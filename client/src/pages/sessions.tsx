@@ -131,31 +131,36 @@ const contests = [
 export default function Sessions() {
   return (
     <div className="min-h-screen pt-20">
-      <section className="py-16 bg-card">
+      <section className="py-20 bg-gradient-to-b from-card to-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <Badge variant="secondary" className="mb-4">8 Expert Sessions</Badge>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-4" data-testid="text-expert-sessions">
+          <div className="text-center mb-16">
+            <div className="inline-block mb-6">
+              <Badge variant="secondary" className="mb-4 text-base px-4 py-2">8 Expert Sessions</Badge>
+            </div>
+            <h2 className="font-serif text-5xl sm:text-6xl font-bold mb-6" data-testid="text-expert-sessions">
               Expert Sessions
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
               Kerala Startup Fest has 13 themes clubbed into 8 expert sessions. These sessions are 
               handled by people who are actually in business — founders, professionals, investors and creators.
             </p>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {sessions.map((session) => (
-              <Card key={session.id} className="hover-elevate group" data-testid={`card-session-${session.id}`}>
-                <CardHeader className="pb-2">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                    <session.icon className="w-6 h-6 text-primary" />
+            {sessions.map((session, index) => (
+              <Card key={session.id} className="hover-elevate group border-2 border-primary/20 hover:border-primary/50 transition-colors bg-gradient-to-br from-background to-card" data-testid={`card-session-${session.id}`}>
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center group-hover:from-primary/50 group-hover:to-primary/20 transition-all">
+                      <session.icon className="w-7 h-7 text-primary" />
+                    </div>
+                    <span className="font-serif text-2xl font-bold text-primary/40 group-hover:text-primary/60 transition-colors">{String(index + 1).padStart(2, '0')}</span>
                   </div>
                   <h3 className="font-semibold text-lg leading-tight">{session.title}</h3>
-                  <p className="text-sm text-primary font-medium">{session.tagline}</p>
+                  <p className="text-sm text-primary font-medium mt-2">{session.tagline}</p>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground">{session.description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{session.description}</p>
                 </CardContent>
               </Card>
             ))}
