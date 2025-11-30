@@ -59,6 +59,7 @@ function App() {
     const targetWord = "caliph";
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (!e.key) return;
       const key = e.key.toLowerCase();
       
       if (/^[a-z]$/.test(key)) {
