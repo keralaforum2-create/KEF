@@ -524,6 +524,29 @@ export default function Participate() {
                         )}
                       />
                     </div>
+
+                    <FormField
+                      control={form.control}
+                      name="participantType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Type of Participant</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-participant-type">
+                                <SelectValue placeholder="Select participant type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="school-student">School Student</SelectItem>
+                              <SelectItem value="college-student">College Student</SelectItem>
+                              <SelectItem value="common">Common</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     
                     <FormField
                       control={form.control}
@@ -584,31 +607,6 @@ export default function Participate() {
                                     {contest}
                                   </SelectItem>
                                 ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    )}
-
-                    {registrationType && (
-                      <FormField
-                        control={form.control}
-                        name="participantType"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Type of Participant</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger data-testid="select-participant-type">
-                                  <SelectValue placeholder="Select participant type" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="school-student">School Student</SelectItem>
-                                <SelectItem value="college-student">College Student</SelectItem>
-                                <SelectItem value="common">Common</SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
