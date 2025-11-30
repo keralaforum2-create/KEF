@@ -169,6 +169,78 @@ export default function Home() {
                 </p>
               </CardContent>
             </Card>
+
+            <Card className="hover-elevate flex-shrink-0 w-80">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <Lightbulb className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Not Just Motivation Talks</h3>
+                <p className="text-muted-foreground text-sm">
+                  Real, practical sessions designed to give you actionable knowledge.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover-elevate flex-shrink-0 w-80">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <Briefcase className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Expert-Led Sessions</h3>
+                <p className="text-muted-foreground text-sm">
+                  Theme-based sessions handled by real business people, not just speakers.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover-elevate flex-shrink-0 w-80">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <Presentation className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Live Idea Pitching</h3>
+                <p className="text-muted-foreground text-sm">
+                  Pitch your ideas directly in front of investors and venture capitalists.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover-elevate flex-shrink-0 w-80">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <Award className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Win Prizes & Funding</h3>
+                <p className="text-muted-foreground text-sm">
+                  Chance to win prizes and funding, not just certificates.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover-elevate flex-shrink-0 w-80">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <Users className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Open to All Ages</h3>
+                <p className="text-muted-foreground text-sm">
+                  From high school students to youngsters up to 29 years of age.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover-elevate flex-shrink-0 w-80">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                  <TrendingUp className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Real Action</h3>
+                <p className="text-muted-foreground text-sm">
+                  Build real startups, not just business plans on paper.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
