@@ -135,7 +135,7 @@
 }
 
 .section-yellow {
-  background: linear-gradient(135deg, hsl(var(--section-yellow)) 0%, hsl(var(--section-cyan)) 100%);
+  background-color: hsl(0 0% 100%);
   color: hsl(0 0% 10%);
 }
 
