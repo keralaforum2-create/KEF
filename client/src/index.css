@@ -17,12 +17,12 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
 }
 
 .auto-scroll {
-  animation: scroll-left 25s linear infinite;
+  animation: scroll-left 30s linear infinite;
 }
 
 /* LIGHT MODE */
