@@ -478,6 +478,33 @@ export default function Participate() {
                       )}
                     />
 
+                    {registrationType === "contest" && (
+                      <FormField
+                        control={form.control}
+                        name="contestName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Select Contest</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-contest">
+                                  <SelectValue placeholder="Select a contest" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {contests.map((contest) => (
+                                  <SelectItem key={contest} value={contest}>
+                                    {contest}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <FormField
                         control={form.control}
@@ -595,33 +622,6 @@ export default function Participate() {
                         </FormItem>
                       )}
                     />
-                    
-                    {registrationType === "contest" && (
-                      <FormField
-                        control={form.control}
-                        name="contestName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Select Contest</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger data-testid="select-contest">
-                                  <SelectValue placeholder="Select a contest" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {contests.map((contest) => (
-                                  <SelectItem key={contest} value={contest}>
-                                    {contest}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    )}
 
                     {registrationType === "contest" && isStartupPitch && (
                       <div className="border rounded-lg p-4 bg-muted/20">
