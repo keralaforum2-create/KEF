@@ -11,6 +11,8 @@ import {
   Briefcase,
   ArrowRight
 } from "lucide-react";
+import califphLifeSchoolLogo from "@assets/PhotoshopExtension_Image_1764498269153.png";
+import keralaEconomicForumLogo from "@assets/KERALA ECONOMIC FORUM LOGO RESOLUTION 00_1764498454572.png";
 
 export default function About() {
   return (
@@ -193,8 +195,8 @@ export default function About() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Card className="hover-elevate">
               <CardContent className="p-8">
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                  <BookOpen className="w-8 h-8 text-primary" />
+                <div className="mb-6 flex items-center justify-center">
+                  <img src={califphLifeSchoolLogo} alt="Caliph Life School" className="h-24 w-auto object-contain" />
                 </div>
                 <h3 className="font-semibold text-xl mb-4">Caliph Life School</h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -206,8 +208,8 @@ export default function About() {
             
             <Card className="hover-elevate">
               <CardContent className="p-8">
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                  <Rocket className="w-8 h-8 text-primary" />
+                <div className="mb-6 flex items-center justify-center">
+                  <img src={keralaEconomicForumLogo} alt="Kerala Economic Forum" className="h-24 w-auto object-contain" />
                 </div>
                 <h3 className="font-semibold text-xl mb-4">Kerala Economic Forum</h3>
                 <p className="text-muted-foreground leading-relaxed">
