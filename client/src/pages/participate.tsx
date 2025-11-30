@@ -505,6 +505,48 @@ export default function Participate() {
                       />
                     )}
 
+                    {registrationType === "contest" && isStartupPitch && (
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <p className="text-sm font-semibold mb-4">Team Members (for StartUp Pitch)</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="teamMember1Name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Team Member 1 Name</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    placeholder="First team member name" 
+                                    {...field} 
+                                    data-testid="input-team-member-1"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="teamMember2Name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Team Member 2 Name</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    placeholder="Second team member name" 
+                                    {...field} 
+                                    data-testid="input-team-member-2"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    )}
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <FormField
                         control={form.control}
@@ -622,48 +664,6 @@ export default function Participate() {
                         </FormItem>
                       )}
                     />
-
-                    {registrationType === "contest" && isStartupPitch && (
-                      <div className="border rounded-lg p-4 bg-muted/20">
-                        <p className="text-sm font-semibold mb-4">Team Members (for StartUp Pitch)</p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="teamMember1Name"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Team Member 1 Name</FormLabel>
-                                <FormControl>
-                                  <Input 
-                                    placeholder="First team member name" 
-                                    {...field} 
-                                    data-testid="input-team-member-1"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="teamMember2Name"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Team Member 2 Name</FormLabel>
-                                <FormControl>
-                                  <Input 
-                                    placeholder="Second team member name" 
-                                    {...field} 
-                                    data-testid="input-team-member-2"
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                      </div>
-                    )}
 
                     <div className="border-t pt-6 mt-6">
                       <div className="text-center mb-6">
