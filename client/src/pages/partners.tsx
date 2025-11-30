@@ -15,6 +15,7 @@ import {
   Star
 } from "lucide-react";
 import investorImage from "@assets/Building Strong Relationships for Business Growth with a B2B PR_1764503880578.jpg";
+import partnershipImage from "@assets/Investor_ double exposure image of investor business man handshake with partner for successful meeting deal with during sunrise and cityscape background, investment, partnership, teamwork concept _ Premium Photo_1764504091678.jpg";
 
 export default function Partners() {
   return (
@@ -86,12 +87,11 @@ export default function Partners() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1 relative">
-              <div className="aspect-square rounded-3xl bg-gradient-to-br from-primary/20 via-primary/10 to-transparent flex items-center justify-center">
-                <div className="text-center p-8">
-                  <Building2 className="w-24 h-24 text-primary mx-auto mb-6 opacity-80" />
-                  <p className="font-serif text-2xl font-bold text-primary">Brand & Impact</p>
-                </div>
-              </div>
+              <img 
+                src={partnershipImage} 
+                alt="Partnership and Investment" 
+                className="w-full h-full rounded-3xl object-cover shadow-lg"
+              />
             </div>
             <div className="order-1 lg:order-2">
               <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
