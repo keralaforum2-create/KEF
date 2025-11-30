@@ -26,7 +26,10 @@ export interface IStorage {
   getRegistrations(): Promise<Registration[]>;
 }
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new Pool({ 
+  connectionString: process.env.DATABASE_URL,
+  max: 1,
+});
 const db = drizzle(pool);
 
 export class DatabaseStorage implements IStorage {
