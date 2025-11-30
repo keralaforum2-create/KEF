@@ -30,13 +30,15 @@ export default function Ticket() {
   const ticketRef = useRef<HTMLDivElement>(null);
 
   const downloadTicket = async () => {
-    if (!ticketRef.current) return;
+    const ticketCard = document.getElementById("ticket-card");
+    if (!ticketCard) return;
     
     try {
       setDownloading(true);
-      const canvas = await html2canvas(ticketRef.current, {
+      const canvas = await html2canvas(ticketCard, {
         backgroundColor: "#ffffff",
         scale: 2,
+        logging: false,
       });
       
       const imgData = canvas.toDataURL("image/png");
@@ -46,10 +48,26 @@ export default function Ticket() {
         format: "a4",
       });
       
-      const imgWidth = 210;
+      const imgWidth = 190;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const pageHeight = 277;
+      const margin = 10;
       
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      let yPosition = margin;
+      
+      if (imgHeight <= pageHeight - (margin * 2)) {
+        const yOffset = (pageHeight - imgHeight) / 2;
+        pdf.addImage(imgData, "PNG", margin, yOffset, imgWidth, imgHeight);
+      } else {
+        while (yPosition < imgHeight + margin) {
+          pdf.addImage(imgData, "PNG", margin, yPosition, imgWidth, imgHeight);
+          yPosition += pageHeight;
+          if (yPosition < imgHeight + margin) {
+            pdf.addPage();
+          }
+        }
+      }
+      
       pdf.save(`KSF-2026-Ticket-${ticket?.registrationId}.pdf`);
     } catch (err) {
       console.error("Failed to download ticket:", err);
@@ -155,7 +173,7 @@ export default function Ticket() {
 
             <div className="space-y-6">
               {/* Professional Ticket Card */}
-              <div className="bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 border-2 border-primary/30 rounded-2xl p-8 overflow-hidden relative">
+              <div id="ticket-card" className="bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 border-2 border-primary/30 rounded-2xl p-8 overflow-hidden relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/5 rounded-full -ml-12 -mb-12"></div>
                 
