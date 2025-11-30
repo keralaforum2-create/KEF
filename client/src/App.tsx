@@ -94,10 +94,10 @@ function App() {
       <TooltipProvider>
         <div className="min-h-screen flex flex-col">
           <Navigation />
-          <main className="flex-1">
+          <main className="flex-1 pb-20 lg:pb-0">
             <Router />
           </main>
-          <Footer />
+          <Footer className="hidden lg:block" />
         </div>
         <Toaster />
       </TooltipProvider>
