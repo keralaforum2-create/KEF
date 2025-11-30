@@ -56,6 +56,7 @@ const registrationSchema = z.object({
     required_error: "Please select registration type",
   }),
   contestName: z.string().optional(),
+  participantType: z.enum(["school-student", "college-student", "common"]).optional(),
   paymentScreenshot: z.any().optional(),
 });
 
@@ -115,6 +116,7 @@ export default function Participate() {
       institution: "",
       registrationType: undefined,
       contestName: "",
+      participantType: undefined,
       paymentScreenshot: undefined,
     },
   });
@@ -147,6 +149,7 @@ export default function Participate() {
       formData.append("institution", data.institution || "");
       formData.append("registrationType", data.registrationType);
       formData.append("contestName", data.contestName || "");
+      formData.append("participantType", data.participantType || "");
       
       if (data.paymentScreenshot instanceof File) {
         formData.append("paymentScreenshot", data.paymentScreenshot);
@@ -581,6 +584,31 @@ export default function Participate() {
                                     {contest}
                                   </SelectItem>
                                 ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+
+                    {registrationType && (
+                      <FormField
+                        control={form.control}
+                        name="participantType"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Type of Participant</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-participant-type">
+                                  <SelectValue placeholder="Select participant type" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="school-student">School Student</SelectItem>
+                                <SelectItem value="college-student">College Student</SelectItem>
+                                <SelectItem value="common">Common</SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
