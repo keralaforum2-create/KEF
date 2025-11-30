@@ -57,7 +57,7 @@ export default function Home() {
           </div>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/participate">
+            <Link href="/participate#register">
               <Button size="lg" className="font-semibold text-base px-8" data-testid="button-register-hero">
                 Register Now
                 <ArrowRight className="w-4 h-4 ml-2" />
