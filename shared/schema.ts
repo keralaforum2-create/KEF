@@ -26,6 +26,7 @@ export type Contact = typeof contactSubmissions.$inferSelect;
 
 export const registrations = pgTable("registrations", {
   id: varchar("id", { length: 36 }).primaryKey(),
+  registrationId: text("registration_id").notNull().unique(),
   fullName: text("full_name").notNull(),
   email: text("email").notNull(),
   phone: text("phone").notNull(),
@@ -38,6 +39,7 @@ export const registrations = pgTable("registrations", {
 
 export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   id: true,
+  registrationId: true,
 }).extend({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),

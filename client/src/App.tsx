@@ -14,6 +14,7 @@ import Partners from "@/pages/partners";
 import Contact from "@/pages/contact";
 import AdminLogin from "@/pages/admin-login";
 import Admin from "@/pages/admin";
+import Ticket from "@/pages/ticket";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/admin" component={Admin} />
+      <Route path="/ticket/:id" component={Ticket} />
       <Route component={NotFound} />
     </Switch>
   );

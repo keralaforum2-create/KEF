@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -37,7 +39,8 @@ import {
   BookOpen,
   Rocket,
   QrCode,
-  Download
+  Download,
+  X
 } from "lucide-react";
 import qrCodeImage from "@assets/image_1764493967902.png";
 
@@ -96,6 +99,9 @@ const benefits = [
 
 export default function Participate() {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
+  const [registrationId, setRegistrationId] = useState<string | null>(null);
+  const [qrCode, setQrCode] = useState<string | null>(null);
   
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
@@ -138,12 +144,18 @@ export default function Participate() {
     mutationFn: async (data: RegistrationFormData) => {
       return apiRequest("POST", "/api/register", data);
     },
-    onSuccess: () => {
-      toast({
-        title: "Registration Successful!",
-        description: "Thank you for registering. You will receive more details via email soon.",
-      });
-      form.reset();
+    onSuccess: async (response: any) => {
+      const regId = response.registration?.registrationId;
+      if (regId) {
+        setRegistrationId(regId);
+        try {
+          const qrResponse = await fetch(`/api/qrcode/${regId}`);
+          const qrData = await qrResponse.json();
+          setQrCode(qrData.qrCode);
+        } catch (err) {
+          console.error("Failed to generate QR code:", err);
+        }
+      }
     },
     onError: () => {
       toast({
@@ -157,6 +169,100 @@ export default function Participate() {
   const onSubmit = (data: RegistrationFormData) => {
     mutation.mutate(data);
   };
+
+  const downloadQRCode = () => {
+    if (!qrCode) return;
+    const link = document.createElement("a");
+    link.href = qrCode;
+    link.download = `ticket-${registrationId}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const viewTicket = () => {
+    if (registrationId) {
+      setLocation(`/ticket/${registrationId}`);
+    }
+  };
+
+  const closeModal = () => {
+    setRegistrationId(null);
+    setQrCode(null);
+    form.reset();
+  };
+
+  // Show success modal after registration
+  if (registrationId && qrCode) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md border-2 border-primary">
+          <CardContent className="p-8">
+            <div className="flex justify-between items-start mb-6">
+              <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                Registration Successful!
+              </h1>
+              <button
+                onClick={closeModal}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                data-testid="button-close-modal"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div className="bg-primary/10 rounded-lg p-4 text-center">
+                <p className="text-sm text-muted-foreground mb-1">Your Ticket ID</p>
+                <p className="text-2xl font-bold text-primary font-mono">{registrationId}</p>
+              </div>
+
+              <div className="bg-background border border-border rounded-lg p-4">
+                <p className="text-sm text-muted-foreground mb-3 text-center">Scan this QR code for your ticket:</p>
+                <img src={qrCode} alt="Ticket QR Code" className="w-full rounded-lg" data-testid="img-ticket-qr" />
+              </div>
+
+              <p className="text-sm text-muted-foreground text-center">
+                Share this QR code at the event check-in to access your ticket instantly.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <Button
+                onClick={downloadQRCode}
+                variant="outline"
+                className="w-full gap-2"
+                data-testid="button-download-ticket-qr"
+              >
+                <Download className="w-4 h-4" />
+                Download QR Code
+              </Button>
+              <Button
+                onClick={viewTicket}
+                className="w-full gap-2"
+                data-testid="button-view-ticket"
+              >
+                <ArrowRight className="w-4 h-4" />
+                View Full Ticket
+              </Button>
+              <Button
+                onClick={closeModal}
+                variant="ghost"
+                className="w-full"
+                data-testid="button-close-success"
+              >
+                Done
+              </Button>
+            </div>
+
+            <p className="text-xs text-muted-foreground text-center mt-4">
+              A confirmation email has been sent to your email address with all details.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-20">

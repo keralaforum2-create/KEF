@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactSchema, insertRegistrationSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
+import QRCode from "qrcode";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 
@@ -95,6 +96,34 @@ export async function registerRoutes(
       return res.json(registrations);
     } catch (error) {
       console.error("Error fetching registrations:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/ticket/:registrationId", async (req, res) => {
+    try {
+      const { registrationId } = req.params;
+      const registration = await storage.getRegistrationByRegistrationId(registrationId);
+      
+      if (!registration) {
+        return res.status(404).json({ message: "Ticket not found" });
+      }
+      
+      return res.json(registration);
+    } catch (error) {
+      console.error("Error fetching ticket:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/qrcode/:registrationId", async (req, res) => {
+    try {
+      const { registrationId } = req.params;
+      const qrUrl = `${process.env.APP_URL || 'http://localhost:5000'}/ticket/${registrationId}`;
+      const qrCode = await QRCode.toDataURL(qrUrl);
+      return res.json({ qrCode, url: qrUrl });
+    } catch (error) {
+      console.error("Error generating QR code:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });

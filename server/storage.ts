@@ -18,6 +18,7 @@ export interface IStorage {
   
   createRegistration(registration: InsertRegistration): Promise<Registration>;
   getRegistrations(): Promise<Registration[]>;
+  getRegistrationByRegistrationId(registrationId: string): Promise<Registration | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -58,9 +59,19 @@ export class MemStorage implements IStorage {
 
   async createRegistration(insertRegistration: InsertRegistration): Promise<Registration> {
     const id = randomUUID();
-    const registration: Registration = { ...insertRegistration, id };
+    const registrationId = `REG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    const registration: Registration = { ...insertRegistration, id, registrationId };
     this.registrations.set(id, registration);
     return registration;
+  }
+
+  async getRegistrationByRegistrationId(registrationId: string): Promise<Registration | undefined> {
+    for (const registration of this.registrations.values()) {
+      if (registration.registrationId === registrationId) {
+        return registration;
+      }
+    }
+    return undefined;
   }
 
   async getRegistrations(): Promise<Registration[]> {
