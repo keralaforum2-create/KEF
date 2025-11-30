@@ -18,6 +18,7 @@ import {
   Building2,
   HandshakeIcon
 } from "lucide-react";
+import califphLifeSchoolLogo from "@assets/PhotoshopExtension_Image_1764498269153.png";
 
 export default function Home() {
   return (
@@ -297,8 +298,8 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <Card className="hover-elevate">
               <CardContent className="p-8">
-                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                  <BookOpen className="w-7 h-7 text-primary" />
+                <div className="mb-6 flex items-center justify-center">
+                  <img src={califphLifeSchoolLogo} alt="Caliph Life School" className="h-20 w-auto object-contain" />
                 </div>
                 <h3 className="font-semibold text-xl mb-3">Caliph Life School</h3>
                 <p className="text-muted-foreground">
