@@ -19,6 +19,7 @@ import {
   HandshakeIcon
 } from "lucide-react";
 import califphLifeSchoolLogo from "@assets/PhotoshopExtension_Image_1764498269153.png";
+import keralaEconomicForumLogo from "@assets/KERALA ECONOMIC FORUM LOGO RESOLUTION 00_1764498454572.png";
 
 export default function Home() {
   return (
@@ -310,8 +311,8 @@ export default function Home() {
             
             <Card className="hover-elevate">
               <CardContent className="p-8">
-                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
-                  <Rocket className="w-7 h-7 text-primary" />
+                <div className="mb-6 flex items-center justify-center">
+                  <img src={keralaEconomicForumLogo} alt="Kerala Economic Forum" className="h-20 w-auto object-contain" />
                 </div>
                 <h3 className="font-semibold text-xl mb-3">Kerala Economic Forum</h3>
                 <p className="text-muted-foreground">
