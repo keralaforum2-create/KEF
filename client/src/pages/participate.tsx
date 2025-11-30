@@ -38,7 +38,7 @@ import {
   Rocket,
   QrCode
 } from "lucide-react";
-import qrCodeImage from "@assets/Screenshot 2025-11-30 140154_1764491722621.png";
+import qrCodeImage from "@assets/WhatsApp Image 2025-11-30 at 14.13.34_f7725a9a_1764492241523.jpg";
 
 const registrationSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
@@ -50,6 +50,7 @@ const registrationSchema = z.object({
     required_error: "Please select registration type",
   }),
   contestName: z.string().optional(),
+  paymentScreenshot: z.any().optional(),
 });
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
@@ -105,10 +106,18 @@ export default function Participate() {
       institution: "",
       registrationType: undefined,
       contestName: "",
+      paymentScreenshot: undefined,
     },
   });
 
   const registrationType = form.watch("registrationType");
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      form.setValue("paymentScreenshot", file);
+    }
+  };
 
   const mutation = useMutation({
     mutationFn: async (data: RegistrationFormData) => {
@@ -446,6 +455,74 @@ export default function Participate() {
                         )}
                       />
                     )}
+
+                    <div className="border-t pt-6 mt-6">
+                      <div className="text-center mb-6">
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                          <QrCode className="w-5 h-5 text-primary" />
+                        </div>
+                        <h3 className="font-serif text-xl font-bold mb-2" data-testid="text-application-fees-form">
+                          Application Fees
+                        </h3>
+                        <p className="text-sm text-muted-foreground font-medium">
+                          Transfer ₹149/- to this UPI No: +91 86063 41939 or below QR
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="w-full max-w-xs">
+                          <img 
+                            src={qrCodeImage} 
+                            alt="Payment QR Code" 
+                            className="w-full rounded-xl border-2 border-primary/20"
+                            data-testid="img-payment-qr-form"
+                          />
+                        </div>
+
+                        <div className="text-center w-full">
+                          <p className="text-sm text-muted-foreground mb-1">UPI ID:</p>
+                          <p className="font-semibold text-sm break-all mb-4">javadivd8448-1@oksbi</p>
+                          
+                          <p className="text-sm text-muted-foreground mb-1">Amount:</p>
+                          <p className="font-bold text-lg text-primary">₹149.00</p>
+                        </div>
+
+                        <p className="text-center text-muted-foreground font-medium text-sm">
+                          Scan to pay with any UPI app
+                        </p>
+                      </div>
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="paymentScreenshot"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Upload Payment Reference / Screenshot</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                                className="hidden"
+                                id="payment-screenshot"
+                                data-testid="input-payment-screenshot"
+                              />
+                              <label
+                                htmlFor="payment-screenshot"
+                                className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed rounded-lg cursor-pointer hover-elevate bg-muted/50 border-muted-foreground/20"
+                              >
+                                <span className="text-sm font-medium">
+                                  {field.value ? "File selected" : "Choose file from gallery"}
+                                </span>
+                              </label>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     
                     <Button 
                       type="submit" 
@@ -459,47 +536,6 @@ export default function Participate() {
                     </Button>
                   </form>
                 </Form>
-              </CardContent>
-            </Card>
-
-            <Card className="mt-8 bg-gradient-to-br from-primary/5 to-primary/10">
-              <CardContent className="p-6 sm:p-8">
-                <div className="text-center mb-8">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <QrCode className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-serif text-2xl sm:text-3xl font-bold mb-2" data-testid="text-application-fees">
-                    Application Fees
-                  </h3>
-                  <p className="text-muted-foreground font-medium">
-                    Transfer Rs.600/- to this UPI No: 9072344434 or below QR
-                  </p>
-                </div>
-
-                <div className="flex flex-col items-center gap-6">
-                  <div className="w-full max-w-xs">
-                    <img 
-                      src={qrCodeImage} 
-                      alt="Payment QR Code" 
-                      className="w-full rounded-xl border-2 border-primary/20"
-                      data-testid="img-payment-qr"
-                    />
-                  </div>
-
-                  <div className="text-center w-full">
-                    <p className="text-sm text-muted-foreground mb-1">UPI ID:</p>
-                    <p className="font-semibold text-sm break-all mb-4">caliphworldfoundation@okhdfcbank</p>
-                    
-                    <p className="text-sm text-muted-foreground mb-1">Amount:</p>
-                    <p className="font-bold text-lg text-primary">₹600.00</p>
-                  </div>
-
-                  <div className="w-full h-px bg-border"></div>
-
-                  <p className="text-center text-muted-foreground font-medium">
-                    Scan to pay with any UPI app
-                  </p>
-                </div>
               </CardContent>
             </Card>
           </div>

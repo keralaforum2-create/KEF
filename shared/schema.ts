@@ -33,6 +33,7 @@ export const registrations = pgTable("registrations", {
   institution: text("institution"),
   registrationType: text("registration_type").notNull(),
   contestName: text("contest_name"),
+  paymentScreenshot: text("payment_screenshot"),
 });
 
 export const insertRegistrationSchema = createInsertSchema(registrations).omit({
@@ -45,6 +46,7 @@ export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   institution: z.string().optional(),
   registrationType: z.enum(["expert-session", "contest"]),
   contestName: z.string().optional(),
+  paymentScreenshot: z.string().optional(),
 });
 
 export type InsertRegistration = z.infer<typeof insertRegistrationSchema>;
