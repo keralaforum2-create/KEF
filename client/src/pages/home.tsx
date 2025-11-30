@@ -97,8 +97,8 @@ export default function Home() {
             This isn't your typical startup event. Here's what sets us apart.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="hover-elevate">
+          <div className="flex overflow-x-hidden gap-6 pb-4 scrollbar-hide auto-scroll">
+            <Card className="hover-elevate flex-shrink-0 w-80">
               <CardContent className="p-6">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   <Lightbulb className="w-6 h-6 text-primary" />
@@ -110,7 +110,7 @@ export default function Home() {
               </CardContent>
             </Card>
             
-            <Card className="hover-elevate">
+            <Card className="hover-elevate flex-shrink-0 w-80">
               <CardContent className="p-6">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   <Briefcase className="w-6 h-6 text-primary" />
@@ -122,7 +122,7 @@ export default function Home() {
               </CardContent>
             </Card>
             
-            <Card className="hover-elevate">
+            <Card className="hover-elevate flex-shrink-0 w-80">
               <CardContent className="p-6">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   <Presentation className="w-6 h-6 text-primary" />
@@ -134,7 +134,7 @@ export default function Home() {
               </CardContent>
             </Card>
             
-            <Card className="hover-elevate">
+            <Card className="hover-elevate flex-shrink-0 w-80">
               <CardContent className="p-6">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   <Award className="w-6 h-6 text-primary" />
@@ -146,7 +146,7 @@ export default function Home() {
               </CardContent>
             </Card>
             
-            <Card className="hover-elevate">
+            <Card className="hover-elevate flex-shrink-0 w-80">
               <CardContent className="p-6">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   <Users className="w-6 h-6 text-primary" />
@@ -158,7 +158,7 @@ export default function Home() {
               </CardContent>
             </Card>
             
-            <Card className="hover-elevate">
+            <Card className="hover-elevate flex-shrink-0 w-80">
               <CardContent className="p-6">
                 <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                   <TrendingUp className="w-6 h-6 text-primary" />
