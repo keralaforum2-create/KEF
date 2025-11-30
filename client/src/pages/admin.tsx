@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +16,14 @@ import { Users, Mail, Phone, Building2, MessageSquare, UserCheck } from "lucide-
 import type { Registration, Contact } from "@shared/schema";
 
 export default function Admin() {
+  const [, setLocation] = useLocation();
+  
+  useEffect(() => {
+    const token = localStorage.getItem("admin_token");
+    if (!token) {
+      setLocation("/admin-login");
+    }
+  }, [setLocation]);
   const { data: registrations, isLoading: loadingRegistrations } = useQuery<Registration[]>({
     queryKey: ["/api/registrations"],
   });

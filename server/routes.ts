@@ -4,11 +4,35 @@ import { storage } from "./storage";
 import { insertContactSchema, insertRegistrationSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
 
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
   
+  app.post("/api/admin/login", async (req, res) => {
+    try {
+      const { password } = req.body;
+      
+      if (!password) {
+        return res.status(400).json({ message: "Password required" });
+      }
+      
+      if (password !== ADMIN_PASSWORD) {
+        return res.status(401).json({ message: "Invalid password" });
+      }
+      
+      return res.json({ 
+        success: true,
+        token: "admin-authenticated"
+      });
+    } catch (error) {
+      console.error("Error logging in:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.post("/api/contact", async (req, res) => {
     try {
       const result = insertContactSchema.safeParse(req.body);
