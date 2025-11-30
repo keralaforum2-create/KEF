@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { z } from "zod";
+import QRCode from "qrcode";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -148,13 +149,13 @@ export default function Participate() {
       const regId = response.registration?.registrationId;
       if (regId) {
         setRegistrationId(regId);
-        try {
-          const qrResponse = await fetch(`/api/qrcode/${regId}`);
-          const qrData = await qrResponse.json();
-          setQrCode(qrData.qrCode);
-        } catch (err) {
+        // Generate QR code in background (non-blocking)
+        const ticketUrl = `${window.location.origin}/ticket/${regId}`;
+        QRCode.toDataURL(ticketUrl).then(setQrCode).catch(err => {
           console.error("Failed to generate QR code:", err);
-        }
+          // Fallback - still show popup even if QR fails
+          setQrCode("");
+        });
       }
     },
     onError: () => {
@@ -192,15 +193,15 @@ export default function Participate() {
     form.reset();
   };
 
-  // Show success modal after registration
-  if (registrationId && qrCode) {
+  // Show success modal immediately when registration ID is ready (don't wait for QR)
+  if (registrationId) {
     return (
       <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
         <Card className="w-full max-w-md border-2 border-primary">
           <CardContent className="p-8">
             <div className="flex justify-between items-start mb-6">
               <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-                Registration Successful!
+                ✓ Registered!
               </h1>
               <button
                 onClick={closeModal}
@@ -217,33 +218,39 @@ export default function Participate() {
                 <p className="text-2xl font-bold text-primary font-mono">{registrationId}</p>
               </div>
 
-              <div className="bg-background border border-border rounded-lg p-4">
-                <p className="text-sm text-muted-foreground mb-3 text-center">Scan this QR code for your ticket:</p>
-                <img src={qrCode} alt="Ticket QR Code" className="w-full rounded-lg" data-testid="img-ticket-qr" />
-              </div>
+              {qrCode && (
+                <div className="bg-background border border-border rounded-lg p-4">
+                  <p className="text-sm text-muted-foreground mb-3 text-center">QR Code:</p>
+                  <img src={qrCode} alt="Ticket QR Code" className="w-full rounded-lg" data-testid="img-ticket-qr" />
+                </div>
+              )}
 
-              <p className="text-sm text-muted-foreground text-center">
-                Share this QR code at the event check-in to access your ticket instantly.
-              </p>
+              {!qrCode && (
+                <div className="bg-background border border-border rounded-lg p-4 text-center">
+                  <div className="animate-pulse">Generating QR code...</div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3">
-              <Button
-                onClick={downloadQRCode}
-                variant="outline"
-                className="w-full gap-2"
-                data-testid="button-download-ticket-qr"
-              >
-                <Download className="w-4 h-4" />
-                Download QR Code
-              </Button>
+              {qrCode && (
+                <Button
+                  onClick={downloadQRCode}
+                  variant="outline"
+                  className="w-full gap-2"
+                  data-testid="button-download-ticket-qr"
+                >
+                  <Download className="w-4 h-4" />
+                  Download QR
+                </Button>
+              )}
               <Button
                 onClick={viewTicket}
                 className="w-full gap-2"
                 data-testid="button-view-ticket"
               >
                 <ArrowRight className="w-4 h-4" />
-                View Full Ticket
+                View Ticket
               </Button>
               <Button
                 onClick={closeModal}
@@ -256,7 +263,7 @@ export default function Participate() {
             </div>
 
             <p className="text-xs text-muted-foreground text-center mt-4">
-              A confirmation email has been sent to your email address with all details.
+              Check your email for full details
             </p>
           </CardContent>
         </Card>
