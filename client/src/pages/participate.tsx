@@ -35,8 +35,10 @@ import {
   Send,
   Building2,
   BookOpen,
-  Rocket
+  Rocket,
+  QrCode
 } from "lucide-react";
+import qrCodeImage from "@assets/Screenshot 2025-11-30 140154_1764491722621.png";
 
 const registrationSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
@@ -457,6 +459,47 @@ export default function Participate() {
                     </Button>
                   </form>
                 </Form>
+              </CardContent>
+            </Card>
+
+            <Card className="mt-8 bg-gradient-to-br from-primary/5 to-primary/10">
+              <CardContent className="p-6 sm:p-8">
+                <div className="text-center mb-8">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                    <QrCode className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="font-serif text-2xl sm:text-3xl font-bold mb-2" data-testid="text-application-fees">
+                    Application Fees
+                  </h3>
+                  <p className="text-muted-foreground font-medium">
+                    Transfer Rs.600/- to this UPI No: 9072344434 or below QR
+                  </p>
+                </div>
+
+                <div className="flex flex-col items-center gap-6">
+                  <div className="w-full max-w-xs">
+                    <img 
+                      src={qrCodeImage} 
+                      alt="Payment QR Code" 
+                      className="w-full rounded-xl border-2 border-primary/20"
+                      data-testid="img-payment-qr"
+                    />
+                  </div>
+
+                  <div className="text-center w-full">
+                    <p className="text-sm text-muted-foreground mb-1">UPI ID:</p>
+                    <p className="font-semibold text-sm break-all mb-4">caliphworldfoundation@okhdfcbank</p>
+                    
+                    <p className="text-sm text-muted-foreground mb-1">Amount:</p>
+                    <p className="font-bold text-lg text-primary">₹600.00</p>
+                  </div>
+
+                  <div className="w-full h-px bg-border"></div>
+
+                  <p className="text-center text-muted-foreground font-medium">
+                    Scan to pay with any UPI app
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
