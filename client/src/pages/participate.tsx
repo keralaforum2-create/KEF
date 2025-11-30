@@ -57,6 +57,9 @@ const registrationSchema = z.object({
   institution: z.string().optional(),
   contestName: z.string().optional(),
   participantType: z.enum(["school-student", "college-student", "common"]).optional(),
+  schoolGrade: z.string().optional(),
+  collegeYear: z.string().optional(),
+  collegeCourse: z.string().optional(),
   teamMember1Name: z.string().optional(),
   teamMember2Name: z.string().optional(),
   paymentScreenshot: z.any().optional(),
@@ -119,6 +122,9 @@ export default function Participate() {
       institution: "",
       contestName: "",
       participantType: undefined,
+      schoolGrade: "",
+      collegeYear: "",
+      collegeCourse: "",
       teamMember1Name: "",
       teamMember2Name: "",
       paymentScreenshot: undefined,
@@ -127,6 +133,7 @@ export default function Participate() {
 
   const registrationType = form.watch("registrationType");
   const contestName = form.watch("contestName");
+  const participantType = form.watch("participantType");
   const isStartupPitch = contestName === "StartUp Pitch";
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -156,6 +163,9 @@ export default function Participate() {
       formData.append("registrationType", data.registrationType);
       formData.append("contestName", data.contestName || "");
       formData.append("participantType", data.participantType || "");
+      formData.append("schoolGrade", data.schoolGrade || "");
+      formData.append("collegeYear", data.collegeYear || "");
+      formData.append("collegeCourse", data.collegeCourse || "");
       formData.append("teamMember1Name", data.teamMember1Name || "");
       formData.append("teamMember2Name", data.teamMember2Name || "");
       
@@ -646,6 +656,82 @@ export default function Participate() {
                         </FormItem>
                       )}
                     />
+
+                    {participantType === "school-student" && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name="schoolGrade"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Grade</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger data-testid="select-school-grade">
+                                    <SelectValue placeholder="Select grade" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="6">Grade 6</SelectItem>
+                                  <SelectItem value="7">Grade 7</SelectItem>
+                                  <SelectItem value="8">Grade 8</SelectItem>
+                                  <SelectItem value="9">Grade 9</SelectItem>
+                                  <SelectItem value="10">Grade 10</SelectItem>
+                                  <SelectItem value="11">Grade 11</SelectItem>
+                                  <SelectItem value="12">Grade 12</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {participantType === "college-student" && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name="collegeCourse"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Course</FormLabel>
+                              <FormControl>
+                                <Input 
+                                  placeholder="e.g., B.Tech CSE, BCA, B.Sc" 
+                                  {...field} 
+                                  data-testid="input-college-course"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="collegeYear"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Year</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger data-testid="select-college-year">
+                                    <SelectValue placeholder="Select year" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="1">1st Year</SelectItem>
+                                  <SelectItem value="2">2nd Year</SelectItem>
+                                  <SelectItem value="3">3rd Year</SelectItem>
+                                  <SelectItem value="4">4th Year</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    )}
                     
                     <FormField
                       control={form.control}
