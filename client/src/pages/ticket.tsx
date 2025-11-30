@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, AlertCircle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import QRCode from "qrcode";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 
 interface Ticket {
   id: string;
@@ -24,6 +26,37 @@ export default function Ticket() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const ticketRef = useRef<HTMLDivElement>(null);
+
+  const downloadTicket = async () => {
+    if (!ticketRef.current) return;
+    
+    try {
+      setDownloading(true);
+      const canvas = await html2canvas(ticketRef.current, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+      });
+      
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+      
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      pdf.save(`KSF-2026-Ticket-${ticket?.registrationId}.pdf`);
+    } catch (err) {
+      console.error("Failed to download ticket:", err);
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchTicket = async () => {
@@ -89,17 +122,29 @@ export default function Ticket() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-card py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        <Button 
-          onClick={() => window.history.back()} 
-          variant="ghost" 
-          className="mb-6"
-          data-testid="button-back"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
+        <div className="flex items-center justify-between mb-6">
+          <Button 
+            onClick={() => window.history.back()} 
+            variant="ghost" 
+            className="mb-0"
+            data-testid="button-back"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          <Button 
+            onClick={downloadTicket} 
+            disabled={downloading}
+            variant="default"
+            className="mb-0"
+            data-testid="button-download-ticket"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            {downloading ? "Downloading..." : "Download Ticket"}
+          </Button>
+        </div>
 
-        <Card className="overflow-hidden border-2 border-primary/20">
+        <Card className="overflow-hidden border-2 border-primary/20" ref={ticketRef}>
           <CardContent className="p-8">
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-accent to-secondary mb-2">
