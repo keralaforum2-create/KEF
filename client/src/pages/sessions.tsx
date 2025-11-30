@@ -131,19 +131,6 @@ const contests = [
 export default function Sessions() {
   return (
     <div className="min-h-screen pt-20">
-      <section className="py-16 sm:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-serif text-4xl sm:text-5xl font-bold mb-6" data-testid="text-sessions-title">
-              Sessions & Contests
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Explore the expert sessions and exciting contests at Kerala Startup Fest 2026.
-            </p>
-          </div>
-        </div>
-      </section>
-
       <section className="py-16 bg-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
