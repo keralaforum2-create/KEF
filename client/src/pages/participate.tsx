@@ -47,16 +47,18 @@ import qrCodeImage from "@assets/image_1764493967902.png";
 import schoolsCollegesImage from "@assets/O sucesso está no topo de sua agenda Foto de alto ângulo de um grupo de empresários tendo uma reunião em um escritório _ Foto Premium_1764503607085.jpg";
 
 const registrationSchema = z.object({
+  registrationType: z.enum(["expert-session", "contest"], {
+    required_error: "Please select registration type",
+  }),
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   age: z.string().min(1, "Age is required"),
   institution: z.string().optional(),
-  registrationType: z.enum(["expert-session", "contest"], {
-    required_error: "Please select registration type",
-  }),
   contestName: z.string().optional(),
   participantType: z.enum(["school-student", "college-student", "common"]).optional(),
+  teamMember1Name: z.string().optional(),
+  teamMember2Name: z.string().optional(),
   paymentScreenshot: z.any().optional(),
 });
 
@@ -109,19 +111,23 @@ export default function Participate() {
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
     defaultValues: {
+      registrationType: undefined,
       fullName: "",
       email: "",
       phone: "",
       age: "",
       institution: "",
-      registrationType: undefined,
       contestName: "",
       participantType: undefined,
+      teamMember1Name: "",
+      teamMember2Name: "",
       paymentScreenshot: undefined,
     },
   });
 
   const registrationType = form.watch("registrationType");
+  const contestName = form.watch("contestName");
+  const isStartupPitch = contestName === "StartUp Pitch";
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -150,6 +156,8 @@ export default function Participate() {
       formData.append("registrationType", data.registrationType);
       formData.append("contestName", data.contestName || "");
       formData.append("participantType", data.participantType || "");
+      formData.append("teamMember1Name", data.teamMember1Name || "");
+      formData.append("teamMember2Name", data.teamMember2Name || "");
       
       if (data.paymentScreenshot instanceof File) {
         formData.append("paymentScreenshot", data.paymentScreenshot);
@@ -448,6 +456,28 @@ export default function Participate() {
               <CardContent className="p-6 sm:p-8">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <FormField
+                      control={form.control}
+                      name="registrationType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Registration For</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-registration-type">
+                                <SelectValue placeholder="Select registration type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="expert-session">Expert Session</SelectItem>
+                              <SelectItem value="contest">Contest</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <FormField
                         control={form.control}
@@ -566,28 +596,6 @@ export default function Participate() {
                       )}
                     />
                     
-                    <FormField
-                      control={form.control}
-                      name="registrationType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Registration For</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger data-testid="select-registration-type">
-                                <SelectValue placeholder="Select registration type" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="expert-session">Expert Session</SelectItem>
-                              <SelectItem value="contest">Contest</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
                     {registrationType === "contest" && (
                       <FormField
                         control={form.control}
@@ -613,6 +621,48 @@ export default function Participate() {
                           </FormItem>
                         )}
                       />
+                    )}
+
+                    {registrationType === "contest" && isStartupPitch && (
+                      <div className="border rounded-lg p-4 bg-muted/20">
+                        <p className="text-sm font-semibold mb-4">Team Members (for StartUp Pitch)</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="teamMember1Name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Team Member 1 Name</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    placeholder="First team member name" 
+                                    {...field} 
+                                    data-testid="input-team-member-1"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="teamMember2Name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Team Member 2 Name</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    placeholder="Second team member name" 
+                                    {...field} 
+                                    data-testid="input-team-member-2"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
                     )}
 
                     <div className="border-t pt-6 mt-6">

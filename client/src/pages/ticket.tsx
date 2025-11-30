@@ -17,6 +17,8 @@ interface Ticket {
   institution: string;
   registrationType: string;
   contestName?: string;
+  teamMember1Name?: string;
+  teamMember2Name?: string;
   paymentScreenshot?: string;
 }
 
@@ -227,6 +229,20 @@ export default function Ticket() {
                         <div>
                           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Institution</p>
                           <p className="text-foreground">{ticket.institution}</p>
+                        </div>
+                      )}
+
+                      {ticket.contestName === "StartUp Pitch" && (ticket.teamMember1Name || ticket.teamMember2Name) && (
+                        <div className="col-span-2 pt-4 border-t border-primary/20">
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Team Members</p>
+                          <div className="space-y-1">
+                            {ticket.teamMember1Name && (
+                              <p className="text-foreground text-sm">• {ticket.teamMember1Name}</p>
+                            )}
+                            {ticket.teamMember2Name && (
+                              <p className="text-foreground text-sm">• {ticket.teamMember2Name}</p>
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>
