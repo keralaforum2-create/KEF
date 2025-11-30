@@ -97,14 +97,14 @@ export function Footer() {
 
             <div>
               <h4 className="font-semibold mb-4">Organised By</h4>
-              <div className="space-y-4">
-                <div>
-                  <p className="font-medium text-sm">Caliph Life School</p>
-                  <p className="text-xs text-muted-foreground">India's first Life School</p>
-                </div>
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="font-medium text-sm">Kerala Economic Forum</p>
                   <p className="text-xs text-muted-foreground">Promoting Kerala's startup ecosystem</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-medium text-sm">Caliph Life School</p>
+                  <p className="text-xs text-muted-foreground">India's first Life School</p>
                 </div>
               </div>
             </div>
