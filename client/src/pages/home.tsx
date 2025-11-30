@@ -88,7 +88,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 section-yellow">
+      <section className="py-20" style={{ backgroundColor: "hsl(189 60% 90%)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4 text-foreground" data-testid="text-why-different">
             Why is KSF Different?

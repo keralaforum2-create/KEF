@@ -73,6 +73,9 @@
   /* Cream Background */
   --section-cream: 45 85% 95%;
   
+  /* Light Cyan Background */
+  --section-light-cyan: 189 60% 90%;
+  
   /* Muted - Gray */
   --muted: 220 13% 91%;
   --muted-foreground: 220 9% 46%;
