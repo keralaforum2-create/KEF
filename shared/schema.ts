@@ -30,9 +30,9 @@ export const registrations = pgTable("registrations", {
   email: text("email").notNull(),
   phone: text("phone").notNull(),
   age: text("age").notNull(),
-  participantType: text("participant_type").notNull(),
   institution: text("institution"),
-  interests: text("interests"),
+  registrationType: text("registration_type").notNull(),
+  contestName: text("contest_name"),
 });
 
 export const insertRegistrationSchema = createInsertSchema(registrations).omit({
@@ -42,9 +42,9 @@ export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   age: z.string().min(1, "Age is required"),
-  participantType: z.enum(["individual", "team", "institution"]),
   institution: z.string().optional(),
-  interests: z.string().optional(),
+  registrationType: z.enum(["expert-session", "contest"]),
+  contestName: z.string().optional(),
 });
 
 export type InsertRegistration = z.infer<typeof insertRegistrationSchema>;

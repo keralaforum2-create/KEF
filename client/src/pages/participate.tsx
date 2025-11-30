@@ -43,14 +43,24 @@ const registrationSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   age: z.string().min(1, "Age is required"),
-  participantType: z.enum(["individual", "team", "institution"], {
-    required_error: "Please select participation type",
-  }),
   institution: z.string().optional(),
-  interests: z.string().optional(),
+  registrationType: z.enum(["expert-session", "contest"], {
+    required_error: "Please select registration type",
+  }),
+  contestName: z.string().optional(),
 });
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
+
+const contests = [
+  "StartUp Pitch",
+  "Business Plan",
+  "Innovation Challenge",
+  "Social Entrepreneurship",
+  "Tech Innovation",
+  "Green Innovation",
+  "Student Entrepreneur",
+];
 
 const benefits = [
   {
@@ -90,11 +100,13 @@ export default function Participate() {
       email: "",
       phone: "",
       age: "",
-      participantType: undefined,
       institution: "",
-      interests: "",
+      registrationType: undefined,
+      contestName: "",
     },
   });
+
+  const registrationType = form.watch("registrationType");
 
   const mutation = useMutation({
     mutationFn: async (data: RegistrationFormData) => {
@@ -368,29 +380,6 @@ export default function Participate() {
                     
                     <FormField
                       control={form.control}
-                      name="participantType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Participation Type</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger data-testid="select-participant-type">
-                                <SelectValue placeholder="Select how you're joining" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="individual">Individual</SelectItem>
-                              <SelectItem value="team">Team</SelectItem>
-                              <SelectItem value="institution">Institution Group</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
                       name="institution"
                       render={({ field }) => (
                         <FormItem>
@@ -409,22 +398,52 @@ export default function Participate() {
                     
                     <FormField
                       control={form.control}
-                      name="interests"
+                      name="registrationType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Interests / Sessions (Optional)</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              placeholder="Which sessions or contests interest you?" 
-                              className="min-h-[100px] resize-none"
-                              {...field} 
-                              data-testid="input-interests"
-                            />
-                          </FormControl>
+                          <FormLabel>Registration For</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-registration-type">
+                                <SelectValue placeholder="Select registration type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="expert-session">Expert Session</SelectItem>
+                              <SelectItem value="contest">Contest</SelectItem>
+                            </SelectContent>
+                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                    
+                    {registrationType === "contest" && (
+                      <FormField
+                        control={form.control}
+                        name="contestName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Select Contest</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-contest">
+                                  <SelectValue placeholder="Select a contest" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {contests.map((contest) => (
+                                  <SelectItem key={contest} value={contest}>
+                                    {contest}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
                     
                     <Button 
                       type="submit" 
