@@ -90,10 +90,10 @@ export default function Home() {
 
       <section className="py-20 section-yellow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4 bg-gradient-to-r from-yellow-900 to-yellow-700 bg-clip-text text-transparent" data-testid="text-why-different">
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4 text-white drop-shadow-lg" data-testid="text-why-different">
             Why is KSF Different?
           </h2>
-          <p className="text-center text-yellow-900/80 mb-12 max-w-2xl mx-auto font-medium">
+          <p className="text-center text-white/90 mb-12 max-w-2xl mx-auto font-medium drop-shadow-md">
             This isn't your typical startup event. Here's what sets us apart.
           </p>
           

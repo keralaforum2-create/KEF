@@ -67,6 +67,9 @@
   /* Yellow Section Background */
   --section-yellow: 43 100% 50%;
   
+  /* Cyan Color */
+  --section-cyan: 189 94% 57%;
+  
   /* Muted - Gray */
   --muted: 220 13% 91%;
   --muted-foreground: 220 9% 46%;
@@ -132,7 +135,7 @@
 }
 
 .section-yellow {
-  background-color: hsl(var(--section-yellow));
+  background: linear-gradient(135deg, hsl(var(--section-yellow)) 0%, hsl(var(--section-cyan)) 100%);
   color: hsl(0 0% 10%);
 }
 
