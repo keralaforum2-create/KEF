@@ -36,9 +36,10 @@ import {
   Building2,
   BookOpen,
   Rocket,
-  QrCode
+  QrCode,
+  Download
 } from "lucide-react";
-import qrCodeImage from "@assets/WhatsApp Image 2025-11-30 at 14.13.34_f7725a9a_1764492241523.jpg";
+import qrCodeImage from "@assets/image_1764493967902.png";
 
 const registrationSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
@@ -122,6 +123,15 @@ export default function Participate() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleDownloadQR = () => {
+    const link = document.createElement("a");
+    link.href = qrCodeImage;
+    link.download = "payment-qr-code.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const mutation = useMutation({
@@ -483,6 +493,18 @@ export default function Participate() {
                             data-testid="img-payment-qr-form"
                           />
                         </div>
+
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={handleDownloadQR}
+                          className="gap-2"
+                          data-testid="button-download-qr"
+                        >
+                          <Download className="w-4 h-4" />
+                          Download QR Code
+                        </Button>
 
                         <div className="text-center w-full">
                           <p className="text-sm text-muted-foreground mb-1">UPI ID:</p>
