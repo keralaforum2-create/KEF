@@ -115,7 +115,12 @@ export default function Participate() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      form.setValue("paymentScreenshot", file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64String = event.target?.result as string;
+        form.setValue("paymentScreenshot", base64String);
+      };
+      reader.readAsDataURL(file);
     }
   };
 

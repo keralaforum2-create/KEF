@@ -43,6 +43,14 @@ export default function Admin() {
     queryKey: ["/api/contacts"],
   });
 
+  const getRegistrationTypeBadge = (type: string) => {
+    const variants: Record<string, string> = {
+      "expert-session": "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+      "contest": "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+    };
+    return variants[type] || "bg-gray-100 text-gray-800";
+  };
+
   const getParticipantTypeBadge = (type: string) => {
     const variants: Record<string, string> = {
       individual: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
@@ -181,8 +189,8 @@ export default function Admin() {
                             <TableRow key={reg.id} data-testid={`row-registration-${reg.id}`}>
                               <TableCell className="font-medium">{reg.fullName}</TableCell>
                               <TableCell>
-                                <Badge className={getParticipantTypeBadge(reg.participantType)}>
-                                  {reg.participantType}
+                                <Badge className={getRegistrationTypeBadge(reg.registrationType)}>
+                                  {reg.registrationType === "expert-session" ? "Expert Session" : "Contest"}
                                 </Badge>
                               </TableCell>
                               <TableCell>
@@ -285,7 +293,7 @@ export default function Admin() {
             <DialogDescription>Full information for this registration</DialogDescription>
           </DialogHeader>
           {selectedReg && (
-            <div className="space-y-4">
+            <div className="space-y-4 max-h-[70vh] overflow-y-auto">
               <div>
                 <label className="text-sm font-medium text-muted-foreground">Full Name</label>
                 <p className="text-base font-medium">{selectedReg.fullName}</p>
@@ -302,20 +310,31 @@ export default function Admin() {
                 <label className="text-sm font-medium text-muted-foreground">Age</label>
                 <p className="text-base">{selectedReg.age}</p>
               </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Participation Type</label>
-                <p className="text-base capitalize">{selectedReg.participantType}</p>
-              </div>
               {selectedReg.institution && (
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Institution</label>
                   <p className="text-base">{selectedReg.institution}</p>
                 </div>
               )}
-              {selectedReg.interests && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Registration For</label>
+                <p className="text-base capitalize">{selectedReg.registrationType === "expert-session" ? "Expert Session" : "Contest"}</p>
+              </div>
+              {selectedReg.contestName && (
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">Interests</label>
-                  <p className="text-base">{selectedReg.interests}</p>
+                  <label className="text-sm font-medium text-muted-foreground">Contest</label>
+                  <p className="text-base">{selectedReg.contestName}</p>
+                </div>
+              )}
+              {selectedReg.paymentScreenshot && (
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Payment Screenshot</label>
+                  <img 
+                    src={selectedReg.paymentScreenshot} 
+                    alt="Payment Screenshot" 
+                    className="w-full rounded-lg border border-border mt-2 max-h-64 object-cover"
+                    data-testid="img-payment-screenshot-admin"
+                  />
                 </div>
               )}
             </div>
