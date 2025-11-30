@@ -44,6 +44,7 @@ import {
   X
 } from "lucide-react";
 import qrCodeImage from "@assets/image_1764493967902.png";
+import schoolsCollegesImage from "@assets/O sucesso está no topo de sua agenda Foto de alto ângulo de um grupo de empresários tendo uma reunião em um escritório _ Foto Premium_1764503607085.jpg";
 
 const registrationSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
@@ -414,12 +415,11 @@ export default function Participate() {
             </div>
             
             <div className="relative">
-              <div className="aspect-square rounded-3xl bg-gradient-to-br from-primary/20 via-primary/10 to-transparent flex items-center justify-center">
-                <div className="text-center p-8">
-                  <Building2 className="w-24 h-24 text-primary mx-auto mb-6 opacity-80" />
-                  <p className="font-serif text-2xl font-bold text-primary">Campus to Company</p>
-                </div>
-              </div>
+              <img 
+                src={schoolsCollegesImage} 
+                alt="Schools and Colleges" 
+                className="w-full h-full rounded-3xl object-cover shadow-lg"
+              />
             </div>
           </div>
         </div>
