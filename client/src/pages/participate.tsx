@@ -193,78 +193,72 @@ export default function Participate() {
     form.reset();
   };
 
-  // Show success modal immediately when registration ID is ready (don't wait for QR)
+  // Show success modal INSTANTLY when registration ID is ready
   if (registrationId) {
     return (
       <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
         <Card className="w-full max-w-md border-2 border-primary">
-          <CardContent className="p-8">
-            <div className="flex justify-between items-start mb-6">
-              <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
-                ✓ Registered!
-              </h1>
+          <CardContent className="p-6 sm:p-8">
+            <div className="flex justify-between items-start mb-4">
+              <h1 className="text-xl sm:text-2xl font-bold text-primary">✓ Done!</h1>
               <button
                 onClick={closeModal}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-foreground"
                 data-testid="button-close-modal"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-4 mb-6">
-              <div className="bg-primary/10 rounded-lg p-4 text-center">
-                <p className="text-sm text-muted-foreground mb-1">Your Ticket ID</p>
-                <p className="text-2xl font-bold text-primary font-mono">{registrationId}</p>
+            <div className="mb-4">
+              <div className="bg-primary/10 rounded-lg p-3 text-center mb-3">
+                <p className="text-xs text-muted-foreground mb-1">Ticket ID</p>
+                <p className="text-xl font-bold text-primary font-mono">{registrationId}</p>
               </div>
 
-              {qrCode && (
-                <div className="bg-background border border-border rounded-lg p-4">
-                  <p className="text-sm text-muted-foreground mb-3 text-center">QR Code:</p>
-                  <img src={qrCode} alt="Ticket QR Code" className="w-full rounded-lg" data-testid="img-ticket-qr" />
+              {qrCode ? (
+                <div className="bg-background border border-border rounded-lg p-3">
+                  <img src={qrCode} alt="QR" className="w-full rounded" data-testid="img-ticket-qr" />
                 </div>
-              )}
-
-              {!qrCode && (
-                <div className="bg-background border border-border rounded-lg p-4 text-center">
-                  <div className="animate-pulse">Generating QR code...</div>
+              ) : (
+                <div className="bg-background border border-border rounded-lg p-3 text-center text-xs text-muted-foreground">
+                  QR generating...
                 </div>
               )}
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2">
               {qrCode && (
                 <Button
                   onClick={downloadQRCode}
                   variant="outline"
+                  size="sm"
                   className="w-full gap-2"
                   data-testid="button-download-ticket-qr"
                 >
-                  <Download className="w-4 h-4" />
-                  Download QR
+                  <Download className="w-3 h-3" />
+                  Download
                 </Button>
               )}
               <Button
                 onClick={viewTicket}
+                size="sm"
                 className="w-full gap-2"
                 data-testid="button-view-ticket"
               >
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3 h-3" />
                 View Ticket
               </Button>
               <Button
                 onClick={closeModal}
                 variant="ghost"
+                size="sm"
                 className="w-full"
                 data-testid="button-close-success"
               >
                 Done
               </Button>
             </div>
-
-            <p className="text-xs text-muted-foreground text-center mt-4">
-              Check your email for full details
-            </p>
           </CardContent>
         </Card>
       </div>
