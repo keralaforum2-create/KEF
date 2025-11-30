@@ -120,9 +120,6 @@ export function Footer() {
               <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Contact Us
               </Link>
-              <Link href="/admin" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-admin">
-                Admin
-              </Link>
             </div>
           </div>
         </div>

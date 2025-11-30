@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
@@ -12,11 +13,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Users, Mail, Phone, Building2, MessageSquare, UserCheck } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye } from "lucide-react";
 import type { Registration, Contact } from "@shared/schema";
 
 export default function Admin() {
   const [, setLocation] = useLocation();
+  const [selectedReg, setSelectedReg] = useState<Registration | null>(null);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
@@ -24,6 +34,7 @@ export default function Admin() {
       setLocation("/admin-login");
     }
   }, [setLocation]);
+
   const { data: registrations, isLoading: loadingRegistrations } = useQuery<Registration[]>({
     queryKey: ["/api/registrations"],
   });
@@ -161,12 +172,8 @@ export default function Admin() {
                         <TableHeader>
                           <TableRow>
                             <TableHead>Name</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Phone</TableHead>
-                            <TableHead>Age</TableHead>
                             <TableHead>Type</TableHead>
-                            <TableHead>Institution</TableHead>
-                            <TableHead>Interests</TableHead>
+                            <TableHead>Action</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -174,26 +181,20 @@ export default function Admin() {
                             <TableRow key={reg.id} data-testid={`row-registration-${reg.id}`}>
                               <TableCell className="font-medium">{reg.fullName}</TableCell>
                               <TableCell>
-                                <div className="flex items-center gap-1">
-                                  <Mail className="w-3 h-3 text-muted-foreground" />
-                                  {reg.email}
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex items-center gap-1">
-                                  <Phone className="w-3 h-3 text-muted-foreground" />
-                                  {reg.phone}
-                                </div>
-                              </TableCell>
-                              <TableCell>{reg.age}</TableCell>
-                              <TableCell>
                                 <Badge className={getParticipantTypeBadge(reg.participantType)}>
                                   {reg.participantType}
                                 </Badge>
                               </TableCell>
-                              <TableCell>{reg.institution || "-"}</TableCell>
-                              <TableCell className="max-w-[200px] truncate">
-                                {reg.interests || "-"}
+                              <TableCell>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => setSelectedReg(reg)}
+                                  data-testid={`button-view-registration-${reg.id}`}
+                                >
+                                  <Eye className="w-4 h-4 mr-1" />
+                                  View
+                                </Button>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -232,10 +233,8 @@ export default function Admin() {
                         <TableHeader>
                           <TableRow>
                             <TableHead>Name</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Phone</TableHead>
                             <TableHead>Type</TableHead>
-                            <TableHead>Message</TableHead>
+                            <TableHead>Action</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -243,26 +242,20 @@ export default function Admin() {
                             <TableRow key={contact.id} data-testid={`row-contact-${contact.id}`}>
                               <TableCell className="font-medium">{contact.name}</TableCell>
                               <TableCell>
-                                <div className="flex items-center gap-1">
-                                  <Mail className="w-3 h-3 text-muted-foreground" />
-                                  {contact.email}
-                                </div>
-                              </TableCell>
-                              <TableCell>
-                                {contact.phone ? (
-                                  <div className="flex items-center gap-1">
-                                    <Phone className="w-3 h-3 text-muted-foreground" />
-                                    {contact.phone}
-                                  </div>
-                                ) : "-"}
-                              </TableCell>
-                              <TableCell>
                                 <Badge className={getUserTypeBadge(contact.userType)}>
                                   {contact.userType}
                                 </Badge>
                               </TableCell>
-                              <TableCell className="max-w-[300px]">
-                                <p className="line-clamp-2">{contact.message}</p>
+                              <TableCell>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => setSelectedContact(contact)}
+                                  data-testid={`button-view-contact-${contact.id}`}
+                                >
+                                  <Eye className="w-4 h-4 mr-1" />
+                                  View
+                                </Button>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -284,6 +277,86 @@ export default function Admin() {
           </Tabs>
         </div>
       </section>
+
+      <Dialog open={!!selectedReg} onOpenChange={() => setSelectedReg(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Registration Details</DialogTitle>
+            <DialogDescription>Full information for this registration</DialogDescription>
+          </DialogHeader>
+          {selectedReg && (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Full Name</label>
+                <p className="text-base font-medium">{selectedReg.fullName}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Email</label>
+                <p className="text-base">{selectedReg.email}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Phone</label>
+                <p className="text-base">{selectedReg.phone}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Age</label>
+                <p className="text-base">{selectedReg.age}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Participation Type</label>
+                <p className="text-base capitalize">{selectedReg.participantType}</p>
+              </div>
+              {selectedReg.institution && (
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Institution</label>
+                  <p className="text-base">{selectedReg.institution}</p>
+                </div>
+              )}
+              {selectedReg.interests && (
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Interests</label>
+                  <p className="text-base">{selectedReg.interests}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!selectedContact} onOpenChange={() => setSelectedContact(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Contact Message Details</DialogTitle>
+            <DialogDescription>Full information for this message</DialogDescription>
+          </DialogHeader>
+          {selectedContact && (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Name</label>
+                <p className="text-base font-medium">{selectedContact.name}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Email</label>
+                <p className="text-base">{selectedContact.email}</p>
+              </div>
+              {selectedContact.phone && (
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Phone</label>
+                  <p className="text-base">{selectedContact.phone}</p>
+                </div>
+              )}
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Type</label>
+                <p className="text-base capitalize">{selectedContact.userType}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Message</label>
+                <p className="text-base">{selectedContact.message}</p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
