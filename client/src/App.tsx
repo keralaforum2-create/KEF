@@ -37,7 +37,7 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "a" && (e.ctrlKey || e.metaKey)) {
+      if (e.key === "o" && e.metaKey && !e.ctrlKey) {
         e.preventDefault();
         const token = localStorage.getItem("admin_token");
         if (token) {
