@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, AlertCircle } from "lucide-react";
+import { ArrowLeft, AlertCircle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import QRCode from "qrcode";
 
 interface Ticket {
   id: string;
@@ -22,6 +23,7 @@ export default function Ticket() {
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTicket = async () => {
@@ -33,6 +35,14 @@ export default function Ticket() {
         }
         const data = await response.json();
         setTicket(data);
+        
+        // Generate QR code
+        try {
+          const qrUrl = await QRCode.toDataURL(data.registrationId);
+          setQrCodeUrl(qrUrl);
+        } catch (qrErr) {
+          console.error("Failed to generate QR code:", qrErr);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load ticket");
       } finally {
@@ -99,30 +109,79 @@ export default function Ticket() {
             </div>
 
             <div className="space-y-6">
-              <div className="bg-card border border-card-border rounded-lg p-6">
-                <h2 className="text-sm font-semibold text-muted-foreground mb-2">Participant Name</h2>
-                <p className="text-2xl font-bold text-foreground">{ticket.fullName}</p>
+              {/* Professional Ticket Card */}
+              <div className="bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 border-2 border-primary/30 rounded-2xl p-8 overflow-hidden relative">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/5 rounded-full -ml-12 -mb-12"></div>
+                
+                <div className="relative z-10">
+                  <div className="text-center mb-6">
+                    <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">Your Entrance Pass</h2>
+                    <p className="text-xl font-bold text-foreground">Kerala Startup Fest 2026</p>
+                    <p className="text-sm text-muted-foreground mt-1">January 7-8, 2026 | Calicut Beach</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                    {/* QR Code Section */}
+                    <div className="flex flex-col items-center justify-center">
+                      {qrCodeUrl && (
+                        <div className="bg-white p-4 rounded-xl border-2 border-primary/20">
+                          <img 
+                            src={qrCodeUrl} 
+                            alt="Ticket QR Code" 
+                            className="w-48 h-48"
+                            data-testid="img-qr-code"
+                          />
+                        </div>
+                      )}
+                      <p className="text-xs text-muted-foreground mt-4 text-center">Scan to verify your registration</p>
+                    </div>
+
+                    {/* Ticket Details Section */}
+                    <div className="flex flex-col justify-center space-y-4">
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Name</p>
+                        <p className="text-2xl font-bold text-foreground">{ticket.fullName}</p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Participation Type</p>
+                        <p className="text-lg font-semibold text-primary capitalize">{ticket.registrationType.replace("-", " ")}</p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4 pt-2">
+                        <div>
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Age</p>
+                          <p className="text-foreground font-medium">{ticket.age}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Ticket ID</p>
+                          <p className="text-sm font-mono text-primary font-bold">{ticket.registrationId}</p>
+                        </div>
+                      </div>
+
+                      {ticket.institution && (
+                        <div>
+                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Institution</p>
+                          <p className="text-foreground">{ticket.institution}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-8 pt-6 border-t border-primary/20 text-center">
+                    <p className="text-xs text-muted-foreground">
+                      ✓ Valid for January 7-8, 2026 | Calicut Beach, Kerala
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-card border border-card-border rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-muted-foreground mb-1">Email</h3>
-                  <p className="text-foreground break-all">{ticket.email}</p>
-                </div>
-
-                <div className="bg-card border border-card-border rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-muted-foreground mb-1">Phone</h3>
-                  <p className="text-foreground">{ticket.phone}</p>
-                </div>
-
-                <div className="bg-card border border-card-border rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-muted-foreground mb-1">Institution</h3>
-                  <p className="text-foreground">{ticket.institution}</p>
-                </div>
-
-                <div className="bg-card border border-card-border rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-muted-foreground mb-1">Registration Type</h3>
-                  <p className="text-foreground capitalize">{ticket.registrationType.replace("-", " ")}</p>
+              <div className="bg-card border border-card-border rounded-lg p-6">
+                <h2 className="text-sm font-semibold text-muted-foreground mb-2">Contact Information</h2>
+                <div className="space-y-2">
+                  <p><span className="text-muted-foreground">Email:</span> {ticket.email}</p>
+                  <p><span className="text-muted-foreground">Phone:</span> {ticket.phone}</p>
                 </div>
               </div>
 
