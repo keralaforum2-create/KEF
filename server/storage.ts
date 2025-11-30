@@ -4,8 +4,14 @@ import {
   type Contact, 
   type InsertContact,
   type Registration,
-  type InsertRegistration
+  type InsertRegistration,
+  users,
+  contactSubmissions,
+  registrations
 } from "@shared/schema";
+import { drizzle } from "drizzle-orm/neon-serverless";
+import { Pool } from "@neondatabase/serverless";
+import { eq } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -20,55 +26,45 @@ export interface IStorage {
   getRegistrations(): Promise<Registration[]>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-  private contacts: Map<string, Contact>;
-  private registrations: Map<string, Registration>;
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const db = drizzle(pool);
 
-  constructor() {
-    this.users = new Map();
-    this.contacts = new Map();
-    this.registrations = new Map();
-  }
-
+export class DatabaseStorage implements IStorage {
   async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+    const result = await db.select().from(users).where(eq(users.id, id));
+    return result[0];
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const result = await db.select().from(users).where(eq(users.username, username));
+    return result[0];
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+    const result = await db.insert(users).values({ ...insertUser, id }).returning();
+    return result[0];
   }
 
   async createContact(insertContact: InsertContact): Promise<Contact> {
     const id = randomUUID();
-    const contact: Contact = { ...insertContact, id };
-    this.contacts.set(id, contact);
-    return contact;
+    const result = await db.insert(contactSubmissions).values({ ...insertContact, id }).returning();
+    return result[0];
   }
 
   async getContacts(): Promise<Contact[]> {
-    return Array.from(this.contacts.values());
+    return db.select().from(contactSubmissions);
   }
 
   async createRegistration(insertRegistration: InsertRegistration): Promise<Registration> {
     const id = randomUUID();
-    const registration: Registration = { ...insertRegistration, id };
-    this.registrations.set(id, registration);
-    return registration;
+    const result = await db.insert(registrations).values({ ...insertRegistration, id }).returning();
+    return result[0];
   }
 
   async getRegistrations(): Promise<Registration[]> {
-    return Array.from(this.registrations.values());
+    return db.select().from(registrations);
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

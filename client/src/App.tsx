@@ -11,6 +11,7 @@ import Sessions from "@/pages/sessions";
 import Participate from "@/pages/participate";
 import Partners from "@/pages/partners";
 import Contact from "@/pages/contact";
+import Admin from "@/pages/admin";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/participate" component={Participate} />
       <Route path="/partners" component={Partners} />
       <Route path="/contact" component={Contact} />
+      <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
     </Switch>
   );
