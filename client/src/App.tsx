@@ -36,15 +36,30 @@ function App() {
   const [, setLocation] = useLocation();
 
   useEffect(() => {
+    let keySequence = "";
+    const targetWord = "caliph";
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "o" && e.metaKey && !e.ctrlKey) {
-        e.preventDefault();
-        const token = localStorage.getItem("admin_token");
-        if (token) {
-          setLocation("/admin");
-        } else {
-          setLocation("/admin-login");
+      const key = e.key.toLowerCase();
+      
+      if (/^[a-z]$/.test(key)) {
+        keySequence += key;
+        
+        if (keySequence.includes(targetWord)) {
+          const token = localStorage.getItem("admin_token");
+          if (token) {
+            setLocation("/admin");
+          } else {
+            setLocation("/admin-login");
+          }
+          keySequence = "";
         }
+        
+        if (keySequence.length > targetWord.length) {
+          keySequence = keySequence.slice(-targetWord.length);
+        }
+      } else {
+        keySequence = "";
       }
     };
 
