@@ -243,11 +243,11 @@ export default function Contact() {
                     <div>
                       <p className="font-medium mb-1">Email</p>
                       <a 
-                        href="mailto:info@keralastartupfest.in" 
+                        href="mailto:keralastartupfest@gmail.com" 
                         className="text-muted-foreground hover:text-primary transition-colors"
                         data-testid="contact-email"
                       >
-                        info@keralastartupfest.in
+                        keralastartupfest@gmail.com
                       </a>
                     </div>
                   </div>
@@ -258,11 +258,11 @@ export default function Contact() {
                     <div>
                       <p className="font-medium mb-1">Phone</p>
                       <a 
-                        href="tel:+919876543210" 
+                        href="tel:+919072344431" 
                         className="text-muted-foreground hover:text-primary transition-colors"
                         data-testid="contact-phone"
                       >
-                        +91 98765 43210
+                        +91 9072344431
                       </a>
                     </div>
                   </div>
@@ -281,9 +281,9 @@ export default function Contact() {
                         <MapPin className="w-5 h-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium">Caliph Campus</p>
+                        <p className="font-medium">Caliph Life School</p>
                         <p className="text-muted-foreground text-sm">
-                          Thamarassery, Kozhikode<br />
+                          Thammaressery, Kozhikode<br />
                           Kerala, India
                         </p>
                       </div>

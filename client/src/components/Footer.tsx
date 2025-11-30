@@ -75,20 +75,20 @@ export function Footer() {
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
                   <Mail className="w-4 h-4 text-primary mt-0.5" />
-                  <a href="mailto:info@keralastartupfest.in" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-email">
-                    info@keralastartupfest.in
+                  <a href="mailto:keralastartupfest@gmail.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-email">
+                    keralastartupfest@gmail.com
                   </a>
                 </li>
                 <li className="flex items-start gap-2">
                   <Phone className="w-4 h-4 text-primary mt-0.5" />
-                  <a href="tel:+919876543210" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-phone">
-                    +91 98765 43210
+                  <a href="tel:+919072344431" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-phone">
+                    +91 9072344431
                   </a>
                 </li>
                 <li className="flex items-start gap-2">
                   <MapPin className="w-4 h-4 text-primary mt-0.5" />
                   <span className="text-sm text-muted-foreground">
-                    Caliph Campus, Thamarassery<br />
+                    Caliph Life School, Thammaressery<br />
                     Kozhikode, Kerala, India
                   </span>
                 </li>
