@@ -6,11 +6,11 @@ import { useState } from "react";
 
 const navItems = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
   { href: "/sessions", label: "Sessions & Contests" },
   { href: "/participate", label: "Participate" },
   { href: "/partners", label: "Partners" },
   { href: "/contact", label: "Contact" },
+  { href: "/about", label: "About" },
 ];
 
 export function Navigation() {
