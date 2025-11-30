@@ -43,7 +43,7 @@ export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   age: z.string().min(1, "Age is required"),
-  institution: z.string().optional(),
+  institution: z.string().min(1, "Institution is required"),
   registrationType: z.enum(["expert-session", "contest"]),
   contestName: z.string().optional(),
   paymentScreenshot: z.string().optional(),

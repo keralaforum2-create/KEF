@@ -409,7 +409,7 @@ export default function Participate() {
                       name="institution"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Institution / Organization (Optional)</FormLabel>
+                          <FormLabel>Institution / Organization</FormLabel>
                           <FormControl>
                             <Input 
                               placeholder="Your school, college or organization" 
