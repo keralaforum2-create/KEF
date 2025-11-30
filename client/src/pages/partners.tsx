@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Star
 } from "lucide-react";
+import investorImage from "@assets/Building Strong Relationships for Business Growth with a B2B PR_1764503880578.jpg";
 
 export default function Partners() {
   return (
@@ -71,12 +72,11 @@ export default function Partners() {
               </Link>
             </div>
             <div className="relative">
-              <div className="aspect-square rounded-3xl bg-gradient-to-br from-primary/20 via-primary/10 to-transparent flex items-center justify-center">
-                <div className="text-center p-8">
-                  <Handshake className="w-24 h-24 text-primary mx-auto mb-6 opacity-80" />
-                  <p className="font-serif text-2xl font-bold text-primary">Shape the Future</p>
-                </div>
-              </div>
+              <img 
+                src={investorImage} 
+                alt="Business Partnership" 
+                className="w-full h-full rounded-3xl object-cover shadow-lg"
+              />
             </div>
           </div>
         </div>
