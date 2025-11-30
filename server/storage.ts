@@ -1,20 +1,34 @@
-import { type User, type InsertUser } from "@shared/schema";
+import { 
+  type User, 
+  type InsertUser, 
+  type Contact, 
+  type InsertContact,
+  type Registration,
+  type InsertRegistration
+} from "@shared/schema";
 import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  
+  createContact(contact: InsertContact): Promise<Contact>;
+  getContacts(): Promise<Contact[]>;
+  
+  createRegistration(registration: InsertRegistration): Promise<Registration>;
+  getRegistrations(): Promise<Registration[]>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
+  private contacts: Map<string, Contact>;
+  private registrations: Map<string, Registration>;
 
   constructor() {
     this.users = new Map();
+    this.contacts = new Map();
+    this.registrations = new Map();
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -32,6 +46,28 @@ export class MemStorage implements IStorage {
     const user: User = { ...insertUser, id };
     this.users.set(id, user);
     return user;
+  }
+
+  async createContact(insertContact: InsertContact): Promise<Contact> {
+    const id = randomUUID();
+    const contact: Contact = { ...insertContact, id };
+    this.contacts.set(id, contact);
+    return contact;
+  }
+
+  async getContacts(): Promise<Contact[]> {
+    return Array.from(this.contacts.values());
+  }
+
+  async createRegistration(insertRegistration: InsertRegistration): Promise<Registration> {
+    const id = randomUUID();
+    const registration: Registration = { ...insertRegistration, id };
+    this.registrations.set(id, registration);
+    return registration;
+  }
+
+  async getRegistrations(): Promise<Registration[]> {
+    return Array.from(this.registrations.values());
   }
 }
 
