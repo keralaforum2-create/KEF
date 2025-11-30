@@ -247,16 +247,40 @@ export default function Home() {
 
       <section className="py-20 bg-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-4" data-testid="text-what-happens">
+          <div className="text-center mb-16">
+            <h2 className="font-serif text-4xl sm:text-5xl font-bold mb-8" data-testid="text-what-happens">
               What Happens at KSF?
             </h2>
-            <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium text-muted-foreground mb-4">
-              <span className="bg-primary/10 text-primary px-3 py-1 rounded-full">8 Expert Sessions</span>
-              <span className="bg-primary/10 text-primary px-3 py-1 rounded-full">13 Themes</span>
-              <span className="bg-primary/10 text-primary px-3 py-1 rounded-full">7 Contests</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 max-w-4xl mx-auto">
+              <div className="bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl p-8 border border-primary/20 hover-elevate">
+                <div className="w-14 h-14 rounded-xl bg-primary/30 flex items-center justify-center mx-auto mb-4">
+                  <Presentation className="w-7 h-7 text-primary" />
+                </div>
+                <p className="font-serif text-4xl font-bold text-primary mb-2">8</p>
+                <p className="font-semibold text-lg text-foreground">Expert Sessions</p>
+                <p className="text-sm text-muted-foreground mt-2">Theme-based masterclasses from industry leaders</p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-secondary/20 to-secondary/10 rounded-2xl p-8 border border-secondary/20 hover-elevate">
+                <div className="w-14 h-14 rounded-xl bg-secondary/30 flex items-center justify-center mx-auto mb-4">
+                  <Lightbulb className="w-7 h-7 text-secondary" />
+                </div>
+                <p className="font-serif text-4xl font-bold text-secondary mb-2">13</p>
+                <p className="font-semibold text-lg text-foreground">Themes Covered</p>
+                <p className="text-sm text-muted-foreground mt-2">From ideas to execution and everything in between</p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-accent/20 to-accent/10 rounded-2xl p-8 border border-accent/20 hover-elevate">
+                <div className="w-14 h-14 rounded-xl bg-accent/30 flex items-center justify-center mx-auto mb-4">
+                  <Award className="w-7 h-7 text-accent" />
+                </div>
+                <p className="font-serif text-4xl font-bold text-accent mb-2">7</p>
+                <p className="font-semibold text-lg text-foreground">Contests</p>
+                <p className="text-sm text-muted-foreground mt-2">Compete, showcase, and win amazing prizes</p>
+              </div>
             </div>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
               KSF is built around powerful sessions and exciting contests that cover the full journey of a 
               startup — from idea, to team, to market, to money.
             </p>
