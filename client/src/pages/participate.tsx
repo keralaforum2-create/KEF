@@ -43,7 +43,7 @@ import {
   Download,
   X
 } from "lucide-react";
-import qrCodeImage from "@assets/image_1764493967902.png";
+import qrCodeImage from "@assets/upi_qr_99 (1)_1764521056107.png";
 import schoolsCollegesImage from "@assets/O sucesso está no topo de sua agenda Foto de alto ângulo de um grupo de empresários tendo uma reunião em um escritório _ Foto Premium_1764503607085.jpg";
 
 const registrationSchema = z.object({
