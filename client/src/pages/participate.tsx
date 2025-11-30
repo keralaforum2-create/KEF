@@ -123,12 +123,7 @@ export default function Participate() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64String = event.target?.result as string;
-        form.setValue("paymentScreenshot", base64String);
-      };
-      reader.readAsDataURL(file);
+      form.setValue("paymentScreenshot", file);
     }
   };
 
@@ -143,7 +138,23 @@ export default function Participate() {
 
   const mutation = useMutation({
     mutationFn: async (data: RegistrationFormData) => {
-      return apiRequest("POST", "/api/register", data);
+      const formData = new FormData();
+      formData.append("fullName", data.fullName);
+      formData.append("email", data.email);
+      formData.append("phone", data.phone);
+      formData.append("age", data.age);
+      formData.append("institution", data.institution || "");
+      formData.append("registrationType", data.registrationType);
+      formData.append("contestName", data.contestName || "");
+      
+      if (data.paymentScreenshot instanceof File) {
+        formData.append("paymentScreenshot", data.paymentScreenshot);
+      }
+      
+      return fetch("/api/register", {
+        method: "POST",
+        body: formData,
+      }).then(res => res.json());
     },
     onSuccess: async (response: any) => {
       const regId = response.registration?.registrationId;

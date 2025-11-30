@@ -1,10 +1,40 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactSchema, insertRegistrationSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+
+// Setup multer for file uploads
+const uploadDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const multerStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (_req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({
+  storage: multerStorage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed"));
+    }
+  },
+});
 
 export async function registerRoutes(
   httpServer: Server,
@@ -66,9 +96,14 @@ export async function registerRoutes(
     }
   });
 
-  app.post("/api/register", async (req, res) => {
+  app.post("/api/register", upload.single("paymentScreenshot"), async (req: Request, res) => {
     try {
-      const result = insertRegistrationSchema.safeParse(req.body);
+      const data = {
+        ...req.body,
+        paymentScreenshot: req.file ? `/uploads/${req.file.filename}` : undefined,
+      };
+      
+      const result = insertRegistrationSchema.safeParse(data);
       
       if (!result.success) {
         const validationError = fromError(result.error);

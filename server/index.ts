@@ -1,14 +1,46 @@
 import express, { type Request, Response, NextFunction } from "express";
+import multer from "multer";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import path from "path";
+import fs from "fs";
 
 const app = express();
 const httpServer = createServer(app);
 
+// Setup multer for file uploads
+const uploadDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (_req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed"));
+    }
+  },
+});
+
 declare module "http" {
   interface IncomingMessage {
     rawBody: unknown;
+    file?: Express.Multer.File;
+    upload?: typeof upload;
   }
 }
 
@@ -22,6 +54,15 @@ app.use(
 );
 
 app.use(express.urlencoded({ extended: false, limit: "50mb" }));
+
+// Make upload middleware and upload directory available
+app.use((req, _res, next) => {
+  req.upload = upload;
+  next();
+});
+
+// Serve uploaded files
+app.use("/uploads", express.static(uploadDir));
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
