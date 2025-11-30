@@ -151,7 +151,7 @@ export default function Participate() {
         setRegistrationId(regId);
         // Generate QR code in background (non-blocking)
         const ticketUrl = `${window.location.origin}/ticket/${regId}`;
-        QRCode.toDataURL(ticketUrl).then(setQrCode).catch(err => {
+        QRCode.toDataURL(ticketUrl).then(setQrCode).catch((err: any) => {
           console.error("Failed to generate QR code:", err);
           // Fallback - still show popup even if QR fails
           setQrCode("");
