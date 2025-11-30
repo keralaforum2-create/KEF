@@ -15,7 +15,7 @@ export function Footer() {
               <p className="text-muted-foreground mb-6">
                 Join Kerala Startup Fest and help turn ideas into real businesses.
               </p>
-              <Link href="/participate">
+              <Link href="/participate#register">
                 <Button size="lg" className="font-semibold" data-testid="button-register-footer">
                   Register Now
                 </Button>

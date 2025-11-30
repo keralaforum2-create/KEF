@@ -44,7 +44,7 @@ export function Navigation() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link href="/participate">
+            <Link href="/participate#register">
               <Button className="hidden sm:flex font-semibold" data-testid="button-register-nav">
                 Register Now
               </Button>
@@ -76,7 +76,7 @@ export function Navigation() {
                     </Link>
                   ))}
                   <div className="pt-4 border-t border-border">
-                    <Link href="/participate" onClick={() => setMobileOpen(false)}>
+                    <Link href="/participate#register" onClick={() => setMobileOpen(false)}>
                       <Button className="w-full font-semibold" data-testid="button-register-mobile">
                         Register Now
                       </Button>
