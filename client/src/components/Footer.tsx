@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Mail, Phone, Calendar, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { ScrollFadeUp, StaggerContainer, StaggerItem } from "@/lib/animations";
-import logoPath from "@assets/LOGO_00-removebg-preview_1764577183320.png";
+import logoPath from "@assets/LOGO_00-removebg-preview_1764577293415.png";
 
 export function Footer() {
   return (
