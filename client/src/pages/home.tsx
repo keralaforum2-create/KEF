@@ -72,7 +72,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-b from-amber-50 via-orange-50/50 to-white">
+      <section className="relative py-24 sm:py-32 overflow-hidden section-yellow-light">
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center mb-16">
@@ -93,7 +93,7 @@ export default function Home() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-100 group">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: "hsl(0 100% 50%)" }}>
                 <Presentation className="w-8 h-8 text-white" />
               </div>
               <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Expert Sessions</h3>
@@ -103,7 +103,7 @@ export default function Home() {
             </div>
             
             <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-200 group">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary to-secondary/80 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: "hsl(45 100% 50%)" }}>
                 <Lightbulb className="w-8 h-8 text-gray-900" />
               </div>
               <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Idea Pitching</h3>
@@ -113,8 +113,8 @@ export default function Home() {
             </div>
             
             <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-300 group">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
-                <Award className="w-8 h-8 text-gray-900" />
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: "hsl(174 100% 29%)" }}>
+                <Award className="w-8 h-8 text-white" />
               </div>
               <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Competitions</h3>
               <p className="text-gray-600 text-sm sm:text-base">
@@ -123,7 +123,7 @@ export default function Home() {
             </div>
             
             <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-400 group">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: "hsl(263 47% 35%)" }}>
                 <Briefcase className="w-8 h-8 text-white" />
               </div>
               <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">VC Networking</h3>
@@ -135,15 +135,15 @@ export default function Home() {
         </div>
         
         <div className="wave-divider">
-          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" fill="hsl(189 60% 90%)">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" fill="hsl(174 60% 90%)">
             <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C57.42,118.92,150.61,71.25,321.39,56.44Z"></path>
           </svg>
         </div>
       </section>
 
-      <section className="py-20" style={{ backgroundColor: "hsl(189 60% 90%)" }}>
+      <section className="py-20 section-teal-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-12 text-foreground" data-testid="text-why-different">
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-12" data-testid="text-why-different">
             Why is KSF Different?
           </h2>
           
@@ -203,36 +203,36 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 bg-card">
+      <section className="py-20 section-purple-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-serif text-4xl sm:text-5xl font-bold mb-8" data-testid="text-what-happens">
               What Happens at KSF?
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 max-w-4xl mx-auto">
-              <div className="bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl p-8 border border-primary/20 hover-elevate">
-                <div className="w-14 h-14 rounded-xl bg-primary/30 flex items-center justify-center mx-auto mb-4">
-                  <Presentation className="w-7 h-7 text-primary" />
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover-elevate">
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "hsl(0 100% 50%)" }}>
+                  <Presentation className="w-7 h-7 text-white" />
                 </div>
                 <p className="font-serif text-4xl font-bold text-primary mb-2">8</p>
                 <p className="font-semibold text-lg text-foreground">Expert Sessions</p>
                 <p className="text-sm text-muted-foreground mt-2">Theme-based masterclasses from industry leaders</p>
               </div>
               
-              <div className="bg-gradient-to-br from-secondary/20 to-secondary/10 rounded-2xl p-8 border border-secondary/20 hover-elevate">
-                <div className="w-14 h-14 rounded-xl bg-secondary/30 flex items-center justify-center mx-auto mb-4">
-                  <Lightbulb className="w-7 h-7 text-secondary" />
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover-elevate">
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "hsl(45 100% 50%)" }}>
+                  <Lightbulb className="w-7 h-7 text-gray-900" />
                 </div>
-                <p className="font-serif text-4xl font-bold text-secondary mb-2">13</p>
+                <p className="font-serif text-4xl font-bold mb-2" style={{ color: "hsl(45 100% 40%)" }}>13</p>
                 <p className="font-semibold text-lg text-foreground">Themes Covered</p>
                 <p className="text-sm text-muted-foreground mt-2">From ideas to execution and everything in between</p>
               </div>
               
-              <div className="bg-gradient-to-br from-accent/20 to-accent/10 rounded-2xl p-8 border border-accent/20 hover-elevate">
-                <div className="w-14 h-14 rounded-xl bg-accent/30 flex items-center justify-center mx-auto mb-4">
-                  <Award className="w-7 h-7 text-accent" />
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover-elevate">
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "hsl(174 100% 29%)" }}>
+                  <Award className="w-7 h-7 text-white" />
                 </div>
-                <p className="font-serif text-4xl font-bold text-accent mb-2">7</p>
+                <p className="font-serif text-4xl font-bold mb-2" style={{ color: "hsl(174 100% 29%)" }}>7</p>
                 <p className="font-semibold text-lg text-foreground">Contests</p>
                 <p className="text-sm text-muted-foreground mt-2">Compete, showcase, and win amazing prizes</p>
               </div>
@@ -285,7 +285,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 bg-card">
+      <section className="py-20 section-yellow-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4" data-testid="text-who-can-join">
             Who Can Join KSF?
@@ -295,10 +295,10 @@ export default function Home() {
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="hover-elevate">
+            <Card className="hover-elevate bg-white">
               <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                  <GraduationCap className="w-8 h-8 text-primary" />
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "hsl(0 100% 50%)" }}>
+                  <GraduationCap className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="font-semibold text-xl mb-3">Students & Young People</h3>
                 <p className="text-sm text-muted-foreground mb-2">(13-29 years)</p>
@@ -308,10 +308,10 @@ export default function Home() {
               </CardContent>
             </Card>
             
-            <Card className="hover-elevate">
+            <Card className="hover-elevate bg-white">
               <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                  <Building2 className="w-8 h-8 text-primary" />
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "hsl(45 100% 50%)" }}>
+                  <Building2 className="w-8 h-8 text-gray-900" />
                 </div>
                 <h3 className="font-semibold text-xl mb-3">Schools & Colleges</h3>
                 <p className="text-muted-foreground">
@@ -320,10 +320,10 @@ export default function Home() {
               </CardContent>
             </Card>
             
-            <Card className="hover-elevate">
+            <Card className="hover-elevate bg-white">
               <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                  <HandshakeIcon className="w-8 h-8 text-primary" />
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "hsl(174 100% 29%)" }}>
+                  <HandshakeIcon className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="font-semibold text-xl mb-3">Mentors & Investors</h3>
                 <p className="text-muted-foreground">
@@ -344,14 +344,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-20 section-teal-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-12" data-testid="text-organised-by">
             Organised By
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Card className="hover-elevate">
+            <Card className="hover-elevate bg-white">
               <CardContent className="p-8">
                 <div className="mb-6 flex items-center justify-center">
                   <img src={califphLifeSchoolLogo} alt="Caliph Life School" className="h-20 w-auto object-contain" />
@@ -363,7 +363,7 @@ export default function Home() {
               </CardContent>
             </Card>
             
-            <Card className="hover-elevate">
+            <Card className="hover-elevate bg-white">
               <CardContent className="p-8">
                 <div className="mb-6 flex items-center justify-center">
                   <img src={keralaEconomicForumLogo} alt="Kerala Economic Forum" className="h-20 w-auto object-contain" />

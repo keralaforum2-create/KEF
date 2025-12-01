@@ -39,12 +39,12 @@
 
 .auto-scroll-wrapper::before {
   left: 0;
-  background: linear-gradient(to right, hsl(189 60% 90%), transparent);
+  background: linear-gradient(to right, hsl(174 60% 90%), transparent);
 }
 
 .auto-scroll-wrapper::after {
   right: 0;
-  background: linear-gradient(to left, hsl(189 60% 90%), transparent);
+  background: linear-gradient(to left, hsl(174 60% 90%), transparent);
 }
 
 .auto-scroll {
@@ -176,6 +176,12 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
   
+  /* Logo Colors - Solid */
+  --logo-red: 0 100% 50%;
+  --logo-yellow: 45 100% 50%;
+  --logo-teal: 174 100% 29%;
+  --logo-purple: 263 47% 35%;
+  
   /* Background and Foreground */
   --background: 0 0% 100%;
   --foreground: 0 0% 10%;
@@ -188,47 +194,43 @@
   --sidebar: 220 13% 91%;
   --sidebar-foreground: 0 0% 10%;
   --sidebar-border: 220 13% 91%;
-  --sidebar-primary: 0 84% 60%;
+  --sidebar-primary: 0 100% 50%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 54 100% 65%;
+  --sidebar-accent: 45 100% 50%;
   --sidebar-accent-foreground: 0 0% 10%;
-  --sidebar-ring: 0 84% 60%;
+  --sidebar-ring: 0 100% 50%;
   
   /* Popover */
   --popover: 0 0% 100%;
   --popover-foreground: 0 0% 10%;
   --popover-border: 220 13% 91%;
   
-  /* Primary - Red */
-  --primary: 0 84% 60%;
+  /* Primary - Red from logo */
+  --primary: 0 100% 50%;
   --primary-foreground: 0 0% 100%;
   
-  /* Secondary - Yellow */
-  --secondary: 54 100% 65%;
+  /* Secondary - Yellow from logo */
+  --secondary: 45 100% 50%;
   --secondary-foreground: 0 0% 10%;
   
-  /* Yellow Section Background */
-  --section-yellow: 43 100% 50%;
+  /* Teal from logo */
+  --teal: 174 100% 29%;
+  --teal-foreground: 0 0% 100%;
   
-  /* Cyan Color */
-  --section-cyan: 189 94% 57%;
-  
-  /* Cream Background */
-  --section-cream: 45 85% 95%;
-  
-  /* Light Cyan Background */
-  --section-light-cyan: 189 60% 90%;
+  /* Purple from logo */
+  --purple: 263 47% 35%;
+  --purple-foreground: 0 0% 100%;
   
   /* Muted - Gray */
   --muted: 220 13% 91%;
   --muted-foreground: 220 9% 46%;
   
-  /* Accent - Cyan */
-  --accent: 189 94% 57%;
-  --accent-foreground: 0 0% 10%;
+  /* Accent - Teal from logo */
+  --accent: 174 100% 29%;
+  --accent-foreground: 0 0% 100%;
   
   /* Destructive - Red variant */
-  --destructive: 0 84% 60%;
+  --destructive: 0 100% 50%;
   --destructive-foreground: 0 0% 100%;
   
   /* Input */
@@ -284,8 +286,40 @@
   --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
 }
 
+/* Logo Color Sections */
 .section-yellow {
-  background-color: hsl(var(--section-cream));
+  background-color: hsl(45 100% 50%);
+  color: hsl(0 0% 10%);
+}
+
+.section-teal {
+  background-color: hsl(174 100% 29%);
+  color: hsl(0 0% 100%);
+}
+
+.section-purple {
+  background-color: hsl(263 47% 35%);
+  color: hsl(0 0% 100%);
+}
+
+.section-red {
+  background-color: hsl(0 100% 50%);
+  color: hsl(0 0% 100%);
+}
+
+/* Light versions for backgrounds */
+.section-yellow-light {
+  background-color: hsl(45 100% 90%);
+  color: hsl(0 0% 10%);
+}
+
+.section-teal-light {
+  background-color: hsl(174 60% 90%);
+  color: hsl(0 0% 10%);
+}
+
+.section-purple-light {
+  background-color: hsl(263 40% 92%);
   color: hsl(0 0% 10%);
 }
 
