@@ -15,7 +15,7 @@ import {
   Star
 } from "lucide-react";
 import investorImage from "@assets/Building Strong Relationships for Business Growth with a B2B PR_1764503880578.jpg";
-import partnershipImage from "@assets/Investor_ double exposure image of investor business man handshake with partner for successful meeting deal with during sunrise and cityscape background, investment, partnership, teamwork concept _ Premium Photo_1764504091678.jpg";
+import partnershipImage from "@assets/WhatsApp Image 2025-11-30 at 14.13.34_f7725a9a_1764492241523.jpg";
 
 export default function Partners() {
   return (
