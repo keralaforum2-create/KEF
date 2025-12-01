@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, X, Rocket, Home, Presentation, Users, Briefcase, Phone } from "lucide-react";
 import { useState } from "react";
-import logoImage from "@assets/LOGO 00_1764520775260.jpg";
+import logoImage from "@assets/LOGO_00-removebg-preview_1764561853084.png";
 
 const navItems = [
   { href: "/", label: "Home" },
