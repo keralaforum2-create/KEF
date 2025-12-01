@@ -362,38 +362,35 @@ export async function sendRegistrationEmails(data: RegistrationData, baseUrl: st
     const ticketUrl = `${baseUrl}/ticket/${data.registrationId}`;
     const isPitchRoom = data.contestName === 'The Pitch Room';
     
-    const emailPromises: Promise<any>[] = [];
+    console.log(`Sending email to customer: ${data.email}`);
+    console.log(`Sending email to admin: ${ADMIN_EMAIL}`);
+    console.log(`Using from email: ${fromEmail}`);
     
-    emailPromises.push(
-      resend.emails.send({
-        from: fromEmail,
-        to: data.email,
-        subject: `Your Kerala Startup Fest 2026 Ticket - ${data.registrationId}`,
-        html: generateTicketEmailHtml(data, ticketUrl),
-      })
-    );
+    const customerEmailResult = await resend.emails.send({
+      from: fromEmail,
+      to: data.email,
+      subject: `Your Kerala Startup Fest 2026 Ticket - ${data.registrationId}`,
+      html: generateTicketEmailHtml(data, ticketUrl),
+    });
+    console.log('Customer email result:', JSON.stringify(customerEmailResult, null, 2));
     
-    emailPromises.push(
-      resend.emails.send({
-        from: fromEmail,
-        to: ADMIN_EMAIL,
-        subject: `New Registration: ${data.fullName} - ${data.registrationId}`,
-        html: generateAdminNotificationHtml(data),
-      })
-    );
+    const adminEmailResult = await resend.emails.send({
+      from: fromEmail,
+      to: ADMIN_EMAIL,
+      subject: `New Registration: ${data.fullName} - ${data.registrationId}`,
+      html: generateAdminNotificationHtml(data),
+    });
+    console.log('Admin email result:', JSON.stringify(adminEmailResult, null, 2));
     
     if (isPitchRoom) {
-      emailPromises.push(
-        resend.emails.send({
-          from: fromEmail,
-          to: ADMIN_EMAIL,
-          subject: `PITCH START IDEA: ${data.pitchStartupName || data.fullName} - ${data.registrationId}`,
-          html: generatePitchIdeaEmailHtml(data),
-        })
-      );
+      const pitchEmailResult = await resend.emails.send({
+        from: fromEmail,
+        to: ADMIN_EMAIL,
+        subject: `PITCH START IDEA: ${data.pitchStartupName || data.fullName} - ${data.registrationId}`,
+        html: generatePitchIdeaEmailHtml(data),
+      });
+      console.log('Pitch email result:', JSON.stringify(pitchEmailResult, null, 2));
     }
-    
-    await Promise.all(emailPromises);
     
     console.log(`Emails sent successfully for registration ${data.registrationId}`);
     return { success: true };
