@@ -1,9 +1,44 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY || 'dummy-key-for-development');
-
 const ADMIN_EMAIL = 'keralastartupfest@gmail.com';
-const FROM_EMAIL = 'Kerala Startup Fest <onboarding@resend.dev>';
+
+let connectionSettings: any;
+
+async function getCredentials() {
+  const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
+  const xReplitToken = process.env.REPL_IDENTITY 
+    ? 'repl ' + process.env.REPL_IDENTITY 
+    : process.env.WEB_REPL_RENEWAL 
+    ? 'depl ' + process.env.WEB_REPL_RENEWAL 
+    : null;
+
+  if (!xReplitToken) {
+    throw new Error('X_REPLIT_TOKEN not found for repl/depl');
+  }
+
+  connectionSettings = await fetch(
+    'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
+    {
+      headers: {
+        'Accept': 'application/json',
+        'X_REPLIT_TOKEN': xReplitToken
+      }
+    }
+  ).then(res => res.json()).then(data => data.items?.[0]);
+
+  if (!connectionSettings || (!connectionSettings.settings.api_key)) {
+    throw new Error('Resend not connected');
+  }
+  return {apiKey: connectionSettings.settings.api_key, fromEmail: connectionSettings.settings.from_email};
+}
+
+async function getResendClient() {
+  const { apiKey, fromEmail } = await getCredentials();
+  return {
+    client: new Resend(apiKey),
+    fromEmail: fromEmail || 'Kerala Startup Fest <onboarding@resend.dev>'
+  };
+}
 
 interface RegistrationData {
   id: string;
@@ -323,6 +358,7 @@ function generatePitchIdeaEmailHtml(data: RegistrationData): string {
 
 export async function sendRegistrationEmails(data: RegistrationData, baseUrl: string): Promise<{ success: boolean; error?: string }> {
   try {
+    const { client: resend, fromEmail } = await getResendClient();
     const ticketUrl = `${baseUrl}/ticket/${data.registrationId}`;
     const isPitchRoom = data.contestName === 'The Pitch Room';
     
@@ -330,7 +366,7 @@ export async function sendRegistrationEmails(data: RegistrationData, baseUrl: st
     
     emailPromises.push(
       resend.emails.send({
-        from: FROM_EMAIL,
+        from: fromEmail,
         to: data.email,
         subject: `Your Kerala Startup Fest 2026 Ticket - ${data.registrationId}`,
         html: generateTicketEmailHtml(data, ticketUrl),
@@ -339,7 +375,7 @@ export async function sendRegistrationEmails(data: RegistrationData, baseUrl: st
     
     emailPromises.push(
       resend.emails.send({
-        from: FROM_EMAIL,
+        from: fromEmail,
         to: ADMIN_EMAIL,
         subject: `New Registration: ${data.fullName} - ${data.registrationId}`,
         html: generateAdminNotificationHtml(data),
@@ -349,7 +385,7 @@ export async function sendRegistrationEmails(data: RegistrationData, baseUrl: st
     if (isPitchRoom) {
       emailPromises.push(
         resend.emails.send({
-          from: FROM_EMAIL,
+          from: fromEmail,
           to: ADMIN_EMAIL,
           subject: `PITCH START IDEA: ${data.pitchStartupName || data.fullName} - ${data.registrationId}`,
           html: generatePitchIdeaEmailHtml(data),
