@@ -72,24 +72,23 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-red-500 via-red-600 to-red-700">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-400/30 via-transparent to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-red-800/50 to-transparent" />
+      <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-red-100 via-rose-100 to-red-200">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-200/20 via-transparent to-transparent" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 
-              className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold mb-8 tracking-tight animate-fade-in-up text-white" 
+              className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold mb-8 tracking-tight animate-fade-in-up text-gray-900" 
               data-testid="text-what-is-ksf"
             >
               What is{" "}
-              <span className="text-yellow-300">Kerala Startup Fest</span>?
+              <span className="text-red-600">Kerala Startup Fest</span>?
             </h2>
-            <p className="text-lg sm:text-xl text-white/90 leading-relaxed animate-fade-in-up animate-delay-200">
+            <p className="text-lg sm:text-xl text-gray-700 leading-relaxed animate-fade-in-up animate-delay-200">
               Kerala Startup Fest is a{" "}
-              <span className="font-semibold text-yellow-300">two-day startup festival</span>{" "}
+              <span className="font-semibold text-red-600">two-day startup festival</span>{" "}
               designed to{" "}
-              <span className="font-semibold text-yellow-300">transform ideas into real action</span>.
+              <span className="font-semibold text-red-600">transform ideas into real action</span>.
             </p>
           </div>
           
