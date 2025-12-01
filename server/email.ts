@@ -68,6 +68,7 @@ interface RegistrationData {
   pitchSellingPrice?: string | null;
   pitchProfitPerUnit?: string | null;
   pitchCustomerAcquisitionCost?: string | null;
+  pitchTotalCapitalRequired?: string | null;
   pitchRevenuePerUser?: string | null;
   pitchTargetCustomers?: string | null;
   pitchMarketSize?: string | null;
@@ -327,7 +328,8 @@ function generatePitchIdeaEmailHtml(data: RegistrationData): string {
             ${data.pitchSellingPrice ? `<tr><td style="padding: 10px; background: #faf5ff; border-bottom: 1px solid #e9d5ff;"><strong style="color: #7c3aed;">Selling Price:</strong><br>${data.pitchSellingPrice}</td></tr>` : ''}
             ${data.pitchProfitPerUnit ? `<tr><td style="padding: 10px; background: white; border-bottom: 1px solid #e9d5ff;"><strong style="color: #7c3aed;">Profit Per Unit:</strong><br>${data.pitchProfitPerUnit}</td></tr>` : ''}
             ${data.pitchCustomerAcquisitionCost ? `<tr><td style="padding: 10px; background: #faf5ff; border-bottom: 1px solid #e9d5ff;"><strong style="color: #7c3aed;">Customer Acquisition Cost:</strong><br>${data.pitchCustomerAcquisitionCost}</td></tr>` : ''}
-            ${data.pitchRevenuePerUser ? `<tr><td style="padding: 10px; background: white; border-bottom: 1px solid #e9d5ff;"><strong style="color: #7c3aed;">Revenue Per User:</strong><br>${data.pitchRevenuePerUser}</td></tr>` : ''}
+            ${data.pitchTotalCapitalRequired ? `<tr><td style="padding: 10px; background: white; border-bottom: 1px solid #e9d5ff;"><strong style="color: #7c3aed;">Total Capital Required for Setting Up:</strong><br>${data.pitchTotalCapitalRequired}</td></tr>` : ''}
+            ${data.pitchRevenuePerUser ? `<tr><td style="padding: 10px; background: #faf5ff; border-bottom: 1px solid #e9d5ff;"><strong style="color: #7c3aed;">Revenue Per User:</strong><br>${data.pitchRevenuePerUser}</td></tr>` : ''}
             ${data.pitchTargetCustomers ? `<tr><td style="padding: 10px; background: #faf5ff; border-bottom: 1px solid #e9d5ff;"><strong style="color: #7c3aed;">Target Customers:</strong><br>${data.pitchTargetCustomers}</td></tr>` : ''}
             ${data.pitchMarketSize ? `<tr><td style="padding: 10px; background: white; border-bottom: 1px solid #e9d5ff;"><strong style="color: #7c3aed;">Market Size:</strong><br>${data.pitchMarketSize}</td></tr>` : ''}
             ${data.pitchCompetitorAnalysis ? `<tr><td style="padding: 10px; background: #faf5ff; border-bottom: 1px solid #e9d5ff;"><strong style="color: #7c3aed;">Competitor Analysis:</strong><br>${data.pitchCompetitorAnalysis}</td></tr>` : ''}

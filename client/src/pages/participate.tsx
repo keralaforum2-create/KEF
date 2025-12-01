@@ -85,6 +85,7 @@ const registrationSchema = z.object({
   pitchSellingPrice: z.string().optional(),
   pitchProfitPerUnit: z.string().optional(),
   pitchCustomerAcquisitionCost: z.string().optional(),
+  pitchTotalCapitalRequired: z.string().optional(),
   pitchRevenuePerUser: z.string().optional(),
   pitchTargetCustomers: z.string().optional(),
   pitchMarketSize: z.string().optional(),
@@ -190,6 +191,7 @@ export default function Participate() {
       pitchSellingPrice: "",
       pitchProfitPerUnit: "",
       pitchCustomerAcquisitionCost: "",
+      pitchTotalCapitalRequired: "",
       pitchRevenuePerUser: "",
       pitchTargetCustomers: "",
       pitchMarketSize: "",
@@ -289,6 +291,7 @@ export default function Participate() {
       formData.append("pitchSellingPrice", data.pitchSellingPrice || "");
       formData.append("pitchProfitPerUnit", data.pitchProfitPerUnit || "");
       formData.append("pitchCustomerAcquisitionCost", data.pitchCustomerAcquisitionCost || "");
+      formData.append("pitchTotalCapitalRequired", data.pitchTotalCapitalRequired || "");
       formData.append("pitchRevenuePerUser", data.pitchRevenuePerUser || "");
       formData.append("pitchTargetCustomers", data.pitchTargetCustomers || "");
       formData.append("pitchMarketSize", data.pitchMarketSize || "");
@@ -1023,6 +1026,26 @@ export default function Participate() {
                                           </FormItem>
                                         )}
                                       />
+                                      <FormField
+                                        control={form.control}
+                                        name="pitchTotalCapitalRequired"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel>Total capital required for setting up</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="number" 
+                                                placeholder="0" 
+                                                {...field} 
+                                                data-testid="input-pitch-total-capital"
+                                              />
+                                            </FormControl>
+                                            <FormMessage />
+                                          </FormItem>
+                                        )}
+                                      />
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                       <FormField
                                         control={form.control}
                                         name="pitchRevenuePerUser"
