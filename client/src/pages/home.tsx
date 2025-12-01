@@ -24,48 +24,48 @@ import keralaEconomicForumLogo from "@assets/KERALA ECONOMIC FORUM LOGO RESOLUTI
 export default function Home() {
   return (
     <div className="min-h-screen">
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/5 to-background" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#FF0000]">
+        <div className="absolute inset-0 bg-gradient-to-br from-red-600 via-red-500 to-red-600" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-400/30 via-transparent to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-red-700/50 to-transparent" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-6">
-            <Calendar className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">7-8 January 2026</span>
-            <span className="text-muted-foreground">|</span>
-            <MapPin className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">Calicut Beach</span>
+          <div className="inline-flex items-center gap-2 bg-white/20 border border-white/30 rounded-full px-4 py-2 mb-6 backdrop-blur-sm">
+            <Calendar className="w-4 h-4 text-white" />
+            <span className="text-sm font-medium text-white">7-8 January 2026</span>
+            <span className="text-white/70">|</span>
+            <MapPin className="w-4 h-4 text-white" />
+            <span className="text-sm font-medium text-white">Calicut Beach</span>
           </div>
           
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight" data-testid="text-hero-title">
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-white" data-testid="text-hero-title">
             Kerala Startup Fest
-            <span className="block text-primary">2026</span>
+            <span className="block text-yellow-300">2026</span>
           </h1>
           
-          <p className="text-xl sm:text-2xl font-medium text-muted-foreground mb-4 max-w-3xl mx-auto" data-testid="text-hero-subtitle">
+          <p className="text-xl sm:text-2xl font-medium text-white/90 mb-4 max-w-3xl mx-auto" data-testid="text-hero-subtitle">
             A two-day mega startup festival that turns ideas into action.
           </p>
           
-          <p className="text-base sm:text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-white/80 mb-8 max-w-2xl mx-auto">
             Kerala Startup Fest (KSF) is a first-of-its-kind event where students, young adults, 
             mentors and investors come together to build real startups. It is not just motivation. 
             It is about learning, pitching, winning, and launching.
           </p>
           
-          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mb-10">
-            <Users className="w-4 h-4 text-primary" />
+          <div className="flex items-center justify-center gap-2 text-sm text-white/80 mb-10">
+            <Users className="w-4 h-4 text-yellow-300" />
             <span>High school to age 29</span>
           </div>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/participate#register">
-              <Button size="lg" className="font-semibold text-base px-8" data-testid="button-register-hero">
+              <Button size="lg" className="font-semibold text-base px-8 bg-white text-red-600 hover:bg-white/90" data-testid="button-register-hero">
                 Register Now
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
-            <Button variant="outline" size="lg" className="font-semibold text-base px-8" data-testid="button-brochure">
+            <Button variant="outline" size="lg" className="font-semibold text-base px-8 border-white text-white hover:bg-white/10" data-testid="button-brochure">
               Download Brochure
             </Button>
           </div>
