@@ -293,33 +293,103 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-primary to-primary/80 rounded-3xl p-8 sm:p-12 text-center text-primary-foreground">
-            <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-6">
-              <Target className="w-8 h-8" />
+      <section className="py-24 sm:py-32 relative overflow-hidden bg-gradient-to-br from-red-500 via-orange-500 to-red-600">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,0.3) 35px, rgba(255,255,255,0.3) 70px)'
+          }} />
+        </div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="mb-8 animate-fade-down">
+              <div className="w-24 h-24 rounded-3xl bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto icon-glow border border-white/20">
+                <Target className="w-12 h-12 text-white" />
+              </div>
             </div>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-6" data-testid="text-big-goal">
+            
+            <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white tracking-wider animate-fade-up" data-testid="text-big-goal">
               Our Big Goal
             </h2>
-            <p className="text-xl sm:text-2xl font-medium mb-6 opacity-90">
-              Kerala Startup Fest aims to launch <span className="font-bold">100 startups</span> from this festival.
+            
+            <p className="text-2xl sm:text-3xl font-semibold mb-8 text-white/95 animate-fade-up animate-delay-100">
+              Kerala Startup Fest aims to launch{" "}
+              <span className="relative inline-block">
+                <span className="relative z-10">100 startups</span>
+                <span className="absolute bottom-1 left-0 right-0 h-1 bg-yellow-300/50" />
+              </span>
+              {" "}from this festival.
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto mt-8">
-              <div className="bg-white/10 rounded-xl p-4">
-                <p className="font-semibold">Democratise</p>
-                <p className="text-sm opacity-80">Entrepreneurship</p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl mx-auto mt-12 mb-12">
+              <div className="group animate-fade-up animate-delay-200 relative backdrop-blur-md bg-white/10 border border-white/30 rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative z-10">
+                  <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
+                    <Lightbulb className="w-6 h-6 text-yellow-300" />
+                  </div>
+                  <p className="font-bold text-lg text-white mb-1">Democratise</p>
+                  <p className="text-sm text-white/80">Entrepreneurship</p>
+                </div>
               </div>
-              <div className="bg-white/10 rounded-xl p-4">
-                <p className="font-semibold">Empower</p>
-                <p className="text-sm opacity-80">School & College Youth</p>
+              
+              <div className="group animate-fade-up animate-delay-300 relative backdrop-blur-md bg-white/10 border border-white/30 rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative z-10">
+                  <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
+                    <Rocket className="w-6 h-6 text-white" />
+                  </div>
+                  <p className="font-bold text-lg text-white mb-1">Empower</p>
+                  <p className="text-sm text-white/80">School & College Youth</p>
+                </div>
               </div>
-              <div className="bg-white/10 rounded-xl p-4">
-                <p className="font-semibold">Bridge</p>
-                <p className="text-sm opacity-80">Education & Execution</p>
+              
+              <div className="group animate-fade-up animate-delay-400 relative backdrop-blur-md bg-white/10 border border-white/30 rounded-2xl p-8 hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-1">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative z-10">
+                  <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
+                    <TrendingUp className="w-6 h-6 text-cyan-300" />
+                  </div>
+                  <p className="font-bold text-lg text-white mb-1">Bridge</p>
+                  <p className="text-sm text-white/80">Education & Execution</p>
+                </div>
               </div>
             </div>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto mb-12">
+              <div className="animate-fade-up animate-delay-500 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <p className="text-2xl font-bold text-white">5K+</p>
+                <p className="text-xs text-white/80 mt-1">Students Impacted</p>
+              </div>
+              <div className="animate-fade-up animate-delay-500 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <p className="text-2xl font-bold text-white">400+</p>
+                <p className="text-xs text-white/80 mt-1">Teams Participating</p>
+              </div>
+              <div className="animate-fade-up animate-delay-500 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <p className="text-2xl font-bold text-white">2</p>
+                <p className="text-xs text-white/80 mt-1">Mega Days</p>
+              </div>
+              <div className="animate-fade-up animate-delay-500 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <p className="text-2xl font-bold text-white">100</p>
+                <p className="text-xs text-white/80 mt-1">Target Startups</p>
+              </div>
+            </div>
+            
+            <div className="animate-fade-up animate-delay-500">
+              <Link href="/participate#register">
+                <Button size="lg" className="font-semibold text-base px-8 bg-white text-red-600 hover:bg-yellow-300 transition-all duration-300" data-testid="button-be-part-of-mission">
+                  Be Part of the 100 Startups
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+            </div>
           </div>
+        </div>
+        
+        <div className="wave-divider">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" fill="white">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C57.42,118.92,150.61,71.25,321.39,56.44Z"></path>
+          </svg>
         </div>
       </section>
 
