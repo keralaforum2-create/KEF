@@ -107,18 +107,14 @@ export default function Home() {
           <HeroSubAnimation delay={0.7}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/participate#register">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>
-                  <Button size="lg" className="font-semibold text-base px-8 bg-white text-red-600 hover:bg-white/90 shadow-lg" data-testid="button-register-hero">
-                    Register Now
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </motion.div>
-              </Link>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>
-                <Button variant="outline" size="lg" className="font-semibold text-base px-8 border-white text-white hover:bg-white/10" data-testid="button-brochure">
-                  Download Brochure
+                <Button size="lg" className="font-semibold text-base px-8 bg-white text-red-600 shadow-lg" data-testid="button-register-hero">
+                  Register Now
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
-              </motion.div>
+              </Link>
+              <Button variant="outline" size="lg" className="font-semibold text-base px-8 border-white text-white" data-testid="button-brochure">
+                Download Brochure
+              </Button>
             </div>
           </HeroSubAnimation>
         </div>
@@ -151,83 +147,63 @@ export default function Home() {
           
           <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" staggerDelay={0.1}>
             <StaggerItem>
-              <motion.div 
-                className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group"
-                whileHover={{ scale: 1.05, y: -5 }}
-                transition={{ duration: 0.2 }}
-              >
-                <motion.div 
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform duration-300" 
+              <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate">
+                <div 
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
                   style={{ backgroundColor: "hsl(0 100% 50%)" }}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
                 >
                   <Presentation className="w-8 h-8 text-white" />
-                </motion.div>
+                </div>
                 <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Expert Sessions</h3>
                 <p className="text-gray-600 text-sm sm:text-base">
                   <span className="font-medium text-primary">Theme-based expert sessions</span> from real business leaders
                 </p>
-              </motion.div>
+              </div>
             </StaggerItem>
             
             <StaggerItem>
-              <motion.div 
-                className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group"
-                whileHover={{ scale: 1.05, y: -5 }}
-                transition={{ duration: 0.2 }}
-              >
-                <motion.div 
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform duration-300" 
+              <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate">
+                <div 
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
                   style={{ backgroundColor: "hsl(45 100% 50%)" }}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
                 >
                   <Lightbulb className="w-8 h-8 text-gray-900" />
-                </motion.div>
+                </div>
                 <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Idea Pitching</h3>
                 <p className="text-gray-600 text-sm sm:text-base">
                   Pitch your ideas to <span className="font-medium text-primary">investors & VCs</span>
                 </p>
-              </motion.div>
+              </div>
             </StaggerItem>
             
             <StaggerItem>
-              <motion.div 
-                className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group"
-                whileHover={{ scale: 1.05, y: -5 }}
-                transition={{ duration: 0.2 }}
-              >
-                <motion.div 
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform duration-300" 
+              <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate">
+                <div 
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
                   style={{ backgroundColor: "hsl(174 100% 29%)" }}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
                 >
                   <Award className="w-8 h-8 text-white" />
-                </motion.div>
+                </div>
                 <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Competitions</h3>
                 <p className="text-gray-600 text-sm sm:text-base">
                   <span className="font-medium text-primary">Win prizes and funding</span>, not just certificates
                 </p>
-              </motion.div>
+              </div>
             </StaggerItem>
             
             <StaggerItem>
-              <motion.div 
-                className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group"
-                whileHover={{ scale: 1.05, y: -5 }}
-                transition={{ duration: 0.2 }}
-              >
-                <motion.div 
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 transition-transform duration-300" 
+              <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate">
+                <div 
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
                   style={{ backgroundColor: "hsl(263 47% 35%)" }}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
                 >
                   <Briefcase className="w-8 h-8 text-white" />
-                </motion.div>
+                </div>
                 <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">VC Networking</h3>
                 <p className="text-gray-600 text-sm sm:text-base">
                   Connect with <span className="font-medium text-primary">venture capitalists</span> & business leaders
                 </p>
-              </motion.div>
+              </div>
             </StaggerItem>
           </StaggerContainer>
         </div>
@@ -322,117 +298,92 @@ export default function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
               {/* Card 1 - Red */}
               <CardWave index={0}>
-                <motion.div 
-                  className="group relative bg-gradient-to-br from-red-50 to-red-100/50 rounded-3xl p-8 shadow-md border border-red-100/50 overflow-hidden h-full"
-                  whileHover={{ y: -8, scale: 1.02, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
-                  transition={{ duration: 0.3 }}
-                >
+                <div className="group relative bg-gradient-to-br from-red-50 to-red-100/50 rounded-3xl p-8 shadow-md border border-red-100/50 overflow-hidden h-full hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-red-200/0 via-transparent to-red-100/0 group-hover:from-red-200/10 group-hover:to-red-100/10 transition-all duration-300" />
                   <div className="relative z-10">
-                    <motion.div 
+                    <div 
                       className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" 
                       style={{ backgroundColor: "hsl(0 100% 50%)" }}
-                      whileHover={{ rotate: 10, scale: 1.1 }}
                     >
                       <Presentation className="w-8 h-8 text-white" />
-                    </motion.div>
+                    </div>
                     <p className="font-serif text-5xl font-bold text-red-600 mb-3">8</p>
                     <p className="font-semibold text-lg text-gray-800 mb-2">Expert Sessions</p>
                     <p className="text-sm text-gray-600">Theme-based masterclasses from industry leaders</p>
                   </div>
-                </motion.div>
+                </div>
               </CardWave>
 
               {/* Card 2 - Yellow */}
               <CardWave index={1}>
-                <motion.div 
-                  className="group relative bg-gradient-to-br from-yellow-50 to-yellow-100/50 rounded-3xl p-8 shadow-md border border-yellow-100/50 overflow-hidden h-full"
-                  whileHover={{ y: -8, scale: 1.02, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
-                  transition={{ duration: 0.3 }}
-                >
+                <div className="group relative bg-gradient-to-br from-yellow-50 to-yellow-100/50 rounded-3xl p-8 shadow-md border border-yellow-100/50 overflow-hidden h-full hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-yellow-200/0 via-transparent to-yellow-100/0 group-hover:from-yellow-200/10 group-hover:to-yellow-100/10 transition-all duration-300" />
                   <div className="relative z-10">
-                    <motion.div 
+                    <div 
                       className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" 
                       style={{ backgroundColor: "hsl(45 100% 50%)" }}
-                      whileHover={{ rotate: 10, scale: 1.1 }}
                     >
                       <Lightbulb className="w-8 h-8 text-gray-900" />
-                    </motion.div>
+                    </div>
                     <p className="font-serif text-5xl font-bold text-yellow-600 mb-3">13</p>
                     <p className="font-semibold text-lg text-gray-800 mb-2">Themes</p>
                     <p className="text-sm text-gray-600">Diverse tracks covering all startup aspects</p>
                   </div>
-                </motion.div>
+                </div>
               </CardWave>
 
               {/* Card 3 - Teal */}
               <CardWave index={2}>
-                <motion.div 
-                  className="group relative bg-gradient-to-br from-teal-50 to-teal-100/50 rounded-3xl p-8 shadow-md border border-teal-100/50 overflow-hidden h-full"
-                  whileHover={{ y: -8, scale: 1.02, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
-                  transition={{ duration: 0.3 }}
-                >
+                <div className="group relative bg-gradient-to-br from-teal-50 to-teal-100/50 rounded-3xl p-8 shadow-md border border-teal-100/50 overflow-hidden h-full hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-teal-200/0 via-transparent to-teal-100/0 group-hover:from-teal-200/10 group-hover:to-teal-100/10 transition-all duration-300" />
                   <div className="relative z-10">
-                    <motion.div 
+                    <div 
                       className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" 
                       style={{ backgroundColor: "hsl(174 100% 29%)" }}
-                      whileHover={{ rotate: 10, scale: 1.1 }}
                     >
                       <Award className="w-8 h-8 text-white" />
-                    </motion.div>
+                    </div>
                     <p className="font-serif text-5xl font-bold text-teal-600 mb-3">7</p>
                     <p className="font-semibold text-lg text-gray-800 mb-2">Contests</p>
                     <p className="text-sm text-gray-600">Compete and win amazing prizes</p>
                   </div>
-                </motion.div>
+                </div>
               </CardWave>
 
               {/* Card 4 - Purple */}
               <CardWave index={3}>
-                <motion.div 
-                  className="group relative bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-3xl p-8 shadow-md border border-purple-100/50 overflow-hidden h-full"
-                  whileHover={{ y: -8, scale: 1.02, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
-                  transition={{ duration: 0.3 }}
-                >
+                <div className="group relative bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-3xl p-8 shadow-md border border-purple-100/50 overflow-hidden h-full hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-200/0 via-transparent to-purple-100/0 group-hover:from-purple-200/10 group-hover:to-purple-100/10 transition-all duration-300" />
                   <div className="relative z-10">
-                    <motion.div 
+                    <div 
                       className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" 
                       style={{ backgroundColor: "hsl(263 47% 35%)" }}
-                      whileHover={{ rotate: 10, scale: 1.1 }}
                     >
                       <Rocket className="w-8 h-8 text-white" />
-                    </motion.div>
+                    </div>
                     <p className="font-serif text-5xl font-bold text-purple-600 mb-3">100</p>
                     <p className="font-semibold text-lg text-gray-800 mb-2">Target Startups</p>
                     <p className="text-sm text-gray-600">Goal to launch from this festival</p>
                   </div>
-                </motion.div>
+                </div>
               </CardWave>
 
               {/* Card 5 - Rose */}
               <CardWave index={4}>
-                <motion.div 
-                  className="group relative bg-gradient-to-br from-rose-50 to-rose-100/50 rounded-3xl p-8 shadow-md border border-rose-100/50 overflow-hidden h-full"
-                  whileHover={{ y: -8, scale: 1.02, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
-                  transition={{ duration: 0.3 }}
-                >
+                <div className="group relative bg-gradient-to-br from-rose-50 to-rose-100/50 rounded-3xl p-8 shadow-md border border-rose-100/50 overflow-hidden h-full hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-rose-200/0 via-transparent to-rose-100/0 group-hover:from-rose-200/10 group-hover:to-rose-100/10 transition-all duration-300" />
                   <div className="relative z-10">
-                    <motion.div 
+                    <div 
                       className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" 
                       style={{ backgroundColor: "hsl(0 100% 50%)" }}
-                      whileHover={{ rotate: 10, scale: 1.1 }}
                     >
                       <Briefcase className="w-8 h-8 text-white" />
-                    </motion.div>
+                    </div>
                     <p className="font-serif text-5xl font-bold text-rose-600 mb-3">2</p>
                     <p className="font-semibold text-lg text-gray-800 mb-2">Mega Days</p>
                     <p className="text-sm text-gray-600">7-8 January 2026 at Calicut Beach</p>
                   </div>
-                </motion.div>
+                </div>
               </CardWave>
             </div>
           </div>
@@ -440,12 +391,10 @@ export default function Home() {
           <ScrollFadeUp>
             <div className="flex justify-center">
               <Link href="/sessions">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>
-                  <Button size="lg" variant="outline" className="font-semibold" data-testid="button-explore-sessions">
-                    Explore Sessions & Contests
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </motion.div>
+                <Button size="lg" variant="outline" className="font-semibold" data-testid="button-explore-sessions">
+                  Explore Sessions & Contests
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
               </Link>
             </div>
           </ScrollFadeUp>
@@ -489,60 +438,42 @@ export default function Home() {
             
             <StaggerContainer className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-4xl mx-auto mt-12 mb-12" staggerDelay={0.1}>
               <StaggerItem>
-                <motion.div 
-                  className="group relative backdrop-blur-md bg-white/10 border border-white/30 rounded-2xl p-8 transition-all duration-300"
-                  whileHover={{ scale: 1.05, y: -5, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
-                >
+                <div className="group relative backdrop-blur-md bg-white/10 border border-white/30 rounded-2xl p-8 transition-all duration-300 hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative z-10">
-                    <motion.div 
-                      className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300"
-                      whileHover={{ rotate: 10 }}
-                    >
+                    <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
                       <Lightbulb className="w-6 h-6 text-yellow-300" />
-                    </motion.div>
+                    </div>
                     <p className="font-bold text-lg text-white mb-1">Democratise</p>
                     <p className="text-sm text-white/80">Entrepreneurship</p>
                   </div>
-                </motion.div>
+                </div>
               </StaggerItem>
               
               <StaggerItem>
-                <motion.div 
-                  className="group relative backdrop-blur-md bg-white/10 border border-white/30 rounded-2xl p-8 transition-all duration-300"
-                  whileHover={{ scale: 1.05, y: -5, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
-                >
+                <div className="group relative backdrop-blur-md bg-white/10 border border-white/30 rounded-2xl p-8 transition-all duration-300 hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative z-10">
-                    <motion.div 
-                      className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300"
-                      whileHover={{ rotate: 10 }}
-                    >
+                    <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
                       <Rocket className="w-6 h-6 text-white" />
-                    </motion.div>
+                    </div>
                     <p className="font-bold text-lg text-white mb-1">Empower</p>
                     <p className="text-sm text-white/80">School & College Youth</p>
                   </div>
-                </motion.div>
+                </div>
               </StaggerItem>
               
               <StaggerItem>
-                <motion.div 
-                  className="group relative backdrop-blur-md bg-white/10 border border-white/30 rounded-2xl p-8 transition-all duration-300"
-                  whileHover={{ scale: 1.05, y: -5, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
-                >
+                <div className="group relative backdrop-blur-md bg-white/10 border border-white/30 rounded-2xl p-8 transition-all duration-300 hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative z-10">
-                    <motion.div 
-                      className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300"
-                      whileHover={{ rotate: 10 }}
-                    >
+                    <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
                       <TrendingUp className="w-6 h-6 text-cyan-300" />
-                    </motion.div>
+                    </div>
                     <p className="font-bold text-lg text-white mb-1">Bridge</p>
                     <p className="text-sm text-white/80">Education & Execution</p>
                   </div>
-                </motion.div>
+                </div>
               </StaggerItem>
             </StaggerContainer>
             
@@ -575,12 +506,10 @@ export default function Home() {
             
             <ScrollFadeUp delay={0.3}>
               <Link href="/participate#register">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>
-                  <Button size="lg" className="font-semibold bg-white text-red-600 hover:bg-white/90 shadow-lg" data-testid="button-join-goal">
-                    Join the Movement
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </motion.div>
+                <Button size="lg" className="font-semibold bg-white text-red-600 shadow-lg" data-testid="button-join-goal">
+                  Join the Movement
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
               </Link>
             </ScrollFadeUp>
           </div>
@@ -623,12 +552,11 @@ export default function Home() {
             }}
           >
             <motion.div 
-              className="flex flex-col items-center text-center group"
+              className="flex flex-col items-center text-center group hover-elevate"
               variants={{
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
               }}
-              whileHover={{ scale: 1.05 }}
             >
               <div className="w-32 h-32 rounded-2xl bg-card border border-border flex items-center justify-center mb-4 overflow-hidden shadow-sm group-hover:shadow-lg transition-shadow duration-300">
                 <img 
@@ -642,12 +570,11 @@ export default function Home() {
             </motion.div>
             
             <motion.div 
-              className="flex flex-col items-center text-center group"
+              className="flex flex-col items-center text-center group hover-elevate"
               variants={{
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
               }}
-              whileHover={{ scale: 1.05 }}
             >
               <div className="w-32 h-32 rounded-2xl bg-card border border-border flex items-center justify-center mb-4 overflow-hidden shadow-sm group-hover:shadow-lg transition-shadow duration-300">
                 <img 
@@ -664,12 +591,10 @@ export default function Home() {
           <ScrollFadeUp delay={0.3}>
             <div className="flex justify-center mt-12">
               <Link href="/partners">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>
-                  <Button variant="outline" className="font-semibold" data-testid="button-view-partners">
-                    View All Partners
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </motion.div>
+                <Button variant="outline" className="font-semibold" data-testid="button-view-partners">
+                  View All Partners
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
               </Link>
             </div>
           </ScrollFadeUp>
@@ -691,12 +616,10 @@ export default function Home() {
           </ScrollFadeUp>
           <ScrollFadeUp delay={0.2}>
             <Link href="/participate#register">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>
-                <Button size="lg" className="font-semibold bg-white text-primary hover:bg-white/90 shadow-lg" data-testid="button-register-cta">
-                  Register Now
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </motion.div>
+              <Button size="lg" className="font-semibold bg-white text-primary shadow-lg" data-testid="button-register-cta">
+                Register Now
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
             </Link>
           </ScrollFadeUp>
         </div>
