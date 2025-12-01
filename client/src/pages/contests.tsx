@@ -19,6 +19,7 @@ import {
 const contests = [
   {
     id: 1,
+    slug: "business-quiz",
     title: "Business Quiz – School Edition",
     description: "A fast-paced challenge that tests business awareness, startup knowledge, and decision-making skills.",
     icon: Brain,
@@ -26,6 +27,7 @@ const contests = [
   },
   {
     id: 2,
+    slug: "the-pitch-room",
     title: "The Pitch Room",
     description: "Where bold ideas meet real opportunities—pitch your concept and convince the evaluators in minutes.",
     icon: Mic,
@@ -33,6 +35,7 @@ const contests = [
   },
   {
     id: 3,
+    slug: "camera-craft",
     title: "Camera Craft – Photo & Video Challenge",
     description: "Showcase your storytelling skills through powerful photos, creative videos, and visual narratives.",
     icon: Camera,
@@ -40,6 +43,7 @@ const contests = [
   },
   {
     id: 4,
+    slug: "jam",
     title: "Just a Minute (JAM)",
     description: "A one-minute fun battle of spontaneity, wit, speed, and presence of mind.",
     icon: Trophy,
@@ -75,7 +79,7 @@ export default function Contests() {
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto" staggerDelay={0.08}>
             {contests.map((contest) => (
               <StaggerItem key={contest.id}>
-                <Link href={`/participate?contest=${encodeURIComponent(contest.title)}#register`}>
+                <Link href={`/contests/${contest.slug}`}>
                   <motion.div whileHover={{ scale: 1.03, y: -5 }} transition={{ duration: 0.2 }} className="cursor-pointer">
                     <Card className="h-full group" data-testid={`card-contest-${contest.id}`}>
                       <CardContent className="p-6">
@@ -93,7 +97,7 @@ export default function Contests() {
                             </div>
                             <p className="text-sm text-muted-foreground">{contest.description}</p>
                             <div className="flex items-center gap-1 mt-3 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                              <span>Register Now</span>
+                              <span>Learn More</span>
                               <ArrowRight className="w-4 h-4" />
                             </div>
                           </div>

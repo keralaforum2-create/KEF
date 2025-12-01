@@ -16,6 +16,7 @@ import Contact from "@/pages/contact";
 import AdminLogin from "@/pages/admin-login";
 import Admin from "@/pages/admin";
 import Ticket from "@/pages/ticket";
+import ContestDetail from "@/pages/contest-detail";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -44,6 +45,7 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/sessions" component={Sessions} />
       <Route path="/contests" component={Contests} />
+      <Route path="/contests/:contestId" component={ContestDetail} />
       <Route path="/participate" component={Participate} />
       <Route path="/partners" component={Partners} />
       <Route path="/contact" component={Contact} />
