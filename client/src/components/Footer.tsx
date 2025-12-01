@@ -1,8 +1,9 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Rocket, MapPin, Mail, Phone, Calendar, Users } from "lucide-react";
+import { MapPin, Mail, Phone, Calendar, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { ScrollFadeUp, StaggerContainer, StaggerItem } from "@/lib/animations";
+import logoPath from "@assets/LOGO_00-removebg-preview_1764577183320.png";
 
 export function Footer() {
   return (
@@ -25,11 +26,9 @@ export function Footer() {
                   Join Kerala Startup Fest and help turn ideas into real businesses.
                 </p>
                 <Link href="/participate#register">
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>
-                    <Button size="lg" className="font-semibold" data-testid="button-register-footer">
-                      Register Now
-                    </Button>
-                  </motion.div>
+                  <Button size="lg" className="font-semibold" data-testid="button-register-footer">
+                    Register Now
+                  </Button>
                 </Link>
               </div>
             </motion.div>
@@ -37,16 +36,13 @@ export function Footer() {
             <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12" staggerDelay={0.1}>
               <StaggerItem>
                 <div>
-                  <motion.div 
-                    className="flex items-center gap-2 mb-4"
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-                      <Rocket className="w-5 h-5 text-primary-foreground" />
-                    </div>
-                    <span className="font-serif font-bold text-lg">KSF 2026</span>
-                  </motion.div>
+                  <div className="flex items-center gap-2 mb-4 hover-elevate">
+                    <img 
+                      src={logoPath}
+                      alt="Kerala Startup Fest Logo"
+                      className="w-12 h-12 object-contain"
+                    />
+                  </div>
                   <p className="text-sm text-muted-foreground mb-4">
                     A two-day mega startup festival that turns ideas into action.
                   </p>

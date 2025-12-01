@@ -601,29 +601,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-primary">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <ScrollFadeUp>
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white">
-              Ready to Turn Your Idea Into Reality?
-            </h2>
-          </ScrollFadeUp>
-          <ScrollFadeUp delay={0.1}>
-            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-              Join Kerala Startup Fest 2026 and be part of the state's biggest startup movement.
-            </p>
-          </ScrollFadeUp>
-          <ScrollFadeUp delay={0.2}>
-            <Link href="/participate#register">
-              <Button size="lg" className="font-semibold bg-white text-primary shadow-lg" data-testid="button-register-cta">
-                Register Now
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
-          </ScrollFadeUp>
-        </div>
-      </section>
     </div>
   );
 }
