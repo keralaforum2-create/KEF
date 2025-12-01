@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import califphLifeSchoolLogo from "@assets/PhotoshopExtension_Image_1764498269153.png";
 import keralaEconomicForumLogo from "@assets/KERALA ECONOMIC FORUM LOGO RESOLUTION 00_1764498454572.png";
+import festivalBgImage from "@assets/stock_images/startup_festival_cro_9d4ccbd6.jpg";
 
 export default function Home() {
   return (
@@ -72,19 +73,77 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 section-yellow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-6" data-testid="text-what-is-ksf">
-              What is Kerala Startup Fest?
+      <section className="relative py-24 sm:py-32 overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${festivalBgImage})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/85 to-white/95 backdrop-blur-[2px]" />
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto text-center mb-16">
+            <h2 
+              className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold mb-8 tracking-tight animate-fade-in-up" 
+              data-testid="text-what-is-ksf"
+            >
+              What is{" "}
+              <span className="text-primary">Kerala Startup Fest</span>?
             </h2>
-            <p className="text-lg text-muted-foreground leading-relaxed">
-              Kerala Startup Fest is a two-day startup festival designed to transform ideas into real action. 
-              Thousands of students and young people will attend theme-based expert sessions, take part in contests, 
-              pitch their ideas, and get a chance to win prizes and capital from venture capitalists and 
-              business leaders present at the venue.
+            <p className="text-lg sm:text-xl text-gray-700 leading-relaxed animate-fade-in-up animate-delay-200">
+              Kerala Startup Fest is a{" "}
+              <span className="font-semibold text-primary">two-day startup festival</span>{" "}
+              designed to{" "}
+              <span className="font-semibold text-primary">transform ideas into real action</span>.
             </p>
           </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-100 group">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
+                <Presentation className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Expert Sessions</h3>
+              <p className="text-gray-600 text-sm sm:text-base">
+                <span className="font-medium text-primary">Theme-based expert sessions</span> from real business leaders
+              </p>
+            </div>
+            
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-200 group">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary to-secondary/80 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
+                <Lightbulb className="w-8 h-8 text-gray-900" />
+              </div>
+              <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Idea Pitching</h3>
+              <p className="text-gray-600 text-sm sm:text-base">
+                Pitch your ideas to <span className="font-medium text-primary">investors & VCs</span>
+              </p>
+            </div>
+            
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-300 group">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
+                <Award className="w-8 h-8 text-gray-900" />
+              </div>
+              <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Competitions</h3>
+              <p className="text-gray-600 text-sm sm:text-base">
+                <span className="font-medium text-primary">Win prizes and funding</span>, not just certificates
+              </p>
+            </div>
+            
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-400 group">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
+                <Briefcase className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">VC Networking</h3>
+              <p className="text-gray-600 text-sm sm:text-base">
+                Connect with <span className="font-medium text-primary">venture capitalists</span> & business leaders
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="wave-divider">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" fill="hsl(189 60% 90%)">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C57.42,118.92,150.61,71.25,321.39,56.44Z"></path>
+          </svg>
         </div>
       </section>
 
