@@ -5,6 +5,10 @@ import {
   type InsertContact,
   type Registration,
   type InsertRegistration,
+  type InvestorMentor,
+  type InsertInvestorMentor,
+  type Sponsorship,
+  type InsertSponsorship,
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
@@ -19,12 +23,20 @@ export interface IStorage {
   createRegistration(registration: InsertRegistration): Promise<Registration>;
   getRegistrations(): Promise<Registration[]>;
   getRegistrationByRegistrationId(registrationId: string): Promise<Registration | undefined>;
+  
+  createInvestorMentor(application: InsertInvestorMentor): Promise<InvestorMentor>;
+  getInvestorMentors(): Promise<InvestorMentor[]>;
+  
+  createSponsorship(inquiry: InsertSponsorship): Promise<Sponsorship>;
+  getSponsorships(): Promise<Sponsorship[]>;
 }
 
 export class MemStorage implements IStorage {
   private users = new Map<string, User>();
   private contacts = new Map<string, Contact>();
   private registrations = new Map<string, Registration>();
+  private investorMentors = new Map<string, InvestorMentor>();
+  private sponsorships = new Map<string, Sponsorship>();
 
   async getUser(id: string): Promise<User | undefined> {
     return this.users.get(id);
@@ -76,6 +88,28 @@ export class MemStorage implements IStorage {
 
   async getRegistrations(): Promise<Registration[]> {
     return Array.from(this.registrations.values());
+  }
+
+  async createInvestorMentor(insertData: InsertInvestorMentor): Promise<InvestorMentor> {
+    const id = randomUUID();
+    const investorMentor: InvestorMentor = { ...insertData, id };
+    this.investorMentors.set(id, investorMentor);
+    return investorMentor;
+  }
+
+  async getInvestorMentors(): Promise<InvestorMentor[]> {
+    return Array.from(this.investorMentors.values());
+  }
+
+  async createSponsorship(insertData: InsertSponsorship): Promise<Sponsorship> {
+    const id = randomUUID();
+    const sponsorship: Sponsorship = { ...insertData, id };
+    this.sponsorships.set(id, sponsorship);
+    return sponsorship;
+  }
+
+  async getSponsorships(): Promise<Sponsorship[]> {
+    return Array.from(this.sponsorships.values());
   }
 }
 

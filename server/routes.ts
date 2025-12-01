@@ -1,7 +1,7 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactSchema, insertRegistrationSchema } from "@shared/schema";
+import { insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
@@ -146,6 +146,72 @@ export async function registerRoutes(
       return res.json(registration);
     } catch (error) {
       console.error("Error fetching ticket:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/investor-mentor", async (req, res) => {
+    try {
+      const result = insertInvestorMentorSchema.safeParse(req.body);
+      
+      if (!result.success) {
+        const validationError = fromError(result.error);
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          error: validationError.toString() 
+        });
+      }
+      
+      const application = await storage.createInvestorMentor(result.data);
+      return res.status(201).json({ 
+        message: "Application submitted successfully", 
+        application 
+      });
+    } catch (error) {
+      console.error("Error creating investor/mentor application:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/investor-mentors", async (req, res) => {
+    try {
+      const applications = await storage.getInvestorMentors();
+      return res.json(applications);
+    } catch (error) {
+      console.error("Error fetching investor/mentors:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/sponsorship", async (req, res) => {
+    try {
+      const result = insertSponsorshipSchema.safeParse(req.body);
+      
+      if (!result.success) {
+        const validationError = fromError(result.error);
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          error: validationError.toString() 
+        });
+      }
+      
+      const inquiry = await storage.createSponsorship(result.data);
+      return res.status(201).json({ 
+        message: "Sponsorship inquiry submitted successfully", 
+        inquiry 
+      });
+    } catch (error) {
+      console.error("Error creating sponsorship inquiry:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/sponsorships", async (req, res) => {
+    try {
+      const sponsorships = await storage.getSponsorships();
+      return res.json(sponsorships);
+    } catch (error) {
+      console.error("Error fetching sponsorships:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });

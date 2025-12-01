@@ -79,3 +79,55 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+export const investorMentorApplications = pgTable("investor_mentor_applications", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  type: text("type").notNull(),
+  companyName: text("company_name"),
+  expertise: text("expertise"),
+  message: text("message"),
+});
+
+export const insertInvestorMentorSchema = createInsertSchema(investorMentorApplications).omit({
+  id: true,
+}).extend({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().optional(),
+  type: z.enum(["investor", "mentor"]),
+  companyName: z.string().optional(),
+  expertise: z.string().optional(),
+  message: z.string().optional(),
+});
+
+export type InsertInvestorMentor = z.infer<typeof insertInvestorMentorSchema>;
+export type InvestorMentor = typeof investorMentorApplications.$inferSelect;
+
+export const sponsorshipInquiries = pgTable("sponsorship_inquiries", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  companyName: text("company_name").notNull(),
+  contactPersonName: text("contact_person_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  sponsorshipLevel: text("sponsorship_level"),
+  industry: text("industry"),
+  message: text("message"),
+});
+
+export const insertSponsorshipSchema = createInsertSchema(sponsorshipInquiries).omit({
+  id: true,
+}).extend({
+  companyName: z.string().min(2, "Company name must be at least 2 characters"),
+  contactPersonName: z.string().min(2, "Contact person name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().optional(),
+  sponsorshipLevel: z.string().optional(),
+  industry: z.string().optional(),
+  message: z.string().optional(),
+});
+
+export type InsertSponsorship = z.infer<typeof insertSponsorshipSchema>;
+export type Sponsorship = typeof sponsorshipInquiries.$inferSelect;
