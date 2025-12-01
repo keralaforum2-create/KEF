@@ -205,43 +205,80 @@ export default function Home() {
 
       <section className="py-20 section-purple-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-serif text-4xl sm:text-5xl font-bold mb-8" data-testid="text-what-happens">
+          <div className="text-center mb-20">
+            <h2 className="font-serif text-4xl sm:text-5xl font-bold mb-8 text-gray-900" data-testid="text-what-happens">
               What Happens at KSF?
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 max-w-4xl mx-auto">
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover-elevate">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "hsl(0 100% 50%)" }}>
-                  <Presentation className="w-7 h-7 text-white" />
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-16">
+              KSF is built around powerful sessions and exciting contests that cover the full journey of a startup — from idea, to team, to market, to money.
+            </p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+              {/* Card 1 - Red */}
+              <div className="card-stagger-1 group relative bg-gradient-to-br from-red-50 to-red-100/50 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-red-100/50 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-red-200/0 via-transparent to-red-100/0 group-hover:from-red-200/10 group-hover:to-red-100/10 transition-all duration-300" />
+                <div className="relative z-10">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "hsl(0 100% 50%)" }}>
+                    <Presentation className="w-8 h-8 text-white" />
+                  </div>
+                  <p className="font-serif text-5xl font-bold text-red-600 mb-3">8</p>
+                  <p className="font-semibold text-lg text-gray-800 mb-2">Expert Sessions</p>
+                  <p className="text-sm text-gray-600">Theme-based masterclasses from industry leaders</p>
                 </div>
-                <p className="font-serif text-4xl font-bold text-primary mb-2">8</p>
-                <p className="font-semibold text-lg text-foreground">Expert Sessions</p>
-                <p className="text-sm text-muted-foreground mt-2">Theme-based masterclasses from industry leaders</p>
               </div>
-              
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover-elevate">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "hsl(45 100% 50%)" }}>
-                  <Lightbulb className="w-7 h-7 text-gray-900" />
+
+              {/* Card 2 - Yellow */}
+              <div className="card-stagger-2 group relative bg-gradient-to-br from-yellow-50 to-yellow-100/50 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-yellow-100/50 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-200/0 via-transparent to-yellow-100/0 group-hover:from-yellow-200/10 group-hover:to-yellow-100/10 transition-all duration-300" />
+                <div className="relative z-10">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "hsl(45 100% 50%)" }}>
+                    <Lightbulb className="w-8 h-8 text-gray-900" />
+                  </div>
+                  <p className="font-serif text-5xl font-bold text-yellow-600 mb-3">13</p>
+                  <p className="font-semibold text-lg text-gray-800 mb-2">Themes</p>
+                  <p className="text-sm text-gray-600">Diverse tracks covering all startup aspects</p>
                 </div>
-                <p className="font-serif text-4xl font-bold mb-2" style={{ color: "hsl(45 100% 40%)" }}>13</p>
-                <p className="font-semibold text-lg text-foreground">Themes Covered</p>
-                <p className="text-sm text-muted-foreground mt-2">From ideas to execution and everything in between</p>
               </div>
-              
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover-elevate">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: "hsl(174 100% 29%)" }}>
-                  <Award className="w-7 h-7 text-white" />
+
+              {/* Card 3 - Teal */}
+              <div className="card-stagger-3 group relative bg-gradient-to-br from-teal-50 to-teal-100/50 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-teal-100/50 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-teal-200/0 via-transparent to-teal-100/0 group-hover:from-teal-200/10 group-hover:to-teal-100/10 transition-all duration-300" />
+                <div className="relative z-10">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "hsl(174 100% 29%)" }}>
+                    <Award className="w-8 h-8 text-white" />
+                  </div>
+                  <p className="font-serif text-5xl font-bold text-teal-600 mb-3">7</p>
+                  <p className="font-semibold text-lg text-gray-800 mb-2">Contests</p>
+                  <p className="text-sm text-gray-600">Compete and win amazing prizes</p>
                 </div>
-                <p className="font-serif text-4xl font-bold mb-2" style={{ color: "hsl(174 100% 29%)" }}>7</p>
-                <p className="font-semibold text-lg text-foreground">Contests</p>
-                <p className="text-sm text-muted-foreground mt-2">Compete, showcase, and win amazing prizes</p>
+              </div>
+
+              {/* Card 4 - Purple */}
+              <div className="card-stagger-4 group relative bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-purple-100/50 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-200/0 via-transparent to-purple-100/0 group-hover:from-purple-200/10 group-hover:to-purple-100/10 transition-all duration-300" />
+                <div className="relative z-10">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "hsl(263 47% 35%)" }}>
+                    <Rocket className="w-8 h-8 text-white" />
+                  </div>
+                  <p className="font-serif text-5xl font-bold text-purple-600 mb-3">100</p>
+                  <p className="font-semibold text-lg text-gray-800 mb-2">Target Startups</p>
+                  <p className="text-sm text-gray-600">Goal to launch from this festival</p>
+                </div>
+              </div>
+
+              {/* Card 5 - Red (accent) */}
+              <div className="card-stagger-5 group relative bg-gradient-to-br from-rose-50 to-rose-100/50 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-rose-100/50 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-rose-200/0 via-transparent to-rose-100/0 group-hover:from-rose-200/10 group-hover:to-rose-100/10 transition-all duration-300" />
+                <div className="relative z-10">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "hsl(0 100% 50%)" }}>
+                    <Briefcase className="w-8 h-8 text-white" />
+                  </div>
+                  <p className="font-serif text-5xl font-bold text-rose-600 mb-3">2</p>
+                  <p className="font-semibold text-lg text-gray-800 mb-2">Mega Days</p>
+                  <p className="text-sm text-gray-600">7-8 January 2026 at Calicut Beach</p>
+                </div>
               </div>
             </div>
-            
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-              KSF is built around powerful sessions and exciting contests that cover the full journey of a 
-              startup — from idea, to team, to market, to money.
-            </p>
           </div>
           
           <div className="flex justify-center">
