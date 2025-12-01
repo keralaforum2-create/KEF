@@ -2,57 +2,57 @@ import { motion, useInView, useScroll, useTransform, Variants } from "framer-mot
 import { useRef, useState, ReactNode } from "react";
 
 export const fadeUpVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 15 },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.25, ease: "easeOut" }
   }
 };
 
 export const fadeDownVariants: Variants = {
-  hidden: { opacity: 0, y: -30 },
+  hidden: { opacity: 0, y: -15 },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.25, ease: "easeOut" }
   }
 };
 
 export const fadeLeftVariants: Variants = {
-  hidden: { opacity: 0, x: -30 },
+  hidden: { opacity: 0, x: -15 },
   visible: { 
     opacity: 1, 
     x: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.25, ease: "easeOut" }
   }
 };
 
 export const fadeRightVariants: Variants = {
-  hidden: { opacity: 0, x: 30 },
+  hidden: { opacity: 0, x: 15 },
   visible: { 
     opacity: 1, 
     x: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.25, ease: "easeOut" }
   }
 };
 
 export const scaleUpVariants: Variants = {
-  hidden: { opacity: 0, scale: 0.9 },
+  hidden: { opacity: 0, scale: 0.95 },
   visible: { 
     opacity: 1, 
     scale: 1,
-    transition: { duration: 0.5, ease: "easeOut" }
+    transition: { duration: 0.2, ease: "easeOut" }
   }
 };
 
 export const rotateInVariants: Variants = {
-  hidden: { opacity: 0, rotate: -5, scale: 0.95 },
+  hidden: { opacity: 0, rotate: -3, scale: 0.97 },
   visible: { 
     opacity: 1, 
     rotate: 0,
     scale: 1,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.25, ease: "easeOut" }
   }
 };
 
@@ -61,18 +61,18 @@ export const staggerContainerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1
+      staggerChildren: 0.03,
+      delayChildren: 0.02
     }
   }
 };
 
 export const staggerItemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 10 },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
+    transition: { duration: 0.2, ease: "easeOut" }
   }
 };
 
@@ -103,7 +103,7 @@ interface ScrollAnimationProps {
 
 export function ScrollFadeUp({ children, className = "", delay = 0 }: ScrollAnimationProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
 
   return (
     <motion.div
@@ -111,11 +111,11 @@ export function ScrollFadeUp({ children, className = "", delay = 0 }: ScrollAnim
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={{
-        hidden: { opacity: 0, y: 40 },
+        hidden: { opacity: 0, y: 20 },
         visible: { 
           opacity: 1, 
           y: 0,
-          transition: { duration: 0.6, ease: "easeOut", delay }
+          transition: { duration: 0.25, ease: "easeOut", delay: delay * 0.5 }
         }
       }}
       className={className}
@@ -127,7 +127,7 @@ export function ScrollFadeUp({ children, className = "", delay = 0 }: ScrollAnim
 
 export function ScrollFadeDown({ children, className = "", delay = 0 }: ScrollAnimationProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
 
   return (
     <motion.div
@@ -135,11 +135,11 @@ export function ScrollFadeDown({ children, className = "", delay = 0 }: ScrollAn
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={{
-        hidden: { opacity: 0, y: -40 },
+        hidden: { opacity: 0, y: -20 },
         visible: { 
           opacity: 1, 
           y: 0,
-          transition: { duration: 0.6, ease: "easeOut", delay }
+          transition: { duration: 0.25, ease: "easeOut", delay: delay * 0.5 }
         }
       }}
       className={className}
@@ -151,7 +151,7 @@ export function ScrollFadeDown({ children, className = "", delay = 0 }: ScrollAn
 
 export function ScrollFadeLeft({ children, className = "", delay = 0 }: ScrollAnimationProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
 
   return (
     <motion.div
@@ -159,11 +159,11 @@ export function ScrollFadeLeft({ children, className = "", delay = 0 }: ScrollAn
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={{
-        hidden: { opacity: 0, x: -40 },
+        hidden: { opacity: 0, x: -20 },
         visible: { 
           opacity: 1, 
           x: 0,
-          transition: { duration: 0.6, ease: "easeOut", delay }
+          transition: { duration: 0.25, ease: "easeOut", delay: delay * 0.5 }
         }
       }}
       className={className}
@@ -175,7 +175,7 @@ export function ScrollFadeLeft({ children, className = "", delay = 0 }: ScrollAn
 
 export function ScrollFadeRight({ children, className = "", delay = 0 }: ScrollAnimationProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
 
   return (
     <motion.div
@@ -183,11 +183,11 @@ export function ScrollFadeRight({ children, className = "", delay = 0 }: ScrollA
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={{
-        hidden: { opacity: 0, x: 40 },
+        hidden: { opacity: 0, x: 20 },
         visible: { 
           opacity: 1, 
           x: 0,
-          transition: { duration: 0.6, ease: "easeOut", delay }
+          transition: { duration: 0.25, ease: "easeOut", delay: delay * 0.5 }
         }
       }}
       className={className}
@@ -199,7 +199,7 @@ export function ScrollFadeRight({ children, className = "", delay = 0 }: ScrollA
 
 export function ScrollScale({ children, className = "", delay = 0 }: ScrollAnimationProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
 
   return (
     <motion.div
@@ -207,11 +207,11 @@ export function ScrollScale({ children, className = "", delay = 0 }: ScrollAnima
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={{
-        hidden: { opacity: 0, scale: 0.9 },
+        hidden: { opacity: 0, scale: 0.95 },
         visible: { 
           opacity: 1, 
           scale: 1,
-          transition: { duration: 0.5, ease: "easeOut", delay }
+          transition: { duration: 0.2, ease: "easeOut", delay: delay * 0.5 }
         }
       }}
       className={className}
@@ -227,9 +227,9 @@ interface StaggerContainerProps {
   staggerDelay?: number;
 }
 
-export function StaggerContainer({ children, className = "", staggerDelay = 0.05 }: StaggerContainerProps) {
+export function StaggerContainer({ children, className = "", staggerDelay = 0.02 }: StaggerContainerProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
 
   return (
     <motion.div
@@ -242,7 +242,7 @@ export function StaggerContainer({ children, className = "", staggerDelay = 0.05
           opacity: 1,
           transition: {
             staggerChildren: staggerDelay,
-            delayChildren: 0.1
+            delayChildren: 0.02
           }
         }
       }}
@@ -257,11 +257,11 @@ export function StaggerItem({ children, className = "" }: { children: ReactNode;
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: 20 },
+        hidden: { opacity: 0, y: 10 },
         visible: { 
           opacity: 1, 
           y: 0,
-          transition: { duration: 0.5, ease: "easeOut" }
+          transition: { duration: 0.2, ease: "easeOut" }
         }
       }}
       className={className}
@@ -274,9 +274,9 @@ export function StaggerItem({ children, className = "" }: { children: ReactNode;
 export function HeroAnimation({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+      initial={{ opacity: 0, y: 15, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
       className={className}
     >
       {children}
@@ -284,12 +284,12 @@ export function HeroAnimation({ children, className = "" }: { children: ReactNod
   );
 }
 
-export function HeroSubAnimation({ children, className = "", delay = 0.2 }: { children: ReactNode; className?: string; delay?: number }) {
+export function HeroSubAnimation({ children, className = "", delay = 0.1 }: { children: ReactNode; className?: string; delay?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.97 }}
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.7, ease: "easeOut", delay }}
+      transition={{ duration: 0.25, ease: "easeOut", delay }}
       className={className}
     >
       {children}
@@ -321,14 +321,14 @@ export function PulsingGlow({ children, className = "" }: { children: ReactNode;
 
 export function RotateIn({ children, className = "", delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, rotate: -5, scale: 0.9 }}
-      animate={isInView ? { opacity: 1, rotate: 0, scale: 1 } : { opacity: 0, rotate: -5, scale: 0.9 }}
-      transition={{ duration: 0.6, ease: "easeOut", delay }}
+      initial={{ opacity: 0, rotate: -2, scale: 0.95 }}
+      animate={isInView ? { opacity: 1, rotate: 0, scale: 1 } : { opacity: 0, rotate: -2, scale: 0.95 }}
+      transition={{ duration: 0.25, ease: "easeOut", delay: delay * 0.5 }}
       className={className}
     >
       {children}
@@ -345,43 +345,23 @@ interface CardWaveProps {
 
 export function CardWave({ children, className = "", index, baseDelay = 0 }: CardWaveProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const [entranceComplete, setEntranceComplete] = useState(false);
+  const isInView = useInView(ref, { once: true, margin: "-30px" });
   
-  const waveDelay = baseDelay + (index * 0.12);
-  const phaseOffset = index * 0.4;
-  const entranceDuration = 0.6;
+  const waveDelay = baseDelay + (index * 0.03);
 
   return (
     <motion.div
       ref={ref}
       className={className}
-      initial={{ opacity: 0, y: 60, scale: 0.95 }}
-      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 60, scale: 0.95 }}
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
+      animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 20, scale: 0.98 }}
       transition={{
-        opacity: { duration: entranceDuration, delay: waveDelay, ease: "easeOut" },
-        y: { duration: entranceDuration, delay: waveDelay, ease: [0.22, 1, 0.36, 1] },
-        scale: { duration: entranceDuration, delay: waveDelay, ease: "easeOut" }
-      }}
-      onAnimationComplete={() => {
-        if (isInView) setEntranceComplete(true);
+        opacity: { duration: 0.2, delay: waveDelay, ease: "easeOut" },
+        y: { duration: 0.2, delay: waveDelay, ease: "easeOut" },
+        scale: { duration: 0.2, delay: waveDelay, ease: "easeOut" }
       }}
     >
-      <motion.div
-        animate={entranceComplete ? { 
-          y: [0, -5, 0, 3, 0]
-        } : {}}
-        transition={entranceComplete ? {
-          duration: 2.5,
-          delay: phaseOffset,
-          times: [0, 0.25, 0.5, 0.75, 1],
-          ease: "easeInOut",
-          repeat: Infinity,
-          repeatType: "loop"
-        } : {}}
-      >
-        {children}
-      </motion.div>
+      {children}
     </motion.div>
   );
 }
