@@ -1,12 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 import { 
   Brain,
   Trophy,
   Camera,
   Mic,
-  Users
+  Users,
+  ArrowRight
 } from "lucide-react";
 import {
   ScrollFadeUp,
@@ -73,27 +75,33 @@ export default function Contests() {
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto" staggerDelay={0.08}>
             {contests.map((contest) => (
               <StaggerItem key={contest.id}>
-                <motion.div whileHover={{ scale: 1.03, y: -5 }} transition={{ duration: 0.2 }}>
-                  <Card className="h-full" data-testid={`card-contest-${contest.id}`}>
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <motion.div 
-                          className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0"
-                          whileHover={{ rotate: 10, scale: 1.1 }}
-                        >
-                          <contest.icon className="w-7 h-7 text-primary" />
-                        </motion.div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex flex-wrap items-center gap-2 mb-2">
-                            <h3 className="font-semibold text-lg">{contest.title}</h3>
-                            <Badge variant="outline" className="text-xs">{contest.badge}</Badge>
+                <Link href={`/participate?contest=${encodeURIComponent(contest.title)}#register`}>
+                  <motion.div whileHover={{ scale: 1.03, y: -5 }} transition={{ duration: 0.2 }} className="cursor-pointer">
+                    <Card className="h-full group" data-testid={`card-contest-${contest.id}`}>
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <motion.div 
+                            className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors"
+                            whileHover={{ rotate: 10, scale: 1.1 }}
+                          >
+                            <contest.icon className="w-7 h-7 text-primary" />
+                          </motion.div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center gap-2 mb-2">
+                              <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">{contest.title}</h3>
+                              <Badge variant="outline" className="text-xs">{contest.badge}</Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground">{contest.description}</p>
+                            <div className="flex items-center gap-1 mt-3 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                              <span>Register Now</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </div>
                           </div>
-                          <p className="text-sm text-muted-foreground">{contest.description}</p>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </Link>
               </StaggerItem>
             ))}
           </StaggerContainer>

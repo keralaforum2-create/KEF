@@ -1,8 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { useLocation } from "wouter";
+import { useLocation, useSearch } from "wouter";
 import { z } from "zod";
 import QRCode from "qrcode";
 import { motion, AnimatePresence } from "framer-motion";
@@ -78,13 +78,10 @@ const registrationSchema = z.object({
 type RegistrationFormData = z.infer<typeof registrationSchema>;
 
 const contests = [
-  "StartUp Pitch",
-  "Business Plan",
-  "Innovation Challenge",
-  "Social Entrepreneurship",
-  "Tech Innovation",
-  "Green Innovation",
-  "Student Entrepreneur",
+  "Business Quiz – School Edition",
+  "The Pitch Room",
+  "Camera Craft – Photo & Video Challenge",
+  "Just a Minute (JAM)",
 ];
 
 const benefits = [
@@ -131,6 +128,7 @@ const formFieldVariants = {
 export default function Participate() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const searchString = useSearch();
   const [registrationId, setRegistrationId] = useState<string | null>(null);
   const [qrCode, setQrCode] = useState<string | null>(null);
   
@@ -154,10 +152,28 @@ export default function Participate() {
     },
   });
 
+  useEffect(() => {
+    const params = new URLSearchParams(searchString);
+    const contestParam = params.get("contest");
+    if (contestParam) {
+      const decodedContest = decodeURIComponent(contestParam);
+      if (contests.includes(decodedContest)) {
+        form.setValue("registrationType", "contest");
+        form.setValue("contestName", decodedContest);
+        setTimeout(() => {
+          const registerSection = document.getElementById("register");
+          if (registerSection) {
+            registerSection.scrollIntoView({ behavior: "smooth" });
+          }
+        }, 100);
+      }
+    }
+  }, [searchString, form]);
+
   const registrationType = form.watch("registrationType");
   const contestName = form.watch("contestName");
   const participantType = form.watch("participantType");
-  const isStartupPitch = contestName === "StartUp Pitch";
+  const isPitchRoom = contestName === "The Pitch Room";
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -637,7 +653,7 @@ export default function Participate() {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel>Select Contest</FormLabel>
-                                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <Select onValueChange={field.onChange} value={field.value}>
                                     <FormControl>
                                       <SelectTrigger data-testid="select-contest">
                                         <SelectValue placeholder="Select a contest" />
@@ -660,7 +676,7 @@ export default function Participate() {
                       </AnimatePresence>
 
                       <AnimatePresence>
-                        {registrationType === "contest" && isStartupPitch && (
+                        {registrationType === "contest" && isPitchRoom && (
                           <motion.div 
                             className="border rounded-lg p-4 bg-muted/20"
                             initial={{ opacity: 0, height: 0 }}
@@ -668,7 +684,7 @@ export default function Participate() {
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <p className="text-sm font-semibold mb-4">Team Members (for StartUp Pitch)</p>
+                            <p className="text-sm font-semibold mb-4">Team Members (for The Pitch Room)</p>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <FormField
                                 control={form.control}
