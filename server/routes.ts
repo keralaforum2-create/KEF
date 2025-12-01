@@ -6,6 +6,7 @@ import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import { sendRegistrationEmails } from "./email";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 
@@ -128,6 +129,15 @@ export async function registerRoutes(
       }
       
       const registration = await storage.createRegistration(result.data);
+      
+      const protocol = req.headers['x-forwarded-proto'] || 'https';
+      const host = req.headers['host'] || 'localhost:5000';
+      const baseUrl = `${protocol}://${host}`;
+      
+      sendRegistrationEmails(registration, baseUrl).catch((err) => {
+        console.error('Failed to send registration emails:', err);
+      });
+      
       return res.status(201).json({ 
         message: "Registration successful", 
         registration 

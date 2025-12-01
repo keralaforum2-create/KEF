@@ -210,8 +210,31 @@ Preferred communication style: Simple, everyday language.
 
 **Rationale**: Dependencies are carefully chosen to balance functionality, bundle size, and developer experience. Radix UI provides accessible foundations, while Tailwind enables rapid styling. Drizzle ORM offers better type safety than traditional ORMs. Vite and esbuild provide exceptional build performance. The stack is modern, well-maintained, and production-ready.
 
+## Email Notifications
+
+The application includes email notification functionality using Resend:
+
+**Secrets Required:**
+- `RESEND_API_KEY`: API key from Resend for sending transactional emails
+
+**Email Functionality:**
+1. **Ticket Email to Registrant**: After successful registration, the participant receives their ticket with registration details and a link to view/download their full ticket
+2. **Admin Notification**: All registration details are sent to keralastartupfest@gmail.com
+3. **Pitch Start Idea Email**: For "The Pitch Room" contest registrations, a special email with "PITCH START IDEA" heading is sent to the admin containing all pitch-related information
+
+**Email Templates** (defined in `server/email.ts`):
+- Beautiful HTML email templates with consistent branding
+- Mobile-responsive design
+- Includes registration ID, participant details, and event information
+
+**Note**: Emails are sent from `onboarding@resend.dev` (Resend's shared sending domain). To use a custom domain like `@keralastartupfest.com`, verify the domain in Resend dashboard.
+
 ## Recent Changes
 
+- Added email notification system using Resend API
+- Sends ticket confirmation to registrants upon registration
+- Sends registration details to admin email (keralastartupfest@gmail.com)
+- Special "Pitch Start Idea" email for Pitch Room contest submissions
 - Added complete 6-page website with Navigation and Footer components
 - Implemented registration form with full validation on Participate page
 - Implemented contact form with validation on Contact page
