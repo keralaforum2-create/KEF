@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -73,6 +74,35 @@ const registrationSchema = z.object({
   teamMember1Name: z.string().optional(),
   teamMember2Name: z.string().optional(),
   paymentScreenshot: z.any().optional(),
+  pitchStartupName: z.string().optional(),
+  pitchElevatorPitch: z.string().max(300, "Elevator pitch must be under 50 words").optional(),
+  pitchProblemStatement: z.string().optional(),
+  pitchProposedSolution: z.string().optional(),
+  pitchProductName: z.string().optional(),
+  pitchProductDescription: z.string().optional(),
+  pitchPricingModel: z.string().optional(),
+  pitchCostPerUnit: z.string().optional(),
+  pitchSellingPrice: z.string().optional(),
+  pitchProfitPerUnit: z.string().optional(),
+  pitchCustomerAcquisitionCost: z.string().optional(),
+  pitchRevenuePerUser: z.string().optional(),
+  pitchTargetCustomers: z.string().optional(),
+  pitchMarketSize: z.string().optional(),
+  pitchCompetitorAnalysis: z.string().optional(),
+  pitchRevenueModel: z.string().optional(),
+  pitchRevenueStreams: z.array(z.string()).optional(),
+  pitchYear1Revenue: z.string().optional(),
+  pitchYear2Revenue: z.string().optional(),
+  pitchYear3Revenue: z.string().optional(),
+  pitchYear4Revenue: z.string().optional(),
+  pitchYear5Revenue: z.string().optional(),
+  pitchExpectedRoi: z.string().optional(),
+  pitchBreakevenPeriod: z.string().optional(),
+  pitchFeasibilityReasons: z.string().optional(),
+  pitchCurrentStage: z.string().optional(),
+  pitchSupportingFiles: z.any().optional(),
+  pitchDemoVideoLink: z.string().optional(),
+  pitchDeclarationConfirmed: z.boolean().optional(),
 });
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
@@ -149,6 +179,35 @@ export default function Participate() {
       teamMember1Name: "",
       teamMember2Name: "",
       paymentScreenshot: undefined,
+      pitchStartupName: "",
+      pitchElevatorPitch: "",
+      pitchProblemStatement: "",
+      pitchProposedSolution: "",
+      pitchProductName: "",
+      pitchProductDescription: "",
+      pitchPricingModel: "",
+      pitchCostPerUnit: "",
+      pitchSellingPrice: "",
+      pitchProfitPerUnit: "",
+      pitchCustomerAcquisitionCost: "",
+      pitchRevenuePerUser: "",
+      pitchTargetCustomers: "",
+      pitchMarketSize: "",
+      pitchCompetitorAnalysis: "",
+      pitchRevenueModel: "",
+      pitchRevenueStreams: [],
+      pitchYear1Revenue: "",
+      pitchYear2Revenue: "",
+      pitchYear3Revenue: "",
+      pitchYear4Revenue: "",
+      pitchYear5Revenue: "",
+      pitchExpectedRoi: "",
+      pitchBreakevenPeriod: "",
+      pitchFeasibilityReasons: "",
+      pitchCurrentStage: "",
+      pitchSupportingFiles: undefined,
+      pitchDemoVideoLink: "",
+      pitchDeclarationConfirmed: false,
     },
   });
 
@@ -191,6 +250,13 @@ export default function Participate() {
     document.body.removeChild(link);
   };
 
+  const handlePitchFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      form.setValue("pitchSupportingFiles", file);
+    }
+  };
+
   const mutation = useMutation({
     mutationFn: async (data: RegistrationFormData) => {
       const formData = new FormData();
@@ -210,6 +276,39 @@ export default function Participate() {
       
       if (data.paymentScreenshot instanceof File) {
         formData.append("paymentScreenshot", data.paymentScreenshot);
+      }
+
+      formData.append("pitchStartupName", data.pitchStartupName || "");
+      formData.append("pitchElevatorPitch", data.pitchElevatorPitch || "");
+      formData.append("pitchProblemStatement", data.pitchProblemStatement || "");
+      formData.append("pitchProposedSolution", data.pitchProposedSolution || "");
+      formData.append("pitchProductName", data.pitchProductName || "");
+      formData.append("pitchProductDescription", data.pitchProductDescription || "");
+      formData.append("pitchPricingModel", data.pitchPricingModel || "");
+      formData.append("pitchCostPerUnit", data.pitchCostPerUnit || "");
+      formData.append("pitchSellingPrice", data.pitchSellingPrice || "");
+      formData.append("pitchProfitPerUnit", data.pitchProfitPerUnit || "");
+      formData.append("pitchCustomerAcquisitionCost", data.pitchCustomerAcquisitionCost || "");
+      formData.append("pitchRevenuePerUser", data.pitchRevenuePerUser || "");
+      formData.append("pitchTargetCustomers", data.pitchTargetCustomers || "");
+      formData.append("pitchMarketSize", data.pitchMarketSize || "");
+      formData.append("pitchCompetitorAnalysis", data.pitchCompetitorAnalysis || "");
+      formData.append("pitchRevenueModel", data.pitchRevenueModel || "");
+      formData.append("pitchRevenueStreams", JSON.stringify(data.pitchRevenueStreams || []));
+      formData.append("pitchYear1Revenue", data.pitchYear1Revenue || "");
+      formData.append("pitchYear2Revenue", data.pitchYear2Revenue || "");
+      formData.append("pitchYear3Revenue", data.pitchYear3Revenue || "");
+      formData.append("pitchYear4Revenue", data.pitchYear4Revenue || "");
+      formData.append("pitchYear5Revenue", data.pitchYear5Revenue || "");
+      formData.append("pitchExpectedRoi", data.pitchExpectedRoi || "");
+      formData.append("pitchBreakevenPeriod", data.pitchBreakevenPeriod || "");
+      formData.append("pitchFeasibilityReasons", data.pitchFeasibilityReasons || "");
+      formData.append("pitchCurrentStage", data.pitchCurrentStage || "");
+      formData.append("pitchDemoVideoLink", data.pitchDemoVideoLink || "");
+      formData.append("pitchDeclarationConfirmed", data.pitchDeclarationConfirmed ? "true" : "false");
+      
+      if (data.pitchSupportingFiles instanceof File) {
+        formData.append("pitchSupportingFiles", data.pitchSupportingFiles);
       }
       
       return fetch("/api/register", {
@@ -678,48 +777,709 @@ export default function Participate() {
                       <AnimatePresence>
                         {registrationType === "contest" && isPitchRoom && (
                           <motion.div 
-                            className="border rounded-lg p-4 bg-muted/20"
+                            className="border rounded-lg p-4 sm:p-6 bg-muted/20 space-y-8"
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <p className="text-sm font-semibold mb-4">Team Members (for The Pitch Room)</p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              <FormField
-                                control={form.control}
-                                name="teamMember1Name"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Team Member 1 Name</FormLabel>
-                                    <FormControl>
-                                      <Input 
-                                        placeholder="First team member name" 
-                                        {...field} 
-                                        data-testid="input-team-member-1"
+                            <div className="text-center mb-6">
+                              <h3 className="font-serif text-xl font-bold text-primary mb-2">THE PITCH BOX - Idea Submission Form</h3>
+                              <p className="text-sm text-muted-foreground">Submit only realistic, execution-ready startup ideas.</p>
+                            </div>
+
+                            <div className="space-y-6">
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                  <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">A</span>
+                                  Basic Information
+                                </h4>
+                                <div className="space-y-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchStartupName"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Proposed Startup / Idea Name</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="Enter your startup/idea name" 
+                                            {...field} 
+                                            data-testid="input-pitch-startup-name"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchElevatorPitch"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Elevator Pitch (Max 50 words)</FormLabel>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="Describe your idea in 50 words or less" 
+                                            {...field} 
+                                            className="min-h-[80px]"
+                                            data-testid="input-pitch-elevator"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                  <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">B</span>
+                                  Problem & Solution
+                                </h4>
+                                <div className="space-y-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchProblemStatement"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Problem Statement</FormLabel>
+                                        <p className="text-xs text-muted-foreground mb-2">Describe: Who faces this problem? Why does this require a solution?</p>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="Describe the problem you're solving..." 
+                                            {...field} 
+                                            className="min-h-[100px]"
+                                            data-testid="input-pitch-problem"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchProposedSolution"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Proposed Solution</FormLabel>
+                                        <p className="text-xs text-muted-foreground mb-2">Explain: How your product/service solves the problem, why it is practical and doable, why people will use it</p>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="Describe your solution..." 
+                                            {...field} 
+                                            className="min-h-[100px]"
+                                            data-testid="input-pitch-solution"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                  <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">C</span>
+                                  Product Details
+                                </h4>
+                                <div className="space-y-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchProductName"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Proposed Product/Service Name</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="Your product/service name" 
+                                            {...field} 
+                                            data-testid="input-pitch-product-name"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchProductDescription"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Product Description</FormLabel>
+                                        <p className="text-xs text-muted-foreground mb-2">Explain: Key features, how it works, prototype available? (Yes/No)</p>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="Describe your product/service in detail..." 
+                                            {...field} 
+                                            className="min-h-[100px]"
+                                            data-testid="input-pitch-product-desc"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  
+                                  <div className="bg-background/50 p-4 rounded-lg space-y-4">
+                                    <p className="font-medium text-sm">Pricing Plan</p>
+                                    <FormField
+                                      control={form.control}
+                                      name="pitchPricingModel"
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormLabel>Pricing Model (for Services/Apps)</FormLabel>
+                                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                              <SelectTrigger data-testid="select-pitch-pricing">
+                                                <SelectValue placeholder="Select pricing model" />
+                                              </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                              <SelectItem value="subscription">Subscription</SelectItem>
+                                              <SelectItem value="freemium">Freemium</SelectItem>
+                                              <SelectItem value="one-time-fee">One-time fee</SelectItem>
+                                              <SelectItem value="product-sales">Product Sales</SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                      <FormField
+                                        control={form.control}
+                                        name="pitchCostPerUnit"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel>Cost per unit (if applicable)</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="number" 
+                                                placeholder="0" 
+                                                {...field} 
+                                                data-testid="input-pitch-cost"
+                                              />
+                                            </FormControl>
+                                            <FormMessage />
+                                          </FormItem>
+                                        )}
                                       />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              <FormField
-                                control={form.control}
-                                name="teamMember2Name"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Team Member 2 Name</FormLabel>
-                                    <FormControl>
-                                      <Input 
-                                        placeholder="Second team member name" 
-                                        {...field} 
-                                        data-testid="input-team-member-2"
+                                      <FormField
+                                        control={form.control}
+                                        name="pitchSellingPrice"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel>Selling price</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="number" 
+                                                placeholder="0" 
+                                                {...field} 
+                                                data-testid="input-pitch-selling"
+                                              />
+                                            </FormControl>
+                                            <FormMessage />
+                                          </FormItem>
+                                        )}
                                       />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
+                                      <FormField
+                                        control={form.control}
+                                        name="pitchProfitPerUnit"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel>Expected profit per unit</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="number" 
+                                                placeholder="0" 
+                                                {...field} 
+                                                data-testid="input-pitch-profit"
+                                              />
+                                            </FormControl>
+                                            <FormMessage />
+                                          </FormItem>
+                                        )}
+                                      />
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                      <FormField
+                                        control={form.control}
+                                        name="pitchCustomerAcquisitionCost"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel>Customer acquisition cost (if known)</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="number" 
+                                                placeholder="0" 
+                                                {...field} 
+                                                data-testid="input-pitch-cac"
+                                              />
+                                            </FormControl>
+                                            <FormMessage />
+                                          </FormItem>
+                                        )}
+                                      />
+                                      <FormField
+                                        control={form.control}
+                                        name="pitchRevenuePerUser"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel>Expected revenue per user/month</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="number" 
+                                                placeholder="0" 
+                                                {...field} 
+                                                data-testid="input-pitch-revenue-user"
+                                              />
+                                            </FormControl>
+                                            <FormMessage />
+                                          </FormItem>
+                                        )}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                  <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">D</span>
+                                  Market Details
+                                </h4>
+                                <div className="space-y-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchTargetCustomers"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Target Customers</FormLabel>
+                                        <p className="text-xs text-muted-foreground mb-2">Specify: Age group, Category (students, parents, businesses, etc.), Region (Kerala / India / Global), Why they will buy it</p>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="Describe your target customers..." 
+                                            {...field} 
+                                            className="min-h-[100px]"
+                                            data-testid="input-pitch-target"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchMarketSize"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Market Size (Basic Approximation)</FormLabel>
+                                        <p className="text-xs text-muted-foreground mb-2">Give simple calculations or estimates</p>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="Provide your market size estimates..." 
+                                            {...field} 
+                                            className="min-h-[80px]"
+                                            data-testid="input-pitch-market"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                  <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">E</span>
+                                  Competition & Uniqueness
+                                </h4>
+                                <FormField
+                                  control={form.control}
+                                  name="pitchCompetitorAnalysis"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Competitor Analysis</FormLabel>
+                                      <p className="text-xs text-muted-foreground mb-2">Submit: At least 1 competitor, what they do, what you do better</p>
+                                      <FormControl>
+                                        <Textarea 
+                                          placeholder="Describe your competitors and your competitive advantage..." 
+                                          {...field} 
+                                          className="min-h-[100px]"
+                                          data-testid="input-pitch-competitor"
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                  <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">F</span>
+                                  Execution Details
+                                </h4>
+                                <div className="space-y-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchRevenueStreams"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Revenue Model - Choose your revenue stream(s)</FormLabel>
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-2">
+                                          {["Product sales", "Subscription", "Commission", "Franchise", "Service-based", "B2B / B2C"].map((stream) => (
+                                            <div key={stream} className="flex items-center space-x-2">
+                                              <Checkbox
+                                                id={`stream-${stream}`}
+                                                checked={(field.value || []).includes(stream)}
+                                                onCheckedChange={(checked) => {
+                                                  const current = field.value || [];
+                                                  if (checked) {
+                                                    field.onChange([...current, stream]);
+                                                  } else {
+                                                    field.onChange(current.filter((s: string) => s !== stream));
+                                                  }
+                                                }}
+                                                data-testid={`checkbox-stream-${stream.toLowerCase().replace(/\s+/g, '-')}`}
+                                              />
+                                              <label
+                                                htmlFor={`stream-${stream}`}
+                                                className="text-sm font-medium leading-none cursor-pointer"
+                                              >
+                                                {stream}
+                                              </label>
+                                            </div>
+                                          ))}
+                                        </div>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchRevenueModel"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Explain your revenue model</FormLabel>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="Explain how you will generate revenue..." 
+                                            {...field} 
+                                            className="min-h-[80px]"
+                                            data-testid="input-pitch-revenue-model"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  
+                                  <div className="bg-background/50 p-4 rounded-lg space-y-4">
+                                    <p className="font-medium text-sm">Expected ROI (5-Year Projection)</p>
+                                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                                      <FormField
+                                        control={form.control}
+                                        name="pitchYear1Revenue"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel className="text-xs">Year 1</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="number" 
+                                                placeholder="0" 
+                                                {...field} 
+                                                data-testid="input-pitch-year1"
+                                              />
+                                            </FormControl>
+                                          </FormItem>
+                                        )}
+                                      />
+                                      <FormField
+                                        control={form.control}
+                                        name="pitchYear2Revenue"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel className="text-xs">Year 2</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="number" 
+                                                placeholder="0" 
+                                                {...field} 
+                                                data-testid="input-pitch-year2"
+                                              />
+                                            </FormControl>
+                                          </FormItem>
+                                        )}
+                                      />
+                                      <FormField
+                                        control={form.control}
+                                        name="pitchYear3Revenue"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel className="text-xs">Year 3</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="number" 
+                                                placeholder="0" 
+                                                {...field} 
+                                                data-testid="input-pitch-year3"
+                                              />
+                                            </FormControl>
+                                          </FormItem>
+                                        )}
+                                      />
+                                      <FormField
+                                        control={form.control}
+                                        name="pitchYear4Revenue"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel className="text-xs">Year 4</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="number" 
+                                                placeholder="0" 
+                                                {...field} 
+                                                data-testid="input-pitch-year4"
+                                              />
+                                            </FormControl>
+                                          </FormItem>
+                                        )}
+                                      />
+                                      <FormField
+                                        control={form.control}
+                                        name="pitchYear5Revenue"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel className="text-xs">Year 5</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="number" 
+                                                placeholder="0" 
+                                                {...field} 
+                                                data-testid="input-pitch-year5"
+                                              />
+                                            </FormControl>
+                                          </FormItem>
+                                        )}
+                                      />
+                                    </div>
+                                    <FormField
+                                      control={form.control}
+                                      name="pitchExpectedRoi"
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormLabel>Expected ROI %</FormLabel>
+                                          <FormControl>
+                                            <Input 
+                                              placeholder="e.g., 150%" 
+                                              {...field} 
+                                              data-testid="input-pitch-roi"
+                                            />
+                                          </FormControl>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+                                  </div>
+
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchBreakevenPeriod"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Break-even Period</FormLabel>
+                                        <p className="text-xs text-muted-foreground mb-2">Explain how long to recover initial investment</p>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="e.g., 18 months" 
+                                            {...field} 
+                                            data-testid="input-pitch-breakeven"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                  <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">G</span>
+                                  Reality Check & Feasibility
+                                </h4>
+                                <div className="space-y-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchFeasibilityReasons"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Why This Idea Can Become a Real Startup</FormLabel>
+                                        <p className="text-xs text-muted-foreground mb-2">Provide 5 reasons minimum</p>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="1. Reason one...&#10;2. Reason two...&#10;3. Reason three...&#10;4. Reason four...&#10;5. Reason five..." 
+                                            {...field} 
+                                            className="min-h-[120px]"
+                                            data-testid="input-pitch-feasibility"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchCurrentStage"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Current Stage of Idea</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                          <FormControl>
+                                            <SelectTrigger data-testid="select-pitch-stage">
+                                              <SelectValue placeholder="Select current stage" />
+                                            </SelectTrigger>
+                                          </FormControl>
+                                          <SelectContent>
+                                            <SelectItem value="concept-only">Concept only</SelectItem>
+                                            <SelectItem value="sketch-prototype">Sketch / prototype ready</SelectItem>
+                                            <SelectItem value="early-testing">Early testing done</SelectItem>
+                                            <SelectItem value="selling-small">Selling in small scale</SelectItem>
+                                            <SelectItem value="generating-revenue">Generating small revenue</SelectItem>
+                                          </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4">Upload Supporting Files (Optional)</h4>
+                                <p className="text-xs text-muted-foreground mb-4">Prototype images, UI screens, Demo video link, Market validation</p>
+                                <div className="space-y-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchSupportingFiles"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Supporting Files</FormLabel>
+                                        <FormControl>
+                                          <div className="relative">
+                                            <input
+                                              type="file"
+                                              accept="image/*,.pdf,.doc,.docx"
+                                              onChange={handlePitchFilesChange}
+                                              className="hidden"
+                                              id="pitch-files"
+                                              data-testid="input-pitch-files"
+                                            />
+                                            <motion.label
+                                              htmlFor="pitch-files"
+                                              className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed rounded-lg cursor-pointer bg-muted/50 border-muted-foreground/20"
+                                              whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary))" }}
+                                              transition={{ duration: 0.2 }}
+                                            >
+                                              <span className="text-sm font-medium">
+                                                {field.value ? "File selected" : "Upload prototype images, UI screens, etc."}
+                                              </span>
+                                            </motion.label>
+                                          </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchDemoVideoLink"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Demo Video Link (Optional)</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            type="url"
+                                            placeholder="https://youtube.com/watch?v=..." 
+                                            {...field} 
+                                            data-testid="input-pitch-video"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4">Team Members (Optional)</h4>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="teamMember1Name"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Team Member 1 Name</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="First team member name" 
+                                            {...field} 
+                                            data-testid="input-team-member-1"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="teamMember2Name"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Team Member 2 Name</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="Second team member name" 
+                                            {...field} 
+                                            data-testid="input-team-member-2"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="bg-primary/5 p-4 rounded-lg">
+                                <h4 className="font-semibold text-lg mb-4">Final Declaration</h4>
+                                <FormField
+                                  control={form.control}
+                                  name="pitchDeclarationConfirmed"
+                                  render={({ field }) => (
+                                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                                      <FormControl>
+                                        <Checkbox
+                                          checked={field.value}
+                                          onCheckedChange={field.onChange}
+                                          data-testid="checkbox-pitch-declaration"
+                                        />
+                                      </FormControl>
+                                      <div className="space-y-1 leading-none">
+                                        <FormLabel className="text-sm font-normal cursor-pointer">
+                                          I confirm this idea is original and I am serious about turning it into a real startup. I will participate in all three stages if shortlisted.
+                                        </FormLabel>
+                                      </div>
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
                             </div>
                           </motion.div>
                         )}

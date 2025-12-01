@@ -28,13 +28,24 @@ const upload = multer({
   storage: multerStorage,
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
-    if (file.mimetype.startsWith("image/")) {
+    const allowedMimes = [
+      'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+    if (allowedMimes.includes(file.mimetype) || file.mimetype.startsWith("image/")) {
       cb(null, true);
     } else {
-      cb(new Error("Only image files are allowed"));
+      cb(new Error("Only image, PDF, and document files are allowed"));
     }
   },
 });
+
+const uploadFields = upload.fields([
+  { name: 'paymentScreenshot', maxCount: 1 },
+  { name: 'pitchSupportingFiles', maxCount: 1 }
+]);
 
 export async function registerRoutes(
   httpServer: Server,
@@ -96,11 +107,14 @@ export async function registerRoutes(
     }
   });
 
-  app.post("/api/register", upload.single("paymentScreenshot"), async (req: Request, res) => {
+  app.post("/api/register", uploadFields, async (req: Request, res) => {
     try {
+      const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+      
       const data = {
         ...req.body,
-        paymentScreenshot: req.file ? `/uploads/${req.file.filename}` : undefined,
+        paymentScreenshot: files?.paymentScreenshot?.[0] ? `/uploads/${files.paymentScreenshot[0].filename}` : undefined,
+        pitchSupportingFiles: files?.pitchSupportingFiles?.[0] ? `/uploads/${files.pitchSupportingFiles[0].filename}` : undefined,
       };
       
       const result = insertRegistrationSchema.safeParse(data);
