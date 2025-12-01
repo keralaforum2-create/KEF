@@ -84,7 +84,6 @@ const registrationSchema = z.object({
   pitchCostPerUnit: z.string().optional(),
   pitchSellingPrice: z.string().optional(),
   pitchProfitPerUnit: z.string().optional(),
-  pitchCustomerAcquisitionCost: z.string().optional(),
   pitchTotalCapitalRequired: z.string().optional(),
   pitchRevenuePerUser: z.string().optional(),
   pitchTargetCustomers: z.string().optional(),
@@ -190,7 +189,6 @@ export default function Participate() {
       pitchCostPerUnit: "",
       pitchSellingPrice: "",
       pitchProfitPerUnit: "",
-      pitchCustomerAcquisitionCost: "",
       pitchTotalCapitalRequired: "",
       pitchRevenuePerUser: "",
       pitchTargetCustomers: "",
@@ -290,7 +288,6 @@ export default function Participate() {
       formData.append("pitchCostPerUnit", data.pitchCostPerUnit || "");
       formData.append("pitchSellingPrice", data.pitchSellingPrice || "");
       formData.append("pitchProfitPerUnit", data.pitchProfitPerUnit || "");
-      formData.append("pitchCustomerAcquisitionCost", data.pitchCustomerAcquisitionCost || "");
       formData.append("pitchTotalCapitalRequired", data.pitchTotalCapitalRequired || "");
       formData.append("pitchRevenuePerUser", data.pitchRevenuePerUser || "");
       formData.append("pitchTargetCustomers", data.pitchTargetCustomers || "");
@@ -1010,24 +1007,6 @@ export default function Participate() {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                       <FormField
                                         control={form.control}
-                                        name="pitchCustomerAcquisitionCost"
-                                        render={({ field }) => (
-                                          <FormItem>
-                                            <FormLabel>Customer acquisition cost (if known)</FormLabel>
-                                            <FormControl>
-                                              <Input 
-                                                type="number" 
-                                                placeholder="0" 
-                                                {...field} 
-                                                data-testid="input-pitch-cac"
-                                              />
-                                            </FormControl>
-                                            <FormMessage />
-                                          </FormItem>
-                                        )}
-                                      />
-                                      <FormField
-                                        control={form.control}
                                         name="pitchTotalCapitalRequired"
                                         render={({ field }) => (
                                           <FormItem>
@@ -1044,8 +1023,6 @@ export default function Participate() {
                                           </FormItem>
                                         )}
                                       />
-                                    </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                       <FormField
                                         control={form.control}
                                         name="pitchRevenuePerUser"
