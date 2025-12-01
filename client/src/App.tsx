@@ -9,6 +9,7 @@ import { Footer } from "@/components/Footer";
 import Home from "@/pages/home";
 import About from "@/pages/about";
 import Sessions from "@/pages/sessions";
+import Contests from "@/pages/contests";
 import Participate from "@/pages/participate";
 import Partners from "@/pages/partners";
 import Contact from "@/pages/contact";
@@ -42,6 +43,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/about" component={About} />
       <Route path="/sessions" component={Sessions} />
+      <Route path="/contests" component={Contests} />
       <Route path="/participate" component={Participate} />
       <Route path="/partners" component={Partners} />
       <Route path="/contact" component={Contact} />

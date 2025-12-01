@@ -5,10 +5,14 @@ import { motion } from "framer-motion";
 import { ScrollFadeUp, StaggerContainer, StaggerItem } from "@/lib/animations";
 import logoPath from "@assets/LOGO_00-removebg-preview_1764577293415.png";
 
-export function Footer() {
+interface FooterProps {
+  className?: string;
+}
+
+export function Footer({ className }: FooterProps) {
   return (
     <ScrollFadeUp>
-      <footer className="bg-card border-t border-border">
+      <footer className={`bg-card border-t border-border ${className || ''}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-16">
             <motion.div 
@@ -68,7 +72,12 @@ export function Footer() {
                     </li>
                     <li>
                       <Link href="/sessions" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-sessions">
-                        Sessions & Contests
+                        Sessions
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/contests" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-contests">
+                        Contests
                       </Link>
                     </li>
                     <li>

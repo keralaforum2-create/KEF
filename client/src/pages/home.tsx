@@ -389,10 +389,16 @@ export default function Home() {
           </div>
           
           <ScrollFadeUp>
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-4 flex-wrap">
               <Link href="/sessions">
                 <Button size="lg" variant="outline" className="font-semibold" data-testid="button-explore-sessions">
-                  Explore Sessions & Contests
+                  Explore Sessions
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+              <Link href="/contests">
+                <Button size="lg" variant="outline" className="font-semibold" data-testid="button-explore-contests">
+                  Explore Contests
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
