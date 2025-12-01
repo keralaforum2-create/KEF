@@ -47,7 +47,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-400/30 via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-red-700/50 to-transparent" />
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-24 flex flex-col items-center justify-center">
           <HeroAnimation>
             <motion.div 
               className="inline-flex items-center gap-2 bg-white/20 border border-white/30 rounded-full px-4 py-2 mb-6 backdrop-blur-sm"
@@ -65,7 +65,7 @@ export default function Home() {
           
           <HeroAnimation>
             <motion.h1 
-              className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-white" 
+              className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-white text-center" 
               data-testid="text-hero-title"
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -84,13 +84,13 @@ export default function Home() {
           </HeroAnimation>
           
           <HeroSubAnimation delay={0.4}>
-            <p className="text-xl sm:text-2xl font-medium text-white/90 mb-4 max-w-3xl mx-auto" data-testid="text-hero-subtitle">
+            <p className="text-xl sm:text-2xl font-medium text-white/90 mb-4 max-w-3xl mx-auto text-center" data-testid="text-hero-subtitle">
               A two-day mega startup festival that turns ideas into action.
             </p>
           </HeroSubAnimation>
           
           <HeroSubAnimation delay={0.5}>
-            <p className="text-base sm:text-lg text-white/80 mb-8 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-white/80 mb-8 max-w-2xl mx-auto text-center">
               Kerala Startup Fest (KSF) is a first-of-its-kind event where students, young adults, 
               mentors and investors come together to build real startups. It is not just motivation. 
               It is about learning, pitching, winning, and launching.
@@ -105,7 +105,7 @@ export default function Home() {
           </HeroSubAnimation>
           
           <HeroSubAnimation delay={0.7}>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/participate#register">
                 <Button size="lg" className="font-semibold text-base px-8 bg-white text-red-600 shadow-lg" data-testid="button-register-hero">
                   Register Now
