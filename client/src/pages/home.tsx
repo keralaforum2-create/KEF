@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 import califphLifeSchoolLogo from "@assets/PhotoshopExtension_Image_1764498269153.png";
 import keralaEconomicForumLogo from "@assets/KERALA ECONOMIC FORUM LOGO RESOLUTION 00_1764498454572.png";
-import festivalBgImage from "@assets/stock_images/startup_festival_cro_9d4ccbd6.jpg";
 
 export default function Home() {
   return (
@@ -73,12 +72,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative py-24 sm:py-32 overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${festivalBgImage})` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/85 to-white/95 backdrop-blur-[2px]" />
+      <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-b from-amber-50 via-orange-50/50 to-white">
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center mb-16">
@@ -98,7 +92,7 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-100 group">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-100 group">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
                 <Presentation className="w-8 h-8 text-white" />
               </div>
@@ -108,7 +102,7 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-200 group">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-200 group">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary to-secondary/80 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
                 <Lightbulb className="w-8 h-8 text-gray-900" />
               </div>
@@ -118,7 +112,7 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-300 group">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-300 group">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
                 <Award className="w-8 h-8 text-gray-900" />
               </div>
@@ -128,7 +122,7 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-400 group">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 animate-fade-in-up animate-delay-400 group">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mx-auto mb-5 icon-hover group-hover:scale-110 transition-transform duration-300">
                 <Briefcase className="w-8 h-8 text-white" />
               </div>
