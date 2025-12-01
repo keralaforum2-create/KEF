@@ -90,132 +90,61 @@ export default function Home() {
 
       <section className="py-20" style={{ backgroundColor: "hsl(189 60% 90%)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4 text-foreground" data-testid="text-why-different">
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-12 text-foreground" data-testid="text-why-different">
             Why is KSF Different?
           </h2>
-          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto font-medium">
-            This isn't your typical startup event. Here's what sets us apart.
-          </p>
           
-          <div className="flex overflow-x-hidden gap-6 pb-4 scrollbar-hide auto-scroll">
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <Lightbulb className="w-6 h-6 text-white" />
+          <div className="auto-scroll-wrapper">
+            <div className="auto-scroll gap-6 py-4">
+              <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
+                <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Not just "business motivation talks"</p>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Not Just Motivation Talks</h3>
-              <p className="text-yellow-800/70 text-sm">
-                Real, practical sessions designed to give you actionable knowledge.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <Briefcase className="w-6 h-6 text-white" />
+              
+              <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
+                <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Theme-based expert sessions handled by real business people</p>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Expert-Led Sessions</h3>
-              <p className="text-yellow-800/70 text-sm">
-                Theme-based sessions handled by real business people, not just speakers.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <Presentation className="w-6 h-6 text-white" />
+              
+              <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
+                <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Live idea pitching in front of investors and venture capitalists</p>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Live Idea Pitching</h3>
-              <p className="text-yellow-800/70 text-sm">
-                Pitch your ideas directly in front of investors and venture capitalists.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <Award className="w-6 h-6 text-white" />
+              
+              <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
+                <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Chance to win prizes and funding, not only certificates</p>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Win Prizes & Funding</h3>
-              <p className="text-yellow-800/70 text-sm">
-                Chance to win prizes and funding, not just certificates.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-white" />
+              
+              <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
+                <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Open for high school students to youngsters up to 29 years of age</p>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Open to All Ages</h3>
-              <p className="text-yellow-800/70 text-sm">
-                From high school students to youngsters up to 29 years of age.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <TrendingUp className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Real Action</h3>
-              <p className="text-yellow-800/70 text-sm">
-                Build real startups, not just business plans on paper.
-              </p>
-            </div>
 
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <Lightbulb className="w-6 h-6 text-white" />
+              <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
+                <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Not just "business motivation talks"</p>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Not Just Motivation Talks</h3>
-              <p className="text-yellow-800/70 text-sm">
-                Real, practical sessions designed to give you actionable knowledge.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <Briefcase className="w-6 h-6 text-white" />
+              
+              <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
+                <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Theme-based expert sessions handled by real business people</p>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Expert-Led Sessions</h3>
-              <p className="text-yellow-800/70 text-sm">
-                Theme-based sessions handled by real business people, not just speakers.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <Presentation className="w-6 h-6 text-white" />
+              
+              <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
+                <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Live idea pitching in front of investors and venture capitalists</p>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Live Idea Pitching</h3>
-              <p className="text-yellow-800/70 text-sm">
-                Pitch your ideas directly in front of investors and venture capitalists.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <Award className="w-6 h-6 text-white" />
+              
+              <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
+                <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Chance to win prizes and funding, not only certificates</p>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Win Prizes & Funding</h3>
-              <p className="text-yellow-800/70 text-sm">
-                Chance to win prizes and funding, not just certificates.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <Users className="w-6 h-6 text-white" />
+              
+              <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
+                <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Open for high school students to youngsters up to 29 years of age</p>
               </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Open to All Ages</h3>
-              <p className="text-yellow-800/70 text-sm">
-                From high school students to youngsters up to 29 years of age.
-              </p>
-            </div>
-            
-            <div className="bg-white rounded-xl p-6 hover-elevate flex-shrink-0 w-80 shadow-sm">
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mb-4">
-                <TrendingUp className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2 text-yellow-900">Real Action</h3>
-              <p className="text-yellow-800/70 text-sm">
-                Build real startups, not just business plans on paper.
-              </p>
             </div>
           </div>
         </div>

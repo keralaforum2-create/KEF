@@ -21,8 +21,40 @@
   }
 }
 
+.auto-scroll-wrapper {
+  overflow: hidden;
+  position: relative;
+}
+
+.auto-scroll-wrapper::before,
+.auto-scroll-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.auto-scroll-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, hsl(189 60% 90%), transparent);
+}
+
+.auto-scroll-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, hsl(189 60% 90%), transparent);
+}
+
 .auto-scroll {
-  animation: scroll-left 12s linear infinite;
+  display: flex;
+  width: max-content;
+  animation: scroll-left 25s linear infinite;
+}
+
+.auto-scroll:hover {
+  animation-play-state: paused;
 }
 
 /* LIGHT MODE */
