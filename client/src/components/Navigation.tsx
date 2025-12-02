@@ -114,9 +114,17 @@ export function Navigation() {
               >
                 <Link href="/participate#register">
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }} transition={{ duration: 0.2 }}>
-                    <Button className="hidden sm:flex font-semibold" data-testid="button-register-nav">
-                      Register Now
-                    </Button>
+                    <div 
+                      className="hidden sm:block relative p-[2px] rounded-md"
+                      style={{
+                        background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                      }}
+                      data-testid="button-register-nav"
+                    >
+                      <Button className="font-semibold bg-white text-gray-800 border-0 rounded-[4px] w-full">
+                        Register Now
+                      </Button>
+                    </div>
                   </motion.div>
                 </Link>
               </motion.div>
@@ -167,9 +175,17 @@ export function Navigation() {
                       transition={{ duration: 0.3, delay: 0.4 }}
                     >
                       <Link href="/participate#register" onClick={() => setMobileOpen(false)}>
-                        <Button className="w-full font-semibold" data-testid="button-register-mobile">
-                          Register Now
-                        </Button>
+                        <div 
+                          className="relative p-[2px] rounded-md"
+                          style={{
+                            background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                          }}
+                          data-testid="button-register-mobile"
+                        >
+                          <Button className="w-full font-semibold bg-white text-gray-800 border-0 rounded-[4px]">
+                            Register Now
+                          </Button>
+                        </div>
                       </Link>
                     </motion.div>
                   </div>
