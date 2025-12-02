@@ -68,7 +68,8 @@ const registrationSchema = z.object({
   age: z.string().optional(),
   institution: z.string().optional(),
   contestName: z.string().optional(),
-  participantType: z.enum(["school-student", "college-student", "common"]).optional(),
+  participantType: z.enum(["school-student", "college-student", "commoner"]).optional(),
+  ticketCategory: z.enum(["normal", "premium"]).optional(),
   schoolGrade: z.string().optional(),
   collegeYear: z.string().optional(),
   collegeCourse: z.string().optional(),
@@ -181,6 +182,7 @@ export default function Participate() {
       phone: "",
       age: "",
       institution: "",
+      ticketCategory: undefined,
       contestName: "",
       participantType: undefined,
       schoolGrade: "",
@@ -295,6 +297,7 @@ export default function Participate() {
       formData.append("phone", data.phone);
       formData.append("age", data.age);
       formData.append("institution", data.institution || "");
+      formData.append("ticketCategory", data.ticketCategory || "");
       formData.append("registrationType", data.registrationType);
       formData.append("contestName", data.contestName || "");
       formData.append("participantType", data.participantType || "");
@@ -2022,7 +2025,7 @@ export default function Participate() {
                                   <SelectContent>
                                     <SelectItem value="school-student">School Student</SelectItem>
                                     <SelectItem value="college-student">College Student</SelectItem>
-                                    <SelectItem value="common">Common</SelectItem>
+                                    <SelectItem value="commoner">Commoner</SelectItem>
                                   </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -2144,6 +2147,41 @@ export default function Participate() {
                                   data-testid="input-institution"
                                 />
                               </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </motion.div>
+
+                      <motion.div
+                        custom={4.5}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={formFieldVariants}
+                      >
+                        <FormField
+                          control={form.control}
+                          name="ticketCategory"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                Ticket Category
+                                {participantType === "commoner" && (
+                                  <span className="text-muted-foreground text-xs ml-2">(Optional)</span>
+                                )}
+                              </FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger data-testid="select-ticket-category">
+                                    <SelectValue placeholder="Select ticket category" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="normal">Normal</SelectItem>
+                                  <SelectItem value="premium">Premium</SelectItem>
+                                </SelectContent>
+                              </Select>
                               <FormMessage />
                             </FormItem>
                           )}
