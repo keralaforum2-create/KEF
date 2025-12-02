@@ -43,7 +43,10 @@ import {
   Rocket,
   QrCode,
   Download,
-  X
+  X,
+  Ticket,
+  Check,
+  CheckCircle
 } from "lucide-react";
 import {
   ScrollFadeUp,
@@ -2172,23 +2175,141 @@ export default function Participate() {
                             name="ticketCategory"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>
-                                  Ticket Category
+                                <FormLabel className="text-lg font-bold flex items-center gap-2">
+                                  <Ticket className="w-5 h-5" />
+                                  Ticket Categories
                                   {participantType === "commoner" && (
                                     <span className="text-muted-foreground text-xs ml-2">(Optional)</span>
                                   )}
                                 </FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                  <FormControl>
-                                    <SelectTrigger data-testid="select-ticket-category">
-                                      <SelectValue placeholder="Select ticket category" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    <SelectItem value="normal">Normal (Rs 199/-)</SelectItem>
-                                    <SelectItem value="premium">Premium (Rs 599/-)</SelectItem>
-                                  </SelectContent>
-                                </Select>
+                                <FormControl>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                    {/* Premium Ticket Card */}
+                                    <div
+                                      onClick={() => field.onChange("premium")}
+                                      className={`relative cursor-pointer rounded-xl border-2 p-5 transition-all ${
+                                        field.value === "premium"
+                                          ? "border-teal-500 bg-teal-50 dark:bg-teal-950/30 shadow-lg"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-teal-300"
+                                      }`}
+                                      data-testid="card-ticket-premium"
+                                    >
+                                      {field.value === "premium" && (
+                                        <div className="absolute top-3 right-3">
+                                          <CheckCircle className="w-6 h-6 text-teal-500" />
+                                        </div>
+                                      )}
+                                      <div className="flex items-center gap-2 mb-4">
+                                        <div className="w-3 h-3 rounded-full bg-teal-500" />
+                                        <h4 className="font-bold text-lg">Premium Ticket</h4>
+                                      </div>
+                                      
+                                      <ul className="space-y-2 mb-5 text-sm">
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
+                                          <span>Access to all stalls</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
+                                          <span>Access to all expert sessions</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
+                                          <span>ID card, notepad & pen</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
+                                          <span>Startup Fest Kit (Exclusive)</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
+                                          <span>Front-row seating with tables</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
+                                          <span>Priority in Q&A with guests</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
+                                          <span>Higher networking opportunities</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
+                                          <span>Lunch & Tea included</span>
+                                        </li>
+                                      </ul>
+                                      
+                                      <div className="border-t pt-4 flex items-center justify-between">
+                                        <span className="text-sm text-muted-foreground">Price:</span>
+                                        <div className="flex items-center gap-2">
+                                          <span className="text-gray-400 line-through text-sm">Rs 999/-</span>
+                                          <span className="font-bold text-xl text-teal-600">Rs 599/-</span>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Normal Ticket Card */}
+                                    <div
+                                      onClick={() => field.onChange("normal")}
+                                      className={`relative cursor-pointer rounded-xl border-2 p-5 transition-all ${
+                                        field.value === "normal"
+                                          ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30 shadow-lg"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+                                      }`}
+                                      data-testid="card-ticket-normal"
+                                    >
+                                      {field.value === "normal" && (
+                                        <div className="absolute top-3 right-3">
+                                          <CheckCircle className="w-6 h-6 text-blue-500" />
+                                        </div>
+                                      )}
+                                      <div className="flex items-center gap-2 mb-4">
+                                        <div className="w-3 h-3 rounded-full bg-blue-500" />
+                                        <h4 className="font-bold text-lg">Normal Ticket</h4>
+                                      </div>
+                                      
+                                      <ul className="space-y-2 mb-5 text-sm">
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                                          <span>Access to stalls</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                                          <span>Access to sessions</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                                          <span>ID card, notepad & pen</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Startup Fest Kit</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Front-row seating</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Priority Q&A</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Extra networking access</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Lunch & Tea</span>
+                                        </li>
+                                      </ul>
+                                      
+                                      <div className="border-t pt-4 flex items-center justify-between">
+                                        <span className="text-sm text-muted-foreground">Price:</span>
+                                        <span className="font-bold text-xl text-blue-600">Rs 199/-</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
