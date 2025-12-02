@@ -774,7 +774,7 @@ export default function Participate() {
                               data-testid="button-register-expert-session"
                             >
                               <GraduationCap className="w-5 h-5 mr-2" />
-                              Register for Expert Session
+                              Register for Kerala Startup Fest Expert Session
                             </Button>
                           </motion.div>
                           <motion.div
@@ -792,7 +792,7 @@ export default function Participate() {
                               data-testid="button-register-contest"
                             >
                               <Trophy className="w-5 h-5 mr-2" />
-                              Register for Contest
+                              Register for Kerala Startup Fest Contest
                             </Button>
                           </motion.div>
                         </div>
