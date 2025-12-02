@@ -583,14 +583,23 @@
   animation-play-state: paused;
 }
 
-/* Hero title styling */
+/* Hero title styling - Big Shoulders Display Black */
 .hero-title {
-  font-family: 'Inter', 'Roboto', sans-serif;
+  font-family: 'Big Shoulders Display', sans-serif;
   font-weight: 900;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
 }
 
 .hero-tagline {
   font-family: 'Inter', 'Roboto', sans-serif;
   letter-spacing: 0.25em;
+}
+
+/* Full width wave banner */
+.wave-banner-container {
+  position: relative;
+  width: 100vw;
+  left: 50%;
+  transform: translateX(-50%);
+  overflow: hidden;
 }
