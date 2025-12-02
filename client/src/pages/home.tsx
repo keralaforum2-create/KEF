@@ -345,93 +345,122 @@ export default function Home() {
               </p>
             </ScrollFadeUp>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
-              {/* Card 1 - Red */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 mb-12">
+              {/* Card 1 - 2 Mega Days */}
               <CardWave index={0}>
-                <div className="group relative bg-gradient-to-br from-red-50 to-red-100/50 rounded-3xl p-8 shadow-md border border-red-100/50 overflow-hidden h-full hover-elevate">
+                <div className="group relative bg-gradient-to-br from-red-50 to-red-100/50 rounded-2xl p-6 shadow-md border border-red-100/50 overflow-hidden h-full hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-red-200/0 via-transparent to-red-100/0 group-hover:from-red-200/10 group-hover:to-red-100/10 transition-all duration-300" />
-                  <div className="relative z-10">
+                  <div className="relative z-10 text-center">
                     <div 
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" 
                       style={{ backgroundColor: "hsl(0 100% 50%)" }}
                     >
-                      <Presentation className="w-8 h-8 text-white" />
+                      <Calendar className="w-6 h-6 text-white" />
                     </div>
-                    <p className="font-serif text-5xl font-bold text-red-600 mb-3">8</p>
-                    <p className="font-semibold text-lg text-gray-800 mb-2">Expert Sessions</p>
-                    <p className="text-sm text-gray-600">Theme-based masterclasses from industry leaders</p>
+                    <p className="font-serif text-4xl font-bold text-red-600 mb-2">2</p>
+                    <p className="font-semibold text-sm text-gray-800">Mega Days</p>
                   </div>
                 </div>
               </CardWave>
 
-              {/* Card 2 - Yellow */}
+              {/* Card 2 - 4 Contests */}
               <CardWave index={1}>
-                <div className="group relative bg-gradient-to-br from-yellow-50 to-yellow-100/50 rounded-3xl p-8 shadow-md border border-yellow-100/50 overflow-hidden h-full hover-elevate">
+                <div className="group relative bg-gradient-to-br from-yellow-50 to-yellow-100/50 rounded-2xl p-6 shadow-md border border-yellow-100/50 overflow-hidden h-full hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-yellow-200/0 via-transparent to-yellow-100/0 group-hover:from-yellow-200/10 group-hover:to-yellow-100/10 transition-all duration-300" />
-                  <div className="relative z-10">
+                  <div className="relative z-10 text-center">
                     <div 
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" 
                       style={{ backgroundColor: "hsl(45 100% 50%)" }}
                     >
-                      <Lightbulb className="w-8 h-8 text-gray-900" />
+                      <Award className="w-6 h-6 text-gray-900" />
                     </div>
-                    <p className="font-serif text-5xl font-bold text-yellow-600 mb-3">13</p>
-                    <p className="font-semibold text-lg text-gray-800 mb-2">Themes</p>
-                    <p className="text-sm text-gray-600">Diverse tracks covering all startup aspects</p>
+                    <p className="font-serif text-4xl font-bold text-yellow-600 mb-2">4</p>
+                    <p className="font-semibold text-sm text-gray-800">Contests</p>
                   </div>
                 </div>
               </CardWave>
 
-              {/* Card 3 - Teal */}
+              {/* Card 3 - 10 Themes */}
               <CardWave index={2}>
-                <div className="group relative bg-gradient-to-br from-teal-50 to-teal-100/50 rounded-3xl p-8 shadow-md border border-teal-100/50 overflow-hidden h-full hover-elevate">
+                <div className="group relative bg-gradient-to-br from-teal-50 to-teal-100/50 rounded-2xl p-6 shadow-md border border-teal-100/50 overflow-hidden h-full hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-teal-200/0 via-transparent to-teal-100/0 group-hover:from-teal-200/10 group-hover:to-teal-100/10 transition-all duration-300" />
-                  <div className="relative z-10">
+                  <div className="relative z-10 text-center">
                     <div 
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" 
                       style={{ backgroundColor: "hsl(174 100% 29%)" }}
                     >
-                      <Award className="w-8 h-8 text-white" />
+                      <Lightbulb className="w-6 h-6 text-white" />
                     </div>
-                    <p className="font-serif text-5xl font-bold text-teal-600 mb-3">7</p>
-                    <p className="font-semibold text-lg text-gray-800 mb-2">Contests</p>
-                    <p className="text-sm text-gray-600">Compete and win amazing prizes</p>
+                    <p className="font-serif text-4xl font-bold text-teal-600 mb-2">10</p>
+                    <p className="font-semibold text-sm text-gray-800">Themes</p>
                   </div>
                 </div>
               </CardWave>
 
-              {/* Card 4 - Purple */}
+              {/* Card 4 - 20 Investors */}
               <CardWave index={3}>
-                <div className="group relative bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-3xl p-8 shadow-md border border-purple-100/50 overflow-hidden h-full hover-elevate">
+                <div className="group relative bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-2xl p-6 shadow-md border border-purple-100/50 overflow-hidden h-full hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-200/0 via-transparent to-purple-100/0 group-hover:from-purple-200/10 group-hover:to-purple-100/10 transition-all duration-300" />
-                  <div className="relative z-10">
+                  <div className="relative z-10 text-center">
                     <div 
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" 
                       style={{ backgroundColor: "hsl(263 47% 35%)" }}
                     >
-                      <Rocket className="w-8 h-8 text-white" />
+                      <TrendingUp className="w-6 h-6 text-white" />
                     </div>
-                    <p className="font-serif text-5xl font-bold text-purple-600 mb-3">100</p>
-                    <p className="font-semibold text-lg text-gray-800 mb-2">Target Startups</p>
-                    <p className="text-sm text-gray-600">Goal to launch from this festival</p>
+                    <p className="font-serif text-4xl font-bold text-purple-600 mb-2">20</p>
+                    <p className="font-semibold text-sm text-gray-800">Investors</p>
                   </div>
                 </div>
               </CardWave>
 
-              {/* Card 5 - Rose */}
+              {/* Card 5 - 40 Speakers */}
               <CardWave index={4}>
-                <div className="group relative bg-gradient-to-br from-rose-50 to-rose-100/50 rounded-3xl p-8 shadow-md border border-rose-100/50 overflow-hidden h-full hover-elevate">
+                <div className="group relative bg-gradient-to-br from-rose-50 to-rose-100/50 rounded-2xl p-6 shadow-md border border-rose-100/50 overflow-hidden h-full hover-elevate">
                   <div className="absolute inset-0 bg-gradient-to-br from-rose-200/0 via-transparent to-rose-100/0 group-hover:from-rose-200/10 group-hover:to-rose-100/10 transition-all duration-300" />
-                  <div className="relative z-10">
+                  <div className="relative z-10 text-center">
                     <div 
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" 
                       style={{ backgroundColor: "hsl(0 100% 50%)" }}
                     >
-                      <Briefcase className="w-8 h-8 text-white" />
+                      <Presentation className="w-6 h-6 text-white" />
                     </div>
-                    <p className="font-serif text-5xl font-bold text-rose-600 mb-3">2</p>
-                    <p className="font-semibold text-lg text-gray-800 mb-2">Mega Days</p>
-                    <p className="text-sm text-gray-600">7-8 January 2026 at Calicut Beach</p>
+                    <p className="font-serif text-4xl font-bold text-rose-600 mb-2">40</p>
+                    <p className="font-semibold text-sm text-gray-800">Speakers</p>
+                  </div>
+                </div>
+              </CardWave>
+
+              {/* Card 6 - 100 Target Startups */}
+              <CardWave index={5}>
+                <div className="group relative bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-2xl p-6 shadow-md border border-blue-100/50 overflow-hidden h-full hover-elevate">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-200/0 via-transparent to-blue-100/0 group-hover:from-blue-200/10 group-hover:to-blue-100/10 transition-all duration-300" />
+                  <div className="relative z-10 text-center">
+                    <div 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" 
+                      style={{ backgroundColor: "hsl(220 70% 50%)" }}
+                    >
+                      <Rocket className="w-6 h-6 text-white" />
+                    </div>
+                    <p className="font-serif text-4xl font-bold text-blue-600 mb-2">100</p>
+                    <p className="font-semibold text-sm text-gray-800">Target Startups</p>
+                  </div>
+                </div>
+              </CardWave>
+
+              {/* Card 7 - 1000+ Participants */}
+              <CardWave index={6}>
+                <div className="group relative bg-gradient-to-br from-green-50 to-green-100/50 rounded-2xl p-6 shadow-md border border-green-100/50 overflow-hidden h-full hover-elevate">
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-200/0 via-transparent to-green-100/0 group-hover:from-green-200/10 group-hover:to-green-100/10 transition-all duration-300" />
+                  <div className="relative z-10 text-center">
+                    <div 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" 
+                      style={{ backgroundColor: "hsl(140 70% 40%)" }}
+                    >
+                      <Users className="w-6 h-6 text-white" />
+                    </div>
+                    <p className="font-serif text-3xl font-bold text-green-600 mb-2">1000+</p>
+                    <p className="font-semibold text-sm text-gray-800">Participants</p>
                   </div>
                 </div>
               </CardWave>
