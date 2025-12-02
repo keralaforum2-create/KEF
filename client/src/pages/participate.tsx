@@ -773,6 +773,9 @@ export default function Participate() {
                               onClick={() => {
                                 form.setValue("registrationType", "expert-session");
                                 setShowForm(true);
+                                setTimeout(() => {
+                                  document.getElementById("register")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                }, 100);
                               }}
                               data-testid="button-register-expert-session"
                             >
@@ -791,6 +794,9 @@ export default function Participate() {
                               onClick={() => {
                                 form.setValue("registrationType", "contest");
                                 setShowForm(true);
+                                setTimeout(() => {
+                                  document.getElementById("register")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                }, 100);
                               }}
                               data-testid="button-register-contest"
                             >
@@ -2153,40 +2159,42 @@ export default function Participate() {
                         />
                       </motion.div>
 
-                      <motion.div
-                        custom={4.5}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        variants={formFieldVariants}
-                      >
-                        <FormField
-                          control={form.control}
-                          name="ticketCategory"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>
-                                Ticket Category
-                                {participantType === "commoner" && (
-                                  <span className="text-muted-foreground text-xs ml-2">(Optional)</span>
-                                )}
-                              </FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger data-testid="select-ticket-category">
-                                    <SelectValue placeholder="Select ticket category" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="normal">Normal</SelectItem>
-                                  <SelectItem value="premium">Premium</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </motion.div>
+                      {registrationType === "expert-session" && (
+                        <motion.div
+                          custom={4.5}
+                          initial="hidden"
+                          whileInView="visible"
+                          viewport={{ once: true }}
+                          variants={formFieldVariants}
+                        >
+                          <FormField
+                            control={form.control}
+                            name="ticketCategory"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  Ticket Category
+                                  {participantType === "commoner" && (
+                                    <span className="text-muted-foreground text-xs ml-2">(Optional)</span>
+                                  )}
+                                </FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                  <FormControl>
+                                    <SelectTrigger data-testid="select-ticket-category">
+                                      <SelectValue placeholder="Select ticket category" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    <SelectItem value="normal">Normal</SelectItem>
+                                    <SelectItem value="premium">Premium</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </motion.div>
+                      )}
 
                       <motion.div 
                         className="border-t pt-6 mt-6"
