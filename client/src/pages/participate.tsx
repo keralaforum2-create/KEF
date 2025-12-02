@@ -2185,8 +2185,8 @@ export default function Participate() {
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent>
-                                    <SelectItem value="normal">Normal</SelectItem>
-                                    <SelectItem value="premium">Premium</SelectItem>
+                                    <SelectItem value="normal">Normal (Rs 199/-)</SelectItem>
+                                    <SelectItem value="premium">Premium (Rs 599/-)</SelectItem>
                                   </SelectContent>
                                 </Select>
                                 <FormMessage />
