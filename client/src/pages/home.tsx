@@ -110,14 +110,21 @@ export default function Home() {
                 <HeroSubAnimation delay={0.6}>
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                     <Link href="/participate#register">
-                      <Button 
-                        size="lg" 
-                        className="font-bold text-base px-10 py-6 bg-gradient-to-r from-red-600 via-yellow-500 to-teal-600 text-white shadow-xl min-w-[200px] text-lg border-0" 
+                      <div 
+                        className="relative p-[3px] rounded-md min-w-[200px] shadow-xl"
+                        style={{
+                          background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                        }}
                         data-testid="button-register-hero"
                       >
-                        Register Now
-                        <ArrowRight className="w-5 h-5 ml-2" />
-                      </Button>
+                        <Button 
+                          size="lg" 
+                          className="font-bold text-base px-10 py-6 bg-white text-gray-800 w-full text-lg border-0 rounded-[4px]" 
+                        >
+                          Register Now
+                          <ArrowRight className="w-5 h-5 ml-2" />
+                        </Button>
+                      </div>
                     </Link>
                     <Button 
                       variant="outline" 
