@@ -6,10 +6,12 @@ import {
   Scale, 
   Megaphone, 
   Settings, 
-  TrendingUp, 
+  UtensilsCrossed, 
   Wrench, 
-  Globe, 
-  BookOpen,
+  ShoppingCart, 
+  Cpu,
+  GraduationCap,
+  Video,
   Users
 } from "lucide-react";
 import {
@@ -20,59 +22,73 @@ import {
 const sessions = [
   {
     id: 1,
-    title: "Incubation & Pitching",
-    tagline: "From idea to pitch.",
-    description: "Learn how to shape an idea, check if it is practical, and present it with clarity, confidence and impact.",
+    title: "Building the Startup Mindset & Getting Your Idea Off the Ground",
+    tagline: "Think like a founder.",
+    description: "How to think like a founder, validate ideas, and shape them into executable startup models.",
     icon: Lightbulb,
   },
   {
     id: 2,
-    title: "Legal Compliances & Finance",
+    title: "Legal, Finance & Funding Basics Every Founder Must Know",
     tagline: "Building on a strong base.",
-    description: "Understand the basics of company registrations, legal compliances, taxation, funding options and money management for startups.",
+    description: "Company registration, compliance, taxation, funding stages, documentation, and financial discipline.",
     icon: Scale,
   },
   {
     id: 3,
-    title: "Sales & Marketing",
+    title: "Sales & Marketing Strategies That Actually Work",
     tagline: "Take your product to people.",
-    description: "Learn how to understand customers, build a brand, promote your idea and convert interest into real sales.",
+    description: "Understanding customers, positioning products, building brand presence, and converting leads into sales.",
     icon: Megaphone,
   },
   {
     id: 4,
-    title: "Operations & People Management",
+    title: "Running the Show: Operations, Systems & People Management",
     tagline: "Running the engine smoothly.",
-    description: "Find out how to create simple systems, set workflows, and manage teams so that your startup runs in an organised way.",
+    description: "Creating efficient workflows, managing teams, and building a strong internal structure for your startup.",
     icon: Settings,
   },
   {
     id: 5,
-    title: "Trending Business",
-    tagline: "New-age opportunities.",
-    description: "Explore high-potential business ideas and new models that are trending in today's world – from tech startups to creative ventures.",
-    icon: TrendingUp,
+    title: "The Business of Food: Opportunities in Food Tech",
+    tagline: "Explore food-tech trends.",
+    description: "Exploring packaged foods, cloud kitchens, health/nutrition products, and emerging food tech trends.",
+    icon: UtensilsCrossed,
   },
   {
     id: 6,
-    title: "Skills as Business",
+    title: "Skills to Startups: Turning Talents into Income",
     tagline: "Turn your talent into income.",
-    description: "See how personal skills like craft, design, tech, writing, art and communication can be converted into sustainable businesses.",
+    description: "How personal skills—design, content, craft, coding, communication—can be shaped into small businesses and ventures.",
     icon: Wrench,
   },
   {
     id: 7,
-    title: "Online Business & Social Media Strategy",
+    title: "How to Build & Grow an Online Business",
     tagline: "Go digital. Go global.",
-    description: "Learn how to use websites, apps, e-commerce, content and social media platforms to grow and scale your business online.",
-    icon: Globe,
+    description: "Selling on e-commerce platforms, running online stores, logistics, pricing, and scaling digital commerce.",
+    icon: ShoppingCart,
   },
   {
     id: 8,
-    title: "My Story",
-    tagline: "Real journeys. Real lessons.",
-    description: "Listen to founders and creators who share their real stories — struggles, failures, turning points and success.",
-    icon: BookOpen,
+    title: "Tech, AI & Disruptive Innovation for Young Entrepreneurs",
+    tagline: "Build with modern tech.",
+    description: "Using software, apps, AI tools, and modern tech to build real, fundable products and solutions.",
+    icon: Cpu,
+  },
+  {
+    id: 9,
+    title: "Learning to Lead: Education Models for Business Success",
+    tagline: "Prepare for real-world challenges.",
+    description: "Entrepreneurial learning, self-education systems, business thinking frameworks, and preparing for real-world challenges.",
+    icon: GraduationCap,
+  },
+  {
+    id: 10,
+    title: "Mastering Digital Media & Social Influence",
+    tagline: "Build your digital presence.",
+    description: "Content creation, personal branding, short-form video strategy, community building, and monetisation.",
+    icon: Video,
   },
 ];
 
@@ -89,13 +105,13 @@ export default function Sessions() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4 }}
               >
-                <Badge variant="secondary" className="mb-4 text-base px-4 py-2">8 Expert Sessions</Badge>
+                <Badge variant="secondary" className="mb-4 text-base px-4 py-2">10 Expert Sessions</Badge>
               </motion.div>
               <h2 className="font-serif text-5xl sm:text-6xl font-bold mb-6" data-testid="text-expert-sessions">
                 Expert Sessions
               </h2>
               <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                Kerala Startup Fest has 13 themes clubbed into 8 expert sessions. These sessions are 
+                Kerala Startup Fest features 10 expert sessions covering everything from startup mindset to digital media mastery. These sessions are 
                 handled by people who are actually in business — founders, professionals, investors and creators.
               </p>
             </div>
