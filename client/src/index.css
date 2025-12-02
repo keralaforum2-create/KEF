@@ -494,3 +494,68 @@
 .no-default-active-elevate:active {
   @apply no-underline;
 }
+
+/* Floating animation for 3D logo */
+@keyframes float-horizontal {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(30px);
+  }
+}
+
+.float-horizontal {
+  animation: float-horizontal 4s ease-in-out infinite;
+}
+
+/* Rainbow scrolling text banner */
+@keyframes scroll-banner {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.banner-scroll {
+  display: flex;
+  width: max-content;
+  animation: scroll-banner 20s linear infinite;
+}
+
+.banner-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* Rainbow gradient text */
+.rainbow-text {
+  background: linear-gradient(
+    90deg, 
+    hsl(0 100% 50%) 0%, 
+    hsl(45 100% 50%) 20%, 
+    hsl(174 100% 29%) 40%, 
+    hsl(263 47% 35%) 60%, 
+    hsl(0 100% 50%) 80%, 
+    hsl(45 100% 50%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Large faded background text */
+.bg-text-large {
+  font-size: 20rem;
+  line-height: 1;
+  font-weight: 900;
+  color: rgba(0, 0, 0, 0.03);
+  white-space: nowrap;
+  position: absolute;
+  right: -5%;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 0;
+}

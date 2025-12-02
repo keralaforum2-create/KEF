@@ -18,7 +18,8 @@ import {
   Briefcase,
   GraduationCap,
   Building2,
-  HandshakeIcon
+  HandshakeIcon,
+  Download
 } from "lucide-react";
 import {
   HeroAnimation,
@@ -34,6 +35,7 @@ import {
 } from "@/lib/animations";
 import califphLifeSchoolLogo from "@assets/PhotoshopExtension_Image_1764498269153.png";
 import keralaEconomicForumLogo from "@assets/KERALA ECONOMIC FORUM LOGO RESOLUTION 00_1764498454572.png";
+import cubeLogo from "@assets/cube_1764697594714.png";
 
 export default function Home() {
   const partnersRef = useRef<HTMLDivElement>(null);
@@ -41,82 +43,107 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section with Animations */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#FF0000]">
-        <div className="absolute inset-0 bg-gradient-to-br from-red-600 via-red-500 to-red-600" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-400/30 via-transparent to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-red-700/50 to-transparent" />
+      {/* Hero Section with New Design */}
+      <section className="relative min-h-[90vh] flex flex-col overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-100">
+        {/* Large faded background text */}
+        <div className="bg-text-large hidden lg:block">FEST'26</div>
         
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-24 flex flex-col items-center justify-center">
-          <HeroAnimation>
-            <motion.div 
-              className="inline-flex items-center gap-2 bg-white/20 border border-white/30 rounded-full px-4 py-2 mb-6 backdrop-blur-sm"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <Calendar className="w-4 h-4 text-white" />
-              <span className="text-sm font-medium text-white">7-8 January 2026</span>
-              <span className="text-white/70">|</span>
-              <MapPin className="w-4 h-4 text-white" />
-              <span className="text-sm font-medium text-white">Calicut Beach</span>
-            </motion.div>
-          </HeroAnimation>
-          
-          <HeroAnimation>
-            <motion.h1 
-              className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-white text-center" 
-              data-testid="text-hero-title"
-              initial={{ opacity: 0, y: 40, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-            >
-              Kerala Startup Fest
-              <motion.span 
-                className="block text-white/90"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-              >
-                2026
-              </motion.span>
-            </motion.h1>
-          </HeroAnimation>
-          
-          <HeroSubAnimation delay={0.4}>
-            <p className="text-xl sm:text-2xl font-medium text-white/90 mb-4 max-w-3xl mx-auto text-center" data-testid="text-hero-subtitle">
-              A two-day mega startup festival that turns ideas into action.
-            </p>
-          </HeroSubAnimation>
-          
-          <HeroSubAnimation delay={0.5}>
-            <p className="text-base sm:text-lg text-white/80 mb-8 max-w-2xl mx-auto text-center">
-              Kerala Startup Fest (KSF) is a first-of-its-kind event where students, young adults, 
-              mentors and investors come together to build real startups. It is not just motivation. 
-              It is about learning, pitching, winning, and launching.
-            </p>
-          </HeroSubAnimation>
-          
-          <HeroSubAnimation delay={0.6}>
-            <div className="flex items-center justify-center gap-2 text-sm text-white/80 mb-10">
-              <Users className="w-4 h-4 text-white" />
-              <span>High school to age 29</span>
+        {/* Main Content */}
+        <div className="relative z-10 flex-1 flex items-center">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              {/* Left - Floating 3D Cube Logo */}
+              <HeroAnimation>
+                <motion.div 
+                  className="flex justify-center lg:justify-start"
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                >
+                  <div className="float-horizontal">
+                    <img 
+                      src={cubeLogo} 
+                      alt="Kerala Startup Fest Logo" 
+                      className="w-64 sm:w-80 md:w-96 lg:w-[450px] h-auto drop-shadow-2xl"
+                      data-testid="img-cube-logo"
+                    />
+                  </div>
+                </motion.div>
+              </HeroAnimation>
+              
+              {/* Right - Text Content */}
+              <div className="text-center lg:text-left">
+                <HeroSubAnimation delay={0.2}>
+                  <p className="text-sm sm:text-base font-medium tracking-[0.3em] text-gray-500 mb-4 uppercase">
+                    First of its kind in the state
+                  </p>
+                </HeroSubAnimation>
+                
+                <HeroAnimation>
+                  <motion.h1 
+                    className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-gray-900 leading-tight" 
+                    data-testid="text-hero-title"
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+                  >
+                    KERALA<br />
+                    STARTUP<br />
+                    <span className="inline-flex items-baseline gap-2">
+                      FEST
+                      <span className="text-red-600">`26</span>
+                    </span>
+                  </motion.h1>
+                </HeroAnimation>
+                
+                <HeroSubAnimation delay={0.5}>
+                  <div className="mb-8">
+                    <p className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">
+                      2026 JAN 7-8
+                    </p>
+                    <p className="text-lg sm:text-xl font-medium text-gray-600">
+                      KOZHIKODE
+                    </p>
+                  </div>
+                </HeroSubAnimation>
+                
+                <HeroSubAnimation delay={0.6}>
+                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                    <Link href="/participate#register">
+                      <Button 
+                        size="lg" 
+                        className="font-semibold text-base px-8 bg-red-600 text-white shadow-lg min-w-[180px]" 
+                        data-testid="button-register-hero"
+                      >
+                        Register Now
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="outline" 
+                      size="lg" 
+                      className="font-semibold text-base px-8 border-gray-800 text-gray-800 min-w-[180px]" 
+                      data-testid="button-brochure"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Brochure
+                    </Button>
+                  </div>
+                </HeroSubAnimation>
+              </div>
             </div>
-          </HeroSubAnimation>
-          
-          <HeroSubAnimation delay={0.7}>
-            <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/participate#register">
-                <Button size="lg" className="font-semibold text-base px-8 bg-white text-red-600 shadow-lg" data-testid="button-register-hero">
-                  Register Now
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-              <Button variant="outline" size="lg" className="font-semibold text-base px-8 border-white text-white" data-testid="button-brochure">
-                Download Brochure
-              </Button>
-            </div>
-          </HeroSubAnimation>
+          </div>
+        </div>
+        
+        {/* Rainbow Scrolling Banner at Bottom */}
+        <div className="relative z-10 py-6 overflow-hidden">
+          <div className="banner-scroll">
+            {[...Array(10)].map((_, i) => (
+              <span key={i} className="rainbow-text text-lg sm:text-xl font-bold tracking-widest whitespace-nowrap mx-4">
+                KERALA STARTUP FEST 26
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
