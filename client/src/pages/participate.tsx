@@ -56,6 +56,7 @@ import {
 } from "@/lib/animations";
 import qrCodeImage from "@assets/upi_qr_99 (1)_1764521056107.png";
 import schoolsCollegesImage from "@assets/O sucesso está no topo de sua agenda Foto de alto ângulo de um grupo de empresários tendo uma reunião em um escritório _ Foto Premium_1764503607085.jpg";
+import eventPosterImage from "@assets/Screenshot_2025-12-02_221240_1764693826335.png";
 
 const registrationSchema = z.object({
   registrationType: z.enum(["expert-session", "contest"], {
@@ -169,6 +170,7 @@ export default function Participate() {
   const searchString = useSearch();
   const [registrationId, setRegistrationId] = useState<string | null>(null);
   const [qrCode, setQrCode] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
   
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
@@ -230,11 +232,13 @@ export default function Participate() {
   useEffect(() => {
     const params = new URLSearchParams(searchString);
     const contestParam = params.get("contest");
+    const typeParam = params.get("type");
     if (contestParam) {
       const decodedContest = decodeURIComponent(contestParam);
       if (contests.includes(decodedContest)) {
         form.setValue("registrationType", "contest");
         form.setValue("contestName", decodedContest);
+        setShowForm(true);
         setTimeout(() => {
           const registerSection = document.getElementById("register");
           if (registerSection) {
@@ -242,6 +246,15 @@ export default function Participate() {
           }
         }, 100);
       }
+    } else if (typeParam === "expert-session" || typeParam === "contest") {
+      form.setValue("registrationType", typeParam);
+      setShowForm(true);
+      setTimeout(() => {
+        const registerSection = document.getElementById("register");
+        if (registerSection) {
+          registerSection.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100);
     }
   }, [searchString, form]);
 
@@ -714,46 +727,112 @@ export default function Participate() {
                   Register Now
                 </h2>
                 <p className="text-muted-foreground">
-                  Fill out the form below to register for Kerala Startup Fest 2026. 
-                  After registering, you will receive more details about the schedule, contests and guidelines.
+                  {showForm 
+                    ? "Fill out the form below to register for Kerala Startup Fest 2026. After registering, you will receive more details about the schedule, contests and guidelines."
+                    : "Choose your registration type to get started with Kerala Startup Fest 2026."
+                  }
                 </p>
               </div>
             </ScrollFadeUp>
             
-            <ScrollFadeUp delay={0.1}>
-              <Card>
-                <CardContent className="p-6 sm:p-8">
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                      <motion.div
-                        custom={0}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        variants={formFieldVariants}
+            <AnimatePresence mode="wait">
+              {!showForm ? (
+                <motion.div
+                  key="poster-selection"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ScrollFadeUp delay={0.1}>
+                    <Card className="overflow-hidden">
+                      <CardContent className="p-0">
+                        <motion.div 
+                          className="relative"
+                          whileHover={{ scale: 1.02 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <img 
+                            src={eventPosterImage} 
+                            alt="Kerala Startup Fest 2026" 
+                            className="w-full h-auto object-contain"
+                            data-testid="img-event-poster"
+                          />
+                        </motion.div>
+                        <div className="p-6 sm:p-8 space-y-4">
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Button 
+                              size="lg" 
+                              className="w-full font-semibold text-base"
+                              onClick={() => {
+                                form.setValue("registrationType", "expert-session");
+                                setShowForm(true);
+                              }}
+                              data-testid="button-register-expert-session"
+                            >
+                              <GraduationCap className="w-5 h-5 mr-2" />
+                              Register for Expert Session
+                            </Button>
+                          </motion.div>
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Button 
+                              size="lg" 
+                              variant="outline"
+                              className="w-full font-semibold text-base"
+                              onClick={() => {
+                                form.setValue("registrationType", "contest");
+                                setShowForm(true);
+                              }}
+                              data-testid="button-register-contest"
+                            >
+                              <Trophy className="w-5 h-5 mr-2" />
+                              Register for Contest
+                            </Button>
+                          </motion.div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </ScrollFadeUp>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="registration-form"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ScrollFadeUp delay={0.1}>
+                    <div className="mb-4">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => {
+                          setShowForm(false);
+                          form.setValue("registrationType", undefined as any);
+                          form.setValue("contestName", "");
+                        }}
+                        data-testid="button-back-to-selection"
                       >
-                        <FormField
-                          control={form.control}
-                          name="registrationType"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Registration For</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                  <SelectTrigger data-testid="select-registration-type">
-                                    <SelectValue placeholder="Select registration type" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="expert-session">Expert Session</SelectItem>
-                                  <SelectItem value="contest">Contest</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </motion.div>
+                        <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
+                        Back to selection
+                      </Button>
+                    </div>
+                    <Card>
+                      <CardContent className="p-6 sm:p-8">
+                        <div className="mb-6 p-4 rounded-lg bg-primary/10 border border-primary/20">
+                          <p className="text-sm font-medium text-center">
+                            Registering for: <span className="text-primary font-semibold">{registrationType === "expert-session" ? "Expert Session" : "Contest"}</span>
+                          </p>
+                        </div>
+                        <Form {...form}>
+                          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
                       <AnimatePresence>
                         {registrationType === "contest" && (
@@ -2199,11 +2278,14 @@ export default function Participate() {
                           </Button>
                         </motion.div>
                       </motion.div>
-                    </form>
-                  </Form>
-                </CardContent>
-              </Card>
-            </ScrollFadeUp>
+                          </form>
+                        </Form>
+                      </CardContent>
+                    </Card>
+                  </ScrollFadeUp>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </section>
