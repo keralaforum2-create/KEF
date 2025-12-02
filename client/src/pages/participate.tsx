@@ -58,7 +58,6 @@ import {
   RotateIn
 } from "@/lib/animations";
 import qrCodeImage from "@assets/upi_qr_99 (1)_1764521056107.png";
-import schoolsCollegesImage from "@assets/O sucesso está no topo de sua agenda Foto de alto ângulo de um grupo de empresários tendo uma reunião em um escritório _ Foto Premium_1764503607085.jpg";
 import eventPosterImage from "@assets/Screenshot_2025-12-02_221240_1764693826335.png";
 
 const registrationSchema = z.object({
@@ -649,62 +648,6 @@ export default function Participate() {
               </StaggerItem>
             ))}
           </StaggerContainer>
-        </div>
-      </section>
-
-      <section className="py-16 bg-card">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <ScrollFadeLeft>
-              <div>
-                <motion.div 
-                  className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                >
-                  <Building2 className="w-7 h-7 text-primary" />
-                </motion.div>
-                <h2 className="font-serif text-3xl font-bold mb-6" data-testid="text-for-schools">
-                  For Schools & Colleges
-                </h2>
-                <p className="text-muted-foreground mb-6">
-                  Schools and colleges can register groups of students for KSF. This is a great chance to:
-                </p>
-                <ul className="space-y-4 mb-8">
-                  {[
-                    "Expose your students to startup thinking",
-                    "Encourage innovation and leadership",
-                    "Build your institution's image as a startup-friendly campus"
-                  ].map((item, index) => (
-                    <motion.li 
-                      key={index}
-                      className="flex items-start gap-3"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
-            </ScrollFadeLeft>
-            
-            <ScrollFadeRight>
-              <motion.div 
-                className="relative"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-              >
-                <img 
-                  src={schoolsCollegesImage} 
-                  alt="Schools and Colleges" 
-                  className="w-full h-full rounded-3xl object-cover shadow-lg"
-                />
-              </motion.div>
-            </ScrollFadeRight>
-          </div>
         </div>
       </section>
 
