@@ -142,36 +142,11 @@ export default function Home() {
           </div>
         </div>
         
-        {/* Wavy Rainbow Banner at Bottom - Full Width */}
-        <div className="wave-banner-container py-4">
-          <div className="wave-banner-scroll">
-            <img 
-              src={waveElement} 
-              alt="Kerala Startup Fest" 
-              className="h-20 sm:h-24 md:h-28 w-auto object-contain"
-            />
-            <img 
-              src={waveElement} 
-              alt="Kerala Startup Fest" 
-              className="h-20 sm:h-24 md:h-28 w-auto object-contain"
-            />
-            <img 
-              src={waveElement} 
-              alt="Kerala Startup Fest" 
-              className="h-20 sm:h-24 md:h-28 w-auto object-contain"
-            />
-            <img 
-              src={waveElement} 
-              alt="Kerala Startup Fest" 
-              className="h-20 sm:h-24 md:h-28 w-auto object-contain"
-            />
-          </div>
-        </div>
       </section>
 
       {/* What is Kerala Startup Fest Section */}
-      <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-red-100 via-rose-100 to-red-200">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-200/20 via-transparent to-transparent" />
+      <section className="relative py-24 sm:py-32 overflow-hidden bg-gradient-to-br from-yellow-100 via-yellow-50 to-amber-100">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-yellow-200/20 via-transparent to-transparent" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center mb-16">
