@@ -36,6 +36,7 @@ import {
 import califphLifeSchoolLogo from "@assets/PhotoshopExtension_Image_1764498269153.png";
 import keralaEconomicForumLogo from "@assets/KERALA ECONOMIC FORUM LOGO RESOLUTION 00_1764498454572.png";
 import cubeLogo from "@assets/cube_1764697594714.png";
+import waveElement from "@assets/keral_startup_element_1764698110061.png";
 
 export default function Home() {
   const partnersRef = useRef<HTMLDivElement>(null);
@@ -44,27 +45,27 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section with New Design */}
-      <section className="relative min-h-[90vh] flex flex-col overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      <section className="relative min-h-[90vh] flex flex-col overflow-hidden bg-white">
         {/* Large faded background text */}
         <div className="bg-text-large hidden lg:block">FEST'26</div>
         
         {/* Main Content */}
-        <div className="relative z-10 flex-1 flex items-center">
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div className="relative z-10 flex-1 flex items-center pt-24">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
               {/* Left - Floating 3D Cube Logo */}
               <HeroAnimation>
                 <motion.div 
-                  className="flex justify-center lg:justify-start"
+                  className="flex justify-center lg:justify-center order-2 lg:order-1"
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 >
-                  <div className="float-horizontal">
+                  <div className="float-horizontal relative">
                     <img 
                       src={cubeLogo} 
                       alt="Kerala Startup Fest Logo" 
-                      className="w-64 sm:w-80 md:w-96 lg:w-[450px] h-auto drop-shadow-2xl"
+                      className="w-72 sm:w-80 md:w-96 lg:w-[420px] h-auto filter drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
                       data-testid="img-cube-logo"
                     />
                   </div>
@@ -72,16 +73,16 @@ export default function Home() {
               </HeroAnimation>
               
               {/* Right - Text Content */}
-              <div className="text-center lg:text-left">
+              <div className="text-center lg:text-left order-1 lg:order-2">
                 <HeroSubAnimation delay={0.2}>
-                  <p className="text-sm sm:text-base font-medium tracking-[0.3em] text-gray-500 mb-4 uppercase">
+                  <p className="hero-tagline text-sm sm:text-base font-medium tracking-[0.25em] text-gray-400 mb-6 uppercase">
                     First of its kind in the state
                   </p>
                 </HeroSubAnimation>
                 
                 <HeroAnimation>
                   <motion.h1 
-                    className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight text-gray-900 leading-tight" 
+                    className="hero-title text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-8 tracking-tight text-gray-800 leading-[0.9]" 
                     data-testid="text-hero-title"
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -89,19 +90,18 @@ export default function Home() {
                   >
                     KERALA<br />
                     STARTUP<br />
-                    <span className="inline-flex items-baseline gap-2">
-                      FEST
-                      <span className="text-red-600">`26</span>
+                    <span className="inline-flex items-baseline">
+                      FEST<span className="text-red-600">`26</span>
                     </span>
                   </motion.h1>
                 </HeroAnimation>
                 
                 <HeroSubAnimation delay={0.5}>
-                  <div className="mb-8">
-                    <p className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">
+                  <div className="mb-10">
+                    <p className="text-xl sm:text-2xl font-bold text-gray-700 mb-1 tracking-wide">
                       2026 JAN 7-8
                     </p>
-                    <p className="text-lg sm:text-xl font-medium text-gray-600">
+                    <p className="text-lg sm:text-xl font-semibold text-gray-500 tracking-widest">
                       KOZHIKODE
                     </p>
                   </div>
@@ -112,20 +112,20 @@ export default function Home() {
                     <Link href="/participate#register">
                       <Button 
                         size="lg" 
-                        className="font-semibold text-base px-8 bg-red-600 text-white shadow-lg min-w-[180px]" 
+                        className="font-bold text-base px-10 py-6 bg-red-600 text-white shadow-xl min-w-[200px] text-lg" 
                         data-testid="button-register-hero"
                       >
                         Register Now
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                        <ArrowRight className="w-5 h-5 ml-2" />
                       </Button>
                     </Link>
                     <Button 
                       variant="outline" 
                       size="lg" 
-                      className="font-semibold text-base px-8 border-gray-800 text-gray-800 min-w-[180px]" 
+                      className="font-bold text-base px-10 py-6 border-2 border-gray-700 text-gray-700 min-w-[200px] text-lg" 
                       data-testid="button-brochure"
                     >
-                      <Download className="w-4 h-4 mr-2" />
+                      <Download className="w-5 h-5 mr-2" />
                       Download Brochure
                     </Button>
                   </div>
@@ -135,14 +135,24 @@ export default function Home() {
           </div>
         </div>
         
-        {/* Rainbow Scrolling Banner at Bottom */}
-        <div className="relative z-10 py-6 overflow-hidden">
-          <div className="banner-scroll">
-            {[...Array(10)].map((_, i) => (
-              <span key={i} className="rainbow-text text-lg sm:text-xl font-bold tracking-widest whitespace-nowrap mx-4">
-                KERALA STARTUP FEST 26
-              </span>
-            ))}
+        {/* Wavy Rainbow Banner at Bottom */}
+        <div className="relative z-10 w-full overflow-hidden py-4">
+          <div className="wave-banner-scroll">
+            <img 
+              src={waveElement} 
+              alt="Kerala Startup Fest" 
+              className="h-24 sm:h-28 md:h-32 w-auto"
+            />
+            <img 
+              src={waveElement} 
+              alt="Kerala Startup Fest" 
+              className="h-24 sm:h-28 md:h-32 w-auto"
+            />
+            <img 
+              src={waveElement} 
+              alt="Kerala Startup Fest" 
+              className="h-24 sm:h-28 md:h-32 w-auto"
+            />
           </div>
         </div>
       </section>
