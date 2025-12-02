@@ -25,7 +25,7 @@ import keralaEconomicForumLogo from "@assets/KERALA ECONOMIC FORUM LOGO RESOLUTI
 
 export default function About() {
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-20 bg-gradient-to-br from-teal-50 via-cyan-100/50 to-teal-50 dark:from-teal-950/30 dark:via-cyan-900/20 dark:to-teal-950/30">
       <section className="py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>

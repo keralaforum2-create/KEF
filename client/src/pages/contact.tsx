@@ -105,7 +105,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-20 bg-gradient-to-br from-red-50 via-rose-100/50 to-red-50 dark:from-red-950/30 dark:via-rose-900/20 dark:to-red-950/30">
       <section className="py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>

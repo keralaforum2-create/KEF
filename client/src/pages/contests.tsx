@@ -53,8 +53,8 @@ const contests = [
 
 export default function Contests() {
   return (
-    <div className="min-h-screen pt-20">
-      <section className="py-20 bg-gradient-to-b from-card to-background">
+    <div className="min-h-screen pt-20 bg-gradient-to-br from-red-50 via-rose-100/50 to-red-50 dark:from-red-950/30 dark:via-rose-900/20 dark:to-red-950/30">
+      <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
             <div className="text-center mb-16">

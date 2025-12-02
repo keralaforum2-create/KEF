@@ -27,7 +27,7 @@ import partnershipImage from "@assets/WhatsApp Image 2025-11-30 at 14.13.34_f772
 
 export default function Partners() {
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-20 bg-gradient-to-br from-purple-50 via-violet-100/50 to-indigo-50 dark:from-purple-950/30 dark:via-violet-900/20 dark:to-indigo-950/30">
       <section className="py-16 sm:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
