@@ -73,7 +73,7 @@ export default function Home() {
             >
               Kerala Startup Fest
               <motion.span 
-                className="block text-yellow-300"
+                className="block text-white/90"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
@@ -99,7 +99,7 @@ export default function Home() {
           
           <HeroSubAnimation delay={0.6}>
             <div className="flex items-center justify-center gap-2 text-sm text-white/80 mb-10">
-              <Users className="w-4 h-4 text-yellow-300" />
+              <Users className="w-4 h-4 text-white" />
               <span>High school to age 29</span>
             </div>
           </HeroSubAnimation>
@@ -147,63 +147,71 @@ export default function Home() {
           
           <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" staggerDelay={0.1}>
             <StaggerItem>
-              <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate">
-                <div 
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                  style={{ backgroundColor: "hsl(0 100% 50%)" }}
-                >
-                  <Presentation className="w-8 h-8 text-white" />
+              <Link href="/sessions" data-testid="link-expert-sessions">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate cursor-pointer h-full">
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    style={{ backgroundColor: "hsl(0 100% 50%)" }}
+                  >
+                    <Presentation className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Expert Sessions</h3>
+                  <p className="text-gray-600 text-sm sm:text-base">
+                    <span className="font-medium text-primary">Theme-based expert sessions</span> from real business leaders
+                  </p>
                 </div>
-                <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Expert Sessions</h3>
-                <p className="text-gray-600 text-sm sm:text-base">
-                  <span className="font-medium text-primary">Theme-based expert sessions</span> from real business leaders
-                </p>
-              </div>
+              </Link>
             </StaggerItem>
             
             <StaggerItem>
-              <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate">
-                <div 
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                  style={{ backgroundColor: "hsl(45 100% 50%)" }}
-                >
-                  <Lightbulb className="w-8 h-8 text-gray-900" />
+              <Link href="/participate" data-testid="link-idea-pitching">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate cursor-pointer h-full">
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    style={{ backgroundColor: "hsl(0 100% 50%)" }}
+                  >
+                    <Lightbulb className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Idea Pitching</h3>
+                  <p className="text-gray-600 text-sm sm:text-base">
+                    Pitch your ideas to <span className="font-medium text-primary">investors & VCs</span>
+                  </p>
                 </div>
-                <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Idea Pitching</h3>
-                <p className="text-gray-600 text-sm sm:text-base">
-                  Pitch your ideas to <span className="font-medium text-primary">investors & VCs</span>
-                </p>
-              </div>
+              </Link>
             </StaggerItem>
             
             <StaggerItem>
-              <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate">
-                <div 
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                  style={{ backgroundColor: "hsl(174 100% 29%)" }}
-                >
-                  <Award className="w-8 h-8 text-white" />
+              <Link href="/contests" data-testid="link-competitions">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate cursor-pointer h-full">
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    style={{ backgroundColor: "hsl(174 100% 29%)" }}
+                  >
+                    <Award className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Competitions</h3>
+                  <p className="text-gray-600 text-sm sm:text-base">
+                    <span className="font-medium text-primary">Win prizes and funding</span>, not just certificates
+                  </p>
                 </div>
-                <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Competitions</h3>
-                <p className="text-gray-600 text-sm sm:text-base">
-                  <span className="font-medium text-primary">Win prizes and funding</span>, not just certificates
-                </p>
-              </div>
+              </Link>
             </StaggerItem>
             
             <StaggerItem>
-              <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate">
-                <div 
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                  style={{ backgroundColor: "hsl(263 47% 35%)" }}
-                >
-                  <Briefcase className="w-8 h-8 text-white" />
+              <Link href="/partners" data-testid="link-vc-networking">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate cursor-pointer h-full">
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    style={{ backgroundColor: "hsl(263 47% 35%)" }}
+                  >
+                    <Briefcase className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">VC Networking</h3>
+                  <p className="text-gray-600 text-sm sm:text-base">
+                    Connect with <span className="font-medium text-primary">venture capitalists</span> & business leaders
+                  </p>
                 </div>
-                <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">VC Networking</h3>
-                <p className="text-gray-600 text-sm sm:text-base">
-                  Connect with <span className="font-medium text-primary">venture capitalists</span> & business leaders
-                </p>
-              </div>
+              </Link>
             </StaggerItem>
           </StaggerContainer>
         </div>
@@ -408,7 +416,7 @@ export default function Home() {
       </section>
 
       {/* Our Big Goal Section with Pulsing Glow */}
-      <section className="py-24 sm:py-32 relative overflow-hidden bg-gradient-to-br from-red-500 via-orange-500 to-red-600">
+      <section className="py-24 sm:py-32 relative overflow-hidden bg-gradient-to-br from-red-600 via-red-500 to-red-700">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
             backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,0.3) 35px, rgba(255,255,255,0.3) 70px)'
@@ -436,7 +444,7 @@ export default function Home() {
                 Kerala Startup Fest aims to launch{" "}
                 <span className="relative inline-block">
                   <span className="relative z-10">100 startups</span>
-                  <span className="absolute bottom-1 left-0 right-0 h-1 bg-yellow-300/50" />
+                  <span className="absolute bottom-1 left-0 right-0 h-1 bg-white/50" />
                 </span>
                 {" "}from this festival.
               </p>
@@ -448,7 +456,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative z-10">
                     <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
-                      <Lightbulb className="w-6 h-6 text-yellow-300" />
+                      <Lightbulb className="w-6 h-6 text-white" />
                     </div>
                     <p className="font-bold text-lg text-white mb-1">Democratise</p>
                     <p className="text-sm text-white/80">Entrepreneurship</p>
@@ -474,7 +482,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative z-10">
                     <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-all duration-300">
-                      <TrendingUp className="w-6 h-6 text-cyan-300" />
+                      <TrendingUp className="w-6 h-6 text-white" />
                     </div>
                     <p className="font-bold text-lg text-white mb-1">Bridge</p>
                     <p className="text-sm text-white/80">Education & Execution</p>
