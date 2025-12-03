@@ -58,6 +58,7 @@ import {
   RotateIn
 } from "@/lib/animations";
 import qrCodeImage from "@assets/upi_qr_99 (1)_1764521056107.png";
+import premiumQrCodeImage from "@assets/599_1764728241010.png";
 import eventPosterImage from "@assets/Screenshot_2025-12-02_221240_1764693826335.png";
 
 const registrationSchema = z.object({
@@ -265,6 +266,7 @@ export default function Participate() {
   const registrationType = form.watch("registrationType");
   const contestName = form.watch("contestName");
   const participantType = form.watch("participantType");
+  const ticketCategory = form.watch("ticketCategory");
   const isPitchRoom = contestName === "The Pitch Room";
   const isBusinessQuiz = contestName === "Business Quiz – School Edition";
 
@@ -277,8 +279,9 @@ export default function Participate() {
 
   const handleDownloadQR = () => {
     const link = document.createElement("a");
-    link.href = qrCodeImage;
-    link.download = "payment-qr-code.png";
+    const currentTicketCategory = form.getValues("ticketCategory");
+    link.href = currentTicketCategory === "premium" ? premiumQrCodeImage : qrCodeImage;
+    link.download = currentTicketCategory === "premium" ? "premium-payment-qr-code.png" : "payment-qr-code.png";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -2279,7 +2282,10 @@ export default function Participate() {
                             Application Fees
                           </h3>
                           <p className="text-sm text-muted-foreground font-medium">
-                            Transfer ₹149/- to this UPI No: +91 86063 41939 or below QR
+                            {ticketCategory === "premium" 
+                              ? "Transfer ₹599/- to the below UPI ID or scan the QR code"
+                              : "Transfer ₹149/- to this UPI No: +91 86063 41939 or below QR"
+                            }
                           </p>
                         </div>
 
@@ -2287,7 +2293,7 @@ export default function Participate() {
                           <RotateIn delay={0.2}>
                             <div className="w-full max-w-xs">
                               <img 
-                                src={qrCodeImage} 
+                                src={ticketCategory === "premium" ? premiumQrCodeImage : qrCodeImage} 
                                 alt="Payment QR Code" 
                                 className="w-full rounded-xl border-2 border-primary/20"
                                 data-testid="img-payment-qr-form"
@@ -2311,10 +2317,17 @@ export default function Participate() {
 
                           <div className="text-center w-full">
                             <p className="text-sm text-muted-foreground mb-1">UPI ID:</p>
-                            <p className="font-semibold text-sm break-all mb-4">javadivd8448-1@oksbi</p>
+                            <p className="font-semibold text-sm break-all mb-4">
+                              {ticketCategory === "premium" 
+                                ? "caliphworldfoundation.9605399676.ibz@icici"
+                                : "javadivd8448-1@oksbi"
+                              }
+                            </p>
                             
                             <p className="text-sm text-muted-foreground mb-1">Amount:</p>
-                            <p className="font-bold text-lg text-primary">₹149.00</p>
+                            <p className="font-bold text-lg text-primary">
+                              {ticketCategory === "premium" ? "₹599.00" : "₹149.00"}
+                            </p>
                           </div>
 
                           <p className="text-center text-muted-foreground font-medium text-sm">
