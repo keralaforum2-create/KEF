@@ -34,6 +34,7 @@ import {
   ScrollFadeDown
 } from "@/lib/animations";
 import waveElement from "@assets/keral_startup_element_1764698110061.png";
+import cubeLogo from "@assets/cube_1764739470058.png";
 import caliphLifeSchoolLogo from "@assets/PhotoshopExtension_Image-removebg-preview_1764739146810.png";
 import keralaEconomicForumLogo from "@assets/kerala_economic_forum_logo_1764739146809.png";
 
@@ -60,16 +61,12 @@ export default function Home() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 >
-                  <div className="cube-scene" data-testid="rotating-cube-logo">
-                    <div className="cube-container">
-                      <div className="cube-face">
-                        <div className="triangle-shape triangle-red"></div>
-                        <div className="triangle-shape triangle-blue"></div>
-                        <div className="triangle-shape triangle-yellow"></div>
-                        <div className="triangle-shape triangle-green"></div>
-                        <div className="triangle-shape triangle-purple"></div>
-                      </div>
-                    </div>
+                  <div className="rotating-logo-container" data-testid="rotating-cube-logo">
+                    <img 
+                      src={cubeLogo} 
+                      alt="Kerala Startup Fest Logo" 
+                      className="rotating-logo w-72 sm:w-80 md:w-96 lg:w-[420px] h-auto"
+                    />
                   </div>
                 </motion.div>
               </HeroAnimation>
