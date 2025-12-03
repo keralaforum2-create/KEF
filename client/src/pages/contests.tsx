@@ -20,10 +20,10 @@ const contests = [
   {
     id: 1,
     slug: "business-quiz",
-    title: "Business Quiz – School Edition",
-    description: "A fast-paced challenge that tests business awareness, startup knowledge, and decision-making skills.",
+    title: "National Level Inter School Business Quiz",
+    description: "A national level inter-school business quiz testing real-world business awareness and brand knowledge. Team-based (2 members per team). Registration: ₹99 per team.",
     icon: Brain,
-    badge: "Grade 12 & Below",
+    badge: "Grade 8-12",
   },
   {
     id: 2,
