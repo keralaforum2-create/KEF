@@ -188,32 +188,70 @@ const contestsData: Record<string, ContestData> = {
   },
   "camera-craft": {
     id: "camera-craft",
-    title: "Camera Craft – Photo & Video Challenge",
-    tagline: "Capture creativity through your lens",
-    badge: "All Participants",
-    introduction: "Showcase your photography and videography skills in this creative challenge. Capture the spirit of entrepreneurship, innovation, and the startup ecosystem through your unique perspective.",
+    title: "Camera Craft – Photography & Reel-Making Contest",
+    tagline: "National Level Manual Photography & Reel-Making Contest",
+    badge: "School & College Students",
+    category: "Offline, Multi-Round Competition",
+    introduction: "Camera Craft is a national level photography and reel-making contest that tests creativity, technical skills, and storytelling. Conducted as a series of rounds covering both Photography and Videography/Reels, participants compete for the title through multiple elimination rounds with cumulative scoring.",
     eligibility: [
-      "Open to all age groups",
-      "Individual or team participation",
-      "Must submit original work only"
+      "Open to all School and College students across India",
+      "Any number of participants can register from an institution",
+      "Participants must carry a valid ID card",
+      "Registered participants may attend the two-day Kerala Startup Fest (KSF) Expo & Expert Sessions",
+      "This is an individual contest - teaming or collaboration is not allowed unless explicitly mentioned"
     ],
+    registrationFee: "₹199 per participant",
     stages: [
       {
-        title: "Submission Phase",
-        description: "Submit your best photos or videos online",
+        title: "Equipment Rules",
+        description: "Guidelines for devices and editing",
         details: [
-          "Theme-based submissions",
-          "Original content only",
-          "High-quality resolution required"
+          "Mobile Phones and Professional Cameras are permitted",
+          "Photo Rounds: No editing allowed - Raw images only",
+          "Video & Reel Rounds: Editing is allowed including cuts, transitions, colour grading, sound/music"
         ]
       },
       {
-        title: "Exhibition & Judging",
-        description: "Selected works displayed at Kerala Startup Fest",
+        title: "Contest Structure",
+        description: "Multi-round competition format",
         details: [
-          "Public exhibition at venue",
-          "Expert jury evaluation",
-          "People's choice voting"
+          "Multiple rounds covering both Photography and Videography/Reels",
+          "After certain rounds, eliminations will take place",
+          "Scores earned in each round will be added cumulatively",
+          "Final winners will be selected based on the total points after all rounds",
+          "Specific rules related to each round will be announced separately"
+        ]
+      },
+      {
+        title: "Contest Rules",
+        description: "Important rules for all participants",
+        details: [
+          "All submissions must be original and captured during the event rounds — no pre-shot content",
+          "AI-generated content is strictly prohibited",
+          "Plagiarism or duplication leads to immediate disqualification",
+          "Participants must follow time limits strictly",
+          "No close-up photos of people without explicit permission",
+          "Avoid political, religious, or sensitive content"
+        ]
+      },
+      {
+        title: "Conduct & Discipline",
+        description: "Behavioral guidelines",
+        details: [
+          "Maintain discipline at all shooting zones",
+          "Respect venue rules, staff, and fellow participants",
+          "No intrusion into restricted areas",
+          "Participants must not disturb the public or ongoing KSF sessions while shooting",
+          "Misbehaviour, argument with judges/volunteers, or violation of venue rules will lead to disqualification"
+        ]
+      },
+      {
+        title: "Additional Notes",
+        description: "Quality & control guidelines",
+        details: [
+          "Participants must back up their files; organizers are not responsible for technical losses",
+          "Bring your own storage devices, chargers, and backup batteries",
+          "All content becomes part of the event archive and may be used for official KSF publications (with credit when used)"
         ]
       }
     ],
@@ -225,7 +263,8 @@ const contestsData: Record<string, ContestData> = {
     additionalBenefits: [
       "Featured on KSF social media",
       "Exhibition at the festival",
-      "Networking with media professionals"
+      "Networking with media professionals",
+      "Access to two-day Kerala Startup Fest Expo and Expert Sessions"
     ]
   },
   "jam": {
