@@ -33,7 +33,7 @@ import {
   PulsingGlow,
   ScrollFadeDown
 } from "@/lib/animations";
-import animatedLogo from "@assets/D_Logo_Animation_Request_1764738870213.mp4";
+import animatedLogo from "@assets/Video_Background_Change_Request_1764739223550.mp4";
 import cubePoster from "@assets/cube_1764697594714.png";
 import waveElement from "@assets/keral_startup_element_1764698110061.png";
 import caliphLifeSchoolLogo from "@assets/PhotoshopExtension_Image-removebg-preview_1764739146810.png";
