@@ -33,7 +33,8 @@ import {
   PulsingGlow,
   ScrollFadeDown
 } from "@/lib/animations";
-import cubeLogo from "@assets/cube_1764697594714.png";
+import animatedLogo from "@assets/D_Logo_Animation_Request_1764738870213.mp4";
+import cubePoster from "@assets/cube_1764697594714.png";
 import waveElement from "@assets/keral_startup_element_1764698110061.png";
 
 export default function Home() {
@@ -51,7 +52,7 @@ export default function Home() {
         <div className="relative z-10 flex-grow flex items-center pt-8 md:pt-12">
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-              {/* Left - Floating 3D Cube Logo */}
+              {/* Left - Animated 3D Cube Logo */}
               <HeroAnimation>
                 <motion.div 
                   className="flex justify-center lg:justify-center order-2 lg:order-1"
@@ -59,12 +60,16 @@ export default function Home() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 >
-                  <div className="float-horizontal relative">
-                    <img 
-                      src={cubeLogo} 
-                      alt="Kerala Startup Fest Logo" 
-                      className="w-72 sm:w-80 md:w-96 lg:w-[420px] h-auto filter drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
-                      data-testid="img-cube-logo"
+                  <div className="relative">
+                    <video 
+                      src={animatedLogo}
+                      poster={cubePoster}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-72 sm:w-80 md:w-96 lg:w-[420px] h-auto object-contain"
+                      data-testid="video-animated-logo"
                     />
                   </div>
                 </motion.div>
