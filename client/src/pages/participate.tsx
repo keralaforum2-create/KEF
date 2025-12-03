@@ -2414,7 +2414,7 @@ export default function Participate() {
                             
                             <p className="text-sm text-muted-foreground mb-1">Amount:</p>
                             <p className="font-bold text-lg text-primary">
-                              {ticketCategory === "premium" ? "₹599.00" : "₹199.00"}
+                              {isBusinessQuiz ? "₹99.00" : (ticketCategory === "premium" ? "₹599.00" : "₹199.00")}
                             </p>
                           </div>
 
