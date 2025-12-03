@@ -171,68 +171,96 @@ export default function Home() {
           <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" staggerDelay={0.1}>
             <StaggerItem>
               <Link href="/sessions" data-testid="link-expert-sessions">
-                <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate cursor-pointer h-full">
-                  <div 
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                    style={{ backgroundColor: "hsl(0 100% 50%)" }}
-                  >
-                    <Presentation className="w-8 h-8 text-white" />
+                <div 
+                  className="relative p-[3px] rounded-2xl shadow-lg hover-elevate cursor-pointer h-full"
+                  style={{
+                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                  }}
+                >
+                  <div className="bg-white rounded-[13px] p-6 sm:p-8 text-center h-full">
+                    <div 
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                      style={{ backgroundColor: "hsl(174 100% 29%)" }}
+                    >
+                      <Presentation className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Expert Sessions</h3>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      <span className="font-medium text-primary">Theme-based expert sessions</span> from real business leaders
+                    </p>
                   </div>
-                  <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Expert Sessions</h3>
-                  <p className="text-gray-600 text-sm sm:text-base">
-                    <span className="font-medium text-primary">Theme-based expert sessions</span> from real business leaders
-                  </p>
                 </div>
               </Link>
             </StaggerItem>
             
             <StaggerItem>
               <Link href="/participate" data-testid="link-idea-pitching">
-                <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate cursor-pointer h-full">
-                  <div 
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                    style={{ backgroundColor: "hsl(0 100% 50%)" }}
-                  >
-                    <Lightbulb className="w-8 h-8 text-white" />
+                <div 
+                  className="relative p-[3px] rounded-2xl shadow-lg hover-elevate cursor-pointer h-full"
+                  style={{
+                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                  }}
+                >
+                  <div className="bg-white rounded-[13px] p-6 sm:p-8 text-center h-full">
+                    <div 
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                      style={{ backgroundColor: "hsl(174 100% 29%)" }}
+                    >
+                      <Lightbulb className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Idea Pitching</h3>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      Pitch your ideas to <span className="font-medium text-primary">investors & VCs</span>
+                    </p>
                   </div>
-                  <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Idea Pitching</h3>
-                  <p className="text-gray-600 text-sm sm:text-base">
-                    Pitch your ideas to <span className="font-medium text-primary">investors & VCs</span>
-                  </p>
                 </div>
               </Link>
             </StaggerItem>
             
             <StaggerItem>
               <Link href="/contests" data-testid="link-competitions">
-                <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate cursor-pointer h-full">
-                  <div 
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                    style={{ backgroundColor: "hsl(174 100% 29%)" }}
-                  >
-                    <Award className="w-8 h-8 text-white" />
+                <div 
+                  className="relative p-[3px] rounded-2xl shadow-lg hover-elevate cursor-pointer h-full"
+                  style={{
+                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                  }}
+                >
+                  <div className="bg-white rounded-[13px] p-6 sm:p-8 text-center h-full">
+                    <div 
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                      style={{ backgroundColor: "hsl(174 100% 29%)" }}
+                    >
+                      <Award className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Competitions</h3>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      <span className="font-medium text-primary">Win prizes and funding</span>, not just certificates
+                    </p>
                   </div>
-                  <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Competitions</h3>
-                  <p className="text-gray-600 text-sm sm:text-base">
-                    <span className="font-medium text-primary">Win prizes and funding</span>, not just certificates
-                  </p>
                 </div>
               </Link>
             </StaggerItem>
             
             <StaggerItem>
               <Link href="/partners" data-testid="link-vc-networking">
-                <div className="bg-white rounded-2xl p-6 sm:p-8 text-center shadow-lg border border-gray-100 group hover-elevate cursor-pointer h-full">
-                  <div 
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                    style={{ backgroundColor: "hsl(263 47% 35%)" }}
-                  >
-                    <Briefcase className="w-8 h-8 text-white" />
+                <div 
+                  className="relative p-[3px] rounded-2xl shadow-lg hover-elevate cursor-pointer h-full"
+                  style={{
+                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                  }}
+                >
+                  <div className="bg-white rounded-[13px] p-6 sm:p-8 text-center h-full">
+                    <div 
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                      style={{ backgroundColor: "hsl(174 100% 29%)" }}
+                    >
+                      <Briefcase className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">VC Networking</h3>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      Connect with <span className="font-medium text-primary">venture capitalists</span> & business leaders
+                    </p>
                   </div>
-                  <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">VC Networking</h3>
-                  <p className="text-gray-600 text-sm sm:text-base">
-                    Connect with <span className="font-medium text-primary">venture capitalists</span> & business leaders
-                  </p>
                 </div>
               </Link>
             </StaggerItem>

@@ -94,9 +94,9 @@ export function Navigation() {
                 >
                   <Link href={item.href}>
                     <Button
-                      variant={location === item.href ? "secondary" : "ghost"}
+                      variant="ghost"
                       size="sm"
-                      className="font-medium"
+                      className={`font-medium ${location === item.href ? "bg-white border border-gray-200 shadow-sm" : ""}`}
                       data-testid={`nav-link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                     >
                       {item.label}
@@ -159,8 +159,8 @@ export function Navigation() {
                       >
                         <Link href={item.href} onClick={() => setMobileOpen(false)}>
                           <Button
-                            variant={location === item.href ? "secondary" : "ghost"}
-                            className="w-full justify-start font-medium"
+                            variant="ghost"
+                            className={`w-full justify-start font-medium ${location === item.href ? "bg-white border border-gray-200 shadow-sm" : ""}`}
                             data-testid={`nav-mobile-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                           >
                             {item.label}
@@ -213,9 +213,9 @@ export function Navigation() {
             >
               <Link href={item.href}>
                 <Button
-                  variant={location === item.href ? "secondary" : "ghost"}
+                  variant="ghost"
                   size="icon"
-                  className="flex flex-col items-center justify-center"
+                  className={`flex flex-col items-center justify-center ${location === item.href ? "bg-white border border-gray-200 shadow-sm" : ""}`}
                   data-testid={`mobile-bottom-nav-${item.label.toLowerCase()}`}
                 >
                   <item.icon className="w-5 h-5" />
