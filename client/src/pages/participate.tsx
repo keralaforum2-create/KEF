@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useLocation, useSearch } from "wouter";
 import { z } from "zod";
 import QRCode from "qrcode";
+import html2canvas from "html2canvas";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -176,6 +177,8 @@ export default function Participate() {
   const [registrationId, setRegistrationId] = useState<string | null>(null);
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const ticketRef = useRef<HTMLDivElement>(null);
   
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
@@ -286,6 +289,36 @@ export default function Participate() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const downloadTicketDirect = async () => {
+    const ticketElement = document.getElementById("success-ticket-card");
+    if (!ticketElement) return;
+    
+    try {
+      setDownloading(true);
+      const canvas = await html2canvas(ticketElement, {
+        backgroundColor: "#ffffff",
+        scale: 3,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+      });
+      
+      const link = document.createElement("a");
+      link.download = `KSF-2026-Ticket-${registrationId}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (err) {
+      console.error("Failed to download ticket:", err);
+      toast({
+        title: "Download Failed",
+        description: "Please try again or use the View button to download.",
+        variant: "destructive",
+      });
+    } finally {
+      setDownloading(false);
+    }
   };
 
   const handlePitchFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -458,6 +491,8 @@ export default function Participate() {
                   transition={{ delay: 0.2 }}
                 >
                   <div 
+                    id="success-ticket-card"
+                    ref={ticketRef}
                     className="relative rounded-lg overflow-hidden shadow-xl bg-white"
                     style={{ aspectRatio: "1024/361" }}
                   >
@@ -469,11 +504,11 @@ export default function Participate() {
                     
                     {qrCode && (
                       <div 
-                        className="absolute bg-white flex items-center justify-center"
+                        className="absolute bg-white flex items-center justify-center p-1"
                         style={{ 
-                          top: '20%', 
-                          right: '12%', 
-                          width: '12%',
+                          top: '25%', 
+                          left: '68%', 
+                          width: '10%',
                           aspectRatio: '1/1'
                         }}
                       >
@@ -501,14 +536,15 @@ export default function Participate() {
                 >
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
                     <Button
-                      onClick={viewTicket}
+                      onClick={downloadTicketDirect}
+                      disabled={downloading}
                       variant="default"
                       size="sm"
                       className="w-full gap-1"
                       data-testid="button-download-ticket"
                     >
                       <Download className="w-3 h-3" />
-                      <span className="hidden sm:inline">Download</span>
+                      <span className="hidden sm:inline">{downloading ? "..." : "Download"}</span>
                     </Button>
                   </motion.div>
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>

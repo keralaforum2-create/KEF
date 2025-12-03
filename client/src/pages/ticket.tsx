@@ -257,11 +257,11 @@ export default function Ticket() {
             
             {qrCodeUrl && (
               <div 
-                className="absolute bg-white flex items-center justify-center"
+                className="absolute bg-white flex items-center justify-center p-1"
                 style={{ 
-                  top: '20%', 
-                  right: '12%', 
-                  width: '12%',
+                  top: '25%', 
+                  left: '68%', 
+                  width: '10%',
                   aspectRatio: '1/1'
                 }}
               >
