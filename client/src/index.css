@@ -692,24 +692,13 @@
   transform: rotate(-25deg) translateX(60px) translateY(10px);
 }
 
-/* Rotating Logo Image */
-@keyframes rotate-logo {
-  0% {
-    transform: rotateY(0deg);
-  }
-  100% {
-    transform: rotateY(360deg);
-  }
-}
-
+/* Static Logo Image */
 .rotating-logo-container {
-  perspective: 1000px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .rotating-logo {
-  animation: rotate-logo 8s linear infinite;
-  transform-style: preserve-3d;
+  /* Static logo - no animation */
 }
