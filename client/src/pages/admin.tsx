@@ -453,9 +453,17 @@ export default function Admin() {
                 exit={{ opacity: 0, y: 10 }}
                 className="space-y-4 max-h-[70vh] overflow-y-auto"
               >
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Full Name</label>
-                  <p className="text-base font-medium">{selectedReg.fullName}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Full Name</label>
+                    <p className="text-base font-medium">{selectedReg.fullName}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Ticket Category</label>
+                    <Badge className={selectedReg.ticketCategory === "premium" ? "bg-amber-500 text-white" : "bg-gray-200 text-gray-700"}>
+                      {selectedReg.ticketCategory === "premium" ? "Premium" : "Normal"}
+                    </Badge>
+                  </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Email</label>
@@ -465,16 +473,18 @@ export default function Admin() {
                   <label className="text-sm font-medium text-muted-foreground">Phone</label>
                   <p className="text-base">{selectedReg.phone}</p>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Age</label>
-                  <p className="text-base">{selectedReg.age}</p>
-                </div>
-                {selectedReg.institution && (
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Institution</label>
-                    <p className="text-base">{selectedReg.institution}</p>
+                    <label className="text-sm font-medium text-muted-foreground">Age</label>
+                    <p className="text-base">{selectedReg.age}</p>
                   </div>
-                )}
+                  {selectedReg.institution && (
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">Institution</label>
+                      <p className="text-base">{selectedReg.institution}</p>
+                    </div>
+                  )}
+                </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Registration For</label>
                   <p className="text-base capitalize">{selectedReg.registrationType === "expert-session" ? "Expert Session" : "Contest"}</p>
@@ -485,8 +495,189 @@ export default function Admin() {
                     <p className="text-base">{selectedReg.contestName}</p>
                   </div>
                 )}
-                {selectedReg.paymentScreenshot && (
+                {selectedReg.participantType && (
                   <div>
+                    <label className="text-sm font-medium text-muted-foreground">Participant Type</label>
+                    <p className="text-base capitalize">{selectedReg.participantType.replace("-", " ")}</p>
+                  </div>
+                )}
+                {(selectedReg.teamMember1Name || selectedReg.teamMember2Name) && (
+                  <div className="border-t pt-4">
+                    <label className="text-sm font-medium text-muted-foreground mb-2 block">Team Members</label>
+                    {selectedReg.teamMember1Name && <p className="text-base">1. {selectedReg.teamMember1Name}</p>}
+                    {selectedReg.teamMember2Name && <p className="text-base">2. {selectedReg.teamMember2Name}</p>}
+                  </div>
+                )}
+                
+                {/* Pitch Room Details Section */}
+                {selectedReg.contestName === "The Pitch Room" && (
+                  <div className="border-t pt-4 space-y-4">
+                    <h4 className="font-semibold text-primary">Pitch Room Details</h4>
+                    
+                    {selectedReg.pitchStartupName && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Startup Name</label>
+                        <p className="text-base font-medium">{selectedReg.pitchStartupName}</p>
+                      </div>
+                    )}
+                    {selectedReg.pitchElevatorPitch && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Elevator Pitch</label>
+                        <p className="text-base">{selectedReg.pitchElevatorPitch}</p>
+                      </div>
+                    )}
+                    {selectedReg.pitchProblemStatement && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Problem Statement</label>
+                        <p className="text-base">{selectedReg.pitchProblemStatement}</p>
+                      </div>
+                    )}
+                    {selectedReg.pitchProposedSolution && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Proposed Solution</label>
+                        <p className="text-base">{selectedReg.pitchProposedSolution}</p>
+                      </div>
+                    )}
+                    {selectedReg.pitchProductName && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Product Name</label>
+                        <p className="text-base">{selectedReg.pitchProductName}</p>
+                      </div>
+                    )}
+                    {selectedReg.pitchProductDescription && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Product Description</label>
+                        <p className="text-base">{selectedReg.pitchProductDescription}</p>
+                      </div>
+                    )}
+                    
+                    {/* Pricing & Financial */}
+                    <div className="bg-muted/30 p-3 rounded-lg space-y-2">
+                      <h5 className="font-medium text-sm">Financial Details</h5>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        {selectedReg.pitchPricingModel && (
+                          <div>
+                            <span className="text-muted-foreground">Pricing Model:</span>
+                            <p className="font-medium">{selectedReg.pitchPricingModel}</p>
+                          </div>
+                        )}
+                        {selectedReg.pitchCostPerUnit && (
+                          <div>
+                            <span className="text-muted-foreground">Cost/Unit:</span>
+                            <p className="font-medium">{selectedReg.pitchCostPerUnit}</p>
+                          </div>
+                        )}
+                        {selectedReg.pitchSellingPrice && (
+                          <div>
+                            <span className="text-muted-foreground">Selling Price:</span>
+                            <p className="font-medium">{selectedReg.pitchSellingPrice}</p>
+                          </div>
+                        )}
+                        {selectedReg.pitchProfitPerUnit && (
+                          <div>
+                            <span className="text-muted-foreground">Profit/Unit:</span>
+                            <p className="font-medium">{selectedReg.pitchProfitPerUnit}</p>
+                          </div>
+                        )}
+                        {selectedReg.pitchTotalCapitalRequired && (
+                          <div>
+                            <span className="text-muted-foreground">Capital Required:</span>
+                            <p className="font-medium">{selectedReg.pitchTotalCapitalRequired}</p>
+                          </div>
+                        )}
+                        {selectedReg.pitchRevenuePerUser && (
+                          <div>
+                            <span className="text-muted-foreground">Revenue/User:</span>
+                            <p className="font-medium">{selectedReg.pitchRevenuePerUser}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Market Analysis */}
+                    {(selectedReg.pitchTargetCustomers || selectedReg.pitchMarketSize || selectedReg.pitchCompetitorAnalysis) && (
+                      <div className="bg-muted/30 p-3 rounded-lg space-y-2">
+                        <h5 className="font-medium text-sm">Market Analysis</h5>
+                        {selectedReg.pitchTargetCustomers && (
+                          <div>
+                            <span className="text-muted-foreground text-sm">Target Customers:</span>
+                            <p className="text-sm">{selectedReg.pitchTargetCustomers}</p>
+                          </div>
+                        )}
+                        {selectedReg.pitchMarketSize && (
+                          <div>
+                            <span className="text-muted-foreground text-sm">Market Size:</span>
+                            <p className="text-sm">{selectedReg.pitchMarketSize}</p>
+                          </div>
+                        )}
+                        {selectedReg.pitchCompetitorAnalysis && (
+                          <div>
+                            <span className="text-muted-foreground text-sm">Competitor Analysis:</span>
+                            <p className="text-sm">{selectedReg.pitchCompetitorAnalysis}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Revenue Projections */}
+                    {(selectedReg.pitchYear1Revenue || selectedReg.pitchYear2Revenue) && (
+                      <div className="bg-muted/30 p-3 rounded-lg space-y-2">
+                        <h5 className="font-medium text-sm">Revenue Projections</h5>
+                        <div className="grid grid-cols-5 gap-1 text-xs text-center">
+                          {selectedReg.pitchYear1Revenue && <div><span className="text-muted-foreground">Y1</span><p className="font-medium">{selectedReg.pitchYear1Revenue}</p></div>}
+                          {selectedReg.pitchYear2Revenue && <div><span className="text-muted-foreground">Y2</span><p className="font-medium">{selectedReg.pitchYear2Revenue}</p></div>}
+                          {selectedReg.pitchYear3Revenue && <div><span className="text-muted-foreground">Y3</span><p className="font-medium">{selectedReg.pitchYear3Revenue}</p></div>}
+                          {selectedReg.pitchYear4Revenue && <div><span className="text-muted-foreground">Y4</span><p className="font-medium">{selectedReg.pitchYear4Revenue}</p></div>}
+                          {selectedReg.pitchYear5Revenue && <div><span className="text-muted-foreground">Y5</span><p className="font-medium">{selectedReg.pitchYear5Revenue}</p></div>}
+                        </div>
+                        {selectedReg.pitchExpectedRoi && (
+                          <div className="mt-2">
+                            <span className="text-muted-foreground text-sm">Expected ROI:</span>
+                            <span className="font-medium ml-2">{selectedReg.pitchExpectedRoi}</span>
+                          </div>
+                        )}
+                        {selectedReg.pitchBreakevenPeriod && (
+                          <div>
+                            <span className="text-muted-foreground text-sm">Breakeven Period:</span>
+                            <span className="font-medium ml-2">{selectedReg.pitchBreakevenPeriod}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {selectedReg.pitchFeasibilityReasons && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Why This Idea is Feasible</label>
+                        <p className="text-base">{selectedReg.pitchFeasibilityReasons}</p>
+                      </div>
+                    )}
+                    {selectedReg.pitchCurrentStage && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Current Stage</label>
+                        <p className="text-base">{selectedReg.pitchCurrentStage}</p>
+                      </div>
+                    )}
+                    {selectedReg.pitchDemoVideoLink && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Demo Video Link</label>
+                        <a href={selectedReg.pitchDemoVideoLink} target="_blank" rel="noopener noreferrer" className="text-primary underline break-all">
+                          {selectedReg.pitchDemoVideoLink}
+                        </a>
+                      </div>
+                    )}
+                    {selectedReg.pitchSupportingFiles && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Supporting Files</label>
+                        <a href={selectedReg.pitchSupportingFiles} target="_blank" rel="noopener noreferrer" className="text-primary underline block">
+                          View File
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {selectedReg.paymentScreenshot && (
+                  <div className="border-t pt-4">
                     <label className="text-sm font-medium text-muted-foreground">Payment Screenshot</label>
                     <img 
                       src={selectedReg.paymentScreenshot} 

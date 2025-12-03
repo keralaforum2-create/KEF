@@ -302,9 +302,10 @@ export default function Participate() {
       formData.append("phone", data.phone);
       formData.append("age", data.age);
       formData.append("institution", data.institution || "");
-      formData.append("ticketCategory", data.ticketCategory || "");
+      formData.append("ticketCategory", data.ticketCategory || "normal");
       formData.append("registrationType", data.registrationType);
       formData.append("contestName", data.contestName || "");
+      formData.append("sessionName", data.registrationType === "expert-session" ? "Expert Session" : "");
       formData.append("participantType", data.participantType || "");
       formData.append("schoolGrade", data.schoolGrade || "");
       formData.append("collegeYear", data.collegeYear || "");

@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button";
 import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import logoImage from "@assets/LOGO_00-removebg-preview_1764701061868.png";
-import kefLogoImage from "@assets/KERALA ECONOMIC FORUM LOGO RESOLUTION 00_1764498454572.png";
+import ticketBgImage from "@assets/KSF_TICKET_1764728809586.png";
 
 interface Ticket {
   id: string;
@@ -20,10 +19,12 @@ interface Ticket {
   institution: string;
   registrationType: string;
   contestName?: string;
+  sessionName?: string;
   teamMember1Name?: string;
   teamMember2Name?: string;
   paymentScreenshot?: string;
   ticketType?: string;
+  ticketCategory?: string;
 }
 
 export default function Ticket() {
@@ -83,19 +84,11 @@ export default function Ticket() {
         setTicket(data);
         
         try {
-          const qrData = JSON.stringify({
-            ticketId: data.registrationId,
-            name: data.fullName,
-            email: data.email,
-            phone: data.phone,
-            type: data.registrationType,
-            ticketType: data.ticketType || "Normal",
-            institution: data.institution,
-            paymentProof: data.paymentScreenshot ? "Verified" : "Pending",
-            event: "Kerala Startup Fest 2026",
-            date: "January 7-8, 2026",
-            venue: "Calicut Beach, Kozhikode"
-          });
+          // Generate simple QR data with name and type (Contest/Session)
+          const typeDisplay = data.registrationType === "contest" 
+            ? `Contest: ${data.contestName || "Startup Pitch"}`
+            : `Session: ${data.sessionName || "Expert Session"}`;
+          const qrData = `Name: ${data.fullName}\nType: ${typeDisplay}${data.ticketCategory === "premium" ? "\nTier: Premium" : ""}`;
           const qrUrl = await QRCode.toDataURL(qrData, {
             width: 200,
             margin: 1,
@@ -218,110 +211,50 @@ export default function Ticket() {
           <div 
             id="ticket-card" 
             ref={ticketRef}
-            className="bg-white rounded-xl overflow-hidden shadow-2xl"
-            style={{ aspectRatio: "2.6/1" }}
+            className="relative rounded-xl overflow-hidden shadow-2xl"
+            style={{ aspectRatio: "3/1" }}
           >
-            <div className="flex h-full">
-              <div className="flex-1 flex">
-                <div className="w-3 flex flex-col">
-                  <div className="flex-1 bg-[#DC2626]"></div>
-                  <div className="flex-1 bg-[#0D9488]"></div>
-                  <div className="flex-1 bg-[#FACC15]"></div>
-                  <div className="flex-1 bg-[#5B21B6]"></div>
-                </div>
-                
-                <div className="flex-1 p-6 flex flex-col justify-between bg-white">
-                  <div>
-                    <div className="flex items-start gap-4">
-                      <img 
-                        src={logoImage} 
-                        alt="KSF Logo" 
-                        className="w-20 h-20 object-contain"
-                      />
-                      <div className="flex-1">
-                        <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">
-                          FIRST OF ITS KIND IN THE STATE
-                        </p>
-                        <h1 className="text-2xl font-black text-gray-900 leading-tight">
-                          KERALA<br/>
-                          STARTUP<br/>
-                          FEST'26
-                        </h1>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <p className="text-sm font-bold text-gray-800">2026 JAN 7-8</p>
-                      <span className="text-gray-400">|</span>
-                      <p className="text-sm text-gray-600">KOZHIKODE</p>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <img 
-                        src={kefLogoImage} 
-                        alt="Kerala Economic Forum" 
-                        className="h-8 object-contain"
-                      />
-                      <div className="flex items-center gap-1">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center">
-                          <span className="text-white text-[8px] font-bold">C</span>
-                        </div>
-                        <span className="text-xs font-semibold text-gray-600">CALIPH<sup className="text-[6px]">Edu</sup></span>
-                      </div>
-                    </div>
-                  </div>
+            {/* Background ticket image */}
+            <img 
+              src={ticketBgImage} 
+              alt="Kerala Startup Fest 2026 Ticket" 
+              className="w-full h-full object-cover"
+            />
+            
+            {/* Unique QR code overlay - positioned exactly where the template QR is */}
+            {qrCodeUrl && (
+              <div 
+                className="absolute"
+                style={{ 
+                  top: '24%', 
+                  left: '58%', 
+                  width: '18%',
+                  aspectRatio: '1/1'
+                }}
+              >
+                <img 
+                  src={qrCodeUrl} 
+                  alt="Ticket QR Code" 
+                  className="w-full h-full object-contain bg-white p-1"
+                  data-testid="img-qr-code"
+                />
+              </div>
+            )}
+            
+            {/* Premium badge overlay */}
+            {ticket.ticketCategory === "premium" && (
+              <div 
+                className="absolute"
+                style={{ 
+                  top: '8%', 
+                  right: '25%'
+                }}
+              >
+                <div className="bg-gradient-to-r from-amber-500 to-yellow-400 text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-lg transform -rotate-12">
+                  PREMIUM
                 </div>
               </div>
-              
-              <div className="flex items-center">
-                <div className="border-l-2 border-dashed border-gray-300 h-[80%] relative">
-                  <div className="absolute -top-3 -left-3 w-6 h-6 bg-background rounded-full"></div>
-                  <div className="absolute -bottom-3 -left-3 w-6 h-6 bg-background rounded-full"></div>
-                </div>
-              </div>
-              
-              <div className="w-[200px] p-4 flex flex-col items-center justify-center bg-white">
-                {qrCodeUrl && (
-                  <img 
-                    src={qrCodeUrl} 
-                    alt="Ticket QR Code" 
-                    className="w-32 h-32 mb-2"
-                    data-testid="img-qr-code"
-                  />
-                )}
-                <p className="text-[8px] text-gray-500 text-center">
-                  Scan for attendee details & payment verification
-                </p>
-              </div>
-              
-              <div className="w-20 bg-gray-100 flex flex-col items-center justify-between py-4 px-2">
-                <div className="flex flex-col items-center">
-                  <div className="w-1 flex flex-col gap-0.5">
-                    {Array.from({ length: 40 }).map((_, i) => (
-                      <div 
-                        key={i} 
-                        className="h-1.5 bg-gray-800" 
-                        style={{ width: Math.random() > 0.5 ? '3px' : '6px' }}
-                      ></div>
-                    ))}
-                  </div>
-                  <p className="text-[8px] text-gray-600 mt-1 rotate-0">{ticketNumber}</p>
-                </div>
-                
-                <div className="text-center transform -rotate-90 origin-center whitespace-nowrap">
-                  <p className="text-[8px] text-gray-500 uppercase tracking-wide">TICKET NUMBER:</p>
-                  <p className="text-[10px] font-bold text-gray-800">{ticketNumber}</p>
-                </div>
-                
-                <div className="text-center">
-                  <p className="text-[8px] text-gray-500 uppercase">DATE</p>
-                  <p className="text-[10px] font-bold text-gray-800">7-8</p>
-                  <p className="text-[8px] text-gray-500 uppercase mt-2">DESTINATION</p>
-                  <p className="text-[8px] font-medium text-gray-700">: CALICUT BEACH</p>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </motion.div>
 
