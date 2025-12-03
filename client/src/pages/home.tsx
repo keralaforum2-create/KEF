@@ -36,7 +36,7 @@ import {
 import waveElement from "@assets/keral_startup_element_1764698110061.png";
 import cubeLogo from "@assets/cube_1764739470058.png";
 import caliphLifeSchoolLogo from "@assets/PhotoshopExtension_Image-removebg-preview_1764739146810.png";
-import keralaEconomicForumLogo from "@assets/kerala_economic_forum_logo_1764739146809.png";
+import keralaEconomicForumLogo from "@assets/Screenshot_2025-11-29_222342-removebg-preview-removebg-preview_1764759226182.png";
 
 export default function Home() {
   const partnersRef = useRef<HTMLDivElement>(null);
@@ -494,10 +494,7 @@ export default function Home() {
             <ScrollFadeUp delay={0.2}>
               <p className="text-2xl sm:text-3xl font-semibold mb-8 text-white/95">
                 Kerala Startup Fest aims to launch{" "}
-                <span className="relative inline-block">
-                  <span className="relative z-10">100 startups</span>
-                  <span className="absolute bottom-1 left-0 right-0 h-1 bg-white/50" />
-                </span>
+                <span className="font-bold">100 startups</span>
                 {" "}from this festival.
               </p>
             </ScrollFadeUp>
