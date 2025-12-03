@@ -603,3 +603,91 @@
   transform: translateX(-50%);
   overflow: hidden;
 }
+
+/* 3D Rotating Cube Logo */
+@keyframes rotate-cube {
+  0% {
+    transform: rotateX(-20deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(-20deg) rotateY(360deg);
+  }
+}
+
+.cube-scene {
+  width: 280px;
+  height: 280px;
+  perspective: 1000px;
+}
+
+@media (min-width: 640px) {
+  .cube-scene {
+    width: 320px;
+    height: 320px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cube-scene {
+    width: 380px;
+    height: 380px;
+  }
+}
+
+.cube-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: rotate-cube 8s linear infinite;
+}
+
+.cube-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.triangle-shape {
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.triangle-red {
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+  border-bottom: 100px solid #DC2626;
+  transform: rotate(-15deg) translateX(20px) translateY(-30px);
+}
+
+.triangle-blue {
+  border-left: 55px solid transparent;
+  border-right: 55px solid transparent;
+  border-bottom: 95px solid #1E3A8A;
+  transform: rotate(15deg) translateX(-50px) translateY(-20px);
+}
+
+.triangle-yellow {
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 85px solid #FACC15;
+  transform: rotate(-5deg) translateX(-30px) translateY(40px);
+}
+
+.triangle-green {
+  border-left: 45px solid transparent;
+  border-right: 45px solid transparent;
+  border-bottom: 80px solid #0D9488;
+  transform: rotate(25deg) translateX(40px) translateY(50px);
+}
+
+.triangle-purple {
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 70px solid #6D28D9;
+  transform: rotate(-25deg) translateX(60px) translateY(10px);
+}
