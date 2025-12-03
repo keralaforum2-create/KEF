@@ -33,8 +33,6 @@ import {
   PulsingGlow,
   ScrollFadeDown
 } from "@/lib/animations";
-import animatedLogo from "@assets/Video_Background_Change_Request_1764739223550.mp4";
-import cubePoster from "@assets/cube_1764697594714.png";
 import waveElement from "@assets/keral_startup_element_1764698110061.png";
 import caliphLifeSchoolLogo from "@assets/PhotoshopExtension_Image-removebg-preview_1764739146810.png";
 import keralaEconomicForumLogo from "@assets/kerala_economic_forum_logo_1764739146809.png";
@@ -54,7 +52,7 @@ export default function Home() {
         <div className="relative z-10 flex-grow flex items-center pt-8 md:pt-12">
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-              {/* Left - Animated 3D Cube Logo */}
+              {/* Left - Rotating 3D Cube Logo */}
               <HeroAnimation>
                 <motion.div 
                   className="flex justify-center lg:justify-center order-2 lg:order-1"
@@ -62,17 +60,16 @@ export default function Home() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
                 >
-                  <div className="relative">
-                    <video 
-                      src={animatedLogo}
-                      poster={cubePoster}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="w-72 sm:w-80 md:w-96 lg:w-[420px] h-auto object-contain"
-                      data-testid="video-animated-logo"
-                    />
+                  <div className="cube-scene" data-testid="rotating-cube-logo">
+                    <div className="cube-container">
+                      <div className="cube-face">
+                        <div className="triangle-shape triangle-red"></div>
+                        <div className="triangle-shape triangle-blue"></div>
+                        <div className="triangle-shape triangle-yellow"></div>
+                        <div className="triangle-shape triangle-green"></div>
+                        <div className="triangle-shape triangle-purple"></div>
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               </HeroAnimation>
