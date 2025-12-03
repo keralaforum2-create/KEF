@@ -2,12 +2,12 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "wouter";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, AlertCircle, Download } from "lucide-react";
+import { ArrowLeft, AlertCircle, Download, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import ticketBgImage from "@assets/KSF_TICKET_1764728809586.png";
+import ticketBgImage from "@assets/KSF_TICKET_1764740702842.png";
 
 interface Ticket {
   id: string;
@@ -43,7 +43,7 @@ export default function Ticket() {
     return String(hash).padStart(10, '0').slice(0, 10);
   };
 
-  const downloadTicket = async () => {
+  const downloadTicketAsPNG = async () => {
     const ticketCard = document.getElementById("ticket-card");
     if (!ticketCard) return;
     
@@ -54,6 +54,32 @@ export default function Ticket() {
         scale: 3,
         logging: false,
         useCORS: true,
+        allowTaint: true,
+      });
+      
+      const link = document.createElement("a");
+      link.download = `KSF-2026-Ticket-${ticket?.registrationId}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (err) {
+      console.error("Failed to download ticket:", err);
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const downloadTicketAsPDF = async () => {
+    const ticketCard = document.getElementById("ticket-card");
+    if (!ticketCard) return;
+    
+    try {
+      setDownloading(true);
+      const canvas = await html2canvas(ticketCard, {
+        backgroundColor: "#ffffff",
+        scale: 3,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
       });
       
       const imgData = canvas.toDataURL("image/png");
@@ -84,12 +110,8 @@ export default function Ticket() {
         setTicket(data);
         
         try {
-          // Generate simple QR data with name and type (Contest/Session)
-          const typeDisplay = data.registrationType === "contest" 
-            ? `Contest: ${data.contestName || "Startup Pitch"}`
-            : `Session: ${data.sessionName || "Expert Session"}`;
-          const qrData = `Name: ${data.fullName}\nType: ${typeDisplay}${data.ticketCategory === "premium" ? "\nTier: Premium" : ""}`;
-          const qrUrl = await QRCode.toDataURL(qrData, {
+          const checkinUrl = `${window.location.origin}/checkin/${data.registrationId}`;
+          const qrUrl = await QRCode.toDataURL(checkinUrl, {
             width: 200,
             margin: 1,
             color: {
@@ -173,7 +195,7 @@ export default function Ticket() {
     <div className="min-h-screen bg-gradient-to-br from-background to-card py-8 px-4">
       <div className="max-w-4xl mx-auto">
         <motion.div 
-          className="flex items-center justify-between mb-6"
+          className="flex flex-wrap items-center justify-between gap-2 mb-6"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
@@ -189,18 +211,30 @@ export default function Ticket() {
               Back
             </Button>
           </motion.div>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-            <Button 
-              onClick={downloadTicket} 
-              disabled={downloading}
-              variant="default"
-              className="mb-0"
-              data-testid="button-download-ticket"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              {downloading ? "Downloading..." : "Download Ticket"}
-            </Button>
-          </motion.div>
+          <div className="flex flex-wrap gap-2">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+              <Button 
+                onClick={downloadTicketAsPNG} 
+                disabled={downloading}
+                variant="outline"
+                data-testid="button-download-ticket-png"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                {downloading ? "..." : "PNG"}
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+              <Button 
+                onClick={downloadTicketAsPDF} 
+                disabled={downloading}
+                variant="default"
+                data-testid="button-download-ticket-pdf"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                {downloading ? "..." : "PDF"}
+              </Button>
+            </motion.div>
+          </div>
         </motion.div>
 
         <motion.div
@@ -211,37 +245,50 @@ export default function Ticket() {
           <div 
             id="ticket-card" 
             ref={ticketRef}
-            className="relative rounded-xl overflow-hidden shadow-2xl"
-            style={{ aspectRatio: "3/1" }}
+            className="relative rounded-xl overflow-hidden shadow-2xl bg-white"
+            style={{ aspectRatio: "1024/361" }}
           >
-            {/* Background ticket image */}
             <img 
               src={ticketBgImage} 
               alt="Kerala Startup Fest 2026 Ticket" 
               className="w-full h-full object-cover"
+              crossOrigin="anonymous"
             />
             
-            {/* Unique QR code overlay - positioned exactly where the template QR is */}
             {qrCodeUrl && (
               <div 
-                className="absolute"
+                className="absolute bg-white"
                 style={{ 
-                  top: '24%', 
-                  left: '58%', 
-                  width: '18%',
+                  top: '18%', 
+                  left: '55%', 
+                  width: '20%',
                   aspectRatio: '1/1'
                 }}
               >
                 <img 
                   src={qrCodeUrl} 
                   alt="Ticket QR Code" 
-                  className="w-full h-full object-contain bg-white p-1"
+                  className="w-full h-full object-contain"
                   data-testid="img-qr-code"
                 />
               </div>
             )}
             
-            {/* Premium badge overlay */}
+            <div 
+              className="absolute text-right"
+              style={{ 
+                top: '50%', 
+                right: '2%',
+                transform: 'translateY(-50%) rotate(90deg)',
+                transformOrigin: 'center center',
+                width: '60%'
+              }}
+            >
+              <p className="text-[10px] sm:text-xs font-medium text-gray-800 whitespace-nowrap">
+                {ticketNumber}
+              </p>
+            </div>
+            
             {ticket.ticketCategory === "premium" && (
               <div 
                 className="absolute"
@@ -250,7 +297,7 @@ export default function Ticket() {
                   right: '25%'
                 }}
               >
-                <div className="bg-gradient-to-r from-amber-500 to-yellow-400 text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-lg transform -rotate-12">
+                <div className="bg-gradient-to-r from-amber-500 to-yellow-400 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg transform -rotate-12">
                   PREMIUM
                 </div>
               </div>
@@ -284,7 +331,7 @@ export default function Ticket() {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Ticket Type</p>
-              <p className="font-medium">{ticket.ticketType || "Normal"}</p>
+              <p className="font-medium capitalize">{ticket.ticketCategory || "Normal"}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Ticket ID</p>
@@ -304,7 +351,7 @@ export default function Ticket() {
             )}
           </div>
           
-          {ticket.contestName === "StartUp Pitch" && (ticket.teamMember1Name || ticket.teamMember2Name) && (
+          {ticket.contestName === "The Pitch Room" && (ticket.teamMember1Name || ticket.teamMember2Name) && (
             <div className="mt-4 pt-4 border-t border-border">
               <p className="text-sm text-muted-foreground mb-2">Team Members</p>
               <div className="space-y-1">

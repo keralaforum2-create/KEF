@@ -16,6 +16,7 @@ import Contact from "@/pages/contact";
 import AdminLogin from "@/pages/admin-login";
 import Admin from "@/pages/admin";
 import Ticket from "@/pages/ticket";
+import Checkin from "@/pages/checkin";
 import ContestDetail from "@/pages/contest-detail";
 import NotFound from "@/pages/not-found";
 
@@ -52,6 +53,7 @@ function Router() {
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/admin" component={Admin} />
       <Route path="/ticket/:id" component={Ticket} />
+      <Route path="/checkin/:id" component={Checkin} />
       <Route component={NotFound} />
     </Switch>
   );

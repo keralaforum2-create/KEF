@@ -60,6 +60,7 @@ import {
 import normalQrCodeImage from "@assets/199_1764728302342.png";
 import premiumQrCodeImage from "@assets/599_1764728241010.png";
 import eventPosterImage from "@assets/Screenshot_2025-12-02_221240_1764693826335.png";
+import ticketBgImage from "@assets/KSF_TICKET_1764740702842.png";
 
 const registrationSchema = z.object({
   registrationType: z.enum(["expert-session", "contest"], {
@@ -359,8 +360,15 @@ export default function Participate() {
       const regId = response.registration?.registrationId;
       if (regId) {
         setRegistrationId(regId);
-        const ticketUrl = `${window.location.origin}/ticket/${regId}`;
-        QRCode.toDataURL(ticketUrl).then(setQrCode).catch((err: any) => {
+        const checkinUrl = `${window.location.origin}/checkin/${regId}`;
+        QRCode.toDataURL(checkinUrl, {
+          width: 200,
+          margin: 1,
+          color: {
+            dark: '#000000',
+            light: '#ffffff'
+          }
+        }).then(setQrCode).catch((err: any) => {
           console.error("Failed to generate QR code:", err);
           setQrCode("");
         });
@@ -379,16 +387,6 @@ export default function Participate() {
     mutation.mutate(data);
   };
 
-  const downloadQRCode = () => {
-    if (!qrCode) return;
-    const link = document.createElement("a");
-    link.href = qrCode;
-    link.download = `ticket-${registrationId}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   const viewTicket = () => {
     if (registrationId) {
       setLocation(`/ticket/${registrationId}`);
@@ -401,11 +399,26 @@ export default function Participate() {
     form.reset();
   };
 
+  const generateTicketNumber = (regId: string) => {
+    const hash = regId.split('').reduce((acc, char) => {
+      return acc + char.charCodeAt(0);
+    }, 0);
+    return String(hash).padStart(10, '0').slice(0, 10);
+  };
+
+  const openInNewTab = () => {
+    if (registrationId) {
+      window.open(`/ticket/${registrationId}`, '_blank');
+    }
+  };
+
   if (registrationId) {
+    const ticketNumber = generateTicketNumber(registrationId);
+    
     return (
       <AnimatePresence>
         <motion.div 
-          className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4 overflow-y-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -415,21 +428,23 @@ export default function Participate() {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
+            className="w-full max-w-2xl"
           >
-            <Card className="w-full max-w-md border-2 border-primary">
-              <CardContent className="p-6 sm:p-8">
-                <div className="flex justify-between items-start mb-4">
-                  <motion.h1 
-                    className="text-xl sm:text-2xl font-bold text-primary"
+            <Card className="border-2 border-primary bg-card/95 backdrop-blur">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <motion.div 
+                    className="flex items-center gap-2"
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 }}
                   >
-                    Done!
-                  </motion.h1>
+                    <CheckCircle className="w-6 h-6 text-green-500" />
+                    <h1 className="text-lg sm:text-xl font-bold text-foreground">Registration Successful!</h1>
+                  </motion.div>
                   <button
                     onClick={closeModal}
-                    className="text-muted-foreground hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground p-1"
                     data-testid="button-close-modal"
                   >
                     <X className="w-5 h-5" />
@@ -442,65 +457,107 @@ export default function Participate() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <div className="bg-primary/10 rounded-lg p-3 text-center mb-3">
-                    <p className="text-xs text-muted-foreground mb-1">Ticket ID</p>
-                    <p className="text-xl font-bold text-primary font-mono">{registrationId}</p>
-                  </div>
-
-                  {qrCode ? (
-                    <RotateIn delay={0.3}>
-                      <div className="bg-background border border-border rounded-lg p-3">
-                        <img src={qrCode} alt="QR" className="w-full rounded" data-testid="img-ticket-qr" />
+                  <div 
+                    className="relative rounded-lg overflow-hidden shadow-xl bg-white"
+                    style={{ aspectRatio: "1024/361" }}
+                  >
+                    <img 
+                      src={ticketBgImage} 
+                      alt="Kerala Startup Fest 2026 Ticket" 
+                      className="w-full h-full object-cover"
+                    />
+                    
+                    {qrCode && (
+                      <div 
+                        className="absolute bg-white"
+                        style={{ 
+                          top: '18%', 
+                          left: '55%', 
+                          width: '20%',
+                          aspectRatio: '1/1'
+                        }}
+                      >
+                        <img 
+                          src={qrCode} 
+                          alt="Ticket QR Code" 
+                          className="w-full h-full object-contain"
+                          data-testid="img-ticket-qr"
+                        />
                       </div>
-                    </RotateIn>
-                  ) : (
-                    <div className="bg-background border border-border rounded-lg p-3 text-center text-xs text-muted-foreground">
-                      QR generating...
+                    )}
+                    
+                    <div 
+                      className="absolute text-right"
+                      style={{ 
+                        top: '50%', 
+                        right: '2%',
+                        transform: 'translateY(-50%) rotate(90deg)',
+                        transformOrigin: 'center center',
+                        width: '60%'
+                      }}
+                    >
+                      <p className="text-[8px] sm:text-[10px] font-medium text-gray-800 whitespace-nowrap">
+                        {ticketNumber}
+                      </p>
                     </div>
-                  )}
+                  </div>
+                  
+                  <div className="mt-3 bg-primary/10 rounded-lg p-3 text-center">
+                    <p className="text-xs text-muted-foreground mb-1">Your Ticket ID</p>
+                    <p className="text-lg font-bold text-primary font-mono">{registrationId}</p>
+                  </div>
                 </motion.div>
 
                 <motion.div 
-                  className="space-y-2"
+                  className="grid grid-cols-3 gap-2"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  {qrCode && (
-                    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-                      <Button
-                        onClick={downloadQRCode}
-                        variant="outline"
-                        size="sm"
-                        className="w-full gap-2"
-                        data-testid="button-download-ticket-qr"
-                      >
-                        <Download className="w-3 h-3" />
-                        Download
-                      </Button>
-                    </motion.div>
-                  )}
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
                     <Button
                       onClick={viewTicket}
+                      variant="default"
                       size="sm"
-                      className="w-full gap-2"
+                      className="w-full gap-1"
+                      data-testid="button-download-ticket"
+                    >
+                      <Download className="w-3 h-3" />
+                      <span className="hidden sm:inline">Download</span>
+                    </Button>
+                  </motion.div>
+                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+                    <Button
+                      onClick={openInNewTab}
+                      variant="outline"
+                      size="sm"
+                      className="w-full gap-1"
                       data-testid="button-view-ticket"
                     >
-                      <ArrowRight className="w-3 h-3" />
-                      View Ticket
+                      <Ticket className="w-3 h-3" />
+                      <span className="hidden sm:inline">View</span>
                     </Button>
                   </motion.div>
                   <Button
                     onClick={closeModal}
                     variant="ghost"
                     size="sm"
-                    className="w-full"
+                    className="w-full gap-1"
                     data-testid="button-close-success"
                   >
-                    Done
+                    <Check className="w-3 h-3" />
+                    <span className="hidden sm:inline">Done</span>
                   </Button>
                 </motion.div>
+                
+                <motion.p 
+                  className="text-xs text-muted-foreground text-center mt-3"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  Scan the QR code at the venue for check-in. Save or download your ticket.
+                </motion.p>
               </CardContent>
             </Card>
           </motion.div>
