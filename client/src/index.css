@@ -590,6 +590,14 @@
   letter-spacing: 0.02em;
 }
 
+/* Section headings - Big Shoulders Display Black */
+.section-heading {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
 .hero-tagline {
   font-family: 'Inter', 'Roboto', sans-serif;
   letter-spacing: 0.25em;

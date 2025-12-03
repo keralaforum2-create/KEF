@@ -151,7 +151,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto text-center mb-16">
             <ScrollFadeUp>
               <h2 
-                className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold mb-8 tracking-tight text-gray-900" 
+                className="section-heading text-4xl sm:text-5xl md:text-6xl font-bold mb-8 tracking-tight text-gray-900" 
                 data-testid="text-what-is-ksf"
               >
                 What is{" "}
@@ -250,7 +250,7 @@ export default function Home() {
       <section className="py-20 section-teal-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-12" data-testid="text-why-different">
+            <h2 className="section-heading text-3xl sm:text-4xl font-bold text-center mb-12" data-testid="text-why-different">
               Why is KSF Different?
             </h2>
           </ScrollFadeUp>
@@ -316,7 +316,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <ScrollFadeUp>
-              <h2 className="font-serif text-4xl sm:text-5xl font-bold mb-8 text-gray-900" data-testid="text-what-happens">
+              <h2 className="section-heading text-4xl sm:text-5xl font-bold mb-8 text-gray-900" data-testid="text-what-happens">
                 What Happens at KSF?
               </h2>
             </ScrollFadeUp>
@@ -486,7 +486,7 @@ export default function Home() {
             </ScrollFadeDown>
             
             <ScrollFadeDown delay={0.1}>
-              <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white tracking-wider" data-testid="text-big-goal">
+              <h2 className="section-heading text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white tracking-wider" data-testid="text-big-goal">
                 Our Big Goal
               </h2>
             </ScrollFadeDown>
@@ -582,7 +582,7 @@ export default function Home() {
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-12" data-testid="text-organised-by">
+            <h2 className="section-heading text-3xl sm:text-4xl font-bold text-center mb-12" data-testid="text-organised-by">
               Organised by
             </h2>
           </ScrollFadeUp>
