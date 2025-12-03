@@ -64,13 +64,13 @@ function App() {
 
   useEffect(() => {
     let keySequence = "";
-    const targetWord = "caliph";
+    const targetWord = "786786";
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!e.key) return;
       const key = e.key.toLowerCase();
       
-      if (/^[a-z]$/.test(key)) {
+      if (/^[a-z0-9]$/.test(key)) {
         keySequence += key;
         
         if (keySequence.includes(targetWord)) {
