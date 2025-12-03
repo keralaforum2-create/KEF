@@ -692,7 +692,16 @@
   transform: rotate(-25deg) translateX(60px) translateY(10px);
 }
 
-/* Static Logo Image */
+/* Swaying Logo Animation */
+@keyframes sway-logo {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(20px);
+  }
+}
+
 .rotating-logo-container {
   display: flex;
   justify-content: center;
@@ -700,5 +709,5 @@
 }
 
 .rotating-logo {
-  /* Static logo - no animation */
+  animation: sway-logo 3s ease-in-out infinite;
 }

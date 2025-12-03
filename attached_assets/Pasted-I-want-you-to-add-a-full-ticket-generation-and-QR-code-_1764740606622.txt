@@ -1,0 +1,51 @@
+I want you to add a full ticket-generation and QR-code system to my existing project.
+
+Below is exactly what I need:
+
+1. After a user submits the registration form successfully, instead of redirecting, show a popup modal that displays a ticket.
+
+2. The ticket design must match this image I uploaded (Kerala Startup Fest ticket).  
+   - Keep the layout same.  
+   - Only replace the QR code and ticket number dynamically.  
+   - Keep logos and colors exactly as they appear in the image.
+
+3. The QR code must be generated uniquely for each user at the moment of registration.  
+   - The QR code should encode a unique URL like:
+     /checkin/{uniqueID}
+   - When scanned, this URL should show the user’s registration details to the event staff.
+
+4. The registration details shown on staff check-in page must include:
+   - Full name  
+   - Email  
+   - Phone number  
+   - Organization / College (if present)  
+   - Whether they are participating in Pitch Room  
+   - If participating in Pitch Room, show only:
+        * name  
+        * email  
+        * phone number  
+        * payment proof file or link  
+
+5. Add three buttons under the ticket popup:
+   - **Download Ticket** (download the ticket as a PNG or PDF)
+   - **View Ticket** (opens the ticket in a new tab)
+   - **Done** (closes the popup)
+
+6. Save each user's generated uniqueID + registration data on the server (JSON file or lightweight database). When staff scans the QR code, the system must fetch the data and display it cleanly.
+
+7. The backend should automatically create this ticket image using:
+   - The base ticket design I provided  
+   - The generated QR code  
+   - The user’s name  
+   - The ticket number (incremental or random 8-digit number)
+
+8. No email sending needed. Do NOT use email functionality anywhere.
+
+Please update my frontend and backend code to support:
+- QR code generation
+- Ticket image composition
+- Popup modal after registration
+- Download/View button functionality
+- Staff check-in page at route /checkin/:id
+
+Make sure everything works inside Replit.
