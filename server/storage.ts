@@ -9,7 +9,14 @@ import {
   type InsertInvestorMentor,
   type Sponsorship,
   type InsertSponsorship,
+  users,
+  contactSubmissions,
+  registrations,
+  investorMentorApplications,
+  sponsorshipInquiries,
 } from "@shared/schema";
+import { db } from "./db";
+import { eq, desc } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -31,86 +38,72 @@ export interface IStorage {
   getSponsorships(): Promise<Sponsorship[]>;
 }
 
-export class MemStorage implements IStorage {
-  private users = new Map<string, User>();
-  private contacts = new Map<string, Contact>();
-  private registrations = new Map<string, Registration>();
-  private investorMentors = new Map<string, InvestorMentor>();
-  private sponsorships = new Map<string, Sponsorship>();
-
+export class DatabaseStorage implements IStorage {
   async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+    const result = await db.select().from(users).where(eq(users.id, id));
+    return result[0];
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    for (const user of this.users.values()) {
-      if (user.username === username) {
-        return user;
-      }
-    }
-    return undefined;
+    const result = await db.select().from(users).where(eq(users.username, username));
+    return result[0];
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+    const result = await db.insert(users).values({ ...insertUser, id }).returning();
+    return result[0];
   }
 
   async createContact(insertContact: InsertContact): Promise<Contact> {
     const id = randomUUID();
-    const contact: Contact = { ...insertContact, id };
-    this.contacts.set(id, contact);
-    return contact;
+    const result = await db.insert(contactSubmissions).values({ ...insertContact, id }).returning();
+    return result[0];
   }
 
   async getContacts(): Promise<Contact[]> {
-    return Array.from(this.contacts.values());
+    return await db.select().from(contactSubmissions).orderBy(desc(contactSubmissions.createdAt));
   }
 
   async createRegistration(insertRegistration: InsertRegistration): Promise<Registration> {
     const id = randomUUID();
-    const registrationId = `REG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-    const registration: Registration = { ...insertRegistration, id, registrationId };
-    this.registrations.set(id, registration);
-    return registration;
+    const registrationId = `KSF-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+    const result = await db.insert(registrations).values({ 
+      ...insertRegistration, 
+      id, 
+      registrationId 
+    }).returning();
+    return result[0];
   }
 
   async getRegistrationByRegistrationId(registrationId: string): Promise<Registration | undefined> {
-    for (const registration of this.registrations.values()) {
-      if (registration.registrationId === registrationId) {
-        return registration;
-      }
-    }
-    return undefined;
+    const result = await db.select().from(registrations).where(eq(registrations.registrationId, registrationId));
+    return result[0];
   }
 
   async getRegistrations(): Promise<Registration[]> {
-    return Array.from(this.registrations.values());
+    return await db.select().from(registrations).orderBy(desc(registrations.createdAt));
   }
 
   async createInvestorMentor(insertData: InsertInvestorMentor): Promise<InvestorMentor> {
     const id = randomUUID();
-    const investorMentor: InvestorMentor = { ...insertData, id };
-    this.investorMentors.set(id, investorMentor);
-    return investorMentor;
+    const result = await db.insert(investorMentorApplications).values({ ...insertData, id }).returning();
+    return result[0];
   }
 
   async getInvestorMentors(): Promise<InvestorMentor[]> {
-    return Array.from(this.investorMentors.values());
+    return await db.select().from(investorMentorApplications).orderBy(desc(investorMentorApplications.createdAt));
   }
 
   async createSponsorship(insertData: InsertSponsorship): Promise<Sponsorship> {
     const id = randomUUID();
-    const sponsorship: Sponsorship = { ...insertData, id };
-    this.sponsorships.set(id, sponsorship);
-    return sponsorship;
+    const result = await db.insert(sponsorshipInquiries).values({ ...insertData, id }).returning();
+    return result[0];
   }
 
   async getSponsorships(): Promise<Sponsorship[]> {
-    return Array.from(this.sponsorships.values());
+    return await db.select().from(sponsorshipInquiries).orderBy(desc(sponsorshipInquiries.createdAt));
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

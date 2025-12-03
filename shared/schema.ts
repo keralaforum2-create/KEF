@@ -9,10 +9,12 @@ export const contactSubmissions = pgTable("contact_submissions", {
   phone: text("phone"),
   userType: text("user_type").notNull(),
   message: text("message").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const insertContactSchema = createInsertSchema(contactSubmissions).omit({
   id: true,
+  createdAt: true,
 }).extend({
   email: z.string().email("Please enter a valid email address"),
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -72,11 +74,13 @@ export const registrations = pgTable("registrations", {
   pitchSupportingFiles: text("pitch_supporting_files"),
   pitchDemoVideoLink: text("pitch_demo_video_link"),
   pitchDeclarationConfirmed: text("pitch_declaration_confirmed"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   id: true,
   registrationId: true,
+  createdAt: true,
 }).extend({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
@@ -151,10 +155,12 @@ export const investorMentorApplications = pgTable("investor_mentor_applications"
   companyName: text("company_name"),
   expertise: text("expertise"),
   message: text("message"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const insertInvestorMentorSchema = createInsertSchema(investorMentorApplications).omit({
   id: true,
+  createdAt: true,
 }).extend({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
@@ -177,10 +183,12 @@ export const sponsorshipInquiries = pgTable("sponsorship_inquiries", {
   sponsorshipLevel: text("sponsorship_level"),
   industry: text("industry"),
   message: text("message"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const insertSponsorshipSchema = createInsertSchema(sponsorshipInquiries).omit({
   id: true,
+  createdAt: true,
 }).extend({
   companyName: z.string().min(2, "Company name must be at least 2 characters"),
   contactPersonName: z.string().min(2, "Contact person name must be at least 2 characters"),
