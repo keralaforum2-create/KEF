@@ -36,6 +36,8 @@ import {
 import animatedLogo from "@assets/D_Logo_Animation_Request_1764738870213.mp4";
 import cubePoster from "@assets/cube_1764697594714.png";
 import waveElement from "@assets/keral_startup_element_1764698110061.png";
+import caliphLifeSchoolLogo from "@assets/PhotoshopExtension_Image-removebg-preview_1764739146810.png";
+import keralaEconomicForumLogo from "@assets/kerala_economic_forum_logo_1764739146809.png";
 
 export default function Home() {
   const partnersRef = useRef<HTMLDivElement>(null);
@@ -582,23 +584,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Partner with KSF Section */}
+      {/* Organised by Section */}
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4" data-testid="text-partner-ksf">
-              Partner with KSF
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-12" data-testid="text-organised-by">
+              Organised by
             </h2>
-          </ScrollFadeUp>
-          <ScrollFadeUp delay={0.1}>
-            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-              Join hands with Kerala Startup Fest and be part of Kerala's biggest startup movement.
-            </p>
           </ScrollFadeUp>
           
           <motion.div 
             ref={partnersRef}
-            className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16"
+            className="flex flex-col sm:flex-row items-center justify-center gap-12 sm:gap-20"
             initial="hidden"
             animate={partnersInView ? "visible" : "hidden"}
             variants={{
@@ -610,34 +607,41 @@ export default function Home() {
             }}
           >
             <motion.div 
-              className="flex flex-col items-center text-center group hover-elevate"
+              className="flex flex-col items-center text-center"
               variants={{
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
               }}
             >
-              <div className="w-48 h-48 rounded-2xl bg-card border border-border flex items-center justify-center mb-4 overflow-hidden shadow-sm group-hover:shadow-lg transition-shadow duration-300">
+              <div className="h-24 flex items-center justify-center mb-4">
                 <img 
-                  src={waveElement} 
-                  alt="Partner with KSF"
-                  className="w-40 h-40 object-contain"
+                  src={caliphLifeSchoolLogo} 
+                  alt="Caliph Life School"
+                  className="h-20 w-auto object-contain"
+                  data-testid="img-caliph-life-school"
                 />
               </div>
-              <h3 className="font-semibold text-lg mb-1">Become a Partner</h3>
-              <p className="text-sm text-muted-foreground">Support Kerala's startup ecosystem</p>
+              <h3 className="font-semibold text-lg">Caliph Life School</h3>
+            </motion.div>
+            
+            <motion.div 
+              className="flex flex-col items-center text-center"
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+              }}
+            >
+              <div className="h-24 flex items-center justify-center mb-4">
+                <img 
+                  src={keralaEconomicForumLogo} 
+                  alt="Kerala Economic Forum"
+                  className="h-20 w-auto object-contain"
+                  data-testid="img-kerala-economic-forum"
+                />
+              </div>
+              <h3 className="font-semibold text-lg">Kerala Economic Forum</h3>
             </motion.div>
           </motion.div>
-          
-          <ScrollFadeUp delay={0.3}>
-            <div className="flex justify-center mt-12">
-              <Link href="/partners">
-                <Button variant="outline" className="font-semibold" data-testid="button-view-partners">
-                  Learn More About Partnership
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-            </div>
-          </ScrollFadeUp>
         </div>
       </section>
 
