@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import ticketBgImage from "@assets/KSF_TICKET_1764740702842.png";
+import ticketBgImage from "@assets/Beige_Black_Minimalist_Event_Music_Festival_Concert_Ticket_1764742314478.png";
 
 interface Ticket {
   id: string;
@@ -257,11 +257,11 @@ export default function Ticket() {
             
             {qrCodeUrl && (
               <div 
-                className="absolute bg-white"
+                className="absolute bg-white flex items-center justify-center"
                 style={{ 
-                  top: '18%', 
-                  left: '55%', 
-                  width: '20%',
+                  top: '20%', 
+                  right: '12%', 
+                  width: '12%',
                   aspectRatio: '1/1'
                 }}
               >
@@ -273,21 +273,6 @@ export default function Ticket() {
                 />
               </div>
             )}
-            
-            <div 
-              className="absolute text-right"
-              style={{ 
-                top: '50%', 
-                right: '2%',
-                transform: 'translateY(-50%) rotate(90deg)',
-                transformOrigin: 'center center',
-                width: '60%'
-              }}
-            >
-              <p className="text-[10px] sm:text-xs font-medium text-gray-800 whitespace-nowrap">
-                {ticketNumber}
-              </p>
-            </div>
             
             {ticket.ticketCategory === "premium" && (
               <div 

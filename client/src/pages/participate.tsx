@@ -60,7 +60,7 @@ import {
 import normalQrCodeImage from "@assets/199_1764728302342.png";
 import premiumQrCodeImage from "@assets/599_1764728241010.png";
 import eventPosterImage from "@assets/Screenshot_2025-12-02_221240_1764693826335.png";
-import ticketBgImage from "@assets/KSF_TICKET_1764740702842.png";
+import ticketBgImage from "@assets/Beige_Black_Minimalist_Event_Music_Festival_Concert_Ticket_1764742314478.png";
 
 const registrationSchema = z.object({
   registrationType: z.enum(["expert-session", "contest"], {
@@ -469,11 +469,11 @@ export default function Participate() {
                     
                     {qrCode && (
                       <div 
-                        className="absolute bg-white"
+                        className="absolute bg-white flex items-center justify-center"
                         style={{ 
-                          top: '18%', 
-                          left: '55%', 
-                          width: '20%',
+                          top: '20%', 
+                          right: '12%', 
+                          width: '12%',
                           aspectRatio: '1/1'
                         }}
                       >
@@ -485,21 +485,6 @@ export default function Participate() {
                         />
                       </div>
                     )}
-                    
-                    <div 
-                      className="absolute text-right"
-                      style={{ 
-                        top: '50%', 
-                        right: '2%',
-                        transform: 'translateY(-50%) rotate(90deg)',
-                        transformOrigin: 'center center',
-                        width: '60%'
-                      }}
-                    >
-                      <p className="text-[8px] sm:text-[10px] font-medium text-gray-800 whitespace-nowrap">
-                        {ticketNumber}
-                      </p>
-                    </div>
                   </div>
                   
                   <div className="mt-3 bg-primary/10 rounded-lg p-3 text-center">
