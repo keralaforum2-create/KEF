@@ -24,9 +24,12 @@ interface ContestData {
   title: string;
   tagline: string;
   badge: string;
+  language?: string;
+  category?: string;
   introduction: string;
   eligibility: string[];
   registrationFee?: string;
+  registrationDetails?: string[];
   stages: {
     title: string;
     description: string;
@@ -34,6 +37,8 @@ interface ContestData {
     outcome?: string[];
     deadline?: string;
   }[];
+  rules?: string[];
+  judgingCriteria?: string[];
   prizes: {
     title: string;
     amount: string;
@@ -225,34 +230,58 @@ const contestsData: Record<string, ContestData> = {
   },
   "jam": {
     id: "jam",
-    title: "Just a Minute (JAM)",
+    title: "State Level Just A Minute (JAM) Contest",
     tagline: "One minute. One topic. Unlimited creativity.",
-    badge: "All Participants",
+    badge: "School & College Students",
+    language: "Malayalam Only",
+    category: "Individual Event",
     introduction: "A one-minute fun battle of spontaneity, wit, speed, and quick thinking. Participants are given a topic and must speak for exactly one minute without hesitation, repetition, or deviation. A classic challenge that tests your communication skills and presence of mind.",
     eligibility: [
-      "Open to all age groups",
-      "Individual participation only",
-      "Must be comfortable speaking in English or Malayalam"
+      "Open to School and College students in the state",
+      "Any number of participants can register from an institution",
+      "Valid ID card is mandatory",
+      "All registered participants can attend the two-day Kerala Startup Fest (KSF) Expo and Expert Sessions"
+    ],
+    registrationFee: "₹199 per participant",
+    registrationDetails: [
+      "Participants must report at the venue on January 08 (Thursday), 9:00 AM",
+      "Late reporting may result in loss of turn"
     ],
     stages: [
       {
-        title: "Preliminary Rounds",
-        description: "Multiple rounds to filter the best speakers",
+        title: "Phase 1: Online Audition Round",
+        description: "Submit your performance online for evaluation",
         details: [
-          "Random topic selection",
-          "One minute speaking time",
-          "Judged on fluency, content, and confidence"
+          "Participants will submit an online video presentation (JAM performance) in Malayalam",
+          "Videos must follow all JAM rules mentioned below",
+          "The panel will evaluate and shortlist candidates for the final round"
         ]
       },
       {
-        title: "Grand Finale",
-        description: "Top speakers compete on stage",
+        title: "Phase 2: Grand Finale at KSF Venue",
+        description: "Shortlisted participants present live on stage",
         details: [
-          "Live audience",
-          "Challenging topics",
-          "Expert jury panel"
+          "Shortlisted participants will present live on stage at the Kerala Startup Fest venue",
+          "Finalists will speak on a randomly assigned topic for one minute"
         ]
       }
+    ],
+    rules: [
+      "Speech must be entirely in Malayalam",
+      "Use of bad words, abusive expressions, immoral or indecent content will lead to instant disqualification",
+      "Participants must avoid: Long pauses",
+      "Participants must avoid: Repetition",
+      "Participants must avoid: Hesitation sounds (uh, hmm, aa...)",
+      "Participants must avoid: Grammatical mistakes",
+      "Mimicking, singing, screaming or dramatic acts are not allowed unless meaningfully connected to the topic",
+      "No political, religious, or defamatory remarks",
+      "Judges' decisions will be final and binding"
+    ],
+    judgingCriteria: [
+      "Fluency & Flow",
+      "Clarity & Grammar",
+      "Confidence & Stage Presence",
+      "Relevance & Creativity & Humour"
     ],
     prizes: [
       { title: "1st Prize", amount: "₹7,500" },
@@ -262,7 +291,8 @@ const contestsData: Record<string, ContestData> = {
     additionalBenefits: [
       "Build public speaking confidence",
       "Certificates for all participants",
-      "Chance to shine on the KSF stage"
+      "Chance to shine on the KSF stage",
+      "Access to two-day Kerala Startup Fest Expo and Expert Sessions"
     ]
   }
 };
@@ -314,13 +344,25 @@ export default function ContestDetail() {
 
           <ScrollFadeUp delay={0.2}>
             <div className="flex flex-wrap gap-4 mb-8">
+              {contest.language && (
+                <Badge variant="secondary" className="flex items-center gap-1">
+                  <MessageSquare className="w-3 h-3" />
+                  {contest.language}
+                </Badge>
+              )}
+              {contest.category && (
+                <Badge variant="secondary" className="flex items-center gap-1">
+                  <Users className="w-3 h-3" />
+                  {contest.category}
+                </Badge>
+              )}
               <Badge variant="secondary" className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
                 January 07-08, 2026
               </Badge>
               <Badge variant="secondary" className="flex items-center gap-1">
                 <MapPin className="w-3 h-3" />
-                Calicut, Kerala
+                Kozhikode, Kerala
               </Badge>
             </div>
           </ScrollFadeUp>
@@ -374,6 +416,16 @@ export default function ContestDetail() {
                   <p className="font-semibold text-lg">
                     Registration Fee: <span className="text-primary">{contest.registrationFee}</span>
                   </p>
+                  {contest.registrationDetails && (
+                    <ul className="mt-3 space-y-2">
+                      {contest.registrationDetails.map((detail, index) => (
+                        <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <Clock className="w-4 h-4 mt-0.5 flex-shrink-0 text-primary" />
+                          {detail}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
             </div>
@@ -449,6 +501,65 @@ export default function ContestDetail() {
           </StaggerContainer>
         </div>
       </section>
+
+      {/* Rules Section */}
+      {contest.rules && (
+        <section className="py-12 md:py-16 bg-card">
+          <div className="container mx-auto px-4">
+            <ScrollFadeUp>
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                  <CheckCircle className="w-6 h-6 text-primary" />
+                  Rules of JAM
+                </h2>
+                <Card>
+                  <CardContent className="p-6">
+                    <ul className="space-y-3">
+                      {contest.rules.map((rule, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span className="text-xs font-bold text-destructive">{index + 1}</span>
+                          </div>
+                          <span className="text-muted-foreground">{rule}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            </ScrollFadeUp>
+          </div>
+        </section>
+      )}
+
+      {/* Judging Criteria Section */}
+      {contest.judgingCriteria && (
+        <section className="py-12 md:py-16">
+          <div className="container mx-auto px-4">
+            <ScrollFadeUp>
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                  <Award className="w-6 h-6 text-primary" />
+                  Judging Criteria
+                </h2>
+                <p className="text-muted-foreground mb-4">Participants will be evaluated based on:</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {contest.judgingCriteria.map((criterion, index) => (
+                    <Card key={index}>
+                      <CardContent className="p-4 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <span className="font-bold text-primary">{index + 1}</span>
+                        </div>
+                        <span className="font-medium">{criterion}</span>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </ScrollFadeUp>
+          </div>
+        </section>
+      )}
 
       {/* Prizes */}
       <section className="py-12 md:py-16 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20">

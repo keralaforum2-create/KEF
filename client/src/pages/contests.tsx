@@ -44,10 +44,10 @@ const contests = [
   {
     id: 4,
     slug: "jam",
-    title: "Just a Minute (JAM)",
-    description: "A one-minute fun battle of spontaneity, wit, speed, and presence of mind.",
+    title: "State Level Just A Minute (JAM) Contest",
+    description: "Malayalam-only one-minute battle of spontaneity, wit, and presence of mind. Entry fee: ₹199 per participant.",
     icon: Trophy,
-    badge: "All Participants",
+    badge: "School & College",
   },
 ];
 
