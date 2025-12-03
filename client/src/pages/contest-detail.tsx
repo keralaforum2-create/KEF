@@ -39,7 +39,7 @@ interface ContestData {
   }[];
   rules?: string[];
   judgingCriteria?: string[];
-  prizes: {
+  prizes?: {
     title: string;
     amount: string;
   }[];
@@ -174,11 +174,6 @@ const contestsData: Record<string, ContestData> = {
         ]
       }
     ],
-    prizes: [
-      { title: "Winners", amount: "Certificates & Awards" },
-      { title: "1st Runner-up", amount: "Certificates & Awards" },
-      { title: "2nd Runner-up", amount: "Certificates & Awards" }
-    ],
     additionalBenefits: [
       "All finalists will receive consolation prizes and certificates",
       "Opportunity to compete at national level",
@@ -255,11 +250,6 @@ const contestsData: Record<string, ContestData> = {
         ]
       }
     ],
-    prizes: [
-      { title: "Best Photo", amount: "₹10,000" },
-      { title: "Best Video", amount: "₹10,000" },
-      { title: "People's Choice", amount: "₹5,000" }
-    ],
     additionalBenefits: [
       "Featured on KSF social media",
       "Exhibition at the festival",
@@ -321,11 +311,6 @@ const contestsData: Record<string, ContestData> = {
       "Clarity & Grammar",
       "Confidence & Stage Presence",
       "Relevance & Creativity & Humour"
-    ],
-    prizes: [
-      { title: "1st Prize", amount: "₹7,500" },
-      { title: "2nd Prize", amount: "₹5,000" },
-      { title: "3rd Prize", amount: "₹2,500" }
     ],
     additionalBenefits: [
       "Build public speaking confidence",
@@ -600,39 +585,43 @@ export default function ContestDetail() {
         </section>
       )}
 
-      {/* Prizes */}
+      {/* Prizes & Benefits */}
       <section className="py-12 md:py-16 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20">
         <div className="container mx-auto px-4">
-          <ScrollFadeUp>
-            <div className="max-w-4xl mx-auto text-center mb-8">
-              <h2 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2">
-                <Trophy className="w-6 h-6 text-yellow-500" />
-                Prizes & Rewards
-              </h2>
-            </div>
-          </ScrollFadeUp>
+          {contest.prizes && contest.prizes.length > 0 && (
+            <>
+              <ScrollFadeUp>
+                <div className="max-w-4xl mx-auto text-center mb-8">
+                  <h2 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2">
+                    <Trophy className="w-6 h-6 text-yellow-500" />
+                    Prizes & Rewards
+                  </h2>
+                </div>
+              </ScrollFadeUp>
 
-          <StaggerContainer className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6" staggerDelay={0.1}>
-            {contest.prizes.map((prize, index) => (
-              <StaggerItem key={index}>
-                <motion.div whileHover={{ scale: 1.05, y: -5 }} transition={{ duration: 0.2 }}>
-                  <Card className="text-center">
-                    <CardContent className="p-6">
-                      <Award className={`w-12 h-12 mx-auto mb-4 ${
-                        index === 0 ? 'text-yellow-500' : 
-                        index === 1 ? 'text-gray-400' : 'text-orange-600'
-                      }`} />
-                      <h3 className="font-semibold mb-2">{prize.title}</h3>
-                      <p className="text-2xl font-bold text-primary">{prize.amount}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+              <StaggerContainer className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" staggerDelay={0.1}>
+                {contest.prizes.map((prize, index) => (
+                  <StaggerItem key={index}>
+                    <motion.div whileHover={{ scale: 1.05, y: -5 }} transition={{ duration: 0.2 }}>
+                      <Card className="text-center">
+                        <CardContent className="p-6">
+                          <Award className={`w-12 h-12 mx-auto mb-4 ${
+                            index === 0 ? 'text-yellow-500' : 
+                            index === 1 ? 'text-gray-400' : 'text-orange-600'
+                          }`} />
+                          <h3 className="font-semibold mb-2">{prize.title}</h3>
+                          <p className="text-2xl font-bold text-primary">{prize.amount}</p>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
+            </>
+          )}
 
           <ScrollFadeUp delay={0.3}>
-            <div className="max-w-3xl mx-auto mt-8">
+            <div className="max-w-3xl mx-auto">
               <Card>
                 <CardContent className="p-6">
                   <h3 className="font-semibold mb-4 text-center">Additional Benefits</h3>
