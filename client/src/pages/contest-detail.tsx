@@ -26,6 +26,7 @@ interface ContestData {
   badge: string;
   introduction: string;
   eligibility: string[];
+  registrationFee?: string;
   stages: {
     title: string;
     description: string;
@@ -133,45 +134,51 @@ const contestsData: Record<string, ContestData> = {
   },
   "business-quiz": {
     id: "business-quiz",
-    title: "Business Quiz – School Edition",
-    tagline: "Test your business knowledge and startup awareness",
-    badge: "Grade 12 & Below",
-    introduction: "A fast-paced challenge that tests business awareness, startup knowledge, and decision-making skills. This quiz is designed for school students who are curious about the world of business and entrepreneurship.",
+    title: "National Level Inter School Business Quiz",
+    tagline: "Test your business knowledge and brand awareness",
+    badge: "Grade 8-12",
+    introduction: "A national level inter-school business quiz that tests real-world business awareness and brand knowledge. This quiz is designed for school students who are curious about the world of business, brands, and entrepreneurship.",
     eligibility: [
-      "School students from Grade 12 and below",
-      "Individual participation only",
-      "Must be available for the quiz rounds"
+      "Open to Grade 8 to 12 students across the country",
+      "Participation is strictly team-based (2 members per team)",
+      "Both members must be from the same school",
+      "A school may send any number of teams"
     ],
+    registrationFee: "₹99 per team",
     stages: [
       {
-        title: "Preliminary Round",
-        description: "Online quiz to test basic business knowledge",
+        title: "Question Areas & Focus",
+        description: "The quiz will test real-world business awareness and brand knowledge",
         details: [
-          "Multiple choice questions",
-          "Business terminology",
-          "Famous entrepreneurs and companies",
-          "Basic economics concepts"
+          "Logos & Brand Identification",
+          "Taglines & Slogans",
+          "CEOs, Founders & Company Leadership",
+          "Indian & Global Brands",
+          "General Business Awareness (products, markets, mergers, recent trends)"
         ]
       },
       {
-        title: "Final Round",
-        description: "Live quiz at Kerala Startup Fest venue",
+        title: "Rules & Guidelines",
+        description: "Important rules for all participants",
         details: [
-          "Rapid-fire questions",
-          "Case study analysis",
-          "Business scenario challenges"
+          "Teams must report strictly by 9:00 AM",
+          "Use of mobile phones, smartwatches, or any digital aid is strictly prohibited",
+          "Decisions of the quizmaster will be final and binding",
+          "Any misconduct or malpractice will lead to immediate disqualification",
+          "Round structure will be announced on the day based on number of teams"
         ]
       }
     ],
     prizes: [
-      { title: "1st Prize", amount: "₹10,000" },
-      { title: "2nd Prize", amount: "₹5,000" },
-      { title: "3rd Prize", amount: "₹2,500" }
+      { title: "Winners", amount: "Certificates & Awards" },
+      { title: "1st Runner-up", amount: "Certificates & Awards" },
+      { title: "2nd Runner-up", amount: "Certificates & Awards" }
     ],
     additionalBenefits: [
-      "Certificates for all participants",
-      "Opportunity to learn from industry experts",
-      "Networking with like-minded students"
+      "All finalists will receive consolation prizes and certificates",
+      "Opportunity to compete at national level",
+      "Networking with like-minded students from across the country",
+      "Experience the excitement of Kerala Startup Fest"
     ]
   },
   "camera-craft": {
@@ -362,6 +369,13 @@ export default function ContestDetail() {
                   </li>
                 ))}
               </ul>
+              {contest.registrationFee && (
+                <div className="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
+                  <p className="font-semibold text-lg">
+                    Registration Fee: <span className="text-primary">{contest.registrationFee}</span>
+                  </p>
+                </div>
+              )}
             </div>
           </ScrollFadeUp>
         </div>
