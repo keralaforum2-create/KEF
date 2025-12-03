@@ -23,7 +23,7 @@ import {
   StaggerItem
 } from "@/lib/animations";
 import investorImage from "@assets/Building Strong Relationships for Business Growth with a B2B PR_1764503880578.jpg";
-import partnershipImage from "@assets/WhatsApp Image 2025-11-30 at 14.13.34_f7725a9a_1764492241523.jpg";
+import partnershipImage from "@assets/stock_images/business_partnership_7f868df6.jpg";
 
 export default function Partners() {
   return (

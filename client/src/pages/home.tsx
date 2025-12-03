@@ -256,9 +256,9 @@ export default function Home() {
                     >
                       <Briefcase className="w-8 h-8 text-white" />
                     </div>
-                    <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">VC Networking</h3>
+                    <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Networking</h3>
                     <p className="text-gray-600 text-sm sm:text-base">
-                      Connect with <span className="font-medium text-primary">venture capitalists</span> & business leaders
+                      Connect with <span className="font-medium text-primary">entrepreneurs</span> and business leaders
                     </p>
                   </div>
                 </div>
@@ -307,7 +307,7 @@ export default function Home() {
               
               <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
                 <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
-                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Open for high school students to youngsters up to 29 years of age</p>
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Open for school students and youngsters up to 29 years of age</p>
               </div>
 
               <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
@@ -332,7 +332,7 @@ export default function Home() {
               
               <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
                 <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
-                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Open for high school students to youngsters up to 29 years of age</p>
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Open for school students and youngsters up to 29 years of age</p>
               </div>
             </div>
           </div>
