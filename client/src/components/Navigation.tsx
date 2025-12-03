@@ -93,14 +93,32 @@ export function Navigation() {
                   transition={{ duration: 0.3, delay: 0.1 + index * 0.05 }}
                 >
                   <Link href={item.href}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className={`font-medium ${location === item.href ? "bg-white border border-gray-200 shadow-sm" : ""}`}
-                      data-testid={`nav-link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
-                    >
-                      {item.label}
-                    </Button>
+                    {location === item.href ? (
+                      <div 
+                        className="relative p-[2px] rounded-md"
+                        style={{
+                          background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                        }}
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="font-medium bg-white rounded-[4px]"
+                          data-testid={`nav-link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                        >
+                          {item.label}
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="font-medium"
+                        data-testid={`nav-link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+                      >
+                        {item.label}
+                      </Button>
+                    )}
                   </Link>
                 </motion.div>
               ))}
