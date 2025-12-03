@@ -33,8 +33,6 @@ import {
   PulsingGlow,
   ScrollFadeDown
 } from "@/lib/animations";
-import califphLifeSchoolLogo from "@assets/PhotoshopExtension_Image_1764498269153.png";
-import keralaEconomicForumLogo from "@assets/KERALA ECONOMIC FORUM LOGO RESOLUTION 00_1764498454572.png";
 import cubeLogo from "@assets/cube_1764697594714.png";
 import waveElement from "@assets/keral_startup_element_1764698110061.png";
 
@@ -544,7 +542,7 @@ export default function Home() {
               </StaggerItem>
             </StaggerContainer>
             
-            <StaggerContainer className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto mb-12" staggerDelay={0.05}>
+            <StaggerContainer className="grid grid-cols-2 gap-4 max-w-xl mx-auto mb-12" staggerDelay={0.05}>
               <StaggerItem>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                   <p className="text-2xl font-bold text-white">5K+</p>
@@ -555,18 +553,6 @@ export default function Home() {
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
                   <p className="text-2xl font-bold text-white">400+</p>
                   <p className="text-xs text-white/80 mt-1">Teams Participating</p>
-                </div>
-              </StaggerItem>
-              <StaggerItem>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <p className="text-2xl font-bold text-white">2</p>
-                  <p className="text-xs text-white/80 mt-1">Mega Days</p>
-                </div>
-              </StaggerItem>
-              <StaggerItem>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <p className="text-2xl font-bold text-white">100</p>
-                  <p className="text-xs text-white/80 mt-1">Target Startups</p>
                 </div>
               </StaggerItem>
             </StaggerContainer>
@@ -591,17 +577,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Partners Section */}
+      {/* Partner with KSF Section */}
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4" data-testid="text-organised-by">
-              Organised By
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-4" data-testid="text-partner-ksf">
+              Partner with KSF
             </h2>
           </ScrollFadeUp>
           <ScrollFadeUp delay={0.1}>
             <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-              Kerala Startup Fest is brought to you by leading organizations committed to fostering entrepreneurship.
+              Join hands with Kerala Startup Fest and be part of Kerala's biggest startup movement.
             </p>
           </ScrollFadeUp>
           
@@ -625,33 +611,15 @@ export default function Home() {
                 visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
               }}
             >
-              <div className="w-32 h-32 rounded-2xl bg-card border border-border flex items-center justify-center mb-4 overflow-hidden shadow-sm group-hover:shadow-lg transition-shadow duration-300">
+              <div className="w-48 h-48 rounded-2xl bg-card border border-border flex items-center justify-center mb-4 overflow-hidden shadow-sm group-hover:shadow-lg transition-shadow duration-300">
                 <img 
-                  src={califphLifeSchoolLogo} 
-                  alt="Caliph Life School"
-                  className="w-24 h-24 object-contain"
+                  src={waveElement} 
+                  alt="Partner with KSF"
+                  className="w-40 h-40 object-contain"
                 />
               </div>
-              <h3 className="font-semibold text-lg mb-1">Caliph Life School</h3>
-              <p className="text-sm text-muted-foreground">India's First Life School</p>
-            </motion.div>
-            
-            <motion.div 
-              className="flex flex-col items-center text-center group hover-elevate"
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-              }}
-            >
-              <div className="w-32 h-32 rounded-2xl bg-card border border-border flex items-center justify-center mb-4 overflow-hidden shadow-sm group-hover:shadow-lg transition-shadow duration-300">
-                <img 
-                  src={keralaEconomicForumLogo} 
-                  alt="Kerala Economic Forum"
-                  className="w-24 h-24 object-contain"
-                />
-              </div>
-              <h3 className="font-semibold text-lg mb-1">Kerala Economic Forum</h3>
-              <p className="text-sm text-muted-foreground">Promoting Kerala's Economy</p>
+              <h3 className="font-semibold text-lg mb-1">Become a Partner</h3>
+              <p className="text-sm text-muted-foreground">Support Kerala's startup ecosystem</p>
             </motion.div>
           </motion.div>
           
@@ -659,7 +627,7 @@ export default function Home() {
             <div className="flex justify-center mt-12">
               <Link href="/partners">
                 <Button variant="outline" className="font-semibold" data-testid="button-view-partners">
-                  View All Partners
+                  Learn More About Partnership
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>

@@ -37,7 +37,7 @@ export function Footer({ className }: FooterProps) {
               </div>
             </motion.div>
 
-            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12" staggerDelay={0.1}>
+            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-3 gap-8 lg:gap-12" staggerDelay={0.1}>
               <StaggerItem>
                 <div>
                   <div className="flex items-center gap-2 mb-4 hover-elevate">
@@ -61,38 +61,6 @@ export function Footer({ className }: FooterProps) {
                 </div>
               </StaggerItem>
 
-              <StaggerItem>
-                <div>
-                  <h4 className="font-semibold mb-4">Quick Links</h4>
-                  <ul className="space-y-2">
-                    <li>
-                      <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-about">
-                        About KSF
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/sessions" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-sessions">
-                        Sessions
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/contests" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-contests">
-                        Contests
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/participate" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-participate">
-                        How to Participate
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/partners" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-partners">
-                        Partners & Sponsors
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </StaggerItem>
 
               <StaggerItem>
                 <div>
@@ -123,17 +91,15 @@ export function Footer({ className }: FooterProps) {
 
               <StaggerItem>
                 <div>
-                  <h4 className="font-semibold mb-4">Organised By</h4>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="font-medium text-sm">Kerala Economic Forum</p>
-                      <p className="text-xs text-muted-foreground">Promoting Kerala's startup ecosystem</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium text-sm">Caliph Life School</p>
-                      <p className="text-xs text-muted-foreground">India's first Life School</p>
-                    </div>
-                  </div>
+                  <h4 className="font-semibold mb-4">Partner with KSF</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Join hands with Kerala Startup Fest and support Kerala's startup ecosystem.
+                  </p>
+                  <Link href="/partners">
+                    <Button size="sm" variant="outline" className="font-semibold" data-testid="footer-button-partner">
+                      Become a Partner
+                    </Button>
+                  </Link>
                 </div>
               </StaggerItem>
             </StaggerContainer>

@@ -584,7 +584,7 @@ export default function Participate() {
                     </motion.div>
                     <h3 className="font-semibold text-xl mb-3">Young Entrepreneurs</h3>
                     <p className="text-muted-foreground text-sm">
-                      Aspiring entrepreneurs up to age 29 with startup dreams.
+                      Aspiring young entrepreneurs with startup dreams.
                     </p>
                   </CardContent>
                 </Card>
