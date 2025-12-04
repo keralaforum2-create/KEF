@@ -123,6 +123,9 @@ export async function registerRoutes(
         ...req.body,
         paymentScreenshot: files?.paymentScreenshot?.[0] ? `/uploads/${files.paymentScreenshot[0].filename}` : undefined,
         pitchSupportingFiles: files?.pitchSupportingFiles?.[0] ? `/uploads/${files.pitchSupportingFiles[0].filename}` : undefined,
+        razorpayPaymentId: req.body.razorpayPaymentId || undefined,
+        razorpayOrderId: req.body.razorpayOrderId || undefined,
+        paymentStatus: req.body.razorpayPaymentId ? "completed" : (files?.paymentScreenshot?.[0] ? "screenshot_uploaded" : "pending"),
       };
       
       const result = insertRegistrationSchema.safeParse(data);

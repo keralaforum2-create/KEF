@@ -74,6 +74,9 @@ export const registrations = pgTable("registrations", {
   pitchSupportingFiles: text("pitch_supporting_files"),
   pitchDemoVideoLink: text("pitch_demo_video_link"),
   pitchDeclarationConfirmed: text("pitch_declaration_confirmed"),
+  razorpayPaymentId: text("razorpay_payment_id"),
+  razorpayOrderId: text("razorpay_order_id"),
+  paymentStatus: text("payment_status"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -127,6 +130,9 @@ export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   pitchSupportingFiles: z.string().optional(),
   pitchDemoVideoLink: z.string().optional(),
   pitchDeclarationConfirmed: z.string().optional(),
+  razorpayPaymentId: z.string().optional(),
+  razorpayOrderId: z.string().optional(),
+  paymentStatus: z.string().optional(),
 });
 
 export type InsertRegistration = z.infer<typeof insertRegistrationSchema>;

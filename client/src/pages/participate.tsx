@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocation, useSearch } from "wouter";
 import { z } from "zod";
 import QRCode from "qrcode";
@@ -47,8 +47,17 @@ import {
   X,
   Ticket,
   Check,
-  CheckCircle
+  CheckCircle,
+  CreditCard,
+  Loader2,
+  ShieldCheck
 } from "lucide-react";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 import {
   ScrollFadeUp,
   ScrollFadeLeft,
@@ -179,7 +188,22 @@ export default function Participate() {
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [paymentCompleted, setPaymentCompleted] = useState(false);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
+  const [orderId, setOrderId] = useState<string | null>(null);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
+
+  // Load Razorpay script
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
   
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
@@ -337,13 +361,135 @@ export default function Participate() {
     }
   };
 
+  // Get payment amount based on ticket type and contest
+  const getPaymentAmount = () => {
+    if (isBusinessQuiz) return 99;
+    if (ticketCategory === "premium") return 599;
+    return 199;
+  };
+
+  // Handle Razorpay payment
+  const handlePayment = async () => {
+    const formValues = form.getValues();
+    
+    // Validate required fields first
+    const result = await form.trigger(["fullName", "email", "phone", "registrationType"]);
+    if (!result) {
+      toast({
+        title: "Please fill required fields",
+        description: "Complete all required fields before payment",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsProcessingPayment(true);
+
+    try {
+      // Create order on backend
+      const response = await fetch("/api/payment/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: getPaymentAmount(),
+          ticketType: ticketCategory || "normal",
+          name: formValues.fullName,
+          email: formValues.email,
+          phone: formValues.phone,
+        }),
+      });
+
+      const orderData = await response.json();
+
+      if (!orderData.success) {
+        throw new Error(orderData.message || "Failed to create order");
+      }
+
+      // Open Razorpay checkout
+      const options = {
+        key: orderData.key_id,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        order_id: orderData.order_id,
+        name: "Kerala Startup Fest 2026",
+        description: `${ticketCategory === "premium" ? "Premium" : "Normal"} Ticket - ${registrationType === "expert-session" ? "Expert Session" : contestName || "Contest"}`,
+        image: "/logo.png",
+        handler: async function (response: any) {
+          try {
+            // Verify payment on backend
+            const verifyResponse = await fetch("/api/payment/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyResponse.json();
+
+            if (verifyData.success) {
+              setPaymentCompleted(true);
+              setPaymentId(response.razorpay_payment_id);
+              setOrderId(response.razorpay_order_id);
+              toast({
+                title: "Payment Successful!",
+                description: "Your payment has been verified. Complete your registration now.",
+              });
+            } else {
+              throw new Error("Payment verification failed");
+            }
+          } catch (error) {
+            toast({
+              title: "Verification Failed",
+              description: "Payment received but verification failed. Please contact support.",
+              variant: "destructive",
+            });
+          }
+        },
+        prefill: {
+          name: formValues.fullName,
+          email: formValues.email,
+          contact: formValues.phone,
+        },
+        theme: {
+          color: "#E11D48",
+        },
+        modal: {
+          ondismiss: function() {
+            setIsProcessingPayment(false);
+          }
+        }
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.on('payment.failed', function (response: any) {
+        toast({
+          title: "Payment Failed",
+          description: response.error.description || "Please try again",
+          variant: "destructive",
+        });
+      });
+      razorpay.open();
+    } catch (error: any) {
+      toast({
+        title: "Payment Error",
+        description: error.message || "Could not initiate payment. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessingPayment(false);
+    }
+  };
+
   const mutation = useMutation({
     mutationFn: async (data: RegistrationFormData) => {
       const formData = new FormData();
       formData.append("fullName", data.fullName);
       formData.append("email", data.email);
       formData.append("phone", data.phone);
-      formData.append("age", data.age);
+      formData.append("age", data.age || "");
       formData.append("institution", data.institution || "");
       formData.append("ticketCategory", data.ticketCategory || "normal");
       formData.append("registrationType", data.registrationType);
@@ -355,6 +501,17 @@ export default function Participate() {
       formData.append("collegeCourse", data.collegeCourse || "");
       formData.append("teamMember1Name", data.teamMember1Name || "");
       formData.append("teamMember2Name", data.teamMember2Name || "");
+      
+      // Add Razorpay payment details if payment completed
+      if (paymentId) {
+        formData.append("razorpayPaymentId", paymentId);
+      }
+      if (orderId) {
+        formData.append("razorpayOrderId", orderId);
+      }
+      if (paymentCompleted) {
+        formData.append("paymentStatus", "completed");
+      }
       
       if (data.paymentScreenshot instanceof File) {
         formData.append("paymentScreenshot", data.paymentScreenshot);
@@ -2365,104 +2522,91 @@ export default function Participate() {
                             className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3"
                             whileHover={{ scale: 1.1, rotate: 5 }}
                           >
-                            <QrCode className="w-5 h-5 text-primary" />
+                            <CreditCard className="w-5 h-5 text-primary" />
                           </motion.div>
                           <h3 className="font-serif text-xl font-bold mb-2" data-testid="text-application-fees-form">
                             Application Fees
                           </h3>
                           <p className="text-sm text-muted-foreground font-medium">
                             {isBusinessQuiz 
-                              ? "Transfer ₹99/- to the below UPI ID or scan the QR code"
+                              ? "Pay ₹99/- securely with Razorpay"
                               : ticketCategory === "premium" 
-                                ? "Transfer ₹599/- to the below UPI ID or scan the QR code"
-                                : "Transfer ₹199/- to the below UPI ID or scan the QR code"
+                                ? "Pay ₹599/- securely with Razorpay"
+                                : "Pay ₹199/- securely with Razorpay"
                             }
                           </p>
                         </div>
 
                         <div className="flex flex-col items-center gap-4">
-                          <RotateIn delay={0.2}>
-                            <div className="w-full max-w-xs">
-                              <img 
-                                src={isBusinessQuiz ? businessQuizQrCodeImage : (ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage)} 
-                                alt="Payment QR Code" 
-                                className="w-full rounded-xl border-2 border-primary/20"
-                                data-testid="img-payment-qr-form"
-                              />
-                            </div>
-                          </RotateIn>
-
-                          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              onClick={handleDownloadQR}
-                              className="gap-2"
-                              data-testid="button-download-qr"
+                          {paymentCompleted ? (
+                            <motion.div 
+                              className="w-full max-w-sm p-6 rounded-xl bg-green-50 dark:bg-green-950/30 border-2 border-green-200 dark:border-green-800"
+                              initial={{ scale: 0.9, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              transition={{ duration: 0.3 }}
                             >
-                              <Download className="w-4 h-4" />
-                              Download QR Code
-                            </Button>
-                          </motion.div>
-
-                          <div className="text-center w-full">
-                            <p className="text-sm text-muted-foreground mb-1">UPI ID:</p>
-                            <p className="font-semibold text-sm break-all mb-4">
-                              caliphworldfoundation.9605399676.ibz@icici
-                            </p>
-                            
-                            <p className="text-sm text-muted-foreground mb-1">Amount:</p>
-                            <p className="font-bold text-lg text-primary">
-                              {isBusinessQuiz ? "₹99.00" : (ticketCategory === "premium" ? "₹599.00" : "₹199.00")}
-                            </p>
-                          </div>
-
-                          <p className="text-center text-muted-foreground font-medium text-sm">
-                            Scan to pay with any UPI app
-                          </p>
-                        </div>
-                      </motion.div>
-
-                      <motion.div
-                        custom={6}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        variants={formFieldVariants}
-                      >
-                        <FormField
-                          control={form.control}
-                          name="paymentScreenshot"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Upload Payment Reference / Screenshot</FormLabel>
-                              <FormControl>
-                                <div className="relative">
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                    className="hidden"
-                                    id="payment-screenshot"
-                                    data-testid="input-payment-screenshot"
-                                  />
-                                  <motion.label
-                                    htmlFor="payment-screenshot"
-                                    className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed rounded-lg cursor-pointer bg-muted/50 border-muted-foreground/20"
-                                    whileHover={{ scale: 1.01, borderColor: "hsl(var(--primary))" }}
-                                    transition={{ duration: 0.2 }}
-                                  >
-                                    <span className="text-sm font-medium">
-                                      {field.value ? "File selected" : "Choose file from gallery"}
-                                    </span>
-                                  </motion.label>
+                              <div className="flex flex-col items-center gap-3">
+                                <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
+                                  <ShieldCheck className="w-6 h-6 text-green-600 dark:text-green-400" />
                                 </div>
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
+                                <div className="text-center">
+                                  <h4 className="font-bold text-green-700 dark:text-green-400">Payment Successful!</h4>
+                                  <p className="text-sm text-green-600 dark:text-green-500 mt-1">
+                                    Payment ID: {paymentId}
+                                  </p>
+                                </div>
+                                <p className="text-xs text-muted-foreground text-center">
+                                  Click the Register button below to complete your registration.
+                                </p>
+                              </div>
+                            </motion.div>
+                          ) : (
+                            <>
+                              <div className="w-full max-w-sm p-6 rounded-xl bg-muted/30 border">
+                                <div className="text-center mb-4">
+                                  <p className="text-sm text-muted-foreground mb-1">Amount to Pay:</p>
+                                  <p className="font-bold text-3xl text-primary">
+                                    ₹{getPaymentAmount()}
+                                  </p>
+                                </div>
+                                
+                                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                                  <Button
+                                    type="button"
+                                    size="lg"
+                                    className="w-full gap-2 font-semibold"
+                                    onClick={handlePayment}
+                                    disabled={isProcessingPayment}
+                                    data-testid="button-pay-razorpay"
+                                  >
+                                    {isProcessingPayment ? (
+                                      <>
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        Processing...
+                                      </>
+                                    ) : (
+                                      <>
+                                        <CreditCard className="w-4 h-4" />
+                                        Pay Now with Razorpay
+                                      </>
+                                    )}
+                                  </Button>
+                                </motion.div>
+
+                                <div className="flex items-center justify-center gap-2 mt-4">
+                                  <ShieldCheck className="w-4 h-4 text-green-500" />
+                                  <p className="text-xs text-muted-foreground">
+                                    Secure payment powered by Razorpay
+                                  </p>
+                                </div>
+                              </div>
+
+                              <p className="text-center text-muted-foreground font-medium text-sm">
+                                Pay with UPI, Cards, Net Banking & more
+                              </p>
+                            </>
                           )}
-                        />
+                        </div>
                       </motion.div>
                       
                       <motion.div
