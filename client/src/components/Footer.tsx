@@ -15,28 +15,6 @@ export function Footer({ className }: FooterProps) {
       <footer className={`bg-card border-t border-border ${className || ''}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-16">
-            <motion.div 
-              className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent rounded-2xl p-8 mb-16 border border-primary/20"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              <div className="max-w-2xl">
-                <h3 className="font-serif text-2xl sm:text-3xl font-bold mb-4">
-                  Be part of Kerala's new startup wave
-                </h3>
-                <p className="text-muted-foreground mb-6">
-                  Join Kerala Startup Fest and help turn ideas into real businesses.
-                </p>
-                <Link href="/participate#register">
-                  <Button size="lg" className="font-semibold" data-testid="button-register-footer">
-                    Register Now
-                  </Button>
-                </Link>
-              </div>
-            </motion.div>
-
             <StaggerContainer className="grid grid-cols-1 sm:grid-cols-3 gap-8 lg:gap-12" staggerDelay={0.1}>
               <StaggerItem>
                 <div>

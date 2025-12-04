@@ -94,7 +94,7 @@ const sessions = [
 
 export default function Sessions() {
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-br from-teal-50 via-teal-100/50 to-cyan-50 dark:from-teal-950/30 dark:via-teal-900/20 dark:to-cyan-950/30">
+    <div className="min-h-screen pt-20 bg-white dark:bg-background">
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
@@ -124,24 +124,32 @@ export default function Sessions() {
                   whileHover={{ y: -8, scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Card className="group border-2 border-primary/20 hover:border-primary/50 transition-colors bg-gradient-to-br from-background to-card h-full" data-testid={`card-session-${session.id}`}>
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between mb-4">
-                        <motion.div 
-                          className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center group-hover:from-primary/50 group-hover:to-primary/20 transition-all"
-                          whileHover={{ rotate: 10, scale: 1.1 }}
-                        >
-                          <session.icon className="w-7 h-7 text-primary" />
-                        </motion.div>
-                        <span className="font-serif text-2xl font-bold text-primary/40 group-hover:text-primary/60 transition-colors">{String(index + 1).padStart(2, '0')}</span>
-                      </div>
-                      <h3 className="font-semibold text-lg leading-tight">{session.title}</h3>
-                      <p className="text-sm text-primary font-medium mt-2">{session.tagline}</p>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{session.description}</p>
-                    </CardContent>
-                  </Card>
+                  <div className="relative">
+                    <div 
+                      className="absolute right-0 top-0 bottom-0 w-1 rounded-r-lg"
+                      style={{
+                        background: 'linear-gradient(180deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                      }}
+                    />
+                    <Card className="group border border-border hover:border-primary/50 transition-colors bg-white dark:bg-card h-full" data-testid={`card-session-${session.id}`}>
+                      <CardHeader className="pb-3">
+                        <div className="flex items-start justify-between mb-4">
+                          <motion.div 
+                            className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center group-hover:from-primary/50 group-hover:to-primary/20 transition-all"
+                            whileHover={{ rotate: 10, scale: 1.1 }}
+                          >
+                            <session.icon className="w-7 h-7 text-primary" />
+                          </motion.div>
+                          <span className="font-serif text-2xl font-bold text-primary/40 group-hover:text-primary/60 transition-colors">{String(index + 1).padStart(2, '0')}</span>
+                        </div>
+                        <h3 className="font-semibold text-lg leading-tight">{session.title}</h3>
+                        <p className="text-sm text-primary font-medium mt-2">{session.tagline}</p>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{session.description}</p>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </motion.div>
               </CardWave>
             ))}
@@ -149,38 +157,52 @@ export default function Sessions() {
         </div>
       </section>
 
-      <section className="py-16 bg-card">
+      <section className="py-16 bg-white dark:bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
-            <motion.div 
-              className="bg-gradient-to-br from-primary to-primary/80 rounded-3xl p-8 sm:p-12 text-center text-primary-foreground"
-              whileHover={{ scale: 1.01 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.div 
-                className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-6"
-                animate={{ 
-                  boxShadow: [
-                    "0 0 0 0 rgba(255, 255, 255, 0)",
-                    "0 0 20px 10px rgba(255, 255, 255, 0.2)",
-                    "0 0 0 0 rgba(255, 255, 255, 0)"
-                  ]
+            <div className="relative">
+              <div 
+                className="absolute right-0 top-0 bottom-0 w-1.5 rounded-r-lg"
+                style={{
+                  background: 'linear-gradient(180deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
                 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <div 
+                className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-lg"
+                style={{
+                  background: 'linear-gradient(180deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                }}
+              />
+              <motion.div 
+                className="bg-white dark:bg-card border border-border rounded-lg p-8 sm:p-12 text-center"
+                whileHover={{ scale: 1.01 }}
+                transition={{ duration: 0.3 }}
               >
-                <Lightbulb className="w-8 h-8" />
+                <motion.div 
+                  className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6"
+                  animate={{ 
+                    boxShadow: [
+                      "0 0 0 0 rgba(239, 68, 68, 0)",
+                      "0 0 20px 10px rgba(239, 68, 68, 0.1)",
+                      "0 0 0 0 rgba(239, 68, 68, 0)"
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <Lightbulb className="w-8 h-8 text-primary" />
+                </motion.div>
+                <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-4 text-foreground">
+                  Ready to Learn?
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-2">
+                  Register now to participate in expert sessions at Kerala Startup Fest 2026.
+                </p>
+                <div className="flex items-center justify-center gap-2 text-muted-foreground mt-6">
+                  <Users className="w-5 h-5" />
+                  <span>Open for ages 13-29</span>
+                </div>
               </motion.div>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-4">
-                Ready to Learn?
-              </h2>
-              <p className="text-lg opacity-90 max-w-xl mx-auto mb-2">
-                Register now to participate in expert sessions at Kerala Startup Fest 2026.
-              </p>
-              <div className="flex items-center justify-center gap-2 opacity-80 mt-6">
-                <Users className="w-5 h-5" />
-                <span>Open for ages 13-29</span>
-              </div>
-            </motion.div>
+            </div>
           </ScrollFadeUp>
         </div>
       </section>
