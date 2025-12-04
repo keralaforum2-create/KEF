@@ -21,6 +21,7 @@ import ContestDetail from "@/pages/contest-detail";
 import Terms from "@/pages/terms";
 import Privacy from "@/pages/privacy";
 import Refund from "@/pages/refund";
+import Shipping from "@/pages/shipping";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -60,6 +61,7 @@ function Router() {
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/refund" component={Refund} />
+      <Route path="/shipping" component={Shipping} />
       <Route component={NotFound} />
     </Switch>
   );
