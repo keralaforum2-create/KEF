@@ -184,15 +184,17 @@ Preferred communication style: Simple, everyday language.
 
 ## Features Implemented
 
-✅ Complete 6-page website with responsive design
+✅ Complete 9-page website with responsive design
 ✅ Event registration with form validation
 ✅ Contact form for inquiries
-✅ Admin dashboard to view all submissions
+✅ Admin dashboard with full CRUD functionality (view and delete entries)
 ✅ Mobile-responsive navigation with sheet menu
 ✅ Form submission feedback with toast notifications
-✅ Data persistence with in-memory storage
+✅ Data persistence with PostgreSQL database (Drizzle ORM)
 ✅ SEO-optimized with proper titles and meta descriptions
 ✅ Accessible UI components from Shadcn/Radix
+✅ RBI-compliant policy pages (Terms, Privacy, Refund)
+✅ Email notifications via Resend API
 
 ## How to Use
 
@@ -205,8 +207,10 @@ Preferred communication style: Simple, everyday language.
 **For Admins:**
 1. Go to `/admin` or click "Admin" in the footer
 2. View registration count and contact message count
-3. Click "Registrations" tab to see all participant details
-4. Click "Contact Messages" tab to see all inquiries with contact information
+3. Click "Registrations" tab to see all participant details (with delete option)
+4. Click "Contact Messages" tab to see all inquiries with contact information (with delete option)
+5. Click "Investors & Mentors" tab to manage investor/mentor applications (with delete option)
+6. Click "Sponsorships" tab to manage sponsorship inquiries (with delete option)
 
 **Rationale**: Dependencies are carefully chosen to balance functionality, bundle size, and developer experience. Radix UI provides accessible foundations, while Tailwind enables rapid styling. Drizzle ORM offers better type safety than traditional ORMs. Vite and esbuild provide exceptional build performance. The stack is modern, well-maintained, and production-ready.
 
@@ -231,6 +235,14 @@ The application includes email notification functionality using Resend:
 
 ## Recent Changes
 
+### December 2024
+- Added delete functionality to admin panel for all data types (registrations, contacts, investors, sponsorships)
+- Updated homepage "Why is KSF Different" section text - changed "venture capitalists" to "investors"
+- Added RBI-compliant policy pages: Terms and Conditions (/terms), Privacy Policy (/privacy), Refund Policy (/refund)
+- Footer now includes links to all policy pages
+- Migrated from in-memory storage to PostgreSQL database with Drizzle ORM
+
+### Previous Changes
 - Added email notification system using Resend API
 - Sends ticket confirmation to registrants upon registration
 - Sends registration details to admin email (keralastartupfest@gmail.com)
@@ -240,5 +252,4 @@ The application includes email notification functionality using Resend:
 - Implemented contact form with validation on Contact page
 - Created Admin dashboard page to view all registrations and submissions
 - Set up API routes for form submission handling
-- Added in-memory storage for reliable data handling
 - Added Admin link to footer for easy access
