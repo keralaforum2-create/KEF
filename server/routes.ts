@@ -240,5 +240,49 @@ export async function registerRoutes(
     }
   });
 
+  app.delete("/api/registrations/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteRegistration(id);
+      return res.json({ message: "Registration deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting registration:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/contacts/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteContact(id);
+      return res.json({ message: "Contact deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting contact:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/investor-mentors/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteInvestorMentor(id);
+      return res.json({ message: "Investor/Mentor deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting investor/mentor:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/sponsorships/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteSponsorship(id);
+      return res.json({ message: "Sponsorship deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting sponsorship:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   return httpServer;
 }

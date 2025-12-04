@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +21,9 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake } from "lucide-react";
+import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 import type { Registration, Contact, InvestorMentor, Sponsorship } from "@shared/schema";
 import { ScrollFadeUp, StaggerContainer, StaggerItem, CardWave } from "@/lib/animations";
 
@@ -53,6 +55,61 @@ export default function Admin() {
 
   const { data: sponsorships, isLoading: loadingSponsorships } = useQuery<Sponsorship[]>({
     queryKey: ["/api/sponsorships"],
+  });
+
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  const deleteRegistrationMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/registrations/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
+      toast({ title: "Registration deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete registration", variant: "destructive" });
+    },
+  });
+
+  const deleteContactMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/contacts/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/contacts"] });
+      toast({ title: "Contact deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete contact", variant: "destructive" });
+    },
+  });
+
+  const deleteInvestorMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/investor-mentors/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/investor-mentors"] });
+      toast({ title: "Application deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete application", variant: "destructive" });
+    },
+  });
+
+  const deleteSponsorshipMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/sponsorships/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/sponsorships"] });
+      toast({ title: "Sponsorship deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete sponsorship", variant: "destructive" });
+    },
   });
 
   const getRegistrationTypeBadge = (type: string) => {
@@ -190,15 +247,30 @@ export default function Admin() {
                                     </Badge>
                                   </TableCell>
                                   <TableCell>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => setSelectedReg(reg)}
-                                      data-testid={`button-view-registration-${reg.id}`}
-                                    >
-                                      <Eye className="w-4 h-4 mr-1" />
-                                      View
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedReg(reg)}
+                                        data-testid={`button-view-registration-${reg.id}`}
+                                      >
+                                        <Eye className="w-4 h-4 mr-1" />
+                                        View
+                                      </Button>
+                                      <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => {
+                                          if (confirm("Are you sure you want to delete this registration?")) {
+                                            deleteRegistrationMutation.mutate(reg.id);
+                                          }
+                                        }}
+                                        disabled={deleteRegistrationMutation.isPending}
+                                        data-testid={`button-delete-registration-${reg.id}`}
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    </div>
                                   </TableCell>
                                 </motion.tr>
                               ))}
@@ -264,15 +336,30 @@ export default function Admin() {
                                     </Badge>
                                   </TableCell>
                                   <TableCell>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => setSelectedContact(contact)}
-                                      data-testid={`button-view-contact-${contact.id}`}
-                                    >
-                                      <Eye className="w-4 h-4 mr-1" />
-                                      View
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedContact(contact)}
+                                        data-testid={`button-view-contact-${contact.id}`}
+                                      >
+                                        <Eye className="w-4 h-4 mr-1" />
+                                        View
+                                      </Button>
+                                      <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => {
+                                          if (confirm("Are you sure you want to delete this contact?")) {
+                                            deleteContactMutation.mutate(contact.id);
+                                          }
+                                        }}
+                                        disabled={deleteContactMutation.isPending}
+                                        data-testid={`button-delete-contact-${contact.id}`}
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    </div>
                                   </TableCell>
                                 </motion.tr>
                               ))}
@@ -340,15 +427,30 @@ export default function Admin() {
                                   </TableCell>
                                   <TableCell>{investor.companyName || "-"}</TableCell>
                                   <TableCell>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => setSelectedInvestor(investor)}
-                                      data-testid={`button-view-investor-${investor.id}`}
-                                    >
-                                      <Eye className="w-4 h-4 mr-1" />
-                                      View
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedInvestor(investor)}
+                                        data-testid={`button-view-investor-${investor.id}`}
+                                      >
+                                        <Eye className="w-4 h-4 mr-1" />
+                                        View
+                                      </Button>
+                                      <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => {
+                                          if (confirm("Are you sure you want to delete this application?")) {
+                                            deleteInvestorMutation.mutate(investor.id);
+                                          }
+                                        }}
+                                        disabled={deleteInvestorMutation.isPending}
+                                        data-testid={`button-delete-investor-${investor.id}`}
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    </div>
                                   </TableCell>
                                 </motion.tr>
                               ))}
@@ -409,15 +511,30 @@ export default function Admin() {
                                   <TableCell>{sponsorship.contactPersonName}</TableCell>
                                   <TableCell>{sponsorship.sponsorshipLevel || "-"}</TableCell>
                                   <TableCell>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => setSelectedSponsorship(sponsorship)}
-                                      data-testid={`button-view-sponsorship-${sponsorship.id}`}
-                                    >
-                                      <Eye className="w-4 h-4 mr-1" />
-                                      View
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedSponsorship(sponsorship)}
+                                        data-testid={`button-view-sponsorship-${sponsorship.id}`}
+                                      >
+                                        <Eye className="w-4 h-4 mr-1" />
+                                        View
+                                      </Button>
+                                      <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => {
+                                          if (confirm("Are you sure you want to delete this sponsorship?")) {
+                                            deleteSponsorshipMutation.mutate(sponsorship.id);
+                                          }
+                                        }}
+                                        disabled={deleteSponsorshipMutation.isPending}
+                                        data-testid={`button-delete-sponsorship-${sponsorship.id}`}
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    </div>
                                   </TableCell>
                                 </motion.tr>
                               ))}

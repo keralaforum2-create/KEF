@@ -36,6 +36,11 @@ export interface IStorage {
   
   createSponsorship(inquiry: InsertSponsorship): Promise<Sponsorship>;
   getSponsorships(): Promise<Sponsorship[]>;
+  
+  deleteRegistration(id: string): Promise<void>;
+  deleteContact(id: string): Promise<void>;
+  deleteInvestorMentor(id: string): Promise<void>;
+  deleteSponsorship(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -103,6 +108,22 @@ export class DatabaseStorage implements IStorage {
 
   async getSponsorships(): Promise<Sponsorship[]> {
     return await db.select().from(sponsorshipInquiries).orderBy(desc(sponsorshipInquiries.createdAt));
+  }
+
+  async deleteRegistration(id: string): Promise<void> {
+    await db.delete(registrations).where(eq(registrations.id, id));
+  }
+
+  async deleteContact(id: string): Promise<void> {
+    await db.delete(contactSubmissions).where(eq(contactSubmissions.id, id));
+  }
+
+  async deleteInvestorMentor(id: string): Promise<void> {
+    await db.delete(investorMentorApplications).where(eq(investorMentorApplications.id, id));
+  }
+
+  async deleteSponsorship(id: string): Promise<void> {
+    await db.delete(sponsorshipInquiries).where(eq(sponsorshipInquiries.id, id));
   }
 }
 

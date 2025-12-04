@@ -300,7 +300,7 @@ export default function Home() {
               
               <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
                 <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
-                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Live idea pitching in front of investors and venture capitalists</p>
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Live pitching in front of investors</p>
               </div>
               
               <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
@@ -310,7 +310,7 @@ export default function Home() {
               
               <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
                 <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
-                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Open for school students and youngsters up to 29 years of age</p>
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Open for school students and youngsters</p>
               </div>
 
               <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
@@ -325,7 +325,7 @@ export default function Home() {
               
               <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
                 <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
-                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Live idea pitching in front of investors and venture capitalists</p>
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Live pitching in front of investors</p>
               </div>
               
               <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
@@ -335,7 +335,7 @@ export default function Home() {
               
               <div className="bg-white rounded-xl px-8 py-5 flex items-center gap-4 flex-shrink-0 shadow-sm border border-gray-100 mx-3">
                 <div className="w-3 h-3 rounded-full bg-primary flex-shrink-0" />
-                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Open for school students and youngsters up to 29 years of age</p>
+                <p className="text-lg font-medium text-gray-800 whitespace-nowrap">Open for school students and youngsters</p>
               </div>
             </div>
           </div>
