@@ -53,7 +53,7 @@ const contests = [
 
 export default function Contests() {
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-br from-red-50 via-rose-100/50 to-red-50 dark:from-red-950/30 dark:via-rose-900/20 dark:to-red-950/30">
+    <div className="min-h-screen pt-20 bg-white dark:bg-background">
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
@@ -81,29 +81,36 @@ export default function Contests() {
               <StaggerItem key={contest.id}>
                 <Link href={`/contests/${contest.slug}`}>
                   <motion.div whileHover={{ scale: 1.03, y: -5 }} transition={{ duration: 0.2 }} className="cursor-pointer">
-                    <Card className="h-full group" data-testid={`card-contest-${contest.id}`}>
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          <motion.div 
-                            className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors"
-                            whileHover={{ rotate: 10, scale: 1.1 }}
-                          >
-                            <contest.icon className="w-7 h-7 text-primary" />
-                          </motion.div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex flex-wrap items-center gap-2 mb-2">
-                              <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">{contest.title}</h3>
-                              <Badge variant="outline" className="text-xs">{contest.badge}</Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground">{contest.description}</p>
-                            <div className="flex items-center gap-1 mt-3 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                              <span>Learn More</span>
-                              <ArrowRight className="w-4 h-4" />
+                    <div 
+                      className="relative p-[3px] rounded-lg h-full"
+                      style={{
+                        background: 'linear-gradient(135deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                      }}
+                    >
+                      <Card className="h-full group border-0 bg-white dark:bg-card" data-testid={`card-contest-${contest.id}`}>
+                        <CardContent className="p-6">
+                          <div className="flex items-start gap-4">
+                            <motion.div 
+                              className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors"
+                              whileHover={{ rotate: 10, scale: 1.1 }}
+                            >
+                              <contest.icon className="w-7 h-7 text-primary" />
+                            </motion.div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-wrap items-center gap-2 mb-2">
+                                <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">{contest.title}</h3>
+                                <Badge variant="outline" className="text-xs">{contest.badge}</Badge>
+                              </div>
+                              <p className="text-sm text-muted-foreground">{contest.description}</p>
+                              <div className="flex items-center gap-1 mt-3 text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span>Learn More</span>
+                                <ArrowRight className="w-4 h-4" />
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    </div>
                   </motion.div>
                 </Link>
               </StaggerItem>
@@ -112,38 +119,52 @@ export default function Contests() {
         </div>
       </section>
 
-      <section className="py-16 bg-card">
+      <section className="py-16 bg-white dark:bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
-            <motion.div 
-              className="bg-gradient-to-br from-primary to-primary/80 rounded-3xl p-8 sm:p-12 text-center text-primary-foreground"
-              whileHover={{ scale: 1.01 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.div 
-                className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center mx-auto mb-6"
-                animate={{ 
-                  boxShadow: [
-                    "0 0 0 0 rgba(255, 255, 255, 0)",
-                    "0 0 20px 10px rgba(255, 255, 255, 0.2)",
-                    "0 0 0 0 rgba(255, 255, 255, 0)"
-                  ]
+            <div className="relative">
+              <div 
+                className="absolute right-0 top-0 bottom-0 w-1.5 rounded-r-lg"
+                style={{
+                  background: 'linear-gradient(180deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
                 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <div 
+                className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-lg"
+                style={{
+                  background: 'linear-gradient(180deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                }}
+              />
+              <motion.div 
+                className="bg-white dark:bg-card border border-border rounded-lg p-8 sm:p-12 text-center"
+                whileHover={{ scale: 1.01 }}
+                transition={{ duration: 0.3 }}
               >
-                <Trophy className="w-8 h-8" />
+                <motion.div 
+                  className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6"
+                  animate={{ 
+                    boxShadow: [
+                      "0 0 0 0 rgba(239, 68, 68, 0)",
+                      "0 0 20px 10px rgba(239, 68, 68, 0.1)",
+                      "0 0 0 0 rgba(239, 68, 68, 0)"
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <Trophy className="w-8 h-8 text-primary" />
+                </motion.div>
+                <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-4 text-foreground">
+                  Ready to Compete?
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-2">
+                  Register now to participate in contests at Kerala Startup Fest 2026.
+                </p>
+                <div className="flex items-center justify-center gap-2 text-muted-foreground mt-6">
+                  <Users className="w-5 h-5" />
+                  <span>Open for ages 10-29</span>
+                </div>
               </motion.div>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-4">
-                Ready to Compete?
-              </h2>
-              <p className="text-lg opacity-90 max-w-xl mx-auto mb-2">
-                Register now to participate in contests at Kerala Startup Fest 2026.
-              </p>
-              <div className="flex items-center justify-center gap-2 opacity-80 mt-6">
-                <Users className="w-5 h-5" />
-                <span>Open for ages 10-29</span>
-              </div>
-            </motion.div>
+            </div>
           </ScrollFadeUp>
         </div>
       </section>

@@ -124,14 +124,13 @@ export default function Sessions() {
                   whileHover={{ y: -8, scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <div className="relative">
-                    <div 
-                      className="absolute right-0 top-0 bottom-0 w-1 rounded-r-lg"
-                      style={{
-                        background: 'linear-gradient(180deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                      }}
-                    />
-                    <Card className="group border border-border hover:border-primary/50 transition-colors bg-white dark:bg-card h-full" data-testid={`card-session-${session.id}`}>
+                  <div 
+                    className="relative p-[3px] rounded-lg"
+                    style={{
+                      background: 'linear-gradient(135deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                    }}
+                  >
+                    <Card className="group border-0 bg-white dark:bg-card h-full" data-testid={`card-session-${session.id}`}>
                       <CardHeader className="pb-3">
                         <div className="flex items-start justify-between mb-4">
                           <motion.div 
