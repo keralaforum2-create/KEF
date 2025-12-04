@@ -104,6 +104,9 @@ export function Footer({ className }: FooterProps) {
                 <Link href="/refund" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-refund">
                   Refund Policy
                 </Link>
+                <Link href="/shipping" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-shipping">
+                  Shipping Policy
+                </Link>
                 <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-contact">
                   Contact Us
                 </Link>
