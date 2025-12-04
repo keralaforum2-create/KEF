@@ -360,9 +360,9 @@ export default function Contact() {
                           <MapPin className="w-5 h-5 text-primary" />
                         </motion.div>
                         <div>
-                          <p className="font-medium">Caliph Life School</p>
+                          <p className="font-medium">Calicut Beach</p>
                           <p className="text-muted-foreground text-sm">
-                            Thammaressery, Kozhikode<br />
+                            Kozhikode<br />
                             Kerala, India
                           </p>
                         </div>
@@ -413,7 +413,7 @@ export default function Contact() {
               transition={{ duration: 0.5 }}
             >
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3912.2788424802884!2d75.88927547484886!3d11.407091788795453!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba66bf2e8f57541%3A0x5c6c8c1b5c5e7c9d!2sThamarassery%2C%20Kerala!5e0!3m2!1sen!2sin!4v1699999999999!5m2!1sen!2sin"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3912.7!2d75.7684!3d11.2588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba65938563d4747%3A0x32150641ca32ecab!2sCalicut%20Beach!5e0!3m2!1sen!2sin!4v1699999999999!5m2!1sen!2sin"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
