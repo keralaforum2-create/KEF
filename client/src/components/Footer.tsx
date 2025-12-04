@@ -94,8 +94,17 @@ export function Footer({ className }: FooterProps) {
               <p className="text-sm text-muted-foreground text-center sm:text-left">
                 &copy; 2026 Kerala Startup Fest. All rights reserved.
               </p>
-              <div className="flex items-center gap-6">
-                <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+                <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-terms">
+                  Terms & Conditions
+                </Link>
+                <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-privacy">
+                  Privacy Policy
+                </Link>
+                <Link href="/refund" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-refund">
+                  Refund Policy
+                </Link>
+                <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-link-contact">
                   Contact Us
                 </Link>
               </div>

@@ -18,6 +18,9 @@ import Admin from "@/pages/admin";
 import Ticket from "@/pages/ticket";
 import Checkin from "@/pages/checkin";
 import ContestDetail from "@/pages/contest-detail";
+import Terms from "@/pages/terms";
+import Privacy from "@/pages/privacy";
+import Refund from "@/pages/refund";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -54,6 +57,9 @@ function Router() {
       <Route path="/admin" component={Admin} />
       <Route path="/ticket/:id" component={Ticket} />
       <Route path="/checkin/:id" component={Checkin} />
+      <Route path="/terms" component={Terms} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/refund" component={Refund} />
       <Route component={NotFound} />
     </Switch>
   );
