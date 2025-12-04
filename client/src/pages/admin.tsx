@@ -21,7 +21,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2 } from "lucide-react";
+import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import type { Registration, Contact, InvestorMentor, Sponsorship } from "@shared/schema";
@@ -229,7 +229,9 @@ export default function Admin() {
                           <Table>
                             <TableHeader>
                               <TableRow>
+                                <TableHead>Payment</TableHead>
                                 <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
                                 <TableHead>Type</TableHead>
                                 <TableHead>Action</TableHead>
                               </TableRow>
@@ -244,7 +246,23 @@ export default function Admin() {
                                   className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                                   data-testid={`row-registration-${reg.id}`}
                                 >
+                                  <TableCell>
+                                    {reg.paymentScreenshot ? (
+                                      <img 
+                                        src={reg.paymentScreenshot} 
+                                        alt="Payment" 
+                                        className="w-12 h-12 object-cover rounded-md border cursor-pointer"
+                                        onClick={() => setSelectedReg(reg)}
+                                        data-testid={`img-payment-thumb-${reg.id}`}
+                                      />
+                                    ) : (
+                                      <div className="w-12 h-12 bg-muted rounded-md flex items-center justify-center">
+                                        <ImageIcon className="w-5 h-5 text-muted-foreground" />
+                                      </div>
+                                    )}
+                                  </TableCell>
                                   <TableCell className="font-medium">{reg.fullName}</TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
                                   <TableCell>
                                     <Badge className={getRegistrationTypeBadge(reg.registrationType)}>
                                       {reg.registrationType === "expert-session" ? "Expert Session" : "Contest"}
@@ -563,7 +581,7 @@ export default function Admin() {
       <AnimatePresence>
         {selectedReg && (
           <Dialog open={!!selectedReg} onOpenChange={() => setSelectedReg(null)}>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-2xl">
               <DialogHeader>
                 <DialogTitle>Registration Details</DialogTitle>
                 <DialogDescription>Full information for this registration</DialogDescription>
@@ -799,13 +817,19 @@ export default function Admin() {
                 
                 {selectedReg.paymentScreenshot && (
                   <div className="border-t pt-4">
-                    <label className="text-sm font-medium text-muted-foreground">Payment Screenshot</label>
-                    <img 
-                      src={selectedReg.paymentScreenshot} 
-                      alt="Payment Screenshot" 
-                      className="w-full rounded-lg border border-border mt-2 max-h-64 object-cover"
-                      data-testid="img-payment-screenshot-admin"
-                    />
+                    <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                      <ImageIcon className="w-4 h-4" />
+                      Payment Screenshot
+                    </label>
+                    <a href={selectedReg.paymentScreenshot} target="_blank" rel="noopener noreferrer">
+                      <img 
+                        src={selectedReg.paymentScreenshot} 
+                        alt="Payment Screenshot" 
+                        className="w-full rounded-lg border border-border mt-2 max-h-96 object-contain bg-muted/20 cursor-pointer"
+                        data-testid="img-payment-screenshot-admin"
+                      />
+                    </a>
+                    <p className="text-xs text-muted-foreground mt-1">Click image to view full size</p>
                   </div>
                 )}
               </motion.div>
