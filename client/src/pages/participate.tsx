@@ -7,6 +7,7 @@ import { z } from "zod";
 import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import { motion, AnimatePresence } from "framer-motion";
+import { SiGooglepay, SiPhonepe, SiPaytm } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -50,7 +51,8 @@ import {
   CheckCircle,
   CreditCard,
   Loader2,
-  ShieldCheck
+  ShieldCheck,
+  Smartphone
 } from "lucide-react";
 
 import {
@@ -2422,6 +2424,47 @@ export default function Participate() {
                             </div>
 
                             <div className="flex flex-col items-center gap-4">
+                              <div className="grid grid-cols-2 gap-3 w-full mb-2">
+                                <a
+                                  href={`tez://upi/pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
+                                  className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                  data-testid="button-gpay"
+                                >
+                                  <SiGooglepay className="w-6 h-6" style={{ color: '#4285F4' }} />
+                                  <span className="text-sm font-medium">GPay</span>
+                                </a>
+                                <a
+                                  href={`phonepe://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
+                                  className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                  data-testid="button-phonepe"
+                                >
+                                  <SiPhonepe className="w-6 h-6" style={{ color: '#5F259F' }} />
+                                  <span className="text-sm font-medium">PhonePe</span>
+                                </a>
+                                <a
+                                  href={`paytmmp://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
+                                  className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                  data-testid="button-paytm"
+                                >
+                                  <SiPaytm className="w-6 h-6" style={{ color: '#00BAF2' }} />
+                                  <span className="text-sm font-medium">Paytm</span>
+                                </a>
+                                <a
+                                  href={`upi://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
+                                  className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                  data-testid="button-other-upi"
+                                >
+                                  <Smartphone className="w-6 h-6 text-primary" />
+                                  <span className="text-sm font-medium">Other UPI</span>
+                                </a>
+                              </div>
+
+                              <div className="flex items-center gap-3 w-full my-2">
+                                <div className="flex-1 h-px bg-border"></div>
+                                <span className="text-xs text-muted-foreground">or scan QR</span>
+                                <div className="flex-1 h-px bg-border"></div>
+                              </div>
+
                               <div className="bg-white p-4 rounded-lg shadow-sm">
                                 <img 
                                   src={isBusinessQuiz ? businessQuizQrCodeImage : (ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage)} 
