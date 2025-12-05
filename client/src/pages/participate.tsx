@@ -2446,6 +2446,13 @@ export default function Participate() {
                               <p className="text-xs text-center text-muted-foreground">
                                 Scan this QR code with any UPI app to make payment
                               </p>
+                              
+                              <div className="w-full mt-2 p-3 rounded-lg bg-muted/50 border text-center">
+                                <p className="text-xs text-muted-foreground mb-1">Or pay directly to UPI ID:</p>
+                                <p className="font-mono text-sm font-medium text-foreground select-all" data-testid="text-upi-id">
+                                  caliphworldfoundation.9605399676.ibz@icici
+                                </p>
+                              </div>
                             </div>
                           </div>
 
