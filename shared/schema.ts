@@ -84,6 +84,8 @@ export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   id: true,
   registrationId: true,
   createdAt: true,
+  razorpayPaymentId: true,
+  razorpayOrderId: true,
 }).extend({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
@@ -100,7 +102,7 @@ export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   collegeCourse: z.string().optional(),
   teamMember1Name: z.string().optional(),
   teamMember2Name: z.string().optional(),
-  paymentScreenshot: z.string().optional(),
+  paymentScreenshot: z.string().min(1, "Payment screenshot is required"),
   pitchStartupName: z.string().optional(),
   pitchElevatorPitch: z.string().max(300, "Elevator pitch must be under 50 words").optional(),
   pitchProblemStatement: z.string().optional(),
@@ -130,8 +132,6 @@ export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   pitchSupportingFiles: z.string().optional(),
   pitchDemoVideoLink: z.string().optional(),
   pitchDeclarationConfirmed: z.string().optional(),
-  razorpayPaymentId: z.string().optional(),
-  razorpayOrderId: z.string().optional(),
   paymentStatus: z.string().optional(),
 });
 

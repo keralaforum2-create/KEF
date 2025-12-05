@@ -53,11 +53,6 @@ import {
   ShieldCheck
 } from "lucide-react";
 
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
 import {
   ScrollFadeUp,
   ScrollFadeLeft,
@@ -98,7 +93,10 @@ const registrationSchema = z.object({
   teamMember2Phone: z.string().optional(),
   teamMember2Grade: z.string().optional(),
   teamMember2Age: z.string().optional(),
-  paymentScreenshot: z.any().optional(),
+  paymentScreenshot: z.any().refine(
+    (val) => val instanceof File || (val instanceof FileList && val.length > 0),
+    { message: "Payment screenshot is required. Please upload your payment confirmation." }
+  ),
   pitchStartupName: z.string().optional(),
   pitchElevatorPitch: z.string().max(300, "Elevator pitch must be under 50 words").optional(),
   pitchProblemStatement: z.string().optional(),
@@ -188,22 +186,7 @@ export default function Participate() {
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  const [paymentCompleted, setPaymentCompleted] = useState(false);
-  const [paymentId, setPaymentId] = useState<string | null>(null);
-  const [orderId, setOrderId] = useState<string | null>(null);
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
-
-  // Load Razorpay script
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
   
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
@@ -368,121 +351,6 @@ export default function Participate() {
     return 199;
   };
 
-  // Handle Razorpay payment
-  const handlePayment = async () => {
-    const formValues = form.getValues();
-    
-    // Validate required fields first
-    const result = await form.trigger(["fullName", "email", "phone", "registrationType"]);
-    if (!result) {
-      toast({
-        title: "Please fill required fields",
-        description: "Complete all required fields before payment",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsProcessingPayment(true);
-
-    try {
-      // Create order on backend
-      const response = await fetch("/api/payment/create-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: getPaymentAmount(),
-          ticketType: ticketCategory || "normal",
-          name: formValues.fullName,
-          email: formValues.email,
-          phone: formValues.phone,
-        }),
-      });
-
-      const orderData = await response.json();
-
-      if (!orderData.success) {
-        throw new Error(orderData.message || "Failed to create order");
-      }
-
-      // Open Razorpay checkout
-      const options = {
-        key: orderData.key_id,
-        amount: orderData.amount,
-        currency: orderData.currency,
-        order_id: orderData.order_id,
-        name: "Kerala Startup Fest 2026",
-        description: `${ticketCategory === "premium" ? "Premium" : "Normal"} Ticket - ${registrationType === "expert-session" ? "Expert Session" : contestName || "Contest"}`,
-        image: "/logo.png",
-        handler: async function (response: any) {
-          try {
-            // Verify payment on backend
-            const verifyResponse = await fetch("/api/payment/verify", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-              }),
-            });
-
-            const verifyData = await verifyResponse.json();
-
-            if (verifyData.success) {
-              setPaymentCompleted(true);
-              setPaymentId(response.razorpay_payment_id);
-              setOrderId(response.razorpay_order_id);
-              toast({
-                title: "Payment Successful!",
-                description: "Your payment has been verified. Complete your registration now.",
-              });
-            } else {
-              throw new Error("Payment verification failed");
-            }
-          } catch (error) {
-            toast({
-              title: "Verification Failed",
-              description: "Payment received but verification failed. Please contact support.",
-              variant: "destructive",
-            });
-          }
-        },
-        prefill: {
-          name: formValues.fullName,
-          email: formValues.email,
-          contact: formValues.phone,
-        },
-        theme: {
-          color: "#E11D48",
-        },
-        modal: {
-          ondismiss: function() {
-            setIsProcessingPayment(false);
-          }
-        }
-      };
-
-      const razorpay = new window.Razorpay(options);
-      razorpay.on('payment.failed', function (response: any) {
-        toast({
-          title: "Payment Failed",
-          description: response.error.description || "Please try again",
-          variant: "destructive",
-        });
-      });
-      razorpay.open();
-    } catch (error: any) {
-      toast({
-        title: "Payment Error",
-        description: error.message || "Could not initiate payment. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsProcessingPayment(false);
-    }
-  };
-
   const mutation = useMutation({
     mutationFn: async (data: RegistrationFormData) => {
       const formData = new FormData();
@@ -502,19 +370,15 @@ export default function Participate() {
       formData.append("teamMember1Name", data.teamMember1Name || "");
       formData.append("teamMember2Name", data.teamMember2Name || "");
       
-      // Add Razorpay payment details if payment completed
-      if (paymentId) {
-        formData.append("razorpayPaymentId", paymentId);
-      }
-      if (orderId) {
-        formData.append("razorpayOrderId", orderId);
-      }
-      if (paymentCompleted) {
-        formData.append("paymentStatus", "completed");
-      }
-      
+      // Handle both File and FileList for payment screenshot
+      let screenshotFile: File | undefined;
       if (data.paymentScreenshot instanceof File) {
-        formData.append("paymentScreenshot", data.paymentScreenshot);
+        screenshotFile = data.paymentScreenshot;
+      } else if (data.paymentScreenshot instanceof FileList && data.paymentScreenshot.length > 0) {
+        screenshotFile = data.paymentScreenshot[0];
+      }
+      if (screenshotFile) {
+        formData.append("paymentScreenshot", screenshotFile);
       }
 
       formData.append("pitchStartupName", data.pitchStartupName || "");
@@ -550,33 +414,44 @@ export default function Participate() {
         formData.append("pitchSupportingFiles", data.pitchSupportingFiles);
       }
       
-      return fetch("/api/register", {
+      const response = await fetch("/api/register", {
         method: "POST",
         body: formData,
-      }).then(res => res.json());
+      });
+      const json = await response.json();
+      if (!response.ok) {
+        throw new Error(json.message || "Registration failed. Please try again.");
+      }
+      return json;
     },
     onSuccess: async (response: any) => {
       const regId = response.registration?.registrationId;
-      if (regId) {
-        setRegistrationId(regId);
-        const checkinUrl = `${window.location.origin}/checkin/${regId}`;
-        QRCode.toDataURL(checkinUrl, {
-          width: 200,
-          margin: 1,
-          color: {
-            dark: '#000000',
-            light: '#ffffff'
-          }
-        }).then(setQrCode).catch((err: any) => {
-          console.error("Failed to generate QR code:", err);
-          setQrCode("");
+      if (!regId) {
+        toast({
+          title: "Registration Failed",
+          description: response.message || "Failed to create registration. Please try again.",
+          variant: "destructive",
         });
+        return;
       }
+      setRegistrationId(regId);
+      const checkinUrl = `${window.location.origin}/checkin/${regId}`;
+      QRCode.toDataURL(checkinUrl, {
+        width: 200,
+        margin: 1,
+        color: {
+          dark: '#000000',
+          light: '#ffffff'
+        }
+      }).then(setQrCode).catch((err: any) => {
+        console.error("Failed to generate QR code:", err);
+        setQrCode("");
+      });
     },
-    onError: () => {
+    onError: (error: Error) => {
       toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
+        title: "Registration Failed",
+        description: error.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
     },
@@ -2522,90 +2397,99 @@ export default function Participate() {
                             className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3"
                             whileHover={{ scale: 1.1, rotate: 5 }}
                           >
-                            <CreditCard className="w-5 h-5 text-primary" />
+                            <QrCode className="w-5 h-5 text-primary" />
                           </motion.div>
                           <h3 className="font-serif text-xl font-bold mb-2" data-testid="text-application-fees-form">
                             Application Fees
                           </h3>
                           <p className="text-sm text-muted-foreground font-medium">
                             {isBusinessQuiz 
-                              ? "Pay ₹99/- securely with Razorpay"
+                              ? "Pay ₹99/- via UPI"
                               : ticketCategory === "premium" 
-                                ? "Pay ₹599/- securely with Razorpay"
-                                : "Pay ₹199/- securely with Razorpay"
+                                ? "Pay ₹599/- via UPI"
+                                : "Pay ₹199/- via UPI"
                             }
                           </p>
                         </div>
 
-                        <div className="flex flex-col items-center gap-4">
-                          {paymentCompleted ? (
-                            <motion.div 
-                              className="w-full max-w-sm p-6 rounded-xl bg-green-50 dark:bg-green-950/30 border-2 border-green-200 dark:border-green-800"
-                              initial={{ scale: 0.9, opacity: 0 }}
-                              animate={{ scale: 1, opacity: 1 }}
-                              transition={{ duration: 0.3 }}
-                            >
-                              <div className="flex flex-col items-center gap-3">
-                                <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
-                                  <ShieldCheck className="w-6 h-6 text-green-600 dark:text-green-400" />
-                                </div>
-                                <div className="text-center">
-                                  <h4 className="font-bold text-green-700 dark:text-green-400">Payment Successful!</h4>
-                                  <p className="text-sm text-green-600 dark:text-green-500 mt-1">
-                                    Payment ID: {paymentId}
-                                  </p>
-                                </div>
-                                <p className="text-xs text-muted-foreground text-center">
-                                  Click the Register button below to complete your registration.
-                                </p>
-                              </div>
-                            </motion.div>
-                          ) : (
-                            <>
-                              <div className="w-full max-w-sm p-6 rounded-xl bg-muted/30 border">
-                                <div className="text-center mb-4">
-                                  <p className="text-sm text-muted-foreground mb-1">Amount to Pay:</p>
-                                  <p className="font-bold text-3xl text-primary">
-                                    ₹{getPaymentAmount()}
-                                  </p>
-                                </div>
-                                
-                                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                                  <Button
-                                    type="button"
-                                    size="lg"
-                                    className="w-full gap-2 font-semibold"
-                                    onClick={handlePayment}
-                                    disabled={isProcessingPayment}
-                                    data-testid="button-pay-razorpay"
-                                  >
-                                    {isProcessingPayment ? (
-                                      <>
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                        Processing...
-                                      </>
-                                    ) : (
-                                      <>
-                                        <CreditCard className="w-4 h-4" />
-                                        Pay Now with Razorpay
-                                      </>
-                                    )}
-                                  </Button>
-                                </motion.div>
-
-                                <div className="flex items-center justify-center gap-2 mt-4">
-                                  <ShieldCheck className="w-4 h-4 text-green-500" />
-                                  <p className="text-xs text-muted-foreground">
-                                    Secure payment powered by Razorpay
-                                  </p>
-                                </div>
-                              </div>
-
-                              <p className="text-center text-muted-foreground font-medium text-sm">
-                                Pay with UPI, Cards, Net Banking & more
+                        <div className="flex flex-col items-center gap-6">
+                          <div className="w-full max-w-md p-6 rounded-xl bg-muted/30 border">
+                            <div className="text-center mb-4">
+                              <p className="text-sm text-muted-foreground mb-1">Amount to Pay:</p>
+                              <p className="font-bold text-3xl text-primary">
+                                ₹{getPaymentAmount()}
                               </p>
-                            </>
-                          )}
+                            </div>
+
+                            <div className="flex flex-col items-center gap-4">
+                              <div className="bg-white p-4 rounded-lg shadow-sm">
+                                <img 
+                                  src={isBusinessQuiz ? businessQuizQrCodeImage : (ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage)} 
+                                  alt="Payment QR Code" 
+                                  className="w-48 h-48 object-contain"
+                                  data-testid="img-payment-qr"
+                                />
+                              </div>
+
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={handleDownloadQR}
+                                className="gap-2"
+                                data-testid="button-download-qr"
+                              >
+                                <Download className="w-4 h-4" />
+                                Download QR Code
+                              </Button>
+
+                              <p className="text-xs text-center text-muted-foreground">
+                                Scan this QR code with any UPI app to make payment
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="w-full max-w-md space-y-4">
+                            <FormField
+                              control={form.control}
+                              name="paymentScreenshot"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center gap-2">
+                                    <span className="text-destructive">*</span>
+                                    Upload Payment Screenshot
+                                  </FormLabel>
+                                  <FormControl>
+                                    <div className="space-y-3">
+                                      <Input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        className="cursor-pointer"
+                                        data-testid="input-payment-screenshot"
+                                      />
+                                      {form.watch("paymentScreenshot") && (
+                                        <motion.div 
+                                          className="flex items-center gap-2 p-3 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800"
+                                          initial={{ opacity: 0, y: -10 }}
+                                          animate={{ opacity: 1, y: 0 }}
+                                        >
+                                          <CheckCircle className="w-4 h-4 text-green-600" />
+                                          <span className="text-sm text-green-700 dark:text-green-400">
+                                            Screenshot uploaded: {(form.watch("paymentScreenshot") as File)?.name}
+                                          </span>
+                                        </motion.div>
+                                      )}
+                                    </div>
+                                  </FormControl>
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    Upload a screenshot of your payment confirmation (Required)
+                                  </p>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
                         </div>
                       </motion.div>
                       

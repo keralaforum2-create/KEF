@@ -6,14 +6,7 @@ import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import crypto from "crypto";
 import { sendRegistrationEmails } from "./email";
-import Razorpay from "razorpay";
-
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || "",
-  key_secret: process.env.RAZORPAY_KEY_SECRET || "",
-});
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 
@@ -119,13 +112,18 @@ export async function registerRoutes(
     try {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
       
+      // Validate payment screenshot is uploaded
+      if (!files?.paymentScreenshot?.[0]) {
+        return res.status(400).json({ 
+          message: "Payment screenshot is required. Please upload your payment confirmation before registering." 
+        });
+      }
+      
       const data = {
         ...req.body,
-        paymentScreenshot: files?.paymentScreenshot?.[0] ? `/uploads/${files.paymentScreenshot[0].filename}` : undefined,
+        paymentScreenshot: `/uploads/${files.paymentScreenshot[0].filename}`,
         pitchSupportingFiles: files?.pitchSupportingFiles?.[0] ? `/uploads/${files.pitchSupportingFiles[0].filename}` : undefined,
-        razorpayPaymentId: req.body.razorpayPaymentId || undefined,
-        razorpayOrderId: req.body.razorpayOrderId || undefined,
-        paymentStatus: req.body.razorpayPaymentId ? "completed" : (files?.paymentScreenshot?.[0] ? "screenshot_uploaded" : "pending"),
+        paymentStatus: "screenshot_uploaded",
       };
       
       const result = insertRegistrationSchema.safeParse(data);
@@ -292,92 +290,6 @@ export async function registerRoutes(
       console.error("Error deleting sponsorship:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
-  });
-
-  // Razorpay: Create Order
-  app.post("/api/payment/create-order", async (req, res) => {
-    try {
-      const { amount, ticketType, name, email, phone } = req.body;
-
-      if (!amount || amount <= 0) {
-        return res.status(400).json({ message: "Invalid amount" });
-      }
-
-      const options = {
-        amount: Math.round(amount * 100), // Convert to paise
-        currency: "INR",
-        receipt: `ksf_${Date.now()}`,
-        notes: {
-          ticketType,
-          name,
-          email,
-          phone
-        }
-      };
-
-      const order = await razorpay.orders.create(options);
-
-      return res.json({
-        success: true,
-        order_id: order.id,
-        amount: order.amount,
-        currency: order.currency,
-        key_id: process.env.RAZORPAY_KEY_ID
-      });
-    } catch (error) {
-      console.error("Error creating Razorpay order:", error);
-      return res.status(500).json({ 
-        success: false, 
-        message: "Failed to create payment order" 
-      });
-    }
-  });
-
-  // Razorpay: Verify Payment
-  app.post("/api/payment/verify", async (req, res) => {
-    try {
-      const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-
-      if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
-        return res.status(400).json({ 
-          success: false, 
-          message: "Missing payment details" 
-        });
-      }
-
-      // Verify signature
-      const sign = razorpay_order_id + "|" + razorpay_payment_id;
-      const expectedSign = crypto
-        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "")
-        .update(sign)
-        .digest("hex");
-
-      if (expectedSign === razorpay_signature) {
-        return res.json({
-          success: true,
-          message: "Payment verified successfully",
-          payment_id: razorpay_payment_id
-        });
-      } else {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid payment signature"
-        });
-      }
-    } catch (error) {
-      console.error("Error verifying payment:", error);
-      return res.status(500).json({ 
-        success: false, 
-        message: "Payment verification failed" 
-      });
-    }
-  });
-
-  // Get Razorpay Key ID for frontend
-  app.get("/api/payment/config", async (req, res) => {
-    return res.json({
-      key_id: process.env.RAZORPAY_KEY_ID
-    });
   });
 
   return httpServer;

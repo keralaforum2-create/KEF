@@ -233,9 +233,36 @@ The application includes email notification functionality using Resend:
 
 **Note**: Emails are sent from `onboarding@resend.dev` (Resend's shared sending domain). To use a custom domain like `@keralastartupfest.com`, verify the domain in Resend dashboard.
 
+## Payment System
+
+### QR Code Payment Flow
+The application uses a QR code-based payment system with mandatory screenshot upload for payment verification.
+
+**Payment Tiers:**
+- Business Quiz Only: ₹99
+- Normal Ticket: ₹199 (access to all contests except Business Quiz)
+- Premium Ticket: ₹599 (all contests + premium benefits)
+
+**Payment Process:**
+1. User selects ticket category during registration
+2. QR code is displayed based on the payment amount
+3. User scans QR code and completes UPI payment
+4. User uploads payment screenshot (mandatory)
+5. Registration is submitted with payment evidence
+
+**Validation:**
+- Frontend validates File/FileList upload before submission
+- Backend rejects registrations without payment screenshot (400 error)
+- Clear error messages are displayed to users if validation fails
+
 ## Recent Changes
 
 ### December 2024
+- Removed Razorpay payment integration entirely
+- Implemented QR code-based payment system with three payment tiers (₹99, ₹199, ₹599)
+- Made payment screenshot upload mandatory for all registrations
+- Added server-side validation to reject registrations without payment screenshot
+- Added proper error handling to display server error messages to users
 - Added delete functionality to admin panel for all data types (registrations, contacts, investors, sponsorships)
 - Updated homepage "Why is KSF Different" section text - changed "venture capitalists" to "investors"
 - Added RBI-compliant policy pages: Terms and Conditions (/terms), Privacy Policy (/privacy), Refund Policy (/refund)
