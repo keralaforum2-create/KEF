@@ -146,8 +146,10 @@ export default function Admin() {
     return variants[type] || "bg-gray-100 text-gray-800";
   };
 
+  const successfulRegistrations = registrations?.filter(r => r.paymentScreenshot) || [];
+  
   const statCards = [
-    { icon: UserCheck, label: "Registrations", value: registrations?.length || 0, testId: "text-registration-count" },
+    { icon: UserCheck, label: "Registrations", value: successfulRegistrations.length, testId: "text-registration-count" },
     { icon: MessageSquare, label: "Contact Messages", value: contacts?.length || 0, testId: "text-contact-count" },
     { icon: Briefcase, label: "Investor/Mentor", value: investorMentors?.length || 0, testId: "text-investor-count" },
     { icon: Handshake, label: "Sponsorships", value: sponsorships?.length || 0, testId: "text-sponsorship-count" },
@@ -194,7 +196,7 @@ export default function Admin() {
             <Tabs defaultValue="registrations" className="w-full">
               <TabsList className="mb-6 flex flex-wrap">
                 <TabsTrigger value="registrations" data-testid="tab-registrations">
-                  Registrations ({registrations?.length || 0})
+                  Registrations ({successfulRegistrations.length})
                 </TabsTrigger>
                 <TabsTrigger value="contacts" data-testid="tab-contacts">
                   Contacts ({contacts?.length || 0})
@@ -225,12 +227,13 @@ export default function Admin() {
                         <div className="text-center py-8 text-muted-foreground">
                           Loading registrations...
                         </div>
-                      ) : registrations && registrations.length > 0 ? (
+                      ) : successfulRegistrations.length > 0 ? (
                         <div className="overflow-x-auto">
                           <Table>
                             <TableHeader>
                               <TableRow>
                                 <TableHead>Payment</TableHead>
+                                <TableHead>Registration ID</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
                                 <TableHead>Type</TableHead>
@@ -238,7 +241,7 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {registrations.map((reg, index) => (
+                              {successfulRegistrations.map((reg, index) => (
                                 <motion.tr
                                   key={reg.id}
                                   initial={{ opacity: 0, x: -10 }}
@@ -248,20 +251,15 @@ export default function Admin() {
                                   data-testid={`row-registration-${reg.id}`}
                                 >
                                   <TableCell>
-                                    {reg.paymentScreenshot ? (
-                                      <img 
-                                        src={reg.paymentScreenshot} 
-                                        alt="Payment" 
-                                        className="w-12 h-12 object-cover rounded-md border cursor-pointer"
-                                        onClick={() => setSelectedReg(reg)}
-                                        data-testid={`img-payment-thumb-${reg.id}`}
-                                      />
-                                    ) : (
-                                      <div className="w-12 h-12 bg-muted rounded-md flex items-center justify-center">
-                                        <ImageIcon className="w-5 h-5 text-muted-foreground" />
-                                      </div>
-                                    )}
+                                    <img 
+                                      src={reg.paymentScreenshot!} 
+                                      alt="Payment" 
+                                      className="w-12 h-12 object-cover rounded-md border cursor-pointer"
+                                      onClick={() => setSelectedReg(reg)}
+                                      data-testid={`img-payment-thumb-${reg.id}`}
+                                    />
                                   </TableCell>
+                                  <TableCell className="font-mono text-xs text-primary">{reg.registrationId}</TableCell>
                                   <TableCell className="font-medium">{reg.fullName}</TableCell>
                                   <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
                                   <TableCell>
@@ -593,6 +591,116 @@ export default function Admin() {
                 exit={{ opacity: 0, y: 10 }}
                 className="space-y-4 max-h-[70vh] overflow-y-auto"
               >
+                <div className="bg-primary/10 rounded-lg p-4 mb-4 text-center">
+                  <p className="text-sm text-muted-foreground mb-1">Registration ID</p>
+                  <p className="text-xl font-bold text-primary font-mono">{selectedReg.registrationId}</p>
+                </div>
+
+                <div className="flex justify-end mb-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const doc = new jsPDF();
+                      const pageWidth = doc.internal.pageSize.getWidth();
+                      const pageHeight = doc.internal.pageSize.getHeight();
+                      const margin = 20;
+                      const maxTextWidth = pageWidth - margin - 70;
+                      
+                      doc.setFontSize(20);
+                      doc.text("Kerala Startup Fest 2026", 105, 20, { align: "center" });
+                      doc.setFontSize(14);
+                      doc.text("Registration Details", 105, 30, { align: "center" });
+                      doc.setFontSize(10);
+                      let y = 45;
+                      
+                      const checkPageBreak = (neededSpace: number) => {
+                        if (y + neededSpace > pageHeight - 20) {
+                          doc.addPage();
+                          y = 20;
+                        }
+                      };
+                      
+                      const addLine = (label: string, value: string | undefined | null) => {
+                        if (value) {
+                          const wrappedText = doc.splitTextToSize(value, maxTextWidth);
+                          const lineHeight = 5;
+                          const totalHeight = wrappedText.length * lineHeight + 3;
+                          checkPageBreak(totalHeight);
+                          
+                          doc.setFont("helvetica", "bold");
+                          doc.text(`${label}:`, margin, y);
+                          doc.setFont("helvetica", "normal");
+                          doc.text(wrappedText, 70, y);
+                          y += totalHeight;
+                        }
+                      };
+                      
+                      addLine("Registration ID", selectedReg.registrationId);
+                      addLine("Full Name", selectedReg.fullName);
+                      addLine("Email", selectedReg.email);
+                      addLine("Phone", selectedReg.phone);
+                      addLine("Age", selectedReg.age);
+                      addLine("Institution", selectedReg.institution);
+                      addLine("Ticket Category", selectedReg.ticketCategory === "premium" ? "Premium" : "Normal");
+                      addLine("Registration Type", selectedReg.registrationType === "expert-session" ? "Expert Session" : "Contest");
+                      addLine("Session Name", selectedReg.sessionName);
+                      addLine("Contest Name", selectedReg.contestName);
+                      addLine("Participant Type", selectedReg.participantType?.replace("-", " "));
+                      addLine("School Grade", selectedReg.schoolGrade);
+                      addLine("College Year", selectedReg.collegeYear);
+                      addLine("College Course", selectedReg.collegeCourse);
+                      addLine("Team Member 1", selectedReg.teamMember1Name);
+                      addLine("Team Member 2", selectedReg.teamMember2Name);
+                      addLine("Payment Status", selectedReg.paymentStatus);
+                      addLine("Created At", selectedReg.createdAt ? new Date(selectedReg.createdAt).toLocaleString() : null);
+                      
+                      if (selectedReg.contestName === "The Pitch Room") {
+                        checkPageBreak(15);
+                        y += 5;
+                        doc.setFontSize(12);
+                        doc.setFont("helvetica", "bold");
+                        doc.text("Pitch Room Details", margin, y);
+                        y += 8;
+                        doc.setFontSize(10);
+                        addLine("Startup Name", selectedReg.pitchStartupName);
+                        addLine("Elevator Pitch", selectedReg.pitchElevatorPitch);
+                        addLine("Problem Statement", selectedReg.pitchProblemStatement);
+                        addLine("Proposed Solution", selectedReg.pitchProposedSolution);
+                        addLine("Product Name", selectedReg.pitchProductName);
+                        addLine("Product Description", selectedReg.pitchProductDescription);
+                        addLine("Pricing Model", selectedReg.pitchPricingModel);
+                        addLine("Cost Per Unit", selectedReg.pitchCostPerUnit);
+                        addLine("Selling Price", selectedReg.pitchSellingPrice);
+                        addLine("Profit Per Unit", selectedReg.pitchProfitPerUnit);
+                        addLine("Capital Required", selectedReg.pitchTotalCapitalRequired);
+                        addLine("Revenue Per User", selectedReg.pitchRevenuePerUser);
+                        addLine("Target Customers", selectedReg.pitchTargetCustomers);
+                        addLine("Market Size", selectedReg.pitchMarketSize);
+                        addLine("Competitor Analysis", selectedReg.pitchCompetitorAnalysis);
+                        addLine("Revenue Model", selectedReg.pitchRevenueModel);
+                        addLine("Revenue Streams", selectedReg.pitchRevenueStreams);
+                        addLine("Year 1 Revenue", selectedReg.pitchYear1Revenue);
+                        addLine("Year 2 Revenue", selectedReg.pitchYear2Revenue);
+                        addLine("Year 3 Revenue", selectedReg.pitchYear3Revenue);
+                        addLine("Year 4 Revenue", selectedReg.pitchYear4Revenue);
+                        addLine("Year 5 Revenue", selectedReg.pitchYear5Revenue);
+                        addLine("Expected ROI", selectedReg.pitchExpectedRoi);
+                        addLine("Breakeven Period", selectedReg.pitchBreakevenPeriod);
+                        addLine("Feasibility Reasons", selectedReg.pitchFeasibilityReasons);
+                        addLine("Current Stage", selectedReg.pitchCurrentStage);
+                        addLine("Demo Video Link", selectedReg.pitchDemoVideoLink);
+                        addLine("Supporting Files", selectedReg.pitchSupportingFiles);
+                      }
+                      doc.save(`KSF-2026-Registration-${selectedReg.registrationId}.pdf`);
+                    }}
+                    data-testid="button-download-registration-pdf"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download PDF
+                  </Button>
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Full Name</label>
@@ -618,17 +726,21 @@ export default function Admin() {
                     <label className="text-sm font-medium text-muted-foreground">Age</label>
                     <p className="text-base">{selectedReg.age}</p>
                   </div>
-                  {selectedReg.institution && (
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Institution</label>
-                      <p className="text-base">{selectedReg.institution}</p>
-                    </div>
-                  )}
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Institution</label>
+                    <p className="text-base">{selectedReg.institution || "-"}</p>
+                  </div>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Registration For</label>
                   <p className="text-base capitalize">{selectedReg.registrationType === "expert-session" ? "Expert Session" : "Contest"}</p>
                 </div>
+                {selectedReg.sessionName && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Session Name</label>
+                    <p className="text-base">{selectedReg.sessionName}</p>
+                  </div>
+                )}
                 {selectedReg.contestName && (
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Contest</label>
@@ -639,6 +751,28 @@ export default function Admin() {
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Participant Type</label>
                     <p className="text-base capitalize">{selectedReg.participantType.replace("-", " ")}</p>
+                  </div>
+                )}
+                {selectedReg.schoolGrade && (
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">School Grade</label>
+                    <p className="text-base">{selectedReg.schoolGrade}</p>
+                  </div>
+                )}
+                {(selectedReg.collegeYear || selectedReg.collegeCourse) && (
+                  <div className="grid grid-cols-2 gap-4">
+                    {selectedReg.collegeYear && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">College Year</label>
+                        <p className="text-base">{selectedReg.collegeYear}</p>
+                      </div>
+                    )}
+                    {selectedReg.collegeCourse && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">College Course</label>
+                        <p className="text-base">{selectedReg.collegeCourse}</p>
+                      </div>
+                    )}
                   </div>
                 )}
                 {(selectedReg.teamMember1Name || selectedReg.teamMember2Name) && (
@@ -785,6 +919,24 @@ export default function Admin() {
                       </div>
                     )}
                     
+                    {(selectedReg.pitchRevenueModel || selectedReg.pitchRevenueStreams) && (
+                      <div className="bg-muted/30 p-3 rounded-lg space-y-2">
+                        <h5 className="font-medium text-sm">Revenue Model</h5>
+                        {selectedReg.pitchRevenueModel && (
+                          <div>
+                            <span className="text-muted-foreground text-sm">Model:</span>
+                            <p className="text-sm">{selectedReg.pitchRevenueModel}</p>
+                          </div>
+                        )}
+                        {selectedReg.pitchRevenueStreams && (
+                          <div>
+                            <span className="text-muted-foreground text-sm">Revenue Streams:</span>
+                            <p className="text-sm">{selectedReg.pitchRevenueStreams}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
                     {selectedReg.pitchFeasibilityReasons && (
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">Why This Idea is Feasible</label>
@@ -815,6 +967,19 @@ export default function Admin() {
                     )}
                   </div>
                 )}
+                
+                <div className="grid grid-cols-2 gap-4 border-t pt-4">
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Payment Status</label>
+                    <Badge className={selectedReg.paymentStatus === "completed" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"}>
+                      {selectedReg.paymentStatus || "Pending"}
+                    </Badge>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Registered On</label>
+                    <p className="text-sm">{selectedReg.createdAt ? new Date(selectedReg.createdAt).toLocaleString() : "-"}</p>
+                  </div>
+                </div>
                 
                 {selectedReg.paymentScreenshot && (
                   <div className="border-t pt-4">
