@@ -24,7 +24,7 @@ export default function Terms() {
                 <section className="space-y-4">
                   <h2 className="text-xl font-semibold">1. Introduction</h2>
                   <p className="text-muted-foreground">
-                    Welcome to Kerala Startup Fest 2026. These Terms and Conditions govern your use of our website and participation in the event. By accessing our website or registering for the event, you agree to be bound by these terms.
+                    Welcome to Kerala Startup Fest 2026, organized by <strong>Caliph World Foundation</strong>. These Terms and Conditions govern your use of our website and participation in the event. By accessing our website or registering for the event, you agree to be bound by these terms.
                   </p>
                 </section>
 
@@ -66,7 +66,7 @@ export default function Terms() {
                 <section className="space-y-4">
                   <h2 className="text-xl font-semibold">7. Liability</h2>
                   <p className="text-muted-foreground">
-                    Kerala Startup Fest and its organizers are not liable for any loss, damage, or injury to persons or property during the event. Participants attend at their own risk and are responsible for their personal belongings.
+                    Kerala Startup Fest, Caliph World Foundation, and its organizers are not liable for any loss, damage, or injury to persons or property during the event. Participants attend at their own risk and are responsible for their personal belongings.
                   </p>
                 </section>
 
@@ -87,9 +87,10 @@ export default function Terms() {
                 <section className="space-y-4">
                   <h2 className="text-xl font-semibold">10. Contact Information</h2>
                   <p className="text-muted-foreground">
-                    For any questions regarding these Terms and Conditions, please contact us at:
+                    For any questions regarding these Terms and Conditions, please contact Caliph World Foundation at:
                   </p>
                   <ul className="text-muted-foreground list-disc pl-6">
+                    <li>Company: Caliph World Foundation</li>
                     <li>Email: keralastartupfest@gmail.com</li>
                     <li>Phone: +91 9072344431</li>
                     <li>Address: Caliph Life School, Thammaressery, Kozhikode, Kerala, India</li>
