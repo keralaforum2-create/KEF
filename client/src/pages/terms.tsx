@@ -93,7 +93,7 @@ export default function Terms() {
                     <li>Company: Caliph World Foundation</li>
                     <li>Email: keralastartupfest@gmail.com</li>
                     <li>Phone: +91 9072344431</li>
-                    <li>Address: Caliph Life School, Thammaressery, Kozhikode, Kerala, India</li>
+                    <li>Address: Caliph World Foundation, Thammaressery, Kozhikode, Kerala, India</li>
                   </ul>
                 </section>
               </div>
