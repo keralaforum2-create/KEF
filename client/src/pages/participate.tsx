@@ -188,6 +188,7 @@ export default function Participate() {
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [submittedData, setSubmittedData] = useState<RegistrationFormData | null>(null);
   const ticketRef = useRef<HTMLDivElement>(null);
   
   const form = useForm<RegistrationFormData>({
@@ -454,6 +455,7 @@ export default function Participate() {
   });
 
   const onSubmit = (data: RegistrationFormData) => {
+    setSubmittedData(data);
     mutation.mutate(data);
   };
 
@@ -466,6 +468,7 @@ export default function Participate() {
   const closeModal = () => {
     setRegistrationId(null);
     setQrCode(null);
+    setSubmittedData(null);
     form.reset();
   };
 
@@ -484,7 +487,320 @@ export default function Participate() {
 
   if (registrationId) {
     const ticketNumber = generateTicketNumber(registrationId);
+    const isPitchRoomSubmission = submittedData?.contestName === "The Pitch Room";
     
+    // Pitch Room Success Page with all submitted details
+    if (isPitchRoomSubmission && submittedData) {
+      return (
+        <AnimatePresence>
+          <motion.div 
+            className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4 overflow-y-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="w-full max-w-3xl my-8"
+            >
+              <Card className="border-2 border-primary bg-card/95 backdrop-blur max-h-[90vh] overflow-y-auto">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <motion.div 
+                      className="flex items-center gap-2"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 }}
+                    >
+                      <CheckCircle className="w-6 h-6 text-green-500" />
+                      <h1 className="text-lg sm:text-xl font-bold text-foreground">Pitch Room Registration Successful!</h1>
+                    </motion.div>
+                    <button
+                      onClick={closeModal}
+                      className="text-muted-foreground hover:text-foreground p-1"
+                      data-testid="button-close-pitch-modal"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <div className="bg-primary/10 rounded-lg p-4 mb-6 text-center">
+                    <p className="text-sm text-muted-foreground mb-1">Your Registration ID</p>
+                    <p className="text-xl font-bold text-primary font-mono">{registrationId}</p>
+                  </div>
+
+                  <motion.div 
+                    className="space-y-6"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    {/* Personal Details */}
+                    <div className="border-b pb-4">
+                      <h3 className="font-semibold text-lg mb-3 text-primary">Personal Details</h3>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-muted-foreground">Full Name:</span>
+                          <p className="font-medium">{submittedData.fullName}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Email:</span>
+                          <p className="font-medium">{submittedData.email}</p>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Phone:</span>
+                          <p className="font-medium">{submittedData.phone}</p>
+                        </div>
+                        {submittedData.age && (
+                          <div>
+                            <span className="text-muted-foreground">Age:</span>
+                            <p className="font-medium">{submittedData.age}</p>
+                          </div>
+                        )}
+                        {submittedData.institution && (
+                          <div>
+                            <span className="text-muted-foreground">Institution:</span>
+                            <p className="font-medium">{submittedData.institution}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Startup Details */}
+                    <div className="border-b pb-4">
+                      <h3 className="font-semibold text-lg mb-3 text-primary">Startup Details</h3>
+                      <div className="space-y-3 text-sm">
+                        {submittedData.pitchStartupName && (
+                          <div>
+                            <span className="text-muted-foreground">Startup Name:</span>
+                            <p className="font-medium text-base">{submittedData.pitchStartupName}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchElevatorPitch && (
+                          <div>
+                            <span className="text-muted-foreground">Elevator Pitch:</span>
+                            <p className="font-medium">{submittedData.pitchElevatorPitch}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchProblemStatement && (
+                          <div>
+                            <span className="text-muted-foreground">Problem Statement:</span>
+                            <p className="font-medium">{submittedData.pitchProblemStatement}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchProposedSolution && (
+                          <div>
+                            <span className="text-muted-foreground">Proposed Solution:</span>
+                            <p className="font-medium">{submittedData.pitchProposedSolution}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchProductName && (
+                          <div>
+                            <span className="text-muted-foreground">Product Name:</span>
+                            <p className="font-medium">{submittedData.pitchProductName}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchProductDescription && (
+                          <div>
+                            <span className="text-muted-foreground">Product Description:</span>
+                            <p className="font-medium">{submittedData.pitchProductDescription}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Financial Details */}
+                    <div className="border-b pb-4">
+                      <h3 className="font-semibold text-lg mb-3 text-primary">Financial Details</h3>
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        {submittedData.pitchPricingModel && (
+                          <div>
+                            <span className="text-muted-foreground">Pricing Model:</span>
+                            <p className="font-medium">{submittedData.pitchPricingModel}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchCostPerUnit && (
+                          <div>
+                            <span className="text-muted-foreground">Cost Per Unit:</span>
+                            <p className="font-medium">{submittedData.pitchCostPerUnit}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchSellingPrice && (
+                          <div>
+                            <span className="text-muted-foreground">Selling Price:</span>
+                            <p className="font-medium">{submittedData.pitchSellingPrice}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchProfitPerUnit && (
+                          <div>
+                            <span className="text-muted-foreground">Profit Per Unit:</span>
+                            <p className="font-medium">{submittedData.pitchProfitPerUnit}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchTotalCapitalRequired && (
+                          <div>
+                            <span className="text-muted-foreground">Total Capital Required:</span>
+                            <p className="font-medium">{submittedData.pitchTotalCapitalRequired}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchRevenuePerUser && (
+                          <div>
+                            <span className="text-muted-foreground">Revenue Per User:</span>
+                            <p className="font-medium">{submittedData.pitchRevenuePerUser}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Market Analysis */}
+                    <div className="border-b pb-4">
+                      <h3 className="font-semibold text-lg mb-3 text-primary">Market Analysis</h3>
+                      <div className="space-y-3 text-sm">
+                        {submittedData.pitchTargetCustomers && (
+                          <div>
+                            <span className="text-muted-foreground">Target Customers:</span>
+                            <p className="font-medium">{submittedData.pitchTargetCustomers}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchMarketSize && (
+                          <div>
+                            <span className="text-muted-foreground">Market Size:</span>
+                            <p className="font-medium">{submittedData.pitchMarketSize}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchCompetitorAnalysis && (
+                          <div>
+                            <span className="text-muted-foreground">Competitor Analysis:</span>
+                            <p className="font-medium">{submittedData.pitchCompetitorAnalysis}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Revenue Projections */}
+                    {(submittedData.pitchYear1Revenue || submittedData.pitchYear2Revenue) && (
+                      <div className="border-b pb-4">
+                        <h3 className="font-semibold text-lg mb-3 text-primary">Revenue Projections</h3>
+                        <div className="grid grid-cols-5 gap-2 text-sm text-center mb-3">
+                          {submittedData.pitchYear1Revenue && (
+                            <div className="bg-muted/30 p-2 rounded">
+                              <span className="text-muted-foreground text-xs">Year 1</span>
+                              <p className="font-medium">{submittedData.pitchYear1Revenue}</p>
+                            </div>
+                          )}
+                          {submittedData.pitchYear2Revenue && (
+                            <div className="bg-muted/30 p-2 rounded">
+                              <span className="text-muted-foreground text-xs">Year 2</span>
+                              <p className="font-medium">{submittedData.pitchYear2Revenue}</p>
+                            </div>
+                          )}
+                          {submittedData.pitchYear3Revenue && (
+                            <div className="bg-muted/30 p-2 rounded">
+                              <span className="text-muted-foreground text-xs">Year 3</span>
+                              <p className="font-medium">{submittedData.pitchYear3Revenue}</p>
+                            </div>
+                          )}
+                          {submittedData.pitchYear4Revenue && (
+                            <div className="bg-muted/30 p-2 rounded">
+                              <span className="text-muted-foreground text-xs">Year 4</span>
+                              <p className="font-medium">{submittedData.pitchYear4Revenue}</p>
+                            </div>
+                          )}
+                          {submittedData.pitchYear5Revenue && (
+                            <div className="bg-muted/30 p-2 rounded">
+                              <span className="text-muted-foreground text-xs">Year 5</span>
+                              <p className="font-medium">{submittedData.pitchYear5Revenue}</p>
+                            </div>
+                          )}
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          {submittedData.pitchExpectedRoi && (
+                            <div>
+                              <span className="text-muted-foreground">Expected ROI:</span>
+                              <p className="font-medium">{submittedData.pitchExpectedRoi}</p>
+                            </div>
+                          )}
+                          {submittedData.pitchBreakevenPeriod && (
+                            <div>
+                              <span className="text-muted-foreground">Breakeven Period:</span>
+                              <p className="font-medium">{submittedData.pitchBreakevenPeriod}</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Additional Info */}
+                    <div>
+                      <h3 className="font-semibold text-lg mb-3 text-primary">Additional Information</h3>
+                      <div className="space-y-3 text-sm">
+                        {submittedData.pitchFeasibilityReasons && (
+                          <div>
+                            <span className="text-muted-foreground">Why This Idea is Feasible:</span>
+                            <p className="font-medium">{submittedData.pitchFeasibilityReasons}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchCurrentStage && (
+                          <div>
+                            <span className="text-muted-foreground">Current Stage:</span>
+                            <p className="font-medium">{submittedData.pitchCurrentStage}</p>
+                          </div>
+                        )}
+                        {submittedData.pitchDemoVideoLink && (
+                          <div>
+                            <span className="text-muted-foreground">Demo Video Link:</span>
+                            <p className="font-medium text-primary break-all">{submittedData.pitchDemoVideoLink}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div 
+                    className="mt-6 flex gap-3 justify-center"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <Button
+                      onClick={downloadTicketDirect}
+                      disabled={downloading}
+                      variant="default"
+                      data-testid="button-download-pitch-ticket"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      {downloading ? "Downloading..." : "Download Ticket"}
+                    </Button>
+                    <Button
+                      onClick={closeModal}
+                      variant="outline"
+                      data-testid="button-close-pitch-success"
+                    >
+                      <Check className="w-4 h-4 mr-2" />
+                      Done
+                    </Button>
+                  </motion.div>
+                  
+                  <motion.p 
+                    className="text-xs text-muted-foreground text-center mt-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    Your pitch has been submitted successfully. We will contact you with further details.
+                  </motion.p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
+      );
+    }
+    
+    // Regular ticket success page for other registrations
     return (
       <AnimatePresence>
         <motion.div 
