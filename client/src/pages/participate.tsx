@@ -527,16 +527,108 @@ export default function Participate() {
                     </button>
                   </div>
 
-                  <div className="bg-primary/10 rounded-lg p-4 mb-6 text-center">
-                    <p className="text-sm text-muted-foreground mb-1">Your Registration ID</p>
-                    <p className="text-xl font-bold text-primary font-mono">{registrationId}</p>
-                  </div>
+                  <motion.div 
+                    className="mb-4"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                  >
+                    <div 
+                      id="success-ticket-card"
+                      ref={ticketRef}
+                      className="relative rounded-lg overflow-hidden shadow-xl bg-white"
+                      style={{ aspectRatio: "1024/361" }}
+                    >
+                      <img 
+                        src={ticketBgImage} 
+                        alt="Kerala Startup Fest 2026 Ticket" 
+                        className="w-full h-full object-cover"
+                      />
+                      
+                      {qrCode && (
+                        <div 
+                          className="absolute bg-white flex items-center justify-center rounded-sm"
+                          style={{ 
+                            top: '15%', 
+                            left: '66%', 
+                            width: '14%',
+                            aspectRatio: '1/1',
+                            padding: '2px'
+                          }}
+                        >
+                          <img 
+                            src={qrCode} 
+                            alt="Ticket QR Code" 
+                            className="w-full h-full object-contain"
+                            data-testid="img-pitch-ticket-qr"
+                          />
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="mt-3 bg-primary/10 rounded-lg p-3 text-center">
+                      <p className="text-xs text-muted-foreground mb-1">Your Ticket ID</p>
+                      <p className="text-lg font-bold text-primary font-mono">{registrationId}</p>
+                    </div>
+                  </motion.div>
+
+                  <motion.div 
+                    className="grid grid-cols-3 gap-2 mb-4"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.25 }}
+                  >
+                    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+                      <Button
+                        onClick={downloadTicketDirect}
+                        disabled={downloading}
+                        variant="default"
+                        size="sm"
+                        className="w-full gap-1"
+                        data-testid="button-download-pitch-ticket"
+                      >
+                        <Download className="w-3 h-3" />
+                        <span className="hidden sm:inline">{downloading ? "..." : "Download"}</span>
+                      </Button>
+                    </motion.div>
+                    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
+                      <Button
+                        onClick={openInNewTab}
+                        variant="outline"
+                        size="sm"
+                        className="w-full gap-1"
+                        data-testid="button-view-pitch-ticket"
+                      >
+                        <Ticket className="w-3 h-3" />
+                        <span className="hidden sm:inline">View</span>
+                      </Button>
+                    </motion.div>
+                    <Button
+                      onClick={closeModal}
+                      variant="ghost"
+                      size="sm"
+                      className="w-full gap-1"
+                      data-testid="button-close-pitch-success-top"
+                    >
+                      <Check className="w-3 h-3" />
+                      <span className="hidden sm:inline">Done</span>
+                    </Button>
+                  </motion.div>
+                  
+                  <motion.p 
+                    className="text-xs text-muted-foreground text-center mb-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    Scan the QR code at the venue for check-in. Save or download your ticket.
+                  </motion.p>
 
                   <motion.div 
                     className="space-y-6"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
+                    transition={{ delay: 0.35 }}
                   >
                     {/* Personal Details */}
                     <div className="border-b pb-4">
@@ -759,33 +851,8 @@ export default function Participate() {
                     </div>
                   </motion.div>
 
-                  <motion.div 
-                    className="mt-6 flex gap-3 justify-center"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    <Button
-                      onClick={downloadTicketDirect}
-                      disabled={downloading}
-                      variant="default"
-                      data-testid="button-download-pitch-ticket"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      {downloading ? "Downloading..." : "Download Ticket"}
-                    </Button>
-                    <Button
-                      onClick={closeModal}
-                      variant="outline"
-                      data-testid="button-close-pitch-success"
-                    >
-                      <Check className="w-4 h-4 mr-2" />
-                      Done
-                    </Button>
-                  </motion.div>
-                  
                   <motion.p 
-                    className="text-xs text-muted-foreground text-center mt-4"
+                    className="text-xs text-muted-foreground text-center mt-4 border-t pt-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
