@@ -294,16 +294,10 @@ export default function Participate() {
   const handleDownloadQR = () => {
     const link = document.createElement("a");
     const currentTicketCategory = form.getValues("ticketCategory");
-    const currentContestName = form.getValues("contestName");
-    const isBusinessQuizContest = currentContestName === "Business Quiz – School Edition";
     
-    if (isBusinessQuizContest) {
-      link.href = businessQuizQrCodeImage;
-      link.download = "business-quiz-payment-qr-code.png";
-    } else {
-      link.href = currentTicketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage;
-      link.download = currentTicketCategory === "premium" ? "premium-payment-qr-code.png" : "normal-payment-qr-code.png";
-    }
+    link.href = currentTicketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage;
+    link.download = currentTicketCategory === "premium" ? "premium-payment-qr-code.png" : "normal-payment-qr-code.png";
+    
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -348,7 +342,7 @@ export default function Participate() {
 
   // Get payment amount based on ticket type and contest
   const getPaymentAmount = () => {
-    if (isBusinessQuiz) return 99;
+    if (isBusinessQuiz) return 199;
     if (ticketCategory === "premium") return 599;
     return 199;
   };
@@ -2406,7 +2400,7 @@ export default function Participate() {
                           </h3>
                           <p className="text-sm text-muted-foreground font-medium">
                             {isBusinessQuiz 
-                              ? "Pay ₹99/- via UPI"
+                              ? "Pay ₹199/- via UPI"
                               : ticketCategory === "premium" 
                                 ? "Pay ₹599/- via UPI"
                                 : "Pay ₹199/- via UPI"
@@ -2467,7 +2461,7 @@ export default function Participate() {
 
                               <div className="bg-white p-4 rounded-lg shadow-sm">
                                 <img 
-                                  src={isBusinessQuiz ? businessQuizQrCodeImage : (ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage)} 
+                                  src={ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage} 
                                   alt="Payment QR Code" 
                                   className="w-48 h-48 object-contain"
                                   data-testid="img-payment-qr"
