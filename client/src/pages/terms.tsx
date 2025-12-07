@@ -31,7 +31,7 @@ export default function Terms() {
                 <section className="space-y-4">
                   <h2 className="text-xl font-semibold">2. Event Registration</h2>
                   <p className="text-muted-foreground">
-                    Registration for Kerala Startup Fest 2026 is subject to availability and eligibility criteria. Participants must be between high school age and 29 years old. Registration is confirmed only upon successful payment and receipt of confirmation.
+                    Registration for Kerala Startup Fest 2026 is subject to availability and eligibility criteria. Participants must be between school age and 29 years old. Registration is confirmed only upon successful payment and receipt of confirmation.
                   </p>
                 </section>
 

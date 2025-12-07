@@ -1047,7 +1047,7 @@ export default function Participate() {
                     >
                       <GraduationCap className="w-8 h-8 text-primary" />
                     </motion.div>
-                    <h3 className="font-semibold text-xl mb-3">High School Students</h3>
+                    <h3 className="font-semibold text-xl mb-3">School Students</h3>
                     <p className="text-muted-foreground text-sm">
                       Young innovators ready to explore the world of startups and entrepreneurship.
                     </p>

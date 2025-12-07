@@ -34,7 +34,7 @@ export function Footer({ className }: FooterProps) {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
                     <Users className="w-4 h-4 text-primary" />
-                    <span>High school to age 29</span>
+                    <span>School to age 29</span>
                   </div>
                 </div>
               </StaggerItem>
