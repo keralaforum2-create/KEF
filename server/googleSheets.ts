@@ -1,61 +1,99 @@
 import { google } from 'googleapis';
+import { JWT } from 'google-auth-library';
 
 let connectionSettings: any;
+let jwtClient: JWT | null = null;
 
-async function getAccessToken() {
-  if (connectionSettings && connectionSettings.settings.expires_at && new Date(connectionSettings.settings.expires_at).getTime() > Date.now()) {
-    return connectionSettings.settings.access_token;
+function getServiceAccountCredentials(): { email: string; privateKey: string } | null {
+  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const privateKey = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
+  
+  if (!email || !privateKey) {
+    return null;
   }
   
-  const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
-  const xReplitToken = process.env.REPL_IDENTITY 
-    ? 'repl ' + process.env.REPL_IDENTITY 
-    : process.env.WEB_REPL_RENEWAL 
-    ? 'depl ' + process.env.WEB_REPL_RENEWAL 
-    : null;
-
-  if (!xReplitToken) {
-    throw new Error('X_REPLIT_TOKEN not found for repl/depl');
-  }
-
-  connectionSettings = await fetch(
-    'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=google-sheet',
-    {
-      headers: {
-        'Accept': 'application/json',
-        'X_REPLIT_TOKEN': xReplitToken
-      }
-    }
-  ).then(res => res.json()).then(data => data.items?.[0]);
-
-  const accessToken = connectionSettings?.settings?.access_token || connectionSettings.settings?.oauth?.credentials?.access_token;
-
-  if (!connectionSettings || !accessToken) {
-    throw new Error('Google Sheet not connected');
-  }
-  return accessToken;
+  const formattedKey = privateKey.replace(/\\n/g, '\n');
+  
+  return { email, privateKey: formattedKey };
 }
 
-async function getUncachableGoogleSheetClient() {
-  const accessToken = await getAccessToken();
+async function getJwtClient(): Promise<JWT> {
+  const credentials = getServiceAccountCredentials();
+  
+  if (!credentials) {
+    throw new Error('Google Service Account credentials not configured. Set GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY environment variables.');
+  }
+  
+  if (!jwtClient) {
+    jwtClient = new JWT({
+      email: credentials.email,
+      key: credentials.privateKey,
+      scopes: [
+        'https://www.googleapis.com/auth/spreadsheets',
+        'https://www.googleapis.com/auth/drive.file',
+      ],
+    });
+  }
+  
+  return jwtClient;
+}
 
-  const oauth2Client = new google.auth.OAuth2();
-  oauth2Client.setCredentials({
-    access_token: accessToken
-  });
+async function getReplitAccessToken(): Promise<string | null> {
+  try {
+    const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
+    const xReplitToken = process.env.REPL_IDENTITY 
+      ? 'repl ' + process.env.REPL_IDENTITY 
+      : process.env.WEB_REPL_RENEWAL 
+      ? 'depl ' + process.env.WEB_REPL_RENEWAL 
+      : null;
 
-  return google.sheets({ version: 'v4', auth: oauth2Client });
+    if (!hostname || !xReplitToken) {
+      return null;
+    }
+
+    connectionSettings = await fetch(
+      'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=google-sheet',
+      {
+        headers: {
+          'Accept': 'application/json',
+          'X_REPLIT_TOKEN': xReplitToken
+        }
+      }
+    ).then(res => res.json()).then(data => data.items?.[0]);
+
+    const accessToken = connectionSettings?.settings?.access_token || connectionSettings?.settings?.oauth?.credentials?.access_token;
+    return accessToken || null;
+  } catch {
+    return null;
+  }
+}
+
+async function getAuthClient(): Promise<any> {
+  const serviceAccountCreds = getServiceAccountCredentials();
+  if (serviceAccountCreds) {
+    console.log('Using Google Service Account authentication');
+    return await getJwtClient();
+  }
+  
+  const replitToken = await getReplitAccessToken();
+  if (replitToken) {
+    console.log('Using Replit connector authentication');
+    const oauth2Client = new google.auth.OAuth2();
+    oauth2Client.setCredentials({ access_token: replitToken });
+    return oauth2Client;
+  }
+  
+  throw new Error('No Google authentication available. Either set GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY environment variables, or connect Google Sheets via Replit.');
+}
+
+async function getGoogleSheetsClient() {
+  const auth = await getAuthClient();
+  return google.sheets({ version: 'v4', auth });
 }
 
 async function getDriveClient() {
-  const accessToken = await getAccessToken();
-
-  const oauth2Client = new google.auth.OAuth2();
-  oauth2Client.setCredentials({
-    access_token: accessToken
-  });
-
-  return google.drive({ version: 'v3', auth: oauth2Client });
+  const auth = await getAuthClient();
+  return google.drive({ version: 'v3', auth });
 }
 
 const SESSION_SHEET_NAME = 'KSF2026_Session_Registrations';
@@ -63,7 +101,7 @@ const CONTEST_SHEET_NAME = 'KSF2026_Contest_Registrations';
 
 async function findOrCreateSpreadsheet(name: string, headers: string[]): Promise<string> {
   const drive = await getDriveClient();
-  const sheets = await getUncachableGoogleSheetClient();
+  const sheets = await getGoogleSheetsClient();
   
   const response = await drive.files.list({
     q: `name='${name}' and mimeType='application/vnd.google-apps.spreadsheet' and trashed=false`,
@@ -101,6 +139,7 @@ async function findOrCreateSpreadsheet(name: string, headers: string[]): Promise
     },
   });
 
+  console.log(`Created new spreadsheet: ${name} (${spreadsheetId})`);
   return spreadsheetId;
 }
 
@@ -122,7 +161,7 @@ export interface ContestRegistrationData {
 
 export async function addSessionRegistration(data: SessionRegistrationData, baseUrl: string): Promise<void> {
   try {
-    const sheets = await getUncachableGoogleSheetClient();
+    const sheets = await getGoogleSheetsClient();
     const headers = ['NAME', 'PHONE NO', 'EMAIL', 'CATEGORY', 'PAYMENT PROOF'];
     const spreadsheetId = await findOrCreateSpreadsheet(SESSION_SHEET_NAME, headers);
 
@@ -147,12 +186,13 @@ export async function addSessionRegistration(data: SessionRegistrationData, base
     console.log(`Session registration added to Google Sheet: ${data.name}`);
   } catch (error) {
     console.error('Error adding session registration to Google Sheet:', error);
+    throw error;
   }
 }
 
 export async function addContestRegistration(data: ContestRegistrationData, baseUrl: string): Promise<void> {
   try {
-    const sheets = await getUncachableGoogleSheetClient();
+    const sheets = await getGoogleSheetsClient();
     const headers = ['NAME', 'PHONE NO', 'EMAIL', 'CONTEST', 'PAYMENT PROOF'];
     const spreadsheetId = await findOrCreateSpreadsheet(CONTEST_SHEET_NAME, headers);
 
@@ -177,5 +217,6 @@ export async function addContestRegistration(data: ContestRegistrationData, base
     console.log(`Contest registration added to Google Sheet: ${data.name}`);
   } catch (error) {
     console.error('Error adding contest registration to Google Sheet:', error);
+    throw error;
   }
 }
