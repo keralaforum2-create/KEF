@@ -7,6 +7,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { sendRegistrationEmails } from "./email";
+import { addSessionRegistration, addContestRegistration } from "./googleSheets";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 
@@ -145,6 +146,28 @@ export async function registerRoutes(
       sendRegistrationEmails(registration, baseUrl).catch((err) => {
         console.error('Failed to send registration emails:', err);
       });
+
+      if (registration.registrationType === 'expert-session') {
+        addSessionRegistration({
+          name: registration.name,
+          phone: registration.phone,
+          email: registration.email,
+          category: registration.ticketCategory || 'Normal',
+          paymentProofUrl: registration.paymentScreenshot || '',
+        }, baseUrl).catch((err) => {
+          console.error('Failed to add session registration to Google Sheet:', err);
+        });
+      } else if (registration.registrationType === 'contest') {
+        addContestRegistration({
+          name: registration.name,
+          phone: registration.phone,
+          email: registration.email,
+          contest: registration.contestName || 'Unknown',
+          paymentProofUrl: registration.paymentScreenshot || '',
+        }, baseUrl).catch((err) => {
+          console.error('Failed to add contest registration to Google Sheet:', err);
+        });
+      }
       
       return res.status(201).json({ 
         message: "Registration successful", 
