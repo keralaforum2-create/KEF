@@ -146,10 +146,12 @@ export default function Admin() {
     return variants[type] || "bg-gray-100 text-gray-800";
   };
 
+  const allRegistrations = registrations || [];
   const successfulRegistrations = registrations?.filter(r => r.paymentScreenshot) || [];
+  const pendingPaymentRegistrations = registrations?.filter(r => !r.paymentScreenshot) || [];
   
   const statCards = [
-    { icon: UserCheck, label: "Registrations", value: successfulRegistrations.length, testId: "text-registration-count" },
+    { icon: UserCheck, label: "Total Registrations", value: allRegistrations.length, testId: "text-registration-count" },
     { icon: MessageSquare, label: "Contact Messages", value: contacts?.length || 0, testId: "text-contact-count" },
     { icon: Briefcase, label: "Investor/Mentor", value: investorMentors?.length || 0, testId: "text-investor-count" },
     { icon: Handshake, label: "Sponsorships", value: sponsorships?.length || 0, testId: "text-sponsorship-count" },
@@ -196,7 +198,7 @@ export default function Admin() {
             <Tabs defaultValue="registrations" className="w-full">
               <TabsList className="mb-6 flex flex-wrap">
                 <TabsTrigger value="registrations" data-testid="tab-registrations">
-                  Registrations ({successfulRegistrations.length})
+                  Registrations ({allRegistrations.length})
                 </TabsTrigger>
                 <TabsTrigger value="contacts" data-testid="tab-contacts">
                   Contacts ({contacts?.length || 0})
@@ -227,12 +229,20 @@ export default function Admin() {
                         <div className="text-center py-8 text-muted-foreground">
                           Loading registrations...
                         </div>
-                      ) : successfulRegistrations.length > 0 ? (
+                      ) : allRegistrations.length > 0 ? (
                         <div className="overflow-x-auto">
+                          <div className="mb-4 flex flex-wrap gap-2 text-sm">
+                            <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                              Payment Confirmed: {successfulRegistrations.length}
+                            </Badge>
+                            <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300">
+                              Pending Payment: {pendingPaymentRegistrations.length}
+                            </Badge>
+                          </div>
                           <Table>
                             <TableHeader>
                               <TableRow>
-                                <TableHead>Payment</TableHead>
+                                <TableHead>Status</TableHead>
                                 <TableHead>Registration ID</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
@@ -241,23 +251,29 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {successfulRegistrations.map((reg, index) => (
+                              {allRegistrations.map((reg, index) => (
                                 <motion.tr
                                   key={reg.id}
                                   initial={{ opacity: 0, x: -10 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: index * 0.03 }}
-                                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                                  className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ${!reg.paymentScreenshot ? 'bg-amber-50/50 dark:bg-amber-900/10' : ''}`}
                                   data-testid={`row-registration-${reg.id}`}
                                 >
                                   <TableCell>
-                                    <img 
-                                      src={reg.paymentScreenshot!} 
-                                      alt="Payment" 
-                                      className="w-12 h-12 object-cover rounded-md border cursor-pointer"
-                                      onClick={() => setSelectedReg(reg)}
-                                      data-testid={`img-payment-thumb-${reg.id}`}
-                                    />
+                                    {reg.paymentScreenshot ? (
+                                      <img 
+                                        src={reg.paymentScreenshot} 
+                                        alt="Payment" 
+                                        className="w-12 h-12 object-cover rounded-md border cursor-pointer"
+                                        onClick={() => setSelectedReg(reg)}
+                                        data-testid={`img-payment-thumb-${reg.id}`}
+                                      />
+                                    ) : (
+                                      <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300">
+                                        No Payment
+                                      </Badge>
+                                    )}
                                   </TableCell>
                                   <TableCell className="font-mono text-xs text-primary">{reg.registrationId}</TableCell>
                                   <TableCell className="font-medium">{reg.fullName}</TableCell>
