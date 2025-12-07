@@ -126,19 +126,20 @@ export async function addSessionRegistration(data: SessionRegistrationData, base
     const headers = ['NAME', 'PHONE NO', 'EMAIL', 'CATEGORY', 'PAYMENT PROOF'];
     const spreadsheetId = await findOrCreateSpreadsheet(SESSION_SHEET_NAME, headers);
 
-    const paymentUrl = data.paymentProofUrl ? `${baseUrl}${data.paymentProofUrl}` : 'Not uploaded';
+    const fullPaymentUrl = data.paymentProofUrl ? `${baseUrl}${data.paymentProofUrl}` : '';
+    const paymentCell = fullPaymentUrl ? `=HYPERLINK("${fullPaymentUrl}", "View Payment")` : 'Not uploaded';
 
     await sheets.spreadsheets.values.append({
       spreadsheetId,
       range: 'Registrations!A:E',
-      valueInputOption: 'RAW',
+      valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [[
           data.name,
           data.phone,
           data.email,
           data.category || 'Normal',
-          paymentUrl,
+          paymentCell,
         ]],
       },
     });
@@ -155,19 +156,20 @@ export async function addContestRegistration(data: ContestRegistrationData, base
     const headers = ['NAME', 'PHONE NO', 'EMAIL', 'CONTEST', 'PAYMENT PROOF'];
     const spreadsheetId = await findOrCreateSpreadsheet(CONTEST_SHEET_NAME, headers);
 
-    const paymentUrl = data.paymentProofUrl ? `${baseUrl}${data.paymentProofUrl}` : 'Not uploaded';
+    const fullPaymentUrl = data.paymentProofUrl ? `${baseUrl}${data.paymentProofUrl}` : '';
+    const paymentCell = fullPaymentUrl ? `=HYPERLINK("${fullPaymentUrl}", "View Payment")` : 'Not uploaded';
 
     await sheets.spreadsheets.values.append({
       spreadsheetId,
       range: 'Registrations!A:E',
-      valueInputOption: 'RAW',
+      valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [[
           data.name,
           data.phone,
           data.email,
           data.contest,
-          paymentUrl,
+          paymentCell,
         ]],
       },
     });

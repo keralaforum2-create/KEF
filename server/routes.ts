@@ -149,7 +149,7 @@ export async function registerRoutes(
 
       if (registration.registrationType === 'expert-session') {
         addSessionRegistration({
-          name: registration.name,
+          name: registration.fullName,
           phone: registration.phone,
           email: registration.email,
           category: registration.ticketCategory || 'Normal',
@@ -159,7 +159,7 @@ export async function registerRoutes(
         });
       } else if (registration.registrationType === 'contest') {
         addContestRegistration({
-          name: registration.name,
+          name: registration.fullName,
           phone: registration.phone,
           email: registration.email,
           contest: registration.contestName || 'Unknown',
