@@ -51,6 +51,10 @@ Preferred communication style: Simple, everyday language.
     3. Special "Pitch Start Idea" email for contest registrations to admin.
 - **Templates**: HTML, mobile-responsive, branded.
 
+### Data Storage
+- All registrations, contacts, and other data are stored in the application database
+- Admin dashboard provides full visibility into all submissions
+
 ## External Dependencies
 
 ### Third-Party UI Libraries
