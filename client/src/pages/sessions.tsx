@@ -85,9 +85,9 @@ const sessions = [
   },
   {
     id: 10,
-    title: "Mastering Digital Media & Social Influence",
+    title: "Digital Media / Smart Content and Media Strategies",
     tagline: "Build your digital presence.",
-    description: "Content creation, personal branding, short-form video strategy, community building, and monetisation.",
+    description: "Crafting effective digital content, producing high impact video ads, building strong brand visibility and applying smart media strategies to reach, engage and convert the right audience.",
     icon: Video,
   },
 ];
