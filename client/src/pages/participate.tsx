@@ -391,66 +391,8 @@ export default function Participate() {
       return;
     }
 
-    if (paymentMethod === "online") {
-      await handleBulkPhonePePayment();
-    } else {
-      // For QR payment, need payment screenshot
-      const screenshotInput = document.getElementById("bulk-payment-screenshot") as HTMLInputElement;
-      const file = screenshotInput?.files?.[0];
-      
-      if (!file) {
-        toast({
-          title: "Payment screenshot required",
-          description: "Please upload your payment screenshot to complete registration.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      setIsBulkSubmitting(true);
-      
-      try {
-        const formData = new FormData();
-        formData.append("institutionName", bulkFormData.institutionName);
-        formData.append("mentorName", bulkFormData.mentorName);
-        formData.append("mentorEmail", bulkFormData.mentorEmail);
-        formData.append("mentorPhone", bulkFormData.mentorPhone);
-        formData.append("numberOfStudents", bulkFormData.numberOfStudents);
-        formData.append("pricePerStudent", getBulkPricePerStudent().toString());
-        formData.append("totalAmount", getBulkTotalAmount().toString());
-        formData.append("ticketCategory", bulkFormData.ticketCategory);
-        formData.append("registrationType", "expert-session");
-        formData.append("paymentScreenshot", file);
-
-        const response = await fetch("/api/bulk-register", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Registration failed");
-        }
-
-        const result = await response.json();
-        
-        setBulkRegistrationId(result.bulkRegistration.bulkRegistrationId);
-        setBulkStudentTickets(result.studentTickets);
-
-        toast({
-          title: "Bulk Registration Successful!",
-          description: `${numStudents} student tickets have been generated for ${bulkFormData.institutionName}`,
-        });
-      } catch (error: any) {
-        toast({
-          title: "Registration failed",
-          description: error.message || "Please try again later.",
-          variant: "destructive",
-        });
-      } finally {
-        setIsBulkSubmitting(false);
-      }
-    }
+    // Always use online payment for bulk registration
+    await handleBulkPhonePePayment();
   };
 
   // Handle bulk PhonePe payment
@@ -1858,61 +1800,13 @@ export default function Participate() {
                                     <CreditCard className="w-4 h-4" />
                                     Payment Method
                                   </h4>
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                    <div
-                                      onClick={() => setPaymentMethod("online")}
-                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
-                                        paymentMethod === "online"
-                                          ? "border-primary bg-primary/10"
-                                          : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
-                                      }`}
-                                      data-testid="card-bulk-payment-online"
-                                    >
-                                      <div className="flex items-center gap-2">
-                                        <Smartphone className="w-5 h-5 text-primary" />
-                                        <span className="font-medium">Pay Online</span>
-                                      </div>
-                                      <p className="text-xs text-muted-foreground mt-1">PhonePe, GPay, Paytm, Cards</p>
+                                  <div className="rounded-lg border-2 border-primary bg-primary/10 p-4 mb-4">
+                                    <div className="flex items-center gap-2">
+                                      <Smartphone className="w-5 h-5 text-primary" />
+                                      <span className="font-medium">Pay Online</span>
                                     </div>
-                                    <div
-                                      onClick={() => setPaymentMethod("qr")}
-                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
-                                        paymentMethod === "qr"
-                                          ? "border-primary bg-primary/10"
-                                          : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
-                                      }`}
-                                      data-testid="card-bulk-payment-qr"
-                                    >
-                                      <div className="flex items-center gap-2">
-                                        <QrCode className="w-5 h-5 text-primary" />
-                                        <span className="font-medium">Scan QR & Upload</span>
-                                      </div>
-                                      <p className="text-xs text-muted-foreground mt-1">Pay via QR code</p>
-                                    </div>
+                                    <p className="text-xs text-muted-foreground mt-1">PhonePe, GPay, Paytm, Cards</p>
                                   </div>
-
-                                  {paymentMethod === "qr" && (
-                                    <div className="space-y-4">
-                                      <div className="text-center p-4 bg-white dark:bg-gray-900 rounded-lg">
-                                        <img
-                                          src={bulkFormData.ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage}
-                                          alt="Payment QR Code"
-                                          className="w-48 h-48 mx-auto mb-2"
-                                        />
-                                        <p className="text-sm font-medium">Scan to pay Rs {getBulkTotalAmount().toLocaleString()}</p>
-                                      </div>
-                                      <div>
-                                        <label className="text-sm font-medium">Upload Payment Screenshot *</label>
-                                        <Input
-                                          id="bulk-payment-screenshot"
-                                          type="file"
-                                          accept="image/*"
-                                          className="mt-1"
-                                          data-testid="input-bulk-payment-screenshot"
-                                        />
-                                      </div>
-                                    </div>
-                                  )}
                                 </div>
 
                                 <Button
@@ -1928,15 +1822,10 @@ export default function Participate() {
                                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                                       Processing...
                                     </>
-                                  ) : paymentMethod === "online" ? (
+                                  ) : (
                                     <>
                                       <CreditCard className="w-4 h-4 mr-2" />
                                       Pay Rs {getBulkTotalAmount().toLocaleString()} & Register
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Send className="w-4 h-4 mr-2" />
-                                      Complete Bulk Registration
                                     </>
                                   )}
                                 </Button>
