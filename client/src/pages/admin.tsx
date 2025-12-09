@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, ImageIcon, Download, CreditCard, QrCode, Filter } from "lucide-react";
+import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, ImageIcon, Download, CreditCard, QrCode, Filter, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration } from "@shared/schema";
@@ -738,6 +738,17 @@ export default function Admin() {
                                         <Download className="w-4 h-4 mr-1" />
                                         Tickets
                                       </Button>
+                                      {bulk.studentsPdf && (
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => window.open(bulk.studentsPdf, '_blank')}
+                                          data-testid={`button-pdf-bulk-${bulk.id}`}
+                                        >
+                                          <FileText className="w-4 h-4 mr-1" />
+                                          PDF
+                                        </Button>
+                                      )}
                                     </div>
                                   </TableCell>
                                 </motion.tr>
@@ -1404,6 +1415,24 @@ export default function Admin() {
                     </Badge>
                   </div>
                 </div>
+
+                {selectedBulkReg.studentsPdf && (
+                  <div className="border-t pt-4">
+                    <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      Students List PDF
+                    </label>
+                    <Button
+                      variant="outline"
+                      className="mt-2"
+                      onClick={() => window.open(selectedBulkReg.studentsPdf!, '_blank')}
+                      data-testid="button-download-students-pdf-dialog"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Students List
+                    </Button>
+                  </div>
+                )}
 
                 <div className="flex justify-center pt-4 gap-3">
                   <Button
