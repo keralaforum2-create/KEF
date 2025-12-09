@@ -189,6 +189,18 @@ export default function Participate() {
   const [paymentMethod, setPaymentMethod] = useState<"qr" | "online">("qr");
   const [isProcessingOnlinePayment, setIsProcessingOnlinePayment] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
+  const [registrationMode, setRegistrationMode] = useState<"individual" | "bulk">("individual");
+  const [bulkFormData, setBulkFormData] = useState({
+    institutionName: "",
+    mentorName: "",
+    mentorEmail: "",
+    mentorPhone: "",
+    numberOfStudents: "5",
+    ticketCategory: "normal" as "normal" | "premium",
+  });
+  const [bulkRegistrationId, setBulkRegistrationId] = useState<string | null>(null);
+  const [bulkStudentTickets, setBulkStudentTickets] = useState<Array<{studentRegistrationId: string; studentNumber: string}>>([]);
+  const [isBulkSubmitting, setIsBulkSubmitting] = useState(false);
   
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
@@ -345,6 +357,142 @@ export default function Participate() {
     if (isBusinessQuiz) return 199;
     if (ticketCategory === "premium") return 599;
     return 199;
+  };
+
+  // Get bulk registration price per student
+  const getBulkPricePerStudent = () => {
+    return bulkFormData.ticketCategory === "premium" ? 599 : 199;
+  };
+
+  // Get bulk registration total amount
+  const getBulkTotalAmount = () => {
+    const numStudents = parseInt(bulkFormData.numberOfStudents) || 0;
+    return numStudents * getBulkPricePerStudent();
+  };
+
+  // Handle bulk registration submission
+  const handleBulkRegistrationSubmit = async () => {
+    if (!bulkFormData.institutionName || !bulkFormData.mentorName || !bulkFormData.mentorEmail || !bulkFormData.mentorPhone) {
+      toast({
+        title: "Please fill all required fields",
+        description: "Institution name, mentor details are required.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const numStudents = parseInt(bulkFormData.numberOfStudents);
+    if (isNaN(numStudents) || numStudents < 5) {
+      toast({
+        title: "Invalid number of students",
+        description: "Minimum 5 students required for bulk registration.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (paymentMethod === "online") {
+      await handleBulkPhonePePayment();
+    } else {
+      // For QR payment, need payment screenshot
+      const screenshotInput = document.getElementById("bulk-payment-screenshot") as HTMLInputElement;
+      const file = screenshotInput?.files?.[0];
+      
+      if (!file) {
+        toast({
+          title: "Payment screenshot required",
+          description: "Please upload your payment screenshot to complete registration.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setIsBulkSubmitting(true);
+      
+      try {
+        const formData = new FormData();
+        formData.append("institutionName", bulkFormData.institutionName);
+        formData.append("mentorName", bulkFormData.mentorName);
+        formData.append("mentorEmail", bulkFormData.mentorEmail);
+        formData.append("mentorPhone", bulkFormData.mentorPhone);
+        formData.append("numberOfStudents", bulkFormData.numberOfStudents);
+        formData.append("pricePerStudent", getBulkPricePerStudent().toString());
+        formData.append("totalAmount", getBulkTotalAmount().toString());
+        formData.append("ticketCategory", bulkFormData.ticketCategory);
+        formData.append("registrationType", "expert-session");
+        formData.append("paymentScreenshot", file);
+
+        const response = await fetch("/api/bulk-register", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Registration failed");
+        }
+
+        const result = await response.json();
+        
+        setBulkRegistrationId(result.bulkRegistration.bulkRegistrationId);
+        setBulkStudentTickets(result.studentTickets);
+
+        toast({
+          title: "Bulk Registration Successful!",
+          description: `${numStudents} student tickets have been generated for ${bulkFormData.institutionName}`,
+        });
+      } catch (error: any) {
+        toast({
+          title: "Registration failed",
+          description: error.message || "Please try again later.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsBulkSubmitting(false);
+      }
+    }
+  };
+
+  // Handle bulk PhonePe payment
+  const handleBulkPhonePePayment = async () => {
+    setIsProcessingOnlinePayment(true);
+
+    try {
+      const amount = getBulkTotalAmount();
+
+      const bulkRegistrationData = {
+        institutionName: bulkFormData.institutionName,
+        mentorName: bulkFormData.mentorName,
+        mentorEmail: bulkFormData.mentorEmail,
+        mentorPhone: bulkFormData.mentorPhone,
+        numberOfStudents: bulkFormData.numberOfStudents,
+        pricePerStudent: getBulkPricePerStudent().toString(),
+        totalAmount: amount.toString(),
+        ticketCategory: bulkFormData.ticketCategory,
+        registrationType: "expert-session",
+      };
+
+      const response = await apiRequest("POST", "/api/bulk-phonepe/initiate", {
+        bulkRegistrationData,
+        amount,
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      } else {
+        throw new Error(data.message || "Failed to initiate payment");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Payment initiation failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessingOnlinePayment(false);
+    }
   };
 
   // Handle PhonePe online payment
@@ -596,6 +744,166 @@ export default function Participate() {
       window.open(`/ticket/${registrationId}`, '_blank');
     }
   };
+
+  const closeBulkModal = () => {
+    setBulkRegistrationId(null);
+    setBulkStudentTickets([]);
+    setBulkFormData({
+      institutionName: "",
+      mentorName: "",
+      mentorEmail: "",
+      mentorPhone: "",
+      numberOfStudents: "5",
+      ticketCategory: "normal",
+    });
+  };
+
+  // Bulk Registration Success State
+  if (bulkRegistrationId && bulkStudentTickets.length > 0) {
+    return (
+      <AnimatePresence>
+        <motion.div 
+          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4 overflow-y-auto"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="w-full max-w-3xl my-8"
+          >
+            <Card className="border-2 border-primary bg-card/95 backdrop-blur max-h-[90vh] overflow-y-auto">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <motion.div 
+                    className="flex items-center gap-2"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <CheckCircle className="w-6 h-6 text-green-500" />
+                    <h1 className="text-lg sm:text-xl font-bold text-foreground">Bulk Registration Successful!</h1>
+                  </motion.div>
+                  <button
+                    onClick={closeBulkModal}
+                    className="text-muted-foreground hover:text-foreground p-1"
+                    data-testid="button-close-bulk-modal"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <motion.div 
+                  className="mb-6 bg-primary/10 rounded-lg p-4 text-center"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                >
+                  <p className="text-sm text-muted-foreground mb-1">Bulk Registration ID</p>
+                  <p className="text-xl font-bold text-primary font-mono">{bulkRegistrationId}</p>
+                </motion.div>
+
+                <motion.div 
+                  className="mb-6"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <div className="border-b pb-4 mb-4">
+                    <h3 className="font-semibold text-lg mb-3 text-primary">Institution Details</h3>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Institution:</span>
+                        <p className="font-medium">{bulkFormData.institutionName}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Mentor Name:</span>
+                        <p className="font-medium">{bulkFormData.mentorName}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Mentor Email:</span>
+                        <p className="font-medium">{bulkFormData.mentorEmail}</p>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Mentor Phone:</span>
+                        <p className="font-medium">{bulkFormData.mentorPhone}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h3 className="font-semibold text-lg mb-3 text-primary flex items-center gap-2">
+                    <Users className="w-5 h-5" />
+                    Student Tickets ({bulkStudentTickets.length})
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Each student will receive an individual ticket with unique QR code for event check-in.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto">
+                    {bulkStudentTickets.map((ticket, index) => (
+                      <div 
+                        key={ticket.studentRegistrationId}
+                        className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border"
+                      >
+                        <div>
+                          <p className="text-xs text-muted-foreground">Student {index + 1}</p>
+                          <p className="font-mono text-sm font-medium">{ticket.studentRegistrationId}</p>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => window.open(`/bulk-student-ticket/${ticket.studentRegistrationId}`, '_blank')}
+                          data-testid={`button-view-student-ticket-${index}`}
+                        >
+                          <Ticket className="w-3 h-3 mr-1" />
+                          View
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+
+                <motion.p 
+                  className="text-xs text-muted-foreground text-center mb-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  Each student should use their unique ticket QR code for check-in at the venue.
+                </motion.p>
+
+                <motion.div 
+                  className="flex justify-center gap-3"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                >
+                  <Button
+                    onClick={() => window.open(`/bulk-ticket/${bulkRegistrationId}`, '_blank')}
+                    variant="default"
+                    data-testid="button-view-all-bulk-tickets"
+                  >
+                    <Ticket className="w-4 h-4 mr-2" />
+                    View All Tickets
+                  </Button>
+                  <Button
+                    onClick={closeBulkModal}
+                    variant="outline"
+                    data-testid="button-close-bulk-success"
+                  >
+                    Done
+                  </Button>
+                </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
 
   if (registrationId) {
     const ticketNumber = generateTicketNumber(registrationId);
@@ -1401,6 +1709,255 @@ export default function Participate() {
                             Registering for: <span className="text-primary font-semibold">{registrationType === "expert-session" ? "Expert Session" : "Contest"}</span>
                           </p>
                         </div>
+                        
+                        {registrationType === "expert-session" && (
+                          <div className="mb-6">
+                            <p className="text-sm font-medium text-center mb-3">Registration Type</p>
+                            <div className="flex justify-center gap-2">
+                              <Button
+                                type="button"
+                                variant={registrationMode === "individual" ? "default" : "outline"}
+                                onClick={() => setRegistrationMode("individual")}
+                                data-testid="button-individual-registration"
+                              >
+                                <Users className="w-4 h-4 mr-2" />
+                                Individual
+                              </Button>
+                              <Button
+                                type="button"
+                                variant={registrationMode === "bulk" ? "default" : "outline"}
+                                onClick={() => setRegistrationMode("bulk")}
+                                data-testid="button-bulk-registration"
+                              >
+                                <Building2 className="w-4 h-4 mr-2" />
+                                Bulk (Institution)
+                              </Button>
+                            </div>
+                            {registrationMode === "bulk" && (
+                              <p className="text-xs text-muted-foreground text-center mt-2">
+                                For schools/colleges registering 5+ students
+                              </p>
+                            )}
+                          </div>
+                        )}
+
+                        <AnimatePresence>
+                          {registrationType === "expert-session" && registrationMode === "bulk" && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="space-y-6 border rounded-lg p-6 bg-muted/20"
+                            >
+                              <div className="text-center mb-4">
+                                <h3 className="font-semibold text-lg flex items-center justify-center gap-2">
+                                  <Building2 className="w-5 h-5 text-primary" />
+                                  Bulk Registration Form
+                                </h3>
+                                <p className="text-sm text-muted-foreground">Register multiple students from your institution</p>
+                              </div>
+
+                              <div className="space-y-4">
+                                <div>
+                                  <label className="text-sm font-medium">Institution Name *</label>
+                                  <Input
+                                    placeholder="School / College Name"
+                                    value={bulkFormData.institutionName}
+                                    onChange={(e) => setBulkFormData({...bulkFormData, institutionName: e.target.value})}
+                                    data-testid="input-bulk-institution"
+                                  />
+                                </div>
+
+                                <div className="border-t pt-4">
+                                  <h4 className="font-medium mb-3 flex items-center gap-2">
+                                    <Users className="w-4 h-4" />
+                                    Mentor/Teacher Details
+                                  </h4>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                      <label className="text-sm font-medium">Mentor Name *</label>
+                                      <Input
+                                        placeholder="Teacher/Mentor Name"
+                                        value={bulkFormData.mentorName}
+                                        onChange={(e) => setBulkFormData({...bulkFormData, mentorName: e.target.value})}
+                                        data-testid="input-bulk-mentor-name"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="text-sm font-medium">Mentor Email *</label>
+                                      <Input
+                                        type="email"
+                                        placeholder="mentor@school.edu"
+                                        value={bulkFormData.mentorEmail}
+                                        onChange={(e) => setBulkFormData({...bulkFormData, mentorEmail: e.target.value})}
+                                        data-testid="input-bulk-mentor-email"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="text-sm font-medium">Mentor Phone *</label>
+                                      <Input
+                                        type="tel"
+                                        placeholder="+91 98765 43210"
+                                        value={bulkFormData.mentorPhone}
+                                        onChange={(e) => setBulkFormData({...bulkFormData, mentorPhone: e.target.value})}
+                                        data-testid="input-bulk-mentor-phone"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="text-sm font-medium">Number of Students *</label>
+                                      <Input
+                                        type="number"
+                                        min="5"
+                                        placeholder="Minimum 5"
+                                        value={bulkFormData.numberOfStudents}
+                                        onChange={(e) => setBulkFormData({...bulkFormData, numberOfStudents: e.target.value})}
+                                        data-testid="input-bulk-students-count"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="border-t pt-4">
+                                  <h4 className="font-medium mb-3 flex items-center gap-2">
+                                    <Ticket className="w-4 h-4" />
+                                    Select Ticket Type
+                                  </h4>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div
+                                      onClick={() => setBulkFormData({...bulkFormData, ticketCategory: "normal"})}
+                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                                        bulkFormData.ticketCategory === "normal"
+                                          ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+                                      }`}
+                                      data-testid="card-bulk-ticket-normal"
+                                    >
+                                      <div className="flex justify-between items-center">
+                                        <span className="font-medium">Normal Ticket</span>
+                                        <span className="font-bold text-blue-600">Rs 199/student</span>
+                                      </div>
+                                    </div>
+                                    <div
+                                      onClick={() => setBulkFormData({...bulkFormData, ticketCategory: "premium"})}
+                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                                        bulkFormData.ticketCategory === "premium"
+                                          ? "border-teal-500 bg-teal-50 dark:bg-teal-950/30"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-teal-300"
+                                      }`}
+                                      data-testid="card-bulk-ticket-premium"
+                                    >
+                                      <div className="flex justify-between items-center">
+                                        <span className="font-medium">Premium Ticket</span>
+                                        <span className="font-bold text-teal-600">Rs 599/student</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="bg-primary/10 rounded-lg p-4 text-center">
+                                  <p className="text-sm text-muted-foreground mb-1">Total Amount</p>
+                                  <p className="text-2xl font-bold text-primary">
+                                    Rs {getBulkTotalAmount().toLocaleString()}/-
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    ({bulkFormData.numberOfStudents} students x Rs {getBulkPricePerStudent()})
+                                  </p>
+                                </div>
+
+                                <div className="border-t pt-4">
+                                  <h4 className="font-medium mb-3 flex items-center gap-2">
+                                    <CreditCard className="w-4 h-4" />
+                                    Payment Method
+                                  </h4>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div
+                                      onClick={() => setPaymentMethod("online")}
+                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                                        paymentMethod === "online"
+                                          ? "border-primary bg-primary/10"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
+                                      }`}
+                                      data-testid="card-bulk-payment-online"
+                                    >
+                                      <div className="flex items-center gap-2">
+                                        <Smartphone className="w-5 h-5 text-primary" />
+                                        <span className="font-medium">Pay Online</span>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground mt-1">PhonePe, GPay, Paytm, Cards</p>
+                                    </div>
+                                    <div
+                                      onClick={() => setPaymentMethod("qr")}
+                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                                        paymentMethod === "qr"
+                                          ? "border-primary bg-primary/10"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
+                                      }`}
+                                      data-testid="card-bulk-payment-qr"
+                                    >
+                                      <div className="flex items-center gap-2">
+                                        <QrCode className="w-5 h-5 text-primary" />
+                                        <span className="font-medium">Scan QR & Upload</span>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground mt-1">Pay via QR code</p>
+                                    </div>
+                                  </div>
+
+                                  {paymentMethod === "qr" && (
+                                    <div className="space-y-4">
+                                      <div className="text-center p-4 bg-white dark:bg-gray-900 rounded-lg">
+                                        <img
+                                          src={bulkFormData.ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage}
+                                          alt="Payment QR Code"
+                                          className="w-48 h-48 mx-auto mb-2"
+                                        />
+                                        <p className="text-sm font-medium">Scan to pay Rs {getBulkTotalAmount().toLocaleString()}</p>
+                                      </div>
+                                      <div>
+                                        <label className="text-sm font-medium">Upload Payment Screenshot *</label>
+                                        <Input
+                                          id="bulk-payment-screenshot"
+                                          type="file"
+                                          accept="image/*"
+                                          className="mt-1"
+                                          data-testid="input-bulk-payment-screenshot"
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <Button
+                                  type="button"
+                                  size="lg"
+                                  className="w-full"
+                                  onClick={handleBulkRegistrationSubmit}
+                                  disabled={isBulkSubmitting || isProcessingOnlinePayment}
+                                  data-testid="button-bulk-submit"
+                                >
+                                  {isBulkSubmitting || isProcessingOnlinePayment ? (
+                                    <>
+                                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                      Processing...
+                                    </>
+                                  ) : paymentMethod === "online" ? (
+                                    <>
+                                      <CreditCard className="w-4 h-4 mr-2" />
+                                      Pay Rs {getBulkTotalAmount().toLocaleString()} & Register
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Send className="w-4 h-4 mr-2" />
+                                      Complete Bulk Registration
+                                    </>
+                                  )}
+                                </Button>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
+                        {((registrationType === "expert-session" && registrationMode === "individual") || registrationType === "contest") && (
                         <Form {...form}>
                           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
@@ -3138,6 +3695,7 @@ export default function Participate() {
                       </motion.div>
                           </form>
                         </Form>
+                        )}
                       </CardContent>
                     </Card>
                   </ScrollFadeUp>
