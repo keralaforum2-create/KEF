@@ -1,7 +1,7 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema } from "@shared/schema";
+import { insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema, insertBulkRegistrationSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
@@ -452,6 +452,311 @@ export async function registerRoutes(
       });
     } catch (error) {
       console.error("Error checking payment status:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Bulk Registration Routes
+  app.post("/api/bulk-register", upload.single('paymentScreenshot'), async (req: Request, res) => {
+    try {
+      const file = req.file;
+      
+      if (!file) {
+        return res.status(400).json({ 
+          message: "Payment screenshot is required for bulk registration." 
+        });
+      }
+      
+      const data = {
+        ...req.body,
+        paymentScreenshot: `/uploads/${file.filename}`,
+        paymentStatus: "screenshot_uploaded",
+      };
+      
+      const result = insertBulkRegistrationSchema.safeParse(data);
+      
+      if (!result.success) {
+        const validationError = fromError(result.error);
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          error: validationError.toString() 
+        });
+      }
+      
+      const bulkRegistration = await storage.createBulkRegistration(result.data);
+      
+      // Create individual student tickets
+      const numberOfStudents = parseInt(bulkRegistration.numberOfStudents);
+      const studentTickets = [];
+      
+      for (let i = 1; i <= numberOfStudents; i++) {
+        const studentRegistrationId = `${bulkRegistration.bulkRegistrationId}-S${String(i).padStart(3, '0')}`;
+        const student = await storage.createBulkStudent({
+          bulkRegistrationId: bulkRegistration.bulkRegistrationId,
+          studentRegistrationId,
+          studentNumber: String(i),
+        });
+        studentTickets.push(student);
+      }
+      
+      return res.status(201).json({ 
+        message: "Bulk registration successful", 
+        bulkRegistration,
+        studentTickets 
+      });
+    } catch (error) {
+      console.error("Error creating bulk registration:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/bulk-phonepe/initiate", async (req: Request, res) => {
+    try {
+      const { bulkRegistrationData, amount } = req.body;
+      
+      if (!bulkRegistrationData || !amount) {
+        return res.status(400).json({ 
+          message: "Bulk registration data and amount are required" 
+        });
+      }
+
+      const result = insertBulkRegistrationSchema.safeParse({
+        ...bulkRegistrationData,
+        paymentStatus: "pending",
+        paymentScreenshot: "phonepe_payment"
+      });
+      
+      if (!result.success) {
+        const validationError = fromError(result.error);
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          error: validationError.toString() 
+        });
+      }
+
+      const merchantTransactionId = `MTB${Date.now()}${randomUUID().slice(0, 8)}`;
+      
+      const registrationWithPayment = {
+        ...result.data,
+        phonepeMerchantTransactionId: merchantTransactionId,
+      };
+
+      const bulkRegistration = await storage.createBulkRegistration(registrationWithPayment as any);
+
+      const protocol = req.headers['x-forwarded-proto'] || 'https';
+      const host = req.headers['host'] || 'localhost:5000';
+      const baseUrl = `${protocol}://${host}`;
+
+      const paymentResult = await initiatePayment({
+        merchantTransactionId,
+        amount: Number(amount),
+        userId: bulkRegistration.id,
+        userPhone: bulkRegistrationData.mentorPhone,
+        userName: bulkRegistrationData.mentorName,
+        redirectUrl: `${baseUrl}/bulk-payment-status/${merchantTransactionId}`,
+        callbackUrl: `${baseUrl}/api/bulk-phonepe/callback`
+      });
+
+      if (!paymentResult.success || !paymentResult.redirectUrl) {
+        await storage.updateBulkRegistrationPayment(bulkRegistration.id, {
+          paymentStatus: "failed"
+        });
+        return res.status(400).json({ 
+          message: paymentResult.error || "Failed to initiate payment" 
+        });
+      }
+
+      return res.json({
+        success: true,
+        redirectUrl: paymentResult.redirectUrl,
+        bulkRegistrationId: bulkRegistration.bulkRegistrationId,
+        merchantTransactionId
+      });
+    } catch (error) {
+      console.error("Error initiating bulk PhonePe payment:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/bulk-phonepe/callback", async (req: Request, res) => {
+    try {
+      console.log("Bulk PhonePe callback received:", JSON.stringify(req.body));
+      
+      const { response } = req.body;
+      
+      if (!response) {
+        return res.redirect('/bulk-payment-status/error');
+      }
+
+      const decodedResponse = Buffer.from(response, 'base64').toString('utf-8');
+      const paymentData = JSON.parse(decodedResponse);
+      
+      const merchantTransactionId = paymentData.data?.merchantTransactionId;
+      
+      if (!merchantTransactionId) {
+        return res.redirect('/bulk-payment-status/error');
+      }
+
+      const bulkRegistration = await storage.getBulkRegistrationByMerchantTransactionId(merchantTransactionId);
+      
+      if (!bulkRegistration) {
+        return res.redirect('/bulk-payment-status/error');
+      }
+
+      if (paymentData.code === 'PAYMENT_SUCCESS') {
+        await storage.updateBulkRegistrationPayment(bulkRegistration.id, {
+          phonepeTransactionId: paymentData.data?.transactionId,
+          paymentStatus: 'paid'
+        });
+
+        // Create individual student tickets
+        const numberOfStudents = parseInt(bulkRegistration.numberOfStudents);
+        
+        for (let i = 1; i <= numberOfStudents; i++) {
+          const studentRegistrationId = `${bulkRegistration.bulkRegistrationId}-S${String(i).padStart(3, '0')}`;
+          await storage.createBulkStudent({
+            bulkRegistrationId: bulkRegistration.bulkRegistrationId,
+            studentRegistrationId,
+            studentNumber: String(i),
+          });
+        }
+      } else {
+        await storage.updateBulkRegistrationPayment(bulkRegistration.id, {
+          paymentStatus: 'failed'
+        });
+      }
+
+      return res.redirect(`/bulk-payment-status/${merchantTransactionId}`);
+    } catch (error) {
+      console.error("Error processing bulk PhonePe callback:", error);
+      return res.redirect('/bulk-payment-status/error');
+    }
+  });
+
+  app.get("/api/bulk-phonepe/status/:merchantTransactionId", async (req: Request, res) => {
+    try {
+      const { merchantTransactionId } = req.params;
+      
+      const bulkRegistration = await storage.getBulkRegistrationByMerchantTransactionId(merchantTransactionId);
+      
+      if (!bulkRegistration) {
+        return res.status(404).json({ message: "Bulk registration not found" });
+      }
+
+      if (bulkRegistration.paymentStatus === 'paid') {
+        const studentTickets = await storage.getBulkStudentsByBulkRegistrationId(bulkRegistration.bulkRegistrationId);
+        return res.json({
+          success: true,
+          status: 'SUCCESS',
+          bulkRegistrationId: bulkRegistration.bulkRegistrationId,
+          studentTickets
+        });
+      }
+
+      const statusResult = await checkPaymentStatus(merchantTransactionId);
+
+      if (statusResult.success && statusResult.status === 'SUCCESS') {
+        await storage.updateBulkRegistrationPayment(bulkRegistration.id, {
+          phonepeTransactionId: statusResult.transactionId,
+          paymentStatus: 'paid'
+        });
+
+        // Create individual student tickets if not already created
+        const existingStudents = await storage.getBulkStudentsByBulkRegistrationId(bulkRegistration.bulkRegistrationId);
+        
+        if (existingStudents.length === 0) {
+          const numberOfStudents = parseInt(bulkRegistration.numberOfStudents);
+          
+          for (let i = 1; i <= numberOfStudents; i++) {
+            const studentRegistrationId = `${bulkRegistration.bulkRegistrationId}-S${String(i).padStart(3, '0')}`;
+            await storage.createBulkStudent({
+              bulkRegistrationId: bulkRegistration.bulkRegistrationId,
+              studentRegistrationId,
+              studentNumber: String(i),
+            });
+          }
+        }
+
+        const studentTickets = await storage.getBulkStudentsByBulkRegistrationId(bulkRegistration.bulkRegistrationId);
+
+        return res.json({
+          success: true,
+          status: 'SUCCESS',
+          bulkRegistrationId: bulkRegistration.bulkRegistrationId,
+          studentTickets
+        });
+      }
+
+      return res.json({
+        success: false,
+        status: statusResult.status,
+        error: statusResult.error
+      });
+    } catch (error) {
+      console.error("Error checking bulk payment status:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/bulk-registrations", async (req, res) => {
+    try {
+      const bulkRegistrations = await storage.getBulkRegistrations();
+      return res.json(bulkRegistrations);
+    } catch (error) {
+      console.error("Error fetching bulk registrations:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/bulk-ticket/:bulkRegistrationId", async (req, res) => {
+    try {
+      const { bulkRegistrationId } = req.params;
+      const bulkRegistration = await storage.getBulkRegistrationByBulkRegistrationId(bulkRegistrationId);
+      
+      if (!bulkRegistration) {
+        return res.status(404).json({ message: "Bulk registration not found" });
+      }
+      
+      const studentTickets = await storage.getBulkStudentsByBulkRegistrationId(bulkRegistrationId);
+      
+      return res.json({
+        bulkRegistration,
+        studentTickets
+      });
+    } catch (error) {
+      console.error("Error fetching bulk ticket:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/bulk-student-ticket/:studentRegistrationId", async (req, res) => {
+    try {
+      const { studentRegistrationId } = req.params;
+      const student = await storage.getBulkStudentByStudentRegistrationId(studentRegistrationId);
+      
+      if (!student) {
+        return res.status(404).json({ message: "Student ticket not found" });
+      }
+      
+      const bulkRegistration = await storage.getBulkRegistrationByBulkRegistrationId(student.bulkRegistrationId);
+      
+      return res.json({
+        student,
+        bulkRegistration
+      });
+    } catch (error) {
+      console.error("Error fetching student ticket:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/bulk-registrations/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.deleteBulkRegistration(id);
+      return res.json({ message: "Bulk registration deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting bulk registration:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });

@@ -210,3 +210,59 @@ export const insertSponsorshipSchema = createInsertSchema(sponsorshipInquiries).
 
 export type InsertSponsorship = z.infer<typeof insertSponsorshipSchema>;
 export type Sponsorship = typeof sponsorshipInquiries.$inferSelect;
+
+export const bulkRegistrations = pgTable("bulk_registrations", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  bulkRegistrationId: text("bulk_registration_id").notNull().unique(),
+  institutionName: text("institution_name").notNull(),
+  mentorName: text("mentor_name").notNull(),
+  mentorEmail: text("mentor_email").notNull(),
+  mentorPhone: text("mentor_phone").notNull(),
+  numberOfStudents: text("number_of_students").notNull(),
+  pricePerStudent: text("price_per_student").notNull(),
+  totalAmount: text("total_amount").notNull(),
+  ticketCategory: text("ticket_category"),
+  registrationType: text("registration_type").notNull(),
+  paymentScreenshot: text("payment_screenshot"),
+  phonepeMerchantTransactionId: text("phonepe_merchant_transaction_id"),
+  phonepeTransactionId: text("phonepe_transaction_id"),
+  paymentStatus: text("payment_status"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertBulkRegistrationSchema = createInsertSchema(bulkRegistrations).omit({
+  id: true,
+  bulkRegistrationId: true,
+  createdAt: true,
+}).extend({
+  institutionName: z.string().min(2, "Institution name must be at least 2 characters"),
+  mentorName: z.string().min(2, "Mentor name must be at least 2 characters"),
+  mentorEmail: z.string().email("Please enter a valid email address"),
+  mentorPhone: z.string().min(10, "Please enter a valid phone number"),
+  numberOfStudents: z.string().min(1, "Number of students is required"),
+  pricePerStudent: z.string(),
+  totalAmount: z.string(),
+  ticketCategory: z.enum(["normal", "premium"]).optional(),
+  registrationType: z.enum(["expert-session", "contest"]),
+  paymentScreenshot: z.string().optional(),
+  paymentStatus: z.string().optional(),
+});
+
+export type InsertBulkRegistration = z.infer<typeof insertBulkRegistrationSchema>;
+export type BulkRegistration = typeof bulkRegistrations.$inferSelect;
+
+export const bulkRegistrationStudents = pgTable("bulk_registration_students", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  bulkRegistrationId: text("bulk_registration_id").notNull(),
+  studentRegistrationId: text("student_registration_id").notNull().unique(),
+  studentNumber: text("student_number").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertBulkStudentSchema = createInsertSchema(bulkRegistrationStudents).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertBulkStudent = z.infer<typeof insertBulkStudentSchema>;
+export type BulkStudent = typeof bulkRegistrationStudents.$inferSelect;

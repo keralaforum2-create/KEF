@@ -52,10 +52,6 @@ localPort = 43555
 externalPort = 3000
 
 [[ports]]
-localPort = 44909
-externalPort = 6800
-
-[[ports]]
 localPort = 45125
 externalPort = 8080
 
@@ -105,5 +101,3 @@ integrations = ["resend:1.0.0", "google-sheet:1.0.0"]
 [userenv]
 
 [userenv.shared]
-RAZORPAY_KEY_ID = "rzp_test_RnaGmXbwGZXftr"
-RAZORPAY_KEY_SECRET = "OMQl6rozIJMATvxHCGyL1Ma8"

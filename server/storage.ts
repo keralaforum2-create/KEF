@@ -9,11 +9,17 @@ import {
   type InsertInvestorMentor,
   type Sponsorship,
   type InsertSponsorship,
+  type BulkRegistration,
+  type InsertBulkRegistration,
+  type BulkStudent,
+  type InsertBulkStudent,
   users,
   contactSubmissions,
   registrations,
   investorMentorApplications,
   sponsorshipInquiries,
+  bulkRegistrations,
+  bulkRegistrationStudents,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
@@ -43,6 +49,17 @@ export interface IStorage {
   deleteContact(id: string): Promise<void>;
   deleteInvestorMentor(id: string): Promise<void>;
   deleteSponsorship(id: string): Promise<void>;
+  
+  createBulkRegistration(registration: InsertBulkRegistration): Promise<BulkRegistration>;
+  getBulkRegistrations(): Promise<BulkRegistration[]>;
+  getBulkRegistrationByBulkRegistrationId(bulkRegistrationId: string): Promise<BulkRegistration | undefined>;
+  getBulkRegistrationByMerchantTransactionId(merchantTransactionId: string): Promise<BulkRegistration | undefined>;
+  updateBulkRegistrationPayment(id: string, paymentData: { phonepeTransactionId?: string; paymentStatus: string }): Promise<BulkRegistration | undefined>;
+  deleteBulkRegistration(id: string): Promise<void>;
+  
+  createBulkStudent(student: InsertBulkStudent): Promise<BulkStudent>;
+  getBulkStudentsByBulkRegistrationId(bulkRegistrationId: string): Promise<BulkStudent[]>;
+  getBulkStudentByStudentRegistrationId(studentRegistrationId: string): Promise<BulkStudent | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -142,6 +159,65 @@ export class DatabaseStorage implements IStorage {
 
   async deleteSponsorship(id: string): Promise<void> {
     await db.delete(sponsorshipInquiries).where(eq(sponsorshipInquiries.id, id));
+  }
+
+  async createBulkRegistration(insertData: InsertBulkRegistration): Promise<BulkRegistration> {
+    const id = randomUUID();
+    const bulkRegistrationId = `KSFB-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
+    const result = await db.insert(bulkRegistrations).values({ 
+      ...insertData, 
+      id, 
+      bulkRegistrationId 
+    }).returning();
+    return result[0];
+  }
+
+  async getBulkRegistrations(): Promise<BulkRegistration[]> {
+    return await db.select().from(bulkRegistrations).orderBy(desc(bulkRegistrations.createdAt));
+  }
+
+  async getBulkRegistrationByBulkRegistrationId(bulkRegistrationId: string): Promise<BulkRegistration | undefined> {
+    const result = await db.select().from(bulkRegistrations).where(eq(bulkRegistrations.bulkRegistrationId, bulkRegistrationId));
+    return result[0];
+  }
+
+  async getBulkRegistrationByMerchantTransactionId(merchantTransactionId: string): Promise<BulkRegistration | undefined> {
+    const result = await db.select().from(bulkRegistrations).where(eq(bulkRegistrations.phonepeMerchantTransactionId, merchantTransactionId));
+    return result[0];
+  }
+
+  async updateBulkRegistrationPayment(id: string, paymentData: { phonepeTransactionId?: string; paymentStatus: string }): Promise<BulkRegistration | undefined> {
+    const result = await db.update(bulkRegistrations)
+      .set({
+        phonepeTransactionId: paymentData.phonepeTransactionId,
+        paymentStatus: paymentData.paymentStatus
+      })
+      .where(eq(bulkRegistrations.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteBulkRegistration(id: string): Promise<void> {
+    await db.delete(bulkRegistrationStudents).where(eq(bulkRegistrationStudents.bulkRegistrationId, id));
+    await db.delete(bulkRegistrations).where(eq(bulkRegistrations.id, id));
+  }
+
+  async createBulkStudent(insertData: InsertBulkStudent): Promise<BulkStudent> {
+    const id = randomUUID();
+    const result = await db.insert(bulkRegistrationStudents).values({ 
+      ...insertData, 
+      id 
+    }).returning();
+    return result[0];
+  }
+
+  async getBulkStudentsByBulkRegistrationId(bulkRegistrationId: string): Promise<BulkStudent[]> {
+    return await db.select().from(bulkRegistrationStudents).where(eq(bulkRegistrationStudents.bulkRegistrationId, bulkRegistrationId));
+  }
+
+  async getBulkStudentByStudentRegistrationId(studentRegistrationId: string): Promise<BulkStudent | undefined> {
+    const result = await db.select().from(bulkRegistrationStudents).where(eq(bulkRegistrationStudents.studentRegistrationId, studentRegistrationId));
+    return result[0];
   }
 }
 
