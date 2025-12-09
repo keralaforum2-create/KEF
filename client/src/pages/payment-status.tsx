@@ -53,9 +53,9 @@ export default function PaymentStatus() {
     };
   }, [merchantTransactionId]);
 
-  const viewTicket = () => {
+  const viewSuccessPage = () => {
     if (registrationId) {
-      setLocation(`/ticket/${registrationId}`);
+      setLocation(`/registration-success/${registrationId}`);
     }
   };
 
@@ -94,8 +94,8 @@ export default function PaymentStatus() {
                   Your registration is complete. A confirmation email has been sent.
                 </p>
               </div>
-              <Button onClick={viewTicket} className="w-full" data-testid="button-view-ticket">
-                View Your Ticket
+              <Button onClick={viewSuccessPage} className="w-full" data-testid="button-view-success">
+                Continue
               </Button>
             </>
           )}
