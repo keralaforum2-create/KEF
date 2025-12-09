@@ -47,7 +47,8 @@ const upload = multer({
 
 const uploadFields = upload.fields([
   { name: 'paymentScreenshot', maxCount: 1 },
-  { name: 'pitchSupportingFiles', maxCount: 1 }
+  { name: 'pitchSupportingFiles', maxCount: 1 },
+  { name: 'studentsPdf', maxCount: 1 }
 ]);
 
 export async function registerRoutes(
@@ -758,6 +759,39 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error deleting bulk registration:", error);
       return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Upload PDF for bulk registration
+  app.post("/api/upload-students-pdf", upload.single('studentsPdf'), async (req: Request, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No PDF file uploaded" });
+      }
+      return res.json({ 
+        success: true,
+        filename: req.file.filename,
+        path: `/uploads/${req.file.filename}`
+      });
+    } catch (error) {
+      console.error("Error uploading students PDF:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Serve uploaded files
+  app.get("/uploads/:filename", (req, res) => {
+    try {
+      const { filename } = req.params;
+      const filePath = path.join(uploadDir, filename);
+      if (fs.existsSync(filePath)) {
+        res.sendFile(filePath);
+      } else {
+        res.status(404).json({ message: "File not found" });
+      }
+    } catch (error) {
+      console.error("Error serving file:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
   });
 

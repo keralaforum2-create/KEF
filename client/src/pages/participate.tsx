@@ -201,6 +201,8 @@ export default function Participate() {
   const [bulkRegistrationId, setBulkRegistrationId] = useState<string | null>(null);
   const [bulkStudentTickets, setBulkStudentTickets] = useState<Array<{studentRegistrationId: string; studentNumber: string}>>([]);
   const [isBulkSubmitting, setIsBulkSubmitting] = useState(false);
+  const [studentsPdfFile, setStudentsPdfFile] = useState<File | null>(null);
+  const [uploadedPdfPath, setUploadedPdfPath] = useState<string | null>(null);
   
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),
@@ -400,6 +402,22 @@ export default function Participate() {
     setIsProcessingOnlinePayment(true);
 
     try {
+      // Upload PDF first if provided
+      let pdfPath = uploadedPdfPath;
+      if (studentsPdfFile && !uploadedPdfPath) {
+        const formData = new FormData();
+        formData.append('studentsPdf', studentsPdfFile);
+        const uploadResponse = await fetch('/api/upload-students-pdf', {
+          method: 'POST',
+          body: formData,
+        });
+        const uploadData = await uploadResponse.json();
+        if (uploadData.success) {
+          pdfPath = uploadData.path;
+          setUploadedPdfPath(pdfPath);
+        }
+      }
+
       const amount = getBulkTotalAmount();
 
       const bulkRegistrationData = {
@@ -407,6 +425,7 @@ export default function Participate() {
         mentorName: bulkFormData.mentorName,
         mentorEmail: bulkFormData.mentorEmail,
         mentorPhone: bulkFormData.mentorPhone,
+        studentsPdf: pdfPath || "",
         numberOfStudents: bulkFormData.numberOfStudents,
         pricePerStudent: getBulkPricePerStudent().toString(),
         totalAmount: amount.toString(),
@@ -1733,6 +1752,23 @@ export default function Participate() {
                                         onChange={(e) => setBulkFormData({...bulkFormData, mentorPhone: e.target.value})}
                                         data-testid="input-bulk-mentor-phone"
                                       />
+                                    </div>
+                                    <div className="md:col-span-2">
+                                      <label className="text-sm font-medium">Upload Students List (PDF)</label>
+                                      <Input
+                                        type="file"
+                                        accept=".pdf"
+                                        onChange={(e) => {
+                                          const file = e.target.files?.[0];
+                                          if (file) {
+                                            setStudentsPdfFile(file);
+                                            setUploadedPdfPath(null);
+                                          }
+                                        }}
+                                        className="mt-1"
+                                        data-testid="input-bulk-students-pdf"
+                                      />
+                                      <p className="text-xs text-muted-foreground mt-1">Optional: Upload a PDF with student names/details</p>
                                     </div>
                                     <div>
                                       <label className="text-sm font-medium">Number of Students *</label>
