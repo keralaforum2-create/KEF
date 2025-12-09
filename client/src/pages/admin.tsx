@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, ImageIcon, Download } from "lucide-react";
+import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, ImageIcon, Download, CreditCard, QrCode, Filter } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration } from "@shared/schema";
@@ -35,6 +35,7 @@ export default function Admin() {
   const [selectedInvestor, setSelectedInvestor] = useState<InvestorMentor | null>(null);
   const [selectedSponsorship, setSelectedSponsorship] = useState<Sponsorship | null>(null);
   const [selectedBulkReg, setSelectedBulkReg] = useState<BulkRegistration | null>(null);
+  const [showOnlyPaid, setShowOnlyPaid] = useState(true);
   
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
@@ -153,8 +154,23 @@ export default function Admin() {
   };
 
   const allRegistrations = registrations || [];
-  const successfulRegistrations = registrations?.filter(r => r.paymentScreenshot) || [];
-  const pendingPaymentRegistrations = registrations?.filter(r => !r.paymentScreenshot) || [];
+  const paidRegistrations = registrations?.filter(r => 
+    r.paymentStatus === 'paid' || r.paymentStatus === 'screenshot_uploaded'
+  ) || [];
+  const pendingPaymentRegistrations = registrations?.filter(r => 
+    !r.paymentStatus || r.paymentStatus === 'pending' || r.paymentStatus === 'failed'
+  ) || [];
+  
+  const displayedRegistrations = showOnlyPaid ? paidRegistrations : allRegistrations;
+  
+  const getPaymentMethod = (reg: Registration): { method: string; icon: typeof CreditCard } => {
+    if (reg.paymentScreenshot === 'phonepe_payment' || reg.phonepeMerchantTransactionId) {
+      return { method: 'Pay Online', icon: CreditCard };
+    } else if (reg.paymentScreenshot && reg.paymentScreenshot.startsWith('/')) {
+      return { method: 'QR Scan', icon: QrCode };
+    }
+    return { method: 'Pending', icon: CreditCard };
+  };
   
   const statCards = [
     { icon: UserCheck, label: "Total Registrations", value: allRegistrations.length, testId: "text-registration-count" },
@@ -240,17 +256,27 @@ export default function Admin() {
                         </div>
                       ) : allRegistrations.length > 0 ? (
                         <div className="overflow-x-auto">
-                          <div className="mb-4 flex flex-wrap gap-2 text-sm">
+                          <div className="mb-4 flex flex-wrap items-center gap-2">
                             <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                              Payment Confirmed: {successfulRegistrations.length}
+                              Paid: {paidRegistrations.length}
                             </Badge>
                             <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300">
-                              Pending Payment: {pendingPaymentRegistrations.length}
+                              Pending/Failed: {pendingPaymentRegistrations.length}
                             </Badge>
+                            <Button
+                              variant={showOnlyPaid ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => setShowOnlyPaid(!showOnlyPaid)}
+                              data-testid="button-toggle-paid-filter"
+                            >
+                              <Filter className="w-4 h-4 mr-1" />
+                              {showOnlyPaid ? "Showing Paid Only" : "Showing All"}
+                            </Button>
                           </div>
                           <Table>
                             <TableHeader>
                               <TableRow>
+                                <TableHead>Payment Method</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Registration ID</TableHead>
                                 <TableHead>Name</TableHead>
@@ -260,27 +286,41 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {allRegistrations.map((reg, index) => (
+                              {displayedRegistrations.map((reg, index) => {
+                                const paymentInfo = getPaymentMethod(reg);
+                                const PaymentIcon = paymentInfo.icon;
+                                return (
                                 <motion.tr
                                   key={reg.id}
                                   initial={{ opacity: 0, x: -10 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: index * 0.03 }}
-                                  className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ${!reg.paymentScreenshot ? 'bg-amber-50/50 dark:bg-amber-900/10' : ''}`}
+                                  className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ${reg.paymentStatus === 'failed' || reg.paymentStatus === 'pending' ? 'bg-amber-50/50 dark:bg-amber-900/10' : ''}`}
                                   data-testid={`row-registration-${reg.id}`}
                                 >
                                   <TableCell>
-                                    {reg.paymentScreenshot ? (
-                                      <img 
-                                        src={reg.paymentScreenshot} 
-                                        alt="Payment" 
-                                        className="w-12 h-12 object-cover rounded-md border cursor-pointer"
-                                        onClick={() => setSelectedReg(reg)}
-                                        data-testid={`img-payment-thumb-${reg.id}`}
-                                      />
+                                    <Badge className={paymentInfo.method === 'Pay Online' 
+                                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' 
+                                      : paymentInfo.method === 'QR Scan' 
+                                        ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
+                                        : 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300'
+                                    }>
+                                      <PaymentIcon className="w-3 h-3 mr-1" />
+                                      {paymentInfo.method}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    {reg.paymentStatus === 'paid' || reg.paymentStatus === 'screenshot_uploaded' ? (
+                                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                                        Paid
+                                      </Badge>
+                                    ) : reg.paymentStatus === 'failed' ? (
+                                      <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">
+                                        Failed
+                                      </Badge>
                                     ) : (
                                       <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300">
-                                        No Payment
+                                        Pending
                                       </Badge>
                                     )}
                                   </TableCell>
@@ -328,7 +368,8 @@ export default function Admin() {
                                     </div>
                                   </TableCell>
                                 </motion.tr>
-                              ))}
+                                );
+                              })}
                             </TableBody>
                           </Table>
                         </div>
