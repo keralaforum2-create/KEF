@@ -30,6 +30,8 @@ export interface IStorage {
   createRegistration(registration: InsertRegistration): Promise<Registration>;
   getRegistrations(): Promise<Registration[]>;
   getRegistrationByRegistrationId(registrationId: string): Promise<Registration | undefined>;
+  getRegistrationByMerchantTransactionId(merchantTransactionId: string): Promise<Registration | undefined>;
+  updateRegistrationPayment(id: string, paymentData: { phonepeTransactionId?: string; paymentStatus: string }): Promise<Registration | undefined>;
   
   createInvestorMentor(application: InsertInvestorMentor): Promise<InvestorMentor>;
   getInvestorMentors(): Promise<InvestorMentor[]>;
@@ -83,6 +85,22 @@ export class DatabaseStorage implements IStorage {
 
   async getRegistrationByRegistrationId(registrationId: string): Promise<Registration | undefined> {
     const result = await db.select().from(registrations).where(eq(registrations.registrationId, registrationId));
+    return result[0];
+  }
+
+  async getRegistrationByMerchantTransactionId(merchantTransactionId: string): Promise<Registration | undefined> {
+    const result = await db.select().from(registrations).where(eq(registrations.phonepeMerchantTransactionId, merchantTransactionId));
+    return result[0];
+  }
+
+  async updateRegistrationPayment(id: string, paymentData: { phonepeTransactionId?: string; paymentStatus: string }): Promise<Registration | undefined> {
+    const result = await db.update(registrations)
+      .set({
+        phonepeTransactionId: paymentData.phonepeTransactionId,
+        paymentStatus: paymentData.paymentStatus
+      })
+      .where(eq(registrations.id, id))
+      .returning();
     return result[0];
   }
 

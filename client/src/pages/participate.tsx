@@ -95,10 +95,7 @@ const registrationSchema = z.object({
   teamMember2Phone: z.string().optional(),
   teamMember2Grade: z.string().optional(),
   teamMember2Age: z.string().optional(),
-  paymentScreenshot: z.any().refine(
-    (val) => val instanceof File || (val instanceof FileList && val.length > 0),
-    { message: "Payment screenshot is required. Please upload your payment confirmation." }
-  ),
+  paymentScreenshot: z.any().optional(),
   pitchStartupName: z.string().optional(),
   pitchElevatorPitch: z.string().max(300, "Elevator pitch must be under 50 words").optional(),
   pitchProblemStatement: z.string().optional(),
@@ -189,6 +186,8 @@ export default function Participate() {
   const [showForm, setShowForm] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [submittedData, setSubmittedData] = useState<RegistrationFormData | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"qr" | "online">("qr");
+  const [isProcessingOnlinePayment, setIsProcessingOnlinePayment] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
   
   const form = useForm<RegistrationFormData>({
@@ -348,6 +347,96 @@ export default function Participate() {
     return 199;
   };
 
+  // Handle PhonePe online payment
+  const handlePhonePePayment = async () => {
+    // Validate form first
+    const isValid = await form.trigger();
+    if (!isValid) {
+      toast({
+        title: "Please complete the form",
+        description: "Fill in all required fields before proceeding to payment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsProcessingOnlinePayment(true);
+
+    try {
+      const formData = form.getValues();
+      const amount = getPaymentAmount();
+
+      const registrationData = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        age: formData.age || "",
+        institution: formData.institution || "",
+        ticketCategory: formData.ticketCategory || "normal",
+        registrationType: formData.registrationType,
+        contestName: formData.contestName || "",
+        sessionName: formData.registrationType === "expert-session" ? "Expert Session" : "",
+        participantType: formData.participantType || "",
+        schoolGrade: formData.schoolGrade || "",
+        collegeYear: formData.collegeYear || "",
+        collegeCourse: formData.collegeCourse || "",
+        teamMember1Name: formData.teamMember1Name || "",
+        teamMember2Name: formData.teamMember2Name || "",
+        pitchStartupName: formData.pitchStartupName || "",
+        pitchElevatorPitch: formData.pitchElevatorPitch || "",
+        pitchProblemStatement: formData.pitchProblemStatement || "",
+        pitchProposedSolution: formData.pitchProposedSolution || "",
+        pitchProductName: formData.pitchProductName || "",
+        pitchProductDescription: formData.pitchProductDescription || "",
+        pitchPricingModel: formData.pitchPricingModel || "",
+        pitchCostPerUnit: formData.pitchCostPerUnit || "",
+        pitchSellingPrice: formData.pitchSellingPrice || "",
+        pitchProfitPerUnit: formData.pitchProfitPerUnit || "",
+        pitchTotalCapitalRequired: formData.pitchTotalCapitalRequired || "",
+        pitchRevenuePerUser: formData.pitchRevenuePerUser || "",
+        pitchTargetCustomers: formData.pitchTargetCustomers || "",
+        pitchMarketSize: formData.pitchMarketSize || "",
+        pitchCompetitorAnalysis: formData.pitchCompetitorAnalysis || "",
+        pitchRevenueModel: formData.pitchRevenueModel || "",
+        pitchRevenueStreams: JSON.stringify(formData.pitchRevenueStreams || []),
+        pitchYear1Revenue: formData.pitchYear1Revenue || "",
+        pitchYear2Revenue: formData.pitchYear2Revenue || "",
+        pitchYear3Revenue: formData.pitchYear3Revenue || "",
+        pitchYear4Revenue: formData.pitchYear4Revenue || "",
+        pitchYear5Revenue: formData.pitchYear5Revenue || "",
+        pitchExpectedRoi: formData.pitchExpectedRoi || "",
+        pitchBreakevenPeriod: formData.pitchBreakevenPeriod || "",
+        pitchFeasibilityReasons: formData.pitchFeasibilityReasons || "",
+        pitchCurrentStage: formData.pitchCurrentStage || "",
+        pitchDemoVideoLink: formData.pitchDemoVideoLink || "",
+        pitchDeclarationConfirmed: formData.pitchDeclarationConfirmed ? "true" : "false",
+      };
+
+      const response = await apiRequest("POST", "/api/phonepe/initiate", {
+        registrationData,
+        amount,
+      });
+
+      const data = await response.json();
+
+      if (data.success && data.redirectUrl) {
+        // Redirect to PhonePe payment page
+        window.location.href = data.redirectUrl;
+      } else {
+        throw new Error(data.message || "Failed to initiate payment");
+      }
+    } catch (error: any) {
+      console.error("PhonePe payment error:", error);
+      toast({
+        title: "Payment Failed",
+        description: error.message || "Failed to initiate online payment. Please try again or use QR code.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessingOnlinePayment(false);
+    }
+  };
+
   const mutation = useMutation({
     mutationFn: async (data: RegistrationFormData) => {
       const formData = new FormData();
@@ -455,6 +544,21 @@ export default function Participate() {
   });
 
   const onSubmit = (data: RegistrationFormData) => {
+    // Validate payment screenshot for QR payment method
+    if (paymentMethod === "qr") {
+      const hasScreenshot = data.paymentScreenshot instanceof File || 
+        (data.paymentScreenshot instanceof FileList && data.paymentScreenshot.length > 0);
+      
+      if (!hasScreenshot) {
+        toast({
+          title: "Payment Screenshot Required",
+          description: "Please upload your payment screenshot before submitting.",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+    
     setSubmittedData(data);
     mutation.mutate(data);
   };
@@ -2776,17 +2880,17 @@ export default function Participate() {
                             className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3"
                             whileHover={{ scale: 1.1, rotate: 5 }}
                           >
-                            <QrCode className="w-5 h-5 text-primary" />
+                            <CreditCard className="w-5 h-5 text-primary" />
                           </motion.div>
                           <h3 className="font-serif text-xl font-bold mb-2" data-testid="text-application-fees-form">
                             Application Fees
                           </h3>
                           <p className="text-sm text-muted-foreground font-medium">
                             {isBusinessQuiz 
-                              ? "Pay ₹199/- via UPI"
+                              ? "Pay ₹199/-"
                               : ticketCategory === "premium" 
-                                ? "Pay ₹599/- via UPI"
-                                : "Pay ₹199/- via UPI"
+                                ? "Pay ₹599/-"
+                                : "Pay ₹199/-"
                             }
                           </p>
                         </div>
@@ -2800,123 +2904,203 @@ export default function Participate() {
                               </p>
                             </div>
 
-                            <div className="flex flex-col items-center gap-4">
-                              <div className="grid grid-cols-2 gap-3 w-full mb-2">
-                                <a
-                                  href={`tez://upi/pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
-                                  className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                  data-testid="button-gpay"
-                                >
-                                  <SiGooglepay className="w-6 h-6" style={{ color: '#4285F4' }} />
-                                  <span className="text-sm font-medium">GPay</span>
-                                </a>
-                                <a
-                                  href={`phonepe://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
-                                  className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                  data-testid="button-phonepe"
-                                >
-                                  <SiPhonepe className="w-6 h-6" style={{ color: '#5F259F' }} />
-                                  <span className="text-sm font-medium">PhonePe</span>
-                                </a>
-                                <a
-                                  href={`paytmmp://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
-                                  className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                  data-testid="button-paytm"
-                                >
-                                  <SiPaytm className="w-6 h-6" style={{ color: '#00BAF2' }} />
-                                  <span className="text-sm font-medium">Paytm</span>
-                                </a>
-                                <a
-                                  href={`upi://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
-                                  className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                  data-testid="button-other-upi"
-                                >
-                                  <Smartphone className="w-6 h-6 text-primary" />
-                                  <span className="text-sm font-medium">Other UPI</span>
-                                </a>
-                              </div>
-
-                              <div className="flex items-center gap-3 w-full my-2">
-                                <div className="flex-1 h-px bg-border"></div>
-                                <span className="text-xs text-muted-foreground">or scan QR</span>
-                                <div className="flex-1 h-px bg-border"></div>
-                              </div>
-
-                              <div className="bg-white p-4 rounded-lg shadow-sm">
-                                <img 
-                                  src={ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage} 
-                                  alt="Payment QR Code" 
-                                  className="w-48 h-48 object-contain"
-                                  data-testid="img-payment-qr"
-                                />
-                              </div>
-
+                            {/* Payment Method Toggle */}
+                            <div className="flex gap-2 mb-6">
                               <Button
                                 type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={handleDownloadQR}
-                                className="gap-2"
-                                data-testid="button-download-qr"
+                                variant={paymentMethod === "online" ? "default" : "outline"}
+                                className="flex-1 gap-2"
+                                onClick={() => setPaymentMethod("online")}
+                                data-testid="button-payment-online"
                               >
-                                <Download className="w-4 h-4" />
-                                Download QR Code
+                                <ShieldCheck className="w-4 h-4" />
+                                Pay Online
                               </Button>
+                              <Button
+                                type="button"
+                                variant={paymentMethod === "qr" ? "default" : "outline"}
+                                className="flex-1 gap-2"
+                                onClick={() => setPaymentMethod("qr")}
+                                data-testid="button-payment-qr"
+                              >
+                                <QrCode className="w-4 h-4" />
+                                Scan QR
+                              </Button>
+                            </div>
 
-                              <p className="text-xs text-center text-muted-foreground">
-                                Scan this QR code with any UPI app to make payment
-                              </p>
-                              
-                              <div className="w-full mt-2 p-3 rounded-lg bg-muted/50 border text-center">
-                                <p className="text-xs text-muted-foreground mb-1">Or pay directly to UPI ID:</p>
-                                <p className="font-mono text-sm font-medium text-foreground select-all" data-testid="text-upi-id">
-                                  caliphworldfoundation.9605399676.ibz@icici
+                            {paymentMethod === "online" ? (
+                              /* Online Payment Section */
+                              <div className="flex flex-col items-center gap-4">
+                                <div className="w-full p-4 rounded-lg bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800">
+                                  <div className="flex items-center gap-3 mb-3">
+                                    <SiPhonepe className="w-8 h-8" style={{ color: '#5F259F' }} />
+                                    <div>
+                                      <p className="font-semibold text-foreground">PhonePe Business</p>
+                                      <p className="text-xs text-muted-foreground">Secure online payment</p>
+                                    </div>
+                                  </div>
+                                  <ul className="text-xs text-muted-foreground space-y-1 mb-4">
+                                    <li className="flex items-center gap-2">
+                                      <CheckCircle className="w-3 h-3 text-green-500" />
+                                      Instant payment confirmation
+                                    </li>
+                                    <li className="flex items-center gap-2">
+                                      <CheckCircle className="w-3 h-3 text-green-500" />
+                                      No screenshot upload needed
+                                    </li>
+                                    <li className="flex items-center gap-2">
+                                      <CheckCircle className="w-3 h-3 text-green-500" />
+                                      UPI, Cards, Net Banking supported
+                                    </li>
+                                  </ul>
+                                  <Button
+                                    type="button"
+                                    className="w-full gap-2"
+                                    style={{ backgroundColor: '#5F259F' }}
+                                    onClick={handlePhonePePayment}
+                                    disabled={isProcessingOnlinePayment}
+                                    data-testid="button-pay-with-phonepe"
+                                  >
+                                    {isProcessingOnlinePayment ? (
+                                      <>
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        Processing...
+                                      </>
+                                    ) : (
+                                      <>
+                                        <SiPhonepe className="w-4 h-4" />
+                                        Pay ₹{getPaymentAmount()} with PhonePe
+                                      </>
+                                    )}
+                                  </Button>
+                                </div>
+                                <p className="text-xs text-center text-muted-foreground">
+                                  You will be redirected to PhonePe to complete payment securely
                                 </p>
                               </div>
-                            </div>
+                            ) : (
+                              /* QR Code Payment Section */
+                              <div className="flex flex-col items-center gap-4">
+                                <div className="grid grid-cols-2 gap-3 w-full mb-2">
+                                  <a
+                                    href={`tez://upi/pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
+                                    className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    data-testid="button-gpay"
+                                  >
+                                    <SiGooglepay className="w-6 h-6" style={{ color: '#4285F4' }} />
+                                    <span className="text-sm font-medium">GPay</span>
+                                  </a>
+                                  <a
+                                    href={`phonepe://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
+                                    className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    data-testid="button-phonepe-upi"
+                                  >
+                                    <SiPhonepe className="w-6 h-6" style={{ color: '#5F259F' }} />
+                                    <span className="text-sm font-medium">PhonePe</span>
+                                  </a>
+                                  <a
+                                    href={`paytmmp://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
+                                    className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    data-testid="button-paytm"
+                                  >
+                                    <SiPaytm className="w-6 h-6" style={{ color: '#00BAF2' }} />
+                                    <span className="text-sm font-medium">Paytm</span>
+                                  </a>
+                                  <a
+                                    href={`upi://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
+                                    className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                                    data-testid="button-other-upi"
+                                  >
+                                    <Smartphone className="w-6 h-6 text-primary" />
+                                    <span className="text-sm font-medium">Other UPI</span>
+                                  </a>
+                                </div>
+
+                                <div className="flex items-center gap-3 w-full my-2">
+                                  <div className="flex-1 h-px bg-border"></div>
+                                  <span className="text-xs text-muted-foreground">or scan QR</span>
+                                  <div className="flex-1 h-px bg-border"></div>
+                                </div>
+
+                                <div className="bg-white p-4 rounded-lg shadow-sm">
+                                  <img 
+                                    src={ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage} 
+                                    alt="Payment QR Code" 
+                                    className="w-48 h-48 object-contain"
+                                    data-testid="img-payment-qr"
+                                  />
+                                </div>
+
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={handleDownloadQR}
+                                  className="gap-2"
+                                  data-testid="button-download-qr"
+                                >
+                                  <Download className="w-4 h-4" />
+                                  Download QR Code
+                                </Button>
+
+                                <p className="text-xs text-center text-muted-foreground">
+                                  Scan this QR code with any UPI app to make payment
+                                </p>
+                                
+                                <div className="w-full mt-2 p-3 rounded-lg bg-muted/50 border text-center">
+                                  <p className="text-xs text-muted-foreground mb-1">Or pay directly to UPI ID:</p>
+                                  <p className="font-mono text-sm font-medium text-foreground select-all" data-testid="text-upi-id">
+                                    caliphworldfoundation.9605399676.ibz@icici
+                                  </p>
+                                </div>
+                              </div>
+                            )}
                           </div>
 
-                          <div className="w-full max-w-md space-y-4">
-                            <FormField
-                              control={form.control}
-                              name="paymentScreenshot"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center gap-2">
-                                    <span className="text-destructive">*</span>
-                                    Upload Payment Screenshot
-                                  </FormLabel>
-                                  <FormControl>
-                                    <div className="space-y-3">
-                                      <Input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleFileChange}
-                                        className="cursor-pointer"
-                                        data-testid="input-payment-screenshot"
-                                      />
-                                      {form.watch("paymentScreenshot") && (
-                                        <motion.div 
-                                          className="flex items-center gap-2 p-3 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800"
-                                          initial={{ opacity: 0, y: -10 }}
-                                          animate={{ opacity: 1, y: 0 }}
-                                        >
-                                          <CheckCircle className="w-4 h-4 text-green-600" />
-                                          <span className="text-sm text-green-700 dark:text-green-400">
-                                            Screenshot uploaded: {(form.watch("paymentScreenshot") as File)?.name}
-                                          </span>
-                                        </motion.div>
-                                      )}
-                                    </div>
-                                  </FormControl>
-                                  <p className="text-xs text-muted-foreground mt-1">
-                                    Upload a screenshot of your payment confirmation (Required)
-                                  </p>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
+                          {/* Only show screenshot upload for QR payment method */}
+                          {paymentMethod === "qr" && (
+                            <div className="w-full max-w-md space-y-4">
+                              <FormField
+                                control={form.control}
+                                name="paymentScreenshot"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center gap-2">
+                                      <span className="text-destructive">*</span>
+                                      Upload Payment Screenshot
+                                    </FormLabel>
+                                    <FormControl>
+                                      <div className="space-y-3">
+                                        <Input
+                                          type="file"
+                                          accept="image/*"
+                                          onChange={handleFileChange}
+                                          className="cursor-pointer"
+                                          data-testid="input-payment-screenshot"
+                                        />
+                                        {form.watch("paymentScreenshot") && (
+                                          <motion.div 
+                                            className="flex items-center gap-2 p-3 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800"
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                          >
+                                            <CheckCircle className="w-4 h-4 text-green-600" />
+                                            <span className="text-sm text-green-700 dark:text-green-400">
+                                              Screenshot uploaded: {(form.watch("paymentScreenshot") as File)?.name}
+                                            </span>
+                                          </motion.div>
+                                        )}
+                                      </div>
+                                    </FormControl>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                      Upload a screenshot of your payment confirmation (Required)
+                                    </p>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          )}
                         </div>
                       </motion.div>
                       

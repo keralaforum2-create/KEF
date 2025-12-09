@@ -76,6 +76,9 @@ export const registrations = pgTable("registrations", {
   pitchDeclarationConfirmed: text("pitch_declaration_confirmed"),
   razorpayPaymentId: text("razorpay_payment_id"),
   razorpayOrderId: text("razorpay_order_id"),
+  phonepeMerchantTransactionId: text("phonepe_merchant_transaction_id"),
+  phonepeTransactionId: text("phonepe_transaction_id"),
+  paymentAmount: text("payment_amount"),
   paymentStatus: text("payment_status"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
@@ -102,7 +105,7 @@ export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   collegeCourse: z.string().optional(),
   teamMember1Name: z.string().optional(),
   teamMember2Name: z.string().optional(),
-  paymentScreenshot: z.string().min(1, "Payment screenshot is required"),
+  paymentScreenshot: z.string().optional(),
   pitchStartupName: z.string().optional(),
   pitchElevatorPitch: z.string().max(300, "Elevator pitch must be under 50 words").optional(),
   pitchProblemStatement: z.string().optional(),

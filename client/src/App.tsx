@@ -22,6 +22,7 @@ import Terms from "@/pages/terms";
 import Privacy from "@/pages/privacy";
 import Refund from "@/pages/refund";
 import Shipping from "@/pages/shipping";
+import PaymentStatus from "@/pages/payment-status";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -62,6 +63,7 @@ function Router() {
       <Route path="/privacy" component={Privacy} />
       <Route path="/refund" component={Refund} />
       <Route path="/shipping" component={Shipping} />
+      <Route path="/payment-status/:merchantTransactionId" component={PaymentStatus} />
       <Route component={NotFound} />
     </Switch>
   );
