@@ -1865,6 +1865,29 @@ export default function Participate() {
                                     </>
                                   )}
                                 </Button>
+
+                                <div className="mt-6">
+                                  <div className="flex items-center gap-3 w-full my-4">
+                                    <div className="flex-1 h-px bg-border"></div>
+                                    <span className="text-xs text-muted-foreground">Need Help?</span>
+                                    <div className="flex-1 h-px bg-border"></div>
+                                  </div>
+                                  <div className="text-center p-4 rounded-lg bg-muted/30 border">
+                                    <p className="text-sm text-muted-foreground mb-2">
+                                      Facing any issues with registration?
+                                    </p>
+                                    <a
+                                      href="https://wa.me/919072344431"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium"
+                                      data-testid="link-bulk-whatsapp-support"
+                                    >
+                                      <Smartphone className="w-4 h-4" />
+                                      WhatsApp us at +91 9072344431
+                                    </a>
+                                  </div>
+                                </div>
                               </div>
                             </motion.div>
                           )}
@@ -3605,6 +3628,36 @@ export default function Participate() {
                             <Send className="w-4 h-4 ml-2" />
                           </Button>
                         </motion.div>
+                      </motion.div>
+
+                      <motion.div
+                        custom={8}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={formFieldVariants}
+                        className="mt-6"
+                      >
+                        <div className="flex items-center gap-3 w-full my-4">
+                          <div className="flex-1 h-px bg-border"></div>
+                          <span className="text-xs text-muted-foreground">Need Help?</span>
+                          <div className="flex-1 h-px bg-border"></div>
+                        </div>
+                        <div className="text-center p-4 rounded-lg bg-muted/30 border">
+                          <p className="text-sm text-muted-foreground mb-2">
+                            Facing any issues with registration?
+                          </p>
+                          <a
+                            href="https://wa.me/919072344431"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-medium"
+                            data-testid="link-whatsapp-support"
+                          >
+                            <Smartphone className="w-4 h-4" />
+                            WhatsApp us at +91 9072344431
+                          </a>
+                        </div>
                       </motion.div>
                           </form>
                         </Form>
