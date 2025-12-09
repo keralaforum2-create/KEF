@@ -25,7 +25,7 @@ import {
 import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, ImageIcon, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import type { Registration, Contact, InvestorMentor, Sponsorship } from "@shared/schema";
+import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration } from "@shared/schema";
 import { ScrollFadeUp, StaggerContainer, StaggerItem, CardWave } from "@/lib/animations";
 
 export default function Admin() {
@@ -34,6 +34,7 @@ export default function Admin() {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [selectedInvestor, setSelectedInvestor] = useState<InvestorMentor | null>(null);
   const [selectedSponsorship, setSelectedSponsorship] = useState<Sponsorship | null>(null);
+  const [selectedBulkReg, setSelectedBulkReg] = useState<BulkRegistration | null>(null);
   
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
@@ -59,6 +60,11 @@ export default function Admin() {
 
   const { data: sponsorships, isLoading: loadingSponsorships } = useQuery<Sponsorship[]>({
     queryKey: ["/api/sponsorships"],
+    refetchInterval: 5000,
+  });
+
+  const { data: bulkRegistrations, isLoading: loadingBulk } = useQuery<BulkRegistration[]>({
+    queryKey: ["/api/bulk-registrations"],
     refetchInterval: 5000,
   });
 
@@ -208,6 +214,9 @@ export default function Admin() {
                 </TabsTrigger>
                 <TabsTrigger value="sponsorships" data-testid="tab-sponsorships">
                   Sponsorships ({sponsorships?.length || 0})
+                </TabsTrigger>
+                <TabsTrigger value="bulk" data-testid="tab-bulk">
+                  Bulk Registrations ({bulkRegistrations?.length || 0})
                 </TabsTrigger>
               </TabsList>
 
@@ -582,6 +591,114 @@ export default function Admin() {
                         <div className="text-center py-12">
                           <Handshake className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
                           <p className="text-muted-foreground">No sponsorship inquiries yet</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="bulk">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Building2 className="w-5 h-5" />
+                        Bulk Registrations (Institutions)
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingBulk ? (
+                        <div className="text-center py-8 text-muted-foreground">
+                          Loading bulk registrations...
+                        </div>
+                      ) : bulkRegistrations && bulkRegistrations.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Registration ID</TableHead>
+                                <TableHead>Institution</TableHead>
+                                <TableHead>Mentor</TableHead>
+                                <TableHead>Students</TableHead>
+                                <TableHead>Ticket Type</TableHead>
+                                <TableHead>Total Amount</TableHead>
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {bulkRegistrations.map((bulk, index) => (
+                                <motion.tr
+                                  key={bulk.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.03 }}
+                                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                                  data-testid={`row-bulk-${bulk.id}`}
+                                >
+                                  <TableCell className="font-mono text-xs">
+                                    {bulk.registrationId.substring(0, 8)}...
+                                  </TableCell>
+                                  <TableCell className="font-medium">
+                                    {bulk.institutionName}
+                                  </TableCell>
+                                  <TableCell>
+                                    <div className="text-sm">
+                                      <p>{bulk.mentorName}</p>
+                                      <p className="text-muted-foreground text-xs">{bulk.mentorEmail}</p>
+                                    </div>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                                      {bulk.numberOfStudents} students
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Badge className={bulk.ticketCategory === "premium" 
+                                      ? "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300" 
+                                      : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                    }>
+                                      {bulk.ticketCategory}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="font-semibold text-primary">
+                                    {bulk.totalAmount}
+                                  </TableCell>
+                                  <TableCell>
+                                    <div className="flex items-center gap-2">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedBulkReg(bulk)}
+                                        data-testid={`button-view-bulk-${bulk.id}`}
+                                      >
+                                        <Eye className="w-4 h-4 mr-1" />
+                                        View
+                                      </Button>
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => window.open(`/bulk-ticket/${bulk.registrationId}`, '_blank')}
+                                        data-testid={`button-tickets-bulk-${bulk.id}`}
+                                      >
+                                        <Download className="w-4 h-4 mr-1" />
+                                        Tickets
+                                      </Button>
+                                    </div>
+                                  </TableCell>
+                                </motion.tr>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <div className="text-center py-12">
+                          <Building2 className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+                          <p className="text-muted-foreground">No bulk registrations yet</p>
                         </div>
                       )}
                     </CardContent>
@@ -1168,6 +1285,91 @@ export default function Admin() {
                     <p className="text-base">{selectedSponsorship.message}</p>
                   </div>
                 )}
+              </motion.div>
+            </DialogContent>
+          </Dialog>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {selectedBulkReg && (
+          <Dialog open={!!selectedBulkReg} onOpenChange={() => setSelectedBulkReg(null)}>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Bulk Registration Details</DialogTitle>
+                <DialogDescription>Institution registration information</DialogDescription>
+              </DialogHeader>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="space-y-4 max-h-[70vh] overflow-y-auto"
+              >
+                <div className="bg-primary/10 rounded-lg p-4 mb-4 text-center">
+                  <p className="text-sm text-muted-foreground mb-1">Registration ID</p>
+                  <p className="text-xl font-bold text-primary font-mono">{selectedBulkReg.registrationId}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Institution Name</label>
+                    <p className="text-base font-medium">{selectedBulkReg.institutionName}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Ticket Category</label>
+                    <Badge className={selectedBulkReg.ticketCategory === "premium" 
+                      ? "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300" 
+                      : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                    }>
+                      {selectedBulkReg.ticketCategory}
+                    </Badge>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Mentor Name</label>
+                    <p className="text-base">{selectedBulkReg.mentorName}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Mentor Email</label>
+                    <p className="text-base">{selectedBulkReg.mentorEmail}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Mentor Phone</label>
+                    <p className="text-base">{selectedBulkReg.mentorPhone}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Number of Students</label>
+                    <p className="text-base font-semibold">{selectedBulkReg.numberOfStudents}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Total Amount</label>
+                    <p className="text-lg font-bold text-primary">{selectedBulkReg.totalAmount}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Payment Status</label>
+                    <Badge className={selectedBulkReg.paymentStatus === "confirmed" 
+                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" 
+                      : "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300"
+                    }>
+                      {selectedBulkReg.paymentStatus}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className="flex justify-center pt-4 gap-3">
+                  <Button
+                    onClick={() => window.open(`/bulk-ticket/${selectedBulkReg.registrationId}`, '_blank')}
+                    data-testid="button-view-all-bulk-tickets-dialog"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    View All Student Tickets
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => setSelectedBulkReg(null)}
+                  >
+                    Close
+                  </Button>
+                </div>
               </motion.div>
             </DialogContent>
           </Dialog>
