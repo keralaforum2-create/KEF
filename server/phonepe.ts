@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 import axios from 'axios';
 
-const PHONEPE_CLIENT_ID = process.env.PHONEPE_CLIENT_ID!;
-const PHONEPE_CLIENT_SECRET = process.env.PHONEPE_CLIENT_SECRET!;
+const PHONEPE_CLIENT_ID = 'SU2512081840541100588125';
+const PHONEPE_CLIENT_SECRET = '69816a38-67b3-47d9-9e5e-291eae89dccd';
 
 const PHONEPE_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://api.phonepe.com/apis/hermes'
