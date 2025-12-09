@@ -122,7 +122,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getRegistrations(): Promise<Registration[]> {
-    return await db.select().from(registrations).orderBy(desc(registrations.createdAt));
+    return await db.select().from(registrations)
+      .where(eq(registrations.paymentStatus, 'paid'))
+      .orderBy(desc(registrations.createdAt));
   }
 
   async createInvestorMentor(insertData: InsertInvestorMentor): Promise<InvestorMentor> {
@@ -173,7 +175,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getBulkRegistrations(): Promise<BulkRegistration[]> {
-    return await db.select().from(bulkRegistrations).orderBy(desc(bulkRegistrations.createdAt));
+    return await db.select().from(bulkRegistrations)
+      .where(eq(bulkRegistrations.paymentStatus, 'paid'))
+      .orderBy(desc(bulkRegistrations.createdAt));
   }
 
   async getBulkRegistrationByBulkRegistrationId(bulkRegistrationId: string): Promise<BulkRegistration | undefined> {
