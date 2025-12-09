@@ -101,3 +101,9 @@ integrations = ["resend:1.0.0", "google-sheet:1.0.0"]
 [userenv]
 
 [userenv.shared]
+NEON_DATABASE_URL = "postgresql://neondb_owner:npg_A4xHkEF8XJ0U@ep-proud-art-a61a8bdj.us-west-2.aws.neon.tech/neondb?sslmode=require"
+NEON_PGHOST = "ep-proud-art-a61a8bdj.us-west-2.aws.neon.tech"
+NEON_PGPASSWORD = "npg_A4xHkEF8XJ0U"
+NEON_PGDATABASE = "neondb"
+NEON_PGUSER = "neondb_owner"
+NEON_PGPORT = "5432"
