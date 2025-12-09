@@ -14,28 +14,43 @@ export default function PaymentStatus() {
   useEffect(() => {
     if (!merchantTransactionId) return;
 
+    let isMounted = true;
+    let timeoutId: NodeJS.Timeout | null = null;
+
     const checkStatus = async () => {
+      if (!isMounted) return;
+      
       try {
         const response = await fetch(`/api/phonepe/status/${merchantTransactionId}`);
         const data = await response.json();
+
+        if (!isMounted) return;
 
         if (data.success && data.status === "SUCCESS") {
           setStatus("success");
           setRegistrationId(data.registrationId);
         } else if (data.status === "PENDING") {
           setStatus("pending");
-          setTimeout(checkStatus, 3000);
+          timeoutId = setTimeout(checkStatus, 3000);
         } else {
           setStatus("failed");
           setError(data.error || "Payment failed");
         }
       } catch (err) {
+        if (!isMounted) return;
         setStatus("failed");
         setError("Failed to verify payment status");
       }
     };
 
     checkStatus();
+
+    return () => {
+      isMounted = false;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [merchantTransactionId]);
 
   const viewTicket = () => {
