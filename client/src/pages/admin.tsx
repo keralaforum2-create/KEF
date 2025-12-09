@@ -304,6 +304,15 @@ export default function Admin() {
                                         View
                                       </Button>
                                       <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => window.open(`/ticket/${reg.registrationId}`, '_blank')}
+                                        data-testid={`button-download-ticket-${reg.id}`}
+                                      >
+                                        <Download className="w-4 h-4 mr-1" />
+                                        Ticket
+                                      </Button>
+                                      <Button
                                         variant="destructive"
                                         size="sm"
                                         onClick={() => {

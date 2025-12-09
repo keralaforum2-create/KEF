@@ -676,19 +676,7 @@ export default function Participate() {
         });
         return;
       }
-      setRegistrationId(regId);
-      const checkinUrl = `${window.location.origin}/checkin/${regId}`;
-      QRCode.toDataURL(checkinUrl, {
-        width: 200,
-        margin: 1,
-        color: {
-          dark: '#000000',
-          light: '#ffffff'
-        }
-      }).then(setQrCode).catch((err: any) => {
-        console.error("Failed to generate QR code:", err);
-        setQrCode("");
-      });
+      setLocation(`/registration-success/${regId}`);
     },
     onError: (error: Error) => {
       toast({

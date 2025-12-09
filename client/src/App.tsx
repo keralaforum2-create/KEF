@@ -17,6 +17,7 @@ import AdminLogin from "@/pages/admin-login";
 import Admin from "@/pages/admin";
 import Ticket from "@/pages/ticket";
 import Checkin from "@/pages/checkin";
+import RegistrationSuccess from "@/pages/registration-success";
 import ContestDetail from "@/pages/contest-detail";
 import Terms from "@/pages/terms";
 import Privacy from "@/pages/privacy";
@@ -58,6 +59,7 @@ function Router() {
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/admin" component={Admin} />
       <Route path="/ticket/:id" component={Ticket} />
+      <Route path="/registration-success/:id" component={RegistrationSuccess} />
       <Route path="/checkin/:id" component={Checkin} />
       <Route path="/terms" component={Terms} />
       <Route path="/privacy" component={Privacy} />
