@@ -3,19 +3,9 @@ import axios from 'axios';
 
 const PHONEPE_CLIENT_ID = 'SU2512081840541100588125';
 const PHONEPE_CLIENT_SECRET = '69816a38-67b3-47d9-9e5e-291eae89dccd';
-
-const PHONEPE_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://api.phonepe.com/apis/hermes'
-  : 'https://api-preprod.phonepe.com/apis/pg-sandbox';
-
-const MERCHANT_ID = process.env.NODE_ENV === 'production' 
-  ? PHONEPE_CLIENT_ID 
-  : 'PGTESTPAYUAT86';
-
-const SALT_KEY = process.env.NODE_ENV === 'production'
-  ? PHONEPE_CLIENT_SECRET
-  : '96434309-7796-489d-8924-ab56988a6076';
-
+const PHONEPE_BASE_URL = 'https://api.phonepe.com/apis/hermes';
+const MERCHANT_ID = 'SU2512081840541100588125';
+const SALT_KEY = '69816a38-67b3-47d9-9e5e-291eae89dccd';
 const SALT_INDEX = '1';
 
 interface PaymentInitiateParams {
