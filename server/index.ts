@@ -5,9 +5,33 @@ import { serveStatic } from "./static";
 import { createServer } from "http";
 import path from "path";
 import fs from "fs";
+import cors from "cors";
 
 const app = express();
 const httpServer = createServer(app);
+
+const allowedOrigins = [
+  'http://localhost:5000',
+  'https://localhost:5000',
+  process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : '',
+  process.env.REPLIT_DOMAINS ? `https://${process.env.REPLIT_DOMAINS.split(',')[0]}` : '',
+].filter(Boolean);
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.some(allowed => origin.startsWith(allowed.replace(/\/$/, '')))) {
+      return callback(null, true);
+    }
+    if (origin.includes('.replit.dev') || origin.includes('.repl.co') || origin.includes('phonepe.com')) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-VERIFY']
+}));
 
 // Setup multer for file uploads
 const uploadDir = path.join(process.cwd(), "uploads");

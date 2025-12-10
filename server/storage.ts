@@ -125,6 +125,18 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(registrations)
       .orderBy(desc(registrations.createdAt));
   }
+  
+  async getAllRegistrations(): Promise<Registration[]> {
+    return await db.select().from(registrations)
+      .orderBy(desc(registrations.createdAt));
+  }
+  
+  async getPaidRegistrations(): Promise<Registration[]> {
+    const paidStatuses = ['paid', 'screenshot_uploaded'];
+    const result = await db.select().from(registrations)
+      .orderBy(desc(registrations.createdAt));
+    return result.filter(r => paidStatuses.includes(r.paymentStatus || ''));
+  }
 
   async createInvestorMentor(insertData: InsertInvestorMentor): Promise<InvestorMentor> {
     const id = randomUUID();

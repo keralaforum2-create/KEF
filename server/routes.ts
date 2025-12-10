@@ -368,9 +368,30 @@ export async function registerRoutes(
     try {
       console.log("PhonePe callback received:", JSON.stringify(req.body));
       
-      const { merchantTransactionId, transactionId, code } = req.body;
+      let merchantTransactionId: string | undefined;
+      let transactionId: string | undefined;
+      let code: string | undefined;
+      
+      if (req.body.response) {
+        try {
+          const decodedResponse = Buffer.from(req.body.response, 'base64').toString('utf-8');
+          const paymentData = JSON.parse(decodedResponse);
+          console.log("Decoded PhonePe callback:", JSON.stringify(paymentData));
+          
+          merchantTransactionId = paymentData.data?.merchantTransactionId;
+          transactionId = paymentData.data?.transactionId;
+          code = paymentData.code;
+        } catch (decodeError) {
+          console.error("Failed to decode callback response:", decodeError);
+        }
+      } else {
+        merchantTransactionId = req.body.merchantTransactionId;
+        transactionId = req.body.transactionId;
+        code = req.body.code;
+      }
       
       if (!merchantTransactionId) {
+        console.error("Missing transaction ID in callback");
         return res.status(400).json({ message: "Missing transaction ID" });
       }
 
@@ -398,6 +419,7 @@ export async function registerRoutes(
         });
       }
 
+      console.log("Callback processed successfully, payment status:", paymentStatus);
       return res.json({ success: true });
     } catch (error) {
       console.error("Error processing PhonePe callback:", error);
@@ -792,6 +814,191 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error serving file:", error);
       res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Alternative PhonePe routes without /api prefix for callback compatibility
+  app.post("/phonepe/initiate", async (req: Request, res) => {
+    try {
+      const { registrationData, amount } = req.body;
+      
+      if (!registrationData || !amount) {
+        return res.status(400).json({ 
+          message: "Registration data and amount are required" 
+        });
+      }
+
+      const result = insertRegistrationSchema.safeParse({
+        ...registrationData,
+        paymentStatus: "pending",
+        paymentScreenshot: "phonepe_payment"
+      });
+      
+      if (!result.success) {
+        const validationError = fromError(result.error);
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          error: validationError.toString() 
+        });
+      }
+
+      const merchantTransactionId = `MT${Date.now()}${randomUUID().slice(0, 8)}`;
+      
+      const registrationWithPayment = {
+        ...result.data,
+        phonepeMerchantTransactionId: merchantTransactionId,
+        paymentAmount: String(amount)
+      };
+
+      const registration = await storage.createRegistration(registrationWithPayment as any);
+
+      const protocol = req.headers['x-forwarded-proto'] || 'https';
+      const host = req.headers['host'] || 'localhost:5000';
+      const baseUrl = `${protocol}://${host}`;
+
+      const paymentResult = await initiatePayment({
+        merchantTransactionId,
+        amount: Number(amount),
+        userId: registration.id,
+        userPhone: registrationData.phone,
+        userName: registrationData.fullName,
+        redirectUrl: `${baseUrl}/payment-status/${merchantTransactionId}`,
+        callbackUrl: `${baseUrl}/api/phonepe/callback`
+      });
+
+      if (!paymentResult.success || !paymentResult.redirectUrl) {
+        await storage.updateRegistrationPayment(registration.id, {
+          paymentStatus: "failed"
+        });
+        return res.status(400).json({ 
+          message: paymentResult.error || "Failed to initiate payment" 
+        });
+      }
+
+      return res.json({
+        success: true,
+        redirectUrl: paymentResult.redirectUrl,
+        registrationId: registration.registrationId,
+        merchantTransactionId
+      });
+    } catch (error) {
+      console.error("Error initiating PhonePe payment:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/phonepe/callback", async (req: Request, res) => {
+    try {
+      console.log("PhonePe callback received (alt route):", JSON.stringify(req.body));
+      
+      let merchantTransactionId: string | undefined;
+      let transactionId: string | undefined;
+      let code: string | undefined;
+      
+      if (req.body.response) {
+        try {
+          const decodedResponse = Buffer.from(req.body.response, 'base64').toString('utf-8');
+          const paymentData = JSON.parse(decodedResponse);
+          console.log("Decoded PhonePe callback:", JSON.stringify(paymentData));
+          
+          merchantTransactionId = paymentData.data?.merchantTransactionId;
+          transactionId = paymentData.data?.transactionId;
+          code = paymentData.code;
+        } catch (decodeError) {
+          console.error("Failed to decode callback response:", decodeError);
+        }
+      } else {
+        merchantTransactionId = req.body.merchantTransactionId;
+        transactionId = req.body.transactionId;
+        code = req.body.code;
+      }
+      
+      if (!merchantTransactionId) {
+        console.error("Missing transaction ID in callback");
+        return res.status(400).json({ message: "Missing transaction ID" });
+      }
+
+      const registration = await storage.getRegistrationByMerchantTransactionId(merchantTransactionId);
+      
+      if (!registration) {
+        console.error("Registration not found for transaction:", merchantTransactionId);
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      const paymentStatus = code === 'PAYMENT_SUCCESS' ? 'paid' : 'failed';
+      
+      await storage.updateRegistrationPayment(registration.id, {
+        phonepeTransactionId: transactionId,
+        paymentStatus
+      });
+
+      if (paymentStatus === 'paid') {
+        const protocol = req.headers['x-forwarded-proto'] || 'https';
+        const host = req.headers['host'] || 'localhost:5000';
+        const baseUrl = `${protocol}://${host}`;
+        
+        sendRegistrationEmails(registration, baseUrl).catch((err) => {
+          console.error('Failed to send registration emails:', err);
+        });
+      }
+
+      console.log("Callback processed successfully, payment status:", paymentStatus);
+      return res.json({ success: true });
+    } catch (error) {
+      console.error("Error processing PhonePe callback:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/phonepe/status/:txnId", async (req: Request, res) => {
+    try {
+      const { txnId } = req.params;
+      
+      const registration = await storage.getRegistrationByMerchantTransactionId(txnId);
+      
+      if (!registration) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      if (registration.paymentStatus === 'paid') {
+        return res.json({
+          success: true,
+          status: 'SUCCESS',
+          registrationId: registration.registrationId
+        });
+      }
+
+      const statusResult = await checkPaymentStatus(txnId);
+
+      if (statusResult.success && statusResult.status === 'SUCCESS') {
+        await storage.updateRegistrationPayment(registration.id, {
+          phonepeTransactionId: statusResult.transactionId,
+          paymentStatus: 'paid'
+        });
+
+        const protocol = req.headers['x-forwarded-proto'] || 'https';
+        const host = req.headers['host'] || 'localhost:5000';
+        const baseUrl = `${protocol}://${host}`;
+        
+        sendRegistrationEmails(registration, baseUrl).catch((err) => {
+          console.error('Failed to send registration emails:', err);
+        });
+
+        return res.json({
+          success: true,
+          status: 'SUCCESS',
+          registrationId: registration.registrationId
+        });
+      }
+
+      return res.json({
+        success: false,
+        status: statusResult.status,
+        error: statusResult.error
+      });
+    } catch (error) {
+      console.error("Error checking payment status:", error);
+      return res.status(500).json({ message: "Internal server error" });
     }
   });
 

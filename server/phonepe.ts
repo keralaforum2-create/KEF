@@ -1,11 +1,16 @@
 import crypto from 'crypto';
 import axios from 'axios';
 
-const PHONEPE_CLIENT_ID = 'SU2512081840541100588125';
-const PHONEPE_CLIENT_SECRET = '69816a38-67b3-47d9-9e5e-291eae89dccd';
-const PHONEPE_BASE_URL = 'https://api.phonepe.com/apis/hermes';
-const MERCHANT_ID = 'SU2512081840541100588125';
-const SALT_KEY = '69816a38-67b3-47d9-9e5e-291eae89dccd';
+const PHONEPE_CLIENT_ID = process.env.PHONEPE_CLIENT_ID || 'SU2512081840541100588125';
+const PHONEPE_CLIENT_SECRET = process.env.PHONEPE_CLIENT_SECRET || '69816a38-67b3-47d9-9e5e-291eae89dccd';
+const PHONEPE_ENVIRONMENT = process.env.PHONEPE_ENVIRONMENT || 'production';
+
+const PHONEPE_BASE_URL = PHONEPE_ENVIRONMENT === 'sandbox' 
+  ? 'https://api-preprod.phonepe.com/apis/pg-sandbox'
+  : 'https://api.phonepe.com/apis/hermes';
+
+const MERCHANT_ID = PHONEPE_CLIENT_ID;
+const SALT_KEY = PHONEPE_CLIENT_SECRET;
 const SALT_INDEX = '1';
 
 interface PaymentInitiateParams {
@@ -40,6 +45,10 @@ function generateChecksum(payload: string, endpoint: string): string {
 
 export async function initiatePayment(params: PaymentInitiateParams): Promise<PaymentInitiateResponse> {
   try {
+    console.log('PhonePe initiation starting with baseUrl:', PHONEPE_BASE_URL);
+    console.log('Redirect URL:', params.redirectUrl);
+    console.log('Callback URL:', params.callbackUrl);
+    
     const payload = {
       merchantId: MERCHANT_ID,
       merchantTransactionId: params.merchantTransactionId,
@@ -58,6 +67,8 @@ export async function initiatePayment(params: PaymentInitiateParams): Promise<Pa
     const endpoint = '/pg/v1/pay';
     const checksum = generateChecksum(base64Payload, endpoint);
 
+    console.log('Making request to:', `${PHONEPE_BASE_URL}${endpoint}`);
+
     const response = await axios.post(
       `${PHONEPE_BASE_URL}${endpoint}`,
       {
@@ -68,9 +79,12 @@ export async function initiatePayment(params: PaymentInitiateParams): Promise<Pa
           'Content-Type': 'application/json',
           'X-VERIFY': checksum,
           'Accept': 'application/json'
-        }
+        },
+        timeout: 30000
       }
     );
+
+    console.log('PhonePe response:', JSON.stringify(response.data));
 
     if (response.data.success && response.data.data?.instrumentResponse?.redirectInfo?.url) {
       return {
@@ -85,6 +99,7 @@ export async function initiatePayment(params: PaymentInitiateParams): Promise<Pa
     };
   } catch (error: any) {
     console.error('PhonePe payment initiation error:', error.response?.data || error.message);
+    console.error('Full error:', error);
     return {
       success: false,
       error: error.response?.data?.message || error.message || 'Failed to initiate payment'
@@ -99,6 +114,8 @@ export async function checkPaymentStatus(merchantTransactionId: string): Promise
     const sha256Hash = crypto.createHash('sha256').update(string).digest('hex');
     const checksum = sha256Hash + '###' + SALT_INDEX;
 
+    console.log('Checking payment status at:', `${PHONEPE_BASE_URL}${endpoint}`);
+
     const response = await axios.get(
       `${PHONEPE_BASE_URL}${endpoint}`,
       {
@@ -106,11 +123,13 @@ export async function checkPaymentStatus(merchantTransactionId: string): Promise
           'Content-Type': 'application/json',
           'X-VERIFY': checksum,
           'X-MERCHANT-ID': MERCHANT_ID
-        }
+        },
+        timeout: 30000
       }
     );
 
     const data = response.data;
+    console.log('Payment status response:', JSON.stringify(data));
     
     if (data.success && data.code === 'PAYMENT_SUCCESS') {
       return {
