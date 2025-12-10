@@ -9,6 +9,16 @@ export function resolveBaseUrl(req: Request): string {
     host = req.headers['host'] as string;
   }
   
+  // Check for Render deployment URL first
+  if (process.env.RENDER_EXTERNAL_URL) {
+    return process.env.RENDER_EXTERNAL_URL;
+  }
+  
+  // Check for custom deployment URL
+  if (process.env.DEPLOYMENT_URL) {
+    return process.env.DEPLOYMENT_URL;
+  }
+  
   if (!host || host.includes('localhost') || host.includes('127.0.0.1')) {
     const replitDomains = process.env.REPLIT_DOMAINS;
     if (replitDomains) {
@@ -25,10 +35,11 @@ export function resolveBaseUrl(req: Request): string {
   
   if (!host) {
     console.warn('Could not determine host, using fallback');
-    host = 'localhost:5000';
+    // Use Render URL as default fallback for production
+    host = 'kef-e3hu.onrender.com';
   }
   
-  if (host.includes('.repl.co') || host.includes('.replit.dev') || host.includes('.replit.app')) {
+  if (host.includes('.repl.co') || host.includes('.replit.dev') || host.includes('.replit.app') || host.includes('.onrender.com')) {
     return `https://${host}`;
   }
   

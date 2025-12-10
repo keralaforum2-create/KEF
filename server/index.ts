@@ -15,6 +15,8 @@ const allowedOrigins: string[] = [
   'https://localhost:5000',
   'http://127.0.0.1:5000',
   'https://127.0.0.1:5000',
+  'https://kef-e3hu.onrender.com',
+  'http://kef-e3hu.onrender.com',
 ];
 
 if (process.env.REPLIT_DEV_DOMAIN) {
@@ -30,6 +32,11 @@ if (process.env.REPLIT_DOMAINS) {
   });
 }
 
+// Add custom deployment domain from environment variable
+if (process.env.DEPLOYMENT_URL) {
+  allowedOrigins.push(process.env.DEPLOYMENT_URL);
+}
+
 app.use(cors({
   origin: function(origin, callback) {
     if (!origin) return callback(null, true);
@@ -41,6 +48,7 @@ app.use(cors({
     if (origin.includes('.replit.dev') || 
         origin.includes('.repl.co') || 
         origin.includes('.replit.app') ||
+        origin.includes('.onrender.com') ||
         origin.includes('phonepe.com')) {
       return callback(null, true);
     }
