@@ -35,7 +35,7 @@ export default function Admin() {
   const [selectedInvestor, setSelectedInvestor] = useState<InvestorMentor | null>(null);
   const [selectedSponsorship, setSelectedSponsorship] = useState<Sponsorship | null>(null);
   const [selectedBulkReg, setSelectedBulkReg] = useState<BulkRegistration | null>(null);
-  const [showOnlyPaid, setShowOnlyPaid] = useState(true);
+  const [showOnlyPaid, setShowOnlyPaid] = useState(false);
   
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
