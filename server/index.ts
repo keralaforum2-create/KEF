@@ -10,27 +10,46 @@ import cors from "cors";
 const app = express();
 const httpServer = createServer(app);
 
-const allowedOrigins = [
+const allowedOrigins: string[] = [
   'http://localhost:5000',
   'https://localhost:5000',
-  process.env.REPLIT_DEV_DOMAIN ? `https://${process.env.REPLIT_DEV_DOMAIN}` : '',
-  process.env.REPLIT_DOMAINS ? `https://${process.env.REPLIT_DOMAINS.split(',')[0]}` : '',
-].filter(Boolean);
+  'http://127.0.0.1:5000',
+  'https://127.0.0.1:5000',
+];
+
+if (process.env.REPLIT_DEV_DOMAIN) {
+  allowedOrigins.push(`https://${process.env.REPLIT_DEV_DOMAIN}`);
+}
+
+if (process.env.REPLIT_DOMAINS) {
+  const domains = process.env.REPLIT_DOMAINS.split(',');
+  domains.forEach(domain => {
+    if (domain.trim()) {
+      allowedOrigins.push(`https://${domain.trim()}`);
+    }
+  });
+}
 
 app.use(cors({
   origin: function(origin, callback) {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.some(allowed => origin.startsWith(allowed.replace(/\/$/, '')))) {
+    
+    if (allowedOrigins.some(allowed => origin === allowed || origin.startsWith(allowed.replace(/\/$/, '')))) {
       return callback(null, true);
     }
-    if (origin.includes('.replit.dev') || origin.includes('.repl.co') || origin.includes('phonepe.com')) {
+    
+    if (origin.includes('.replit.dev') || 
+        origin.includes('.repl.co') || 
+        origin.includes('.replit.app') ||
+        origin.includes('phonepe.com')) {
       return callback(null, true);
     }
+    
     return callback(null, true);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-VERIFY']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-VERIFY', 'X-Forwarded-Proto', 'X-Forwarded-Host']
 }));
 
 // Setup multer for file uploads

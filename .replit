@@ -16,6 +16,10 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
+localPort = 35177
+externalPort = 6800
+
+[[ports]]
 localPort = 41303
 externalPort = 3002
 
@@ -101,3 +105,4 @@ NEON_PGUSER = "neondb_owner"
 NEON_PGPORT = "5432"
 PHONEPE_CLIENT_ID = "SU2512081840541100588125"
 PHONEPE_CLIENT_SECRET = "69816a38-67b3-47d9-9e5e-291eae89dccd"
+PHONEPE_ENVIRONMENT = "sandbox"

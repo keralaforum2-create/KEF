@@ -9,6 +9,7 @@ import fs from "fs";
 import { sendRegistrationEmails } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { randomUUID } from "crypto";
+import { resolveBaseUrl } from "./utils/request";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 
@@ -141,9 +142,7 @@ export async function registerRoutes(
       
       const registration = await storage.createRegistration(result.data);
       
-      const protocol = req.headers['x-forwarded-proto'] || 'https';
-      const host = req.headers['host'] || 'localhost:5000';
-      const baseUrl = `${protocol}://${host}`;
+      const baseUrl = resolveBaseUrl(req);
       
       sendRegistrationEmails(registration, baseUrl).catch((err) => {
         console.error('Failed to send registration emails:', err);
@@ -329,9 +328,7 @@ export async function registerRoutes(
 
       const registration = await storage.createRegistration(registrationWithPayment as any);
 
-      const protocol = req.headers['x-forwarded-proto'] || 'https';
-      const host = req.headers['host'] || 'localhost:5000';
-      const baseUrl = `${protocol}://${host}`;
+      const baseUrl = resolveBaseUrl(req);
 
       const paymentResult = await initiatePayment({
         merchantTransactionId,
@@ -410,9 +407,7 @@ export async function registerRoutes(
       });
 
       if (paymentStatus === 'paid') {
-        const protocol = req.headers['x-forwarded-proto'] || 'https';
-        const host = req.headers['host'] || 'localhost:5000';
-        const baseUrl = `${protocol}://${host}`;
+        const baseUrl = resolveBaseUrl(req);
         
         sendRegistrationEmails(registration, baseUrl).catch((err) => {
           console.error('Failed to send registration emails:', err);
@@ -453,9 +448,7 @@ export async function registerRoutes(
           paymentStatus: 'paid'
         });
 
-        const protocol = req.headers['x-forwarded-proto'] || 'https';
-        const host = req.headers['host'] || 'localhost:5000';
-        const baseUrl = `${protocol}://${host}`;
+        const baseUrl = resolveBaseUrl(req);
         
         sendRegistrationEmails(registration, baseUrl).catch((err) => {
           console.error('Failed to send registration emails:', err);
@@ -566,9 +559,7 @@ export async function registerRoutes(
 
       const bulkRegistration = await storage.createBulkRegistration(registrationWithPayment as any);
 
-      const protocol = req.headers['x-forwarded-proto'] || 'https';
-      const host = req.headers['host'] || 'localhost:5000';
-      const baseUrl = `${protocol}://${host}`;
+      const baseUrl = resolveBaseUrl(req);
 
       const paymentResult = await initiatePayment({
         merchantTransactionId,
@@ -852,9 +843,7 @@ export async function registerRoutes(
 
       const registration = await storage.createRegistration(registrationWithPayment as any);
 
-      const protocol = req.headers['x-forwarded-proto'] || 'https';
-      const host = req.headers['host'] || 'localhost:5000';
-      const baseUrl = `${protocol}://${host}`;
+      const baseUrl = resolveBaseUrl(req);
 
       const paymentResult = await initiatePayment({
         merchantTransactionId,
@@ -933,9 +922,7 @@ export async function registerRoutes(
       });
 
       if (paymentStatus === 'paid') {
-        const protocol = req.headers['x-forwarded-proto'] || 'https';
-        const host = req.headers['host'] || 'localhost:5000';
-        const baseUrl = `${protocol}://${host}`;
+        const baseUrl = resolveBaseUrl(req);
         
         sendRegistrationEmails(registration, baseUrl).catch((err) => {
           console.error('Failed to send registration emails:', err);
@@ -976,9 +963,7 @@ export async function registerRoutes(
           paymentStatus: 'paid'
         });
 
-        const protocol = req.headers['x-forwarded-proto'] || 'https';
-        const host = req.headers['host'] || 'localhost:5000';
-        const baseUrl = `${protocol}://${host}`;
+        const baseUrl = resolveBaseUrl(req);
         
         sendRegistrationEmails(registration, baseUrl).catch((err) => {
           console.error('Failed to send registration emails:', err);
