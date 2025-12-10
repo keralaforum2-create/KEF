@@ -9,7 +9,7 @@ router.post("/pay", async (req, res) => {
   const merchantTransactionId = "TXN" + Date.now();
 
   const redirectUrl = `${process.env.DEPLOYMENT_URL}/payment/success`;
-  const callbackUrl = `${process.env.DEPLOYMENT_URL}/phonepe/callback`;
+  const callbackUrl = `${process.env.DEPLOYMENT_URL}/api/phonepe/callback`;
 
   const result = await initiatePayment({
     merchantTransactionId,
@@ -27,6 +27,16 @@ router.post("/pay", async (req, res) => {
 router.get("/status/:id", async (req, res) => {
   const result = await checkPaymentStatus(req.params.id);
   res.json(result);
+});
+
+router.post("/callback", async (req, res) => {
+  try {
+    console.log("PhonePe callback received:", JSON.stringify(req.body));
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error processing PhonePe callback:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 export default router;

@@ -6,7 +6,7 @@ import { createServer } from "http";
 import path from "path";
 import fs from "fs";
 import cors from "cors";
-import phonepeRoutes from "../routes/phonepe";
+import { registerPhonepeRoutes } from "../routes/index";
 
 const app = express();
 const httpServer = createServer(app);
@@ -117,7 +117,7 @@ app.use((req, _res, next) => {
 app.use("/uploads", express.static(uploadDir));
 
 // PhonePe payment routes
-app.use("/phonepe", phonepeRoutes);
+registerPhonepeRoutes(app);
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
