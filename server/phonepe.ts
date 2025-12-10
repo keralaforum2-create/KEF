@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Hardcoded PhonePe Configuration
 // Change to 'PRODUCTION' and use production credentials when ready for live payments
-const PHONEPE_ENVIRONMENT = 'SANDBOX';
+const PHONEPE_ENVIRONMENT: 'SANDBOX' | 'PRODUCTION' = 'SANDBOX';
 
 // Sandbox credentials (for testing)
 const SANDBOX_MERCHANT_ID = 'PGTESTPAYUAT86';
