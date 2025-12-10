@@ -1,22 +1,29 @@
 import crypto from 'crypto';
 import axios from 'axios';
 
-const PHONEPE_CLIENT_ID = process.env.PHONEPE_CLIENT_ID;
-const PHONEPE_CLIENT_SECRET = process.env.PHONEPE_CLIENT_SECRET;
-const PHONEPE_ENVIRONMENT = process.env.PHONEPE_ENVIRONMENT || 'PRODUCTION';
+// Hardcoded PhonePe Configuration
+// Change to 'PRODUCTION' and use production credentials when ready for live payments
+const PHONEPE_ENVIRONMENT = 'SANDBOX';
 
-if (!PHONEPE_CLIENT_ID || !PHONEPE_CLIENT_SECRET) {
-  console.error('WARNING: PHONEPE_CLIENT_ID or PHONEPE_CLIENT_SECRET not set in environment variables');
-}
+// Sandbox credentials (for testing)
+const SANDBOX_MERCHANT_ID = 'PGTESTPAYUAT86';
+const SANDBOX_SALT_KEY = '96434309-7796-489d-8924-ab56988a6076';
 
-// Production: https://api.phonepe.com/apis/pg
-// Sandbox:    https://api-preprod.phonepe.com/apis/pg-sandbox
+// Production credentials (for live payments)
+const PRODUCTION_MERCHANT_ID = 'SU2512081840541100588125';
+const PRODUCTION_SALT_KEY = '69816a38-67b3-47d9-9e5e-291eae89dccd';
+
+// Use credentials based on environment
+const PHONEPE_CLIENT_ID = PHONEPE_ENVIRONMENT === 'PRODUCTION' ? PRODUCTION_MERCHANT_ID : SANDBOX_MERCHANT_ID;
+const PHONEPE_CLIENT_SECRET = PHONEPE_ENVIRONMENT === 'PRODUCTION' ? PRODUCTION_SALT_KEY : SANDBOX_SALT_KEY;
+
+// API URLs
 const PHONEPE_BASE_URL = PHONEPE_ENVIRONMENT === 'PRODUCTION' 
   ? 'https://api.phonepe.com/apis/pg'
   : 'https://api-preprod.phonepe.com/apis/pg-sandbox';
 
-// Deployment URL for callbacks (no localhost)
-const DEPLOYMENT_URL = process.env.DEPLOYMENT_URL || 'https://kef-e3hu.onrender.com';
+// Deployment URL for callbacks - automatically detect or use Render URL
+const DEPLOYMENT_URL = process.env.DEPLOYMENT_URL || process.env.RENDER_EXTERNAL_URL || 'https://kef-e3hu.onrender.com';
 
 const MERCHANT_ID = PHONEPE_CLIENT_ID;
 const SALT_KEY = PHONEPE_CLIENT_SECRET;
