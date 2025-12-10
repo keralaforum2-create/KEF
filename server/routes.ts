@@ -987,5 +987,138 @@ export async function registerRoutes(
     }
   });
 
+  // Additional PhonePe routes as requested: /phonepe/pay, /phonepe/create
+  const DEPLOYMENT_BASE_URL = process.env.DEPLOYMENT_URL || 'https://kef-e3hu.onrender.com';
+
+  app.post("/phonepe/pay", async (req: Request, res) => {
+    try {
+      const { registrationData, amount } = req.body;
+      
+      if (!registrationData || !amount) {
+        return res.status(400).json({ 
+          message: "Registration data and amount are required" 
+        });
+      }
+
+      const result = insertRegistrationSchema.safeParse({
+        ...registrationData,
+        paymentStatus: "pending",
+        paymentScreenshot: "phonepe_payment"
+      });
+      
+      if (!result.success) {
+        const validationError = fromError(result.error);
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          error: validationError.toString() 
+        });
+      }
+
+      const merchantTransactionId = `MT${Date.now()}${randomUUID().slice(0, 8)}`;
+      
+      const registrationWithPayment = {
+        ...result.data,
+        phonepeMerchantTransactionId: merchantTransactionId,
+        paymentAmount: String(amount)
+      };
+
+      const registration = await storage.createRegistration(registrationWithPayment as any);
+
+      const paymentResult = await initiatePayment({
+        merchantTransactionId,
+        amount: Number(amount),
+        userId: registration.id,
+        userPhone: registrationData.phone,
+        userName: registrationData.fullName,
+        redirectUrl: `${DEPLOYMENT_BASE_URL}/payment-status/${merchantTransactionId}`,
+        callbackUrl: `${DEPLOYMENT_BASE_URL}/phonepe/callback`
+      });
+
+      if (!paymentResult.success || !paymentResult.redirectUrl) {
+        await storage.updateRegistrationPayment(registration.id, {
+          paymentStatus: "failed"
+        });
+        return res.status(400).json({ 
+          message: paymentResult.error || "Failed to initiate payment" 
+        });
+      }
+
+      return res.json({
+        success: true,
+        redirectUrl: paymentResult.redirectUrl,
+        registrationId: registration.registrationId,
+        merchantTransactionId
+      });
+    } catch (error) {
+      console.error("Error initiating PhonePe payment (/phonepe/pay):", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/phonepe/create", async (req: Request, res) => {
+    try {
+      const { registrationData, amount } = req.body;
+      
+      if (!registrationData || !amount) {
+        return res.status(400).json({ 
+          message: "Registration data and amount are required" 
+        });
+      }
+
+      const result = insertRegistrationSchema.safeParse({
+        ...registrationData,
+        paymentStatus: "pending",
+        paymentScreenshot: "phonepe_payment"
+      });
+      
+      if (!result.success) {
+        const validationError = fromError(result.error);
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          error: validationError.toString() 
+        });
+      }
+
+      const merchantTransactionId = `MT${Date.now()}${randomUUID().slice(0, 8)}`;
+      
+      const registrationWithPayment = {
+        ...result.data,
+        phonepeMerchantTransactionId: merchantTransactionId,
+        paymentAmount: String(amount)
+      };
+
+      const registration = await storage.createRegistration(registrationWithPayment as any);
+
+      const paymentResult = await initiatePayment({
+        merchantTransactionId,
+        amount: Number(amount),
+        userId: registration.id,
+        userPhone: registrationData.phone,
+        userName: registrationData.fullName,
+        redirectUrl: `${DEPLOYMENT_BASE_URL}/payment-status/${merchantTransactionId}`,
+        callbackUrl: `${DEPLOYMENT_BASE_URL}/phonepe/callback`
+      });
+
+      if (!paymentResult.success || !paymentResult.redirectUrl) {
+        await storage.updateRegistrationPayment(registration.id, {
+          paymentStatus: "failed"
+        });
+        return res.status(400).json({ 
+          message: paymentResult.error || "Failed to initiate payment" 
+        });
+      }
+
+      return res.json({
+        success: true,
+        redirectUrl: paymentResult.redirectUrl,
+        registrationId: registration.registrationId,
+        merchantTransactionId
+      });
+    } catch (error) {
+      console.error("Error initiating PhonePe payment (/phonepe/create):", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   return httpServer;
 }

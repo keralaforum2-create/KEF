@@ -1,17 +1,30 @@
 import crypto from 'crypto';
 import axios from 'axios';
 
-const PHONEPE_CLIENT_ID = process.env.PHONEPE_CLIENT_ID || 'SU2512081840541100588125';
-const PHONEPE_CLIENT_SECRET = process.env.PHONEPE_CLIENT_SECRET || '69816a38-67b3-47d9-9e5e-291eae89dccd';
-const PHONEPE_ENVIRONMENT = process.env.PHONEPE_ENVIRONMENT || 'production';
+const PHONEPE_CLIENT_ID = process.env.PHONEPE_CLIENT_ID;
+const PHONEPE_CLIENT_SECRET = process.env.PHONEPE_CLIENT_SECRET;
+const PHONEPE_ENVIRONMENT = process.env.PHONEPE_ENVIRONMENT || 'PRODUCTION';
 
-const PHONEPE_BASE_URL = PHONEPE_ENVIRONMENT === 'sandbox' 
-  ? 'https://api-preprod.phonepe.com/apis/pg-sandbox'
-  : 'https://api.phonepe.com/apis/hermes';
+if (!PHONEPE_CLIENT_ID || !PHONEPE_CLIENT_SECRET) {
+  console.error('WARNING: PHONEPE_CLIENT_ID or PHONEPE_CLIENT_SECRET not set in environment variables');
+}
+
+// Production: https://api.phonepe.com/apis/pg
+// Sandbox:    https://api-preprod.phonepe.com/apis/pg-sandbox
+const PHONEPE_BASE_URL = PHONEPE_ENVIRONMENT === 'PRODUCTION' 
+  ? 'https://api.phonepe.com/apis/pg'
+  : 'https://api-preprod.phonepe.com/apis/pg-sandbox';
+
+// Deployment URL for callbacks (no localhost)
+const DEPLOYMENT_URL = process.env.DEPLOYMENT_URL || 'https://kef-e3hu.onrender.com';
 
 const MERCHANT_ID = PHONEPE_CLIENT_ID;
 const SALT_KEY = PHONEPE_CLIENT_SECRET;
 const SALT_INDEX = '1';
+
+console.log('PhonePe Environment:', PHONEPE_ENVIRONMENT);
+console.log('PhonePe Base URL:', PHONEPE_BASE_URL);
+console.log('Deployment URL:', DEPLOYMENT_URL);
 
 interface PaymentInitiateParams {
   merchantTransactionId: string;
