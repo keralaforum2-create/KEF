@@ -691,7 +691,7 @@ export default function Admin() {
                                   data-testid={`row-bulk-${bulk.id}`}
                                 >
                                   <TableCell className="font-mono text-xs">
-                                    {bulk.registrationId.substring(0, 8)}...
+                                    {bulk.bulkRegistrationId?.substring(0, 8) || bulk.id.substring(0, 8)}...
                                   </TableCell>
                                   <TableCell className="font-medium">
                                     {bulk.institutionName}
@@ -732,7 +732,7 @@ export default function Admin() {
                                       <Button
                                         variant="default"
                                         size="sm"
-                                        onClick={() => window.open(`/bulk-ticket/${bulk.registrationId}`, '_blank')}
+                                        onClick={() => window.open(`/bulk-ticket/${bulk.bulkRegistrationId || bulk.id}`, '_blank')}
                                         data-testid={`button-tickets-bulk-${bulk.id}`}
                                       >
                                         <Download className="w-4 h-4 mr-1" />
@@ -1368,7 +1368,7 @@ export default function Admin() {
               >
                 <div className="bg-primary/10 rounded-lg p-4 mb-4 text-center">
                   <p className="text-sm text-muted-foreground mb-1">Registration ID</p>
-                  <p className="text-xl font-bold text-primary font-mono">{selectedBulkReg.registrationId}</p>
+                  <p className="text-xl font-bold text-primary font-mono">{selectedBulkReg.bulkRegistrationId || selectedBulkReg.id}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -1436,7 +1436,7 @@ export default function Admin() {
 
                 <div className="flex justify-center pt-4 gap-3">
                   <Button
-                    onClick={() => window.open(`/bulk-ticket/${selectedBulkReg.registrationId}`, '_blank')}
+                    onClick={() => window.open(`/bulk-ticket/${selectedBulkReg.bulkRegistrationId || selectedBulkReg.id}`, '_blank')}
                     data-testid="button-view-all-bulk-tickets-dialog"
                   >
                     <Download className="w-4 h-4 mr-2" />
