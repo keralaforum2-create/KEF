@@ -57,6 +57,30 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   
+  // Health check endpoint
+  app.get("/api/health", (_req, res) => {
+    return res.json({ 
+      status: "ok", 
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || "development"
+    });
+  });
+
+  // API info endpoint for testing
+  app.get("/api/info", (_req, res) => {
+    return res.json({
+      version: "1.0.0",
+      endpoints: {
+        payment: "/api/payment/create",
+        phonepe: {
+          initiate: "/api/phonepe/initiate",
+          callback: "/api/phonepe/callback",
+          status: "/api/phonepe/status/:merchantTransactionId"
+        }
+      }
+    });
+  });
+
   app.post("/api/admin/login", async (req, res) => {
     try {
       const { password } = req.body;
@@ -291,6 +315,83 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error deleting sponsorship:", error);
       return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Payment create endpoint - alias for phonepe/initiate
+  app.post("/api/payment/create", async (req: Request, res) => {
+    try {
+      console.log("Payment create request received:", JSON.stringify(req.body));
+      const { registrationData, amount } = req.body;
+      
+      if (!registrationData || !amount) {
+        console.error("Missing required fields: registrationData or amount");
+        return res.status(400).json({ 
+          message: "Registration data and amount are required" 
+        });
+      }
+
+      const result = insertRegistrationSchema.safeParse({
+        ...registrationData,
+        paymentStatus: "pending",
+        paymentScreenshot: "phonepe_payment"
+      });
+      
+      if (!result.success) {
+        const validationError = fromError(result.error);
+        console.error("Validation failed:", validationError.toString());
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          error: validationError.toString() 
+        });
+      }
+
+      const merchantTransactionId = `MT${Date.now()}${randomUUID().slice(0, 8)}`;
+      
+      const registrationWithPayment = {
+        ...result.data,
+        phonepeMerchantTransactionId: merchantTransactionId,
+        paymentAmount: String(amount)
+      };
+
+      const registration = await storage.createRegistration(registrationWithPayment as any);
+
+      const baseUrl = resolveBaseUrl(req);
+      console.log("Resolved base URL:", baseUrl);
+
+      const paymentResult = await initiatePayment({
+        merchantTransactionId,
+        amount: Number(amount),
+        userId: registration.id,
+        userPhone: registrationData.phone,
+        userName: registrationData.fullName,
+        redirectUrl: `${baseUrl}/payment-status/${merchantTransactionId}`,
+        callbackUrl: `${baseUrl}/api/phonepe/callback`
+      });
+
+      if (!paymentResult.success || !paymentResult.redirectUrl) {
+        console.error("Payment initiation failed:", paymentResult.error);
+        await storage.updateRegistrationPayment(registration.id, {
+          paymentStatus: "failed"
+        });
+        return res.status(400).json({ 
+          message: paymentResult.error || "Failed to initiate payment" 
+        });
+      }
+
+      console.log("Payment initiated successfully:", merchantTransactionId);
+      return res.json({
+        success: true,
+        redirectUrl: paymentResult.redirectUrl,
+        registrationId: registration.registrationId,
+        merchantTransactionId
+      });
+    } catch (error) {
+      console.error("Error in /api/payment/create:", error);
+      return res.status(500).json({ 
+        message: "Internal server error",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 

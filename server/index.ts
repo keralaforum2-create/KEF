@@ -38,28 +38,16 @@ if (process.env.DEPLOYMENT_URL) {
   allowedOrigins.push(process.env.DEPLOYMENT_URL);
 }
 
+// CORS - Allow all origins for deployment compatibility
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.some(allowed => origin === allowed || origin.startsWith(allowed.replace(/\/$/, '')))) {
-      return callback(null, true);
-    }
-    
-    if (origin.includes('.replit.dev') || 
-        origin.includes('.repl.co') || 
-        origin.includes('.replit.app') ||
-        origin.includes('.onrender.com') ||
-        origin.includes('phonepe.com')) {
-      return callback(null, true);
-    }
-    
-    return callback(null, true);
-  },
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'X-VERIFY', 'X-Forwarded-Proto', 'X-Forwarded-Host']
 }));
+
+// Handle preflight requests
+app.options('*', cors());
 
 // Setup multer for file uploads
 const uploadDir = path.join(process.cwd(), "uploads");

@@ -9,7 +9,33 @@ export function resolveBaseUrl(req: Request): string {
     host = req.headers['host'] as string;
   }
   
-  // Check for Render deployment URL first
+  // In production on Replit, prioritize Replit domains
+  if (process.env.NODE_ENV === 'production') {
+    // Check for Replit deployment domain first
+    const replitDomains = process.env.REPLIT_DOMAINS;
+    if (replitDomains) {
+      const primaryDomain = replitDomains.split(',')[0].trim();
+      if (primaryDomain.includes('.replit.app')) {
+        return `https://${primaryDomain}`;
+      }
+    }
+  }
+  
+  // Check for Replit dev domain
+  if (process.env.REPLIT_DEV_DOMAIN) {
+    return `https://${process.env.REPLIT_DEV_DOMAIN}`;
+  }
+  
+  // Check for Replit domains
+  const replitDomains = process.env.REPLIT_DOMAINS;
+  if (replitDomains) {
+    const primaryDomain = replitDomains.split(',')[0].trim();
+    if (primaryDomain) {
+      return `https://${primaryDomain}`;
+    }
+  }
+  
+  // Check for Render deployment URL
   if (process.env.RENDER_EXTERNAL_URL) {
     return process.env.RENDER_EXTERNAL_URL;
   }
@@ -19,24 +45,9 @@ export function resolveBaseUrl(req: Request): string {
     return process.env.DEPLOYMENT_URL;
   }
   
-  if (!host || host.includes('localhost') || host.includes('127.0.0.1')) {
-    const replitDomains = process.env.REPLIT_DOMAINS;
-    if (replitDomains) {
-      host = replitDomains.split(',')[0].trim();
-    }
-  }
-  
-  if (!host) {
-    const devDomain = process.env.REPLIT_DEV_DOMAIN;
-    if (devDomain) {
-      host = devDomain;
-    }
-  }
-  
   if (!host) {
     console.warn('Could not determine host, using fallback');
-    // Use Render URL as default fallback for production
-    host = 'kef-e3hu.onrender.com';
+    host = 'localhost:5000';
   }
   
   if (host.includes('.repl.co') || host.includes('.replit.dev') || host.includes('.replit.app') || host.includes('.onrender.com')) {
