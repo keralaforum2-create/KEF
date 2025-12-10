@@ -77,8 +77,8 @@ export async function initiatePayment(params: PaymentInitiateParams): Promise<Pa
     };
 
     const base64Payload = Buffer.from(JSON.stringify(payload)).toString('base64');
-    const endpoint = '/pg/v1/pay';
-    const checksum = generateChecksum(base64Payload, endpoint);
+    const endpoint = '/v1/pay';
+    const checksum = generateChecksum(base64Payload, '/pg/v1/pay');
 
     console.log('Making request to:', `${PHONEPE_BASE_URL}${endpoint}`);
 
@@ -122,8 +122,9 @@ export async function initiatePayment(params: PaymentInitiateParams): Promise<Pa
 
 export async function checkPaymentStatus(merchantTransactionId: string): Promise<PaymentStatusResponse> {
   try {
-    const endpoint = `/pg/v1/status/${MERCHANT_ID}/${merchantTransactionId}`;
-    const string = endpoint + SALT_KEY;
+    const checksumEndpoint = `/pg/v1/status/${MERCHANT_ID}/${merchantTransactionId}`;
+    const endpoint = `/v1/status/${MERCHANT_ID}/${merchantTransactionId}`;
+    const string = checksumEndpoint + SALT_KEY;
     const sha256Hash = crypto.createHash('sha256').update(string).digest('hex');
     const checksum = sha256Hash + '###' + SALT_INDEX;
 
