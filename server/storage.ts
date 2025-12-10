@@ -123,7 +123,6 @@ export class DatabaseStorage implements IStorage {
 
   async getRegistrations(): Promise<Registration[]> {
     return await db.select().from(registrations)
-      .where(eq(registrations.paymentStatus, 'paid'))
       .orderBy(desc(registrations.createdAt));
   }
 
@@ -176,7 +175,6 @@ export class DatabaseStorage implements IStorage {
 
   async getBulkRegistrations(): Promise<BulkRegistration[]> {
     return await db.select().from(bulkRegistrations)
-      .where(eq(bulkRegistrations.paymentStatus, 'paid'))
       .orderBy(desc(bulkRegistrations.createdAt));
   }
 
