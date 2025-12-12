@@ -67,6 +67,7 @@ import {
 import normalQrCodeImage from "@assets/199_1764728302342.png";
 import premiumQrCodeImage from "@assets/upi_qr_799.png";
 import businessQuizQrCodeImage from "@assets/99_1764749383754.png";
+import bulkQrCodeImage from "@assets/upi_qr_bulk.png";
 import eventPosterImage from "@assets/Screenshot_2025-12-02_221240_1764693826335.png";
 import ticketBgImage from "@assets/Beige_Black_Minimalist_Event_Music_Festival_Concert_Ticket_1764742314478.png";
 
@@ -195,6 +196,7 @@ export default function Participate() {
   const [isProcessingOnlinePayment, setIsProcessingOnlinePayment] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
   const [registrationMode, setRegistrationMode] = useState<"individual" | "bulk">("individual");
+  const [bulkPaymentMethod, setBulkPaymentMethod] = useState<"qr" | "online">("qr");
   const [bulkFormData, setBulkFormData] = useState({
     institutionName: "",
     mentorName: "",
@@ -202,6 +204,7 @@ export default function Participate() {
     mentorPhone: "",
     numberOfStudents: "5",
     ticketCategory: "normal" as "normal" | "premium",
+    paymentScreenshot: null as File | null,
   });
   const [bulkRegistrationId, setBulkRegistrationId] = useState<string | null>(null);
   const [bulkStudentTickets, setBulkStudentTickets] = useState<Array<{studentRegistrationId: string; studentNumber: string}>>([]);
@@ -403,8 +406,99 @@ export default function Participate() {
       return;
     }
 
-    // Always use online payment for bulk registration
-    await handleBulkPhonePePayment();
+    if (bulkPaymentMethod === "qr") {
+      // Handle QR payment with screenshot upload
+      if (!bulkFormData.paymentScreenshot) {
+        toast({
+          title: "Payment screenshot required",
+          description: "Please upload a screenshot of your payment confirmation.",
+          variant: "destructive",
+        });
+        return;
+      }
+      await handleBulkQrPayment();
+    } else {
+      // Use online payment for bulk registration
+      await handleBulkPhonePePayment();
+    }
+  };
+
+  // Handle bulk QR payment with screenshot
+  const handleBulkQrPayment = async () => {
+    setIsBulkSubmitting(true);
+
+    try {
+      // Upload PDF first if provided
+      let pdfPath = uploadedPdfPath;
+      if (studentsPdfFile && !pdfPath) {
+        const pdfFormData = new FormData();
+        pdfFormData.append('studentsPdf', studentsPdfFile);
+        const pdfResponse = await fetch('/api/upload-pdf', {
+          method: 'POST',
+          body: pdfFormData,
+        });
+        if (pdfResponse.ok) {
+          const pdfResult = await pdfResponse.json();
+          pdfPath = pdfResult.path;
+          setUploadedPdfPath(pdfPath);
+        }
+      }
+
+      const formData = new FormData();
+      formData.append('institutionName', bulkFormData.institutionName);
+      formData.append('mentorName', bulkFormData.mentorName);
+      formData.append('mentorEmail', bulkFormData.mentorEmail);
+      formData.append('mentorPhone', bulkFormData.mentorPhone);
+      formData.append('numberOfStudents', bulkFormData.numberOfStudents);
+      formData.append('ticketCategory', bulkFormData.ticketCategory);
+      if (pdfPath) {
+        formData.append('studentsPdfPath', pdfPath);
+      }
+      if (bulkFormData.paymentScreenshot) {
+        formData.append('paymentScreenshot', bulkFormData.paymentScreenshot);
+      }
+
+      const response = await fetch('/api/bulk-register', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        toast({
+          title: "Registration Successful!",
+          description: `Bulk registration completed. Registration ID: ${result.bulkRegistration.bulkRegistrationId}`,
+        });
+        // Reset form
+        setBulkFormData({
+          institutionName: "",
+          mentorName: "",
+          mentorEmail: "",
+          mentorPhone: "",
+          numberOfStudents: "",
+          ticketCategory: "normal",
+          paymentScreenshot: null,
+        });
+        setStudentsPdfFile(null);
+        setUploadedPdfPath(null);
+      } else {
+        const error = await response.json();
+        toast({
+          title: "Registration Failed",
+          description: error.message || "Something went wrong. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Bulk registration error:", error);
+      toast({
+        title: "Registration Failed",
+        description: "An error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsBulkSubmitting(false);
+    }
   };
 
   // Handle bulk PhonePe payment
@@ -732,6 +826,7 @@ export default function Participate() {
       mentorPhone: "",
       numberOfStudents: "5",
       ticketCategory: "normal",
+      paymentScreenshot: null,
     });
   };
 
@@ -1864,13 +1959,81 @@ export default function Participate() {
                                     <CreditCard className="w-4 h-4" />
                                     Payment Method
                                   </h4>
-                                  <div className="rounded-lg border-2 border-primary bg-primary/10 p-4 mb-4">
-                                    <div className="flex items-center gap-2">
-                                      <Smartphone className="w-5 h-5 text-primary" />
-                                      <span className="font-medium">Pay Online</span>
+                                  <div className="grid grid-cols-2 gap-3 mb-4">
+                                    <div
+                                      onClick={() => setBulkPaymentMethod("qr")}
+                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                                        bulkPaymentMethod === "qr"
+                                          ? "border-primary bg-primary/10"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
+                                      }`}
+                                      data-testid="card-bulk-payment-qr"
+                                    >
+                                      <div className="flex items-center gap-2">
+                                        <QrCode className="w-5 h-5 text-primary" />
+                                        <span className="font-medium">Scan QR</span>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground mt-1">Pay via UPI apps</p>
                                     </div>
-                                    <p className="text-xs text-muted-foreground mt-1">PhonePe, GPay, Paytm, Cards</p>
+                                    <div
+                                      onClick={() => setBulkPaymentMethod("online")}
+                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                                        bulkPaymentMethod === "online"
+                                          ? "border-primary bg-primary/10"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
+                                      }`}
+                                      data-testid="card-bulk-payment-online"
+                                    >
+                                      <div className="flex items-center gap-2">
+                                        <Smartphone className="w-5 h-5 text-primary" />
+                                        <span className="font-medium">Pay Online</span>
+                                      </div>
+                                      <p className="text-xs text-muted-foreground mt-1">PhonePe, GPay, Cards</p>
+                                    </div>
                                   </div>
+
+                                  {bulkPaymentMethod === "qr" && (
+                                    <div className="space-y-4">
+                                      <div className="bg-white p-4 rounded-lg text-center">
+                                        <img 
+                                          src={bulkQrCodeImage} 
+                                          alt="Bulk Registration Payment QR" 
+                                          className="w-48 h-48 mx-auto"
+                                          data-testid="img-bulk-qr-code"
+                                        />
+                                        <p className="text-sm text-muted-foreground mt-2">
+                                          Scan this QR code with any UPI app
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                          Or pay directly to UPI ID: <strong>caliphworldfoundation.9605399676.ibz@icici</strong>
+                                        </p>
+                                      </div>
+                                      <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+                                        <p className="text-sm text-amber-800 dark:text-amber-200 font-medium">
+                                          Amount to Pay: Rs {getBulkTotalAmount().toLocaleString()}/-
+                                        </p>
+                                        <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                                          ({bulkFormData.numberOfStudents || 0} students x Rs {getBulkPricePerStudent()})
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <label className="text-sm font-medium">Upload Payment Screenshot *</label>
+                                        <Input
+                                          type="file"
+                                          accept="image/*"
+                                          onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                              setBulkFormData({...bulkFormData, paymentScreenshot: file as any});
+                                            }
+                                          }}
+                                          className="mt-1"
+                                          data-testid="input-bulk-payment-screenshot"
+                                        />
+                                        <p className="text-xs text-muted-foreground mt-1">Upload screenshot of your payment confirmation</p>
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
 
                                 <Button
@@ -1885,6 +2048,11 @@ export default function Participate() {
                                     <>
                                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                                       Processing...
+                                    </>
+                                  ) : bulkPaymentMethod === "qr" ? (
+                                    <>
+                                      <Send className="w-4 h-4 mr-2" />
+                                      Submit Registration
                                     </>
                                   ) : (
                                     <>
