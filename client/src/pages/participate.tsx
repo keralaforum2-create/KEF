@@ -65,7 +65,7 @@ import {
   RotateIn
 } from "@/lib/animations";
 import normalQrCodeImage from "@assets/199_1764728302342.png";
-import premiumQrCodeImage from "@assets/599_1764728241010.png";
+import premiumQrCodeImage from "@assets/upi_qr_799.png";
 import businessQuizQrCodeImage from "@assets/99_1764749383754.png";
 import eventPosterImage from "@assets/Screenshot_2025-12-02_221240_1764693826335.png";
 import ticketBgImage from "@assets/Beige_Black_Minimalist_Event_Music_Festival_Concert_Ticket_1764742314478.png";
@@ -367,13 +367,13 @@ export default function Participate() {
   // Get payment amount based on ticket type and contest
   const getPaymentAmount = () => {
     if (isBusinessQuiz) return 199;
-    if (ticketCategory === "premium") return 599;
+    if (ticketCategory === "premium") return 799;
     return 199;
   };
 
   // Get bulk registration price per student
   const getBulkPricePerStudent = () => {
-    return bulkFormData.ticketCategory === "premium" ? 599 : 199;
+    return bulkFormData.ticketCategory === "premium" ? 799 : 199;
   };
 
   // Get bulk registration total amount
@@ -1843,7 +1843,7 @@ export default function Participate() {
                                     >
                                       <div className="flex justify-between items-center">
                                         <span className="font-medium">Premium Ticket</span>
-                                        <span className="font-bold text-teal-600">Rs 599/student</span>
+                                        <span className="font-bold text-teal-600">Rs 799/student</span>
                                       </div>
                                     </div>
                                   </div>
@@ -3491,7 +3491,7 @@ export default function Participate() {
                                         <span className="text-sm text-muted-foreground">Price:</span>
                                         <div className="flex items-center gap-2">
                                           <span className="text-gray-400 line-through text-sm">Rs 999/-</span>
-                                          <span className="font-bold text-xl text-teal-600">Rs 599/-</span>
+                                          <span className="font-bold text-xl text-teal-600">Rs 799/-</span>
                                         </div>
                                       </div>
                                     </div>
@@ -3587,7 +3587,7 @@ export default function Participate() {
                             {isBusinessQuiz 
                               ? "Pay ₹199/-"
                               : ticketCategory === "premium" 
-                                ? "Pay ₹599/-"
+                                ? "Pay ₹799/-"
                                 : "Pay ₹199/-"
                             }
                           </p>
