@@ -95,6 +95,11 @@ const registrationSchema = z.object({
   teamMember2Phone: z.string().optional(),
   teamMember2Grade: z.string().optional(),
   teamMember2Age: z.string().optional(),
+  teamMember3Name: z.string().optional(),
+  teamMember3Email: z.string().optional(),
+  teamMember3Phone: z.string().optional(),
+  teamMember3Grade: z.string().optional(),
+  teamMember3Age: z.string().optional(),
   paymentScreenshot: z.any().optional(),
   pitchStartupName: z.string().optional(),
   pitchElevatorPitch: z.string().max(300, "Elevator pitch must be under 50 words").optional(),
@@ -229,6 +234,11 @@ export default function Participate() {
       teamMember2Phone: "",
       teamMember2Grade: "",
       teamMember2Age: "",
+      teamMember3Name: "",
+      teamMember3Email: "",
+      teamMember3Phone: "",
+      teamMember3Grade: "",
+      teamMember3Age: "",
       paymentScreenshot: undefined,
       pitchStartupName: "",
       pitchElevatorPitch: "",
@@ -499,6 +509,11 @@ export default function Participate() {
         teamMember2Phone: formData.teamMember2Phone || "",
         teamMember2Grade: formData.teamMember2Grade || "",
         teamMember2Age: formData.teamMember2Age || "",
+        teamMember3Name: formData.teamMember3Name || "",
+        teamMember3Email: formData.teamMember3Email || "",
+        teamMember3Phone: formData.teamMember3Phone || "",
+        teamMember3Grade: formData.teamMember3Grade || "",
+        teamMember3Age: formData.teamMember3Age || "",
         pitchStartupName: formData.pitchStartupName || "",
         pitchElevatorPitch: formData.pitchElevatorPitch || "",
         pitchProblemStatement: formData.pitchProblemStatement || "",
@@ -571,7 +586,20 @@ export default function Participate() {
       formData.append("collegeYear", data.collegeYear || "");
       formData.append("collegeCourse", data.collegeCourse || "");
       formData.append("teamMember1Name", data.teamMember1Name || "");
+      formData.append("teamMember1Email", data.teamMember1Email || "");
+      formData.append("teamMember1Phone", data.teamMember1Phone || "");
+      formData.append("teamMember1Grade", data.teamMember1Grade || "");
+      formData.append("teamMember1Age", data.teamMember1Age || "");
       formData.append("teamMember2Name", data.teamMember2Name || "");
+      formData.append("teamMember2Email", data.teamMember2Email || "");
+      formData.append("teamMember2Phone", data.teamMember2Phone || "");
+      formData.append("teamMember2Grade", data.teamMember2Grade || "");
+      formData.append("teamMember2Age", data.teamMember2Age || "");
+      formData.append("teamMember3Name", data.teamMember3Name || "");
+      formData.append("teamMember3Email", data.teamMember3Email || "");
+      formData.append("teamMember3Phone", data.teamMember3Phone || "");
+      formData.append("teamMember3Grade", data.teamMember3Grade || "");
+      formData.append("teamMember3Age", data.teamMember3Age || "");
       
       // Handle both File and FileList for payment screenshot
       let screenshotFile: File | undefined;
@@ -2131,6 +2159,95 @@ export default function Participate() {
                                       )}
                                     />
                                   </div>
+                                  
+                                  <div className="bg-background/50 p-4 rounded-lg space-y-4">
+                                    <p className="font-medium text-sm text-primary">Team Member 3</p>
+                                    <FormField
+                                      control={form.control}
+                                      name="teamMember3Name"
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormLabel>Name</FormLabel>
+                                          <FormControl>
+                                            <Input 
+                                              placeholder="Team member 3 name" 
+                                              {...field} 
+                                              data-testid="input-pitch-team-member-3-name"
+                                            />
+                                          </FormControl>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                      <FormField
+                                        control={form.control}
+                                        name="teamMember3Email"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel>Email</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="email"
+                                                placeholder="email@example.com" 
+                                                {...field} 
+                                                data-testid="input-pitch-team-member-3-email"
+                                              />
+                                            </FormControl>
+                                            <FormMessage />
+                                          </FormItem>
+                                        )}
+                                      />
+                                      <FormField
+                                        control={form.control}
+                                        name="teamMember3Phone"
+                                        render={({ field }) => (
+                                          <FormItem>
+                                            <FormLabel>Phone Number</FormLabel>
+                                            <FormControl>
+                                              <Input 
+                                                type="tel"
+                                                placeholder="+91 98765 43210" 
+                                                {...field} 
+                                                data-testid="input-pitch-team-member-3-phone"
+                                              />
+                                            </FormControl>
+                                            <FormMessage />
+                                          </FormItem>
+                                        )}
+                                      />
+                                    </div>
+                                    <FormField
+                                      control={form.control}
+                                      name="teamMember3Grade"
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormLabel>Grade</FormLabel>
+                                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                              <SelectTrigger data-testid="select-pitch-team-member-3-grade">
+                                                <SelectValue placeholder="Select grade" />
+                                              </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                              <SelectItem value="6">Grade 6</SelectItem>
+                                              <SelectItem value="7">Grade 7</SelectItem>
+                                              <SelectItem value="8">Grade 8</SelectItem>
+                                              <SelectItem value="9">Grade 9</SelectItem>
+                                              <SelectItem value="10">Grade 10</SelectItem>
+                                              <SelectItem value="11">Grade 11</SelectItem>
+                                              <SelectItem value="12">Grade 12</SelectItem>
+                                              <SelectItem value="college-1">College 1st Year</SelectItem>
+                                              <SelectItem value="college-2">College 2nd Year</SelectItem>
+                                              <SelectItem value="college-3">College 3rd Year</SelectItem>
+                                              <SelectItem value="college-4">College 4th Year</SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+                                  </div>
                                 </div>
                               </div>
 
@@ -2957,6 +3074,86 @@ export default function Participate() {
                                           placeholder="Age" 
                                           {...field} 
                                           data-testid="input-quiz-team-member-2-age"
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+                              
+                              <div className="bg-background/50 p-4 rounded-lg space-y-4">
+                                <p className="font-medium text-sm text-primary flex items-center gap-2">
+                                  <Users className="w-4 h-4" />
+                                  Team Member 3
+                                </p>
+                                <FormField
+                                  control={form.control}
+                                  name="teamMember3Name"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Name</FormLabel>
+                                      <FormControl>
+                                        <Input 
+                                          placeholder="Team member 3 name" 
+                                          {...field} 
+                                          data-testid="input-quiz-team-member-3-name"
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="teamMember3Email"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            type="email"
+                                            placeholder="email@example.com" 
+                                            {...field} 
+                                            data-testid="input-quiz-team-member-3-email"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <FormField
+                                    control={form.control}
+                                    name="teamMember3Phone"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Phone Number</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            type="tel"
+                                            placeholder="+91 98765 43210" 
+                                            {...field} 
+                                            data-testid="input-quiz-team-member-3-phone"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                                <FormField
+                                  control={form.control}
+                                  name="teamMember3Age"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Age</FormLabel>
+                                      <FormControl>
+                                        <Input 
+                                          type="text"
+                                          placeholder="Age" 
+                                          {...field} 
+                                          data-testid="input-quiz-team-member-3-age"
                                         />
                                       </FormControl>
                                       <FormMessage />
