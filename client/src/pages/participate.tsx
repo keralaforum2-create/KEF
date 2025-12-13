@@ -7,7 +7,6 @@ import { z } from "zod";
 import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import { motion, AnimatePresence } from "framer-motion";
-import { SiGooglepay, SiPhonepe, SiPaytm } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -1974,81 +1973,62 @@ export default function Participate() {
                                     <CreditCard className="w-4 h-4" />
                                     Payment Method
                                   </h4>
-                                  <div className="grid grid-cols-2 gap-3 mb-4">
-                                    <div
-                                      onClick={() => setBulkPaymentMethod("qr")}
-                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
-                                        bulkPaymentMethod === "qr"
-                                          ? "border-primary bg-primary/10"
-                                          : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
-                                      }`}
-                                      data-testid="card-bulk-payment-qr"
-                                    >
-                                      <div className="flex items-center gap-2">
-                                        <QrCode className="w-5 h-5 text-primary" />
-                                        <span className="font-medium">Scan QR</span>
-                                      </div>
-                                      <p className="text-xs text-muted-foreground mt-1">Pay via UPI apps</p>
+
+                                  <div className="space-y-4">
+                                    <div className="bg-white dark:bg-gray-900 p-4 rounded-lg text-center">
+                                      <img 
+                                        src={bulkQrCodeImage} 
+                                        alt="Bulk Registration Payment QR" 
+                                        className="w-48 h-48 mx-auto"
+                                        data-testid="img-bulk-qr-code"
+                                      />
+                                      <p className="text-sm text-muted-foreground mt-2">
+                                        Scan this QR code with any UPI app
+                                      </p>
+                                      <p className="text-xs text-muted-foreground">
+                                        Or pay directly to UPI ID: <strong>caliphworldfoundation.9605399676.ibz@icici</strong>
+                                      </p>
                                     </div>
-                                    <div
-                                      onClick={() => setBulkPaymentMethod("online")}
-                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
-                                        bulkPaymentMethod === "online"
-                                          ? "border-primary bg-primary/10"
-                                          : "border-gray-200 dark:border-gray-700 hover:border-primary/50"
-                                      }`}
-                                      data-testid="card-bulk-payment-online"
-                                    >
-                                      <div className="flex items-center gap-2">
-                                        <Smartphone className="w-5 h-5 text-primary" />
-                                        <span className="font-medium">Pay Online</span>
+                                    
+                                    <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                                      <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-2 flex items-center gap-2">
+                                        <Building2 className="w-4 h-4" />
+                                        Bank Transfer Details
+                                      </h5>
+                                      <div className="text-sm space-y-1 text-blue-700 dark:text-blue-300">
+                                        <p><strong>Account Name:</strong> CALIPH WORLD FOUNDATION</p>
+                                        <p><strong>Bank:</strong> ICICI BANK</p>
+                                        <p><strong>Branch:</strong> MUKKAM BRANCH</p>
+                                        <p><strong>A/C No:</strong> 265405000474</p>
+                                        <p><strong>IFSC:</strong> ICIC0002654</p>
                                       </div>
-                                      <p className="text-xs text-muted-foreground mt-1">PhonePe, GPay, Cards</p>
+                                    </div>
+
+                                    <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+                                      <p className="text-sm text-amber-800 dark:text-amber-200 font-medium">
+                                        Amount to Pay: Rs {getBulkTotalAmount().toLocaleString()}/-
+                                      </p>
+                                      <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                                        ({bulkFormData.numberOfStudents || 0} students x Rs {getBulkPricePerStudent()})
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <label className="text-sm font-medium">Upload Payment Screenshot *</label>
+                                      <Input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                          const file = e.target.files?.[0];
+                                          if (file) {
+                                            setBulkFormData({...bulkFormData, paymentScreenshot: file as any});
+                                          }
+                                        }}
+                                        className="mt-1"
+                                        data-testid="input-bulk-payment-screenshot"
+                                      />
+                                      <p className="text-xs text-muted-foreground mt-1">Upload screenshot of your payment confirmation</p>
                                     </div>
                                   </div>
-
-                                  {bulkPaymentMethod === "qr" && (
-                                    <div className="space-y-4">
-                                      <div className="bg-white p-4 rounded-lg text-center">
-                                        <img 
-                                          src={bulkQrCodeImage} 
-                                          alt="Bulk Registration Payment QR" 
-                                          className="w-48 h-48 mx-auto"
-                                          data-testid="img-bulk-qr-code"
-                                        />
-                                        <p className="text-sm text-muted-foreground mt-2">
-                                          Scan this QR code with any UPI app
-                                        </p>
-                                        <p className="text-xs text-muted-foreground">
-                                          Or pay directly to UPI ID: <strong>caliphworldfoundation.9605399676.ibz@icici</strong>
-                                        </p>
-                                      </div>
-                                      <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
-                                        <p className="text-sm text-amber-800 dark:text-amber-200 font-medium">
-                                          Amount to Pay: Rs {getBulkTotalAmount().toLocaleString()}/-
-                                        </p>
-                                        <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
-                                          ({bulkFormData.numberOfStudents || 0} students x Rs {getBulkPricePerStudent()})
-                                        </p>
-                                      </div>
-                                      <div>
-                                        <label className="text-sm font-medium">Upload Payment Screenshot *</label>
-                                        <Input
-                                          type="file"
-                                          accept="image/*"
-                                          onChange={(e) => {
-                                            const file = e.target.files?.[0];
-                                            if (file) {
-                                              setBulkFormData({...bulkFormData, paymentScreenshot: file as any});
-                                            }
-                                          }}
-                                          className="mt-1"
-                                          data-testid="input-bulk-payment-screenshot"
-                                        />
-                                        <p className="text-xs text-muted-foreground mt-1">Upload screenshot of your payment confirmation</p>
-                                      </div>
-                                    </div>
-                                  )}
                                 </div>
 
                                 <Button
@@ -2059,20 +2039,15 @@ export default function Participate() {
                                   disabled={isBulkSubmitting || isProcessingOnlinePayment}
                                   data-testid="button-bulk-submit"
                                 >
-                                  {isBulkSubmitting || isProcessingOnlinePayment ? (
+                                  {isBulkSubmitting ? (
                                     <>
                                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                                       Processing...
                                     </>
-                                  ) : bulkPaymentMethod === "qr" ? (
+                                  ) : (
                                     <>
                                       <Send className="w-4 h-4 mr-2" />
                                       Submit Registration
-                                    </>
-                                  ) : (
-                                    <>
-                                      <CreditCard className="w-4 h-4 mr-2" />
-                                      Pay Rs {getBulkTotalAmount().toLocaleString()} & Register
                                     </>
                                   )}
                                 </Button>
@@ -3785,161 +3760,58 @@ export default function Participate() {
                               </p>
                             </div>
 
-                            {/* Payment Method Toggle */}
-                            <div className="flex gap-2 mb-6">
+                            {/* QR Code Payment Section */}
+                            <div className="flex flex-col items-center gap-4">
+                              <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm">
+                                <img 
+                                  src={ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage} 
+                                  alt="Payment QR Code" 
+                                  className="w-48 h-48 object-contain"
+                                  data-testid="img-payment-qr"
+                                />
+                              </div>
+
                               <Button
                                 type="button"
-                                variant={paymentMethod === "online" ? "default" : "outline"}
-                                className="flex-1 gap-2"
-                                onClick={() => setPaymentMethod("online")}
-                                data-testid="button-payment-online"
+                                variant="outline"
+                                size="sm"
+                                onClick={handleDownloadQR}
+                                className="gap-2"
+                                data-testid="button-download-qr"
                               >
-                                <ShieldCheck className="w-4 h-4" />
-                                Pay Online
+                                <Download className="w-4 h-4" />
+                                Download QR Code
                               </Button>
-                              <Button
-                                type="button"
-                                variant={paymentMethod === "qr" ? "default" : "outline"}
-                                className="flex-1 gap-2"
-                                onClick={() => setPaymentMethod("qr")}
-                                data-testid="button-payment-qr"
-                              >
-                                <QrCode className="w-4 h-4" />
-                                Scan QR
-                              </Button>
+
+                              <p className="text-xs text-center text-muted-foreground">
+                                Scan this QR code with any UPI app to make payment
+                              </p>
+                              
+                              <div className="w-full mt-2 p-3 rounded-lg bg-muted/50 border text-center">
+                                <p className="text-xs text-muted-foreground mb-1">Or pay directly to UPI ID:</p>
+                                <p className="font-mono text-sm font-medium text-foreground select-all" data-testid="text-upi-id">
+                                  caliphworldfoundation.9605399676.ibz@icici
+                                </p>
+                              </div>
+
+                              <div className="w-full p-4 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800">
+                                <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-2 flex items-center gap-2">
+                                  <Building2 className="w-4 h-4" />
+                                  Bank Transfer Details
+                                </h5>
+                                <div className="text-sm space-y-1 text-blue-700 dark:text-blue-300">
+                                  <p><strong>Account Name:</strong> CALIPH WORLD FOUNDATION</p>
+                                  <p><strong>Bank:</strong> ICICI BANK</p>
+                                  <p><strong>Branch:</strong> MUKKAM BRANCH</p>
+                                  <p><strong>A/C No:</strong> 265405000474</p>
+                                  <p><strong>IFSC:</strong> ICIC0002654</p>
+                                </div>
+                              </div>
                             </div>
-
-                            {paymentMethod === "online" ? (
-                              /* Online Payment Section */
-                              <div className="flex flex-col items-center gap-4">
-                                <div className="w-full p-4 rounded-lg bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800">
-                                  <div className="flex items-center gap-3 mb-3">
-                                    <SiPhonepe className="w-8 h-8" style={{ color: '#5F259F' }} />
-                                    <div>
-                                      <p className="font-semibold text-foreground">PhonePe Business</p>
-                                      <p className="text-xs text-muted-foreground">Secure online payment</p>
-                                    </div>
-                                  </div>
-                                  <ul className="text-xs text-muted-foreground space-y-1 mb-4">
-                                    <li className="flex items-center gap-2">
-                                      <CheckCircle className="w-3 h-3 text-green-500" />
-                                      Instant payment confirmation
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                      <CheckCircle className="w-3 h-3 text-green-500" />
-                                      No screenshot upload needed
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                      <CheckCircle className="w-3 h-3 text-green-500" />
-                                      UPI, Cards, Net Banking supported
-                                    </li>
-                                  </ul>
-                                  <Button
-                                    type="button"
-                                    className="w-full gap-2"
-                                    style={{ backgroundColor: '#5F259F' }}
-                                    onClick={handlePhonePePayment}
-                                    disabled={isProcessingOnlinePayment}
-                                    data-testid="button-pay-with-phonepe"
-                                  >
-                                    {isProcessingOnlinePayment ? (
-                                      <>
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                        Processing...
-                                      </>
-                                    ) : (
-                                      <>
-                                        <SiPhonepe className="w-4 h-4" />
-                                        Pay ₹{getPaymentAmount()} with PhonePe
-                                      </>
-                                    )}
-                                  </Button>
-                                </div>
-                                <p className="text-xs text-center text-muted-foreground">
-                                  You will be redirected to PhonePe to complete payment securely
-                                </p>
-                              </div>
-                            ) : (
-                              /* QR Code Payment Section */
-                              <div className="flex flex-col items-center gap-4">
-                                <div className="grid grid-cols-2 gap-3 w-full mb-2">
-                                  <a
-                                    href={`tez://upi/pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
-                                    className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                    data-testid="button-gpay"
-                                  >
-                                    <SiGooglepay className="w-6 h-6" style={{ color: '#4285F4' }} />
-                                    <span className="text-sm font-medium">GPay</span>
-                                  </a>
-                                  <a
-                                    href={`phonepe://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
-                                    className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                    data-testid="button-phonepe-upi"
-                                  >
-                                    <SiPhonepe className="w-6 h-6" style={{ color: '#5F259F' }} />
-                                    <span className="text-sm font-medium">PhonePe</span>
-                                  </a>
-                                  <a
-                                    href={`paytmmp://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
-                                    className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                    data-testid="button-paytm"
-                                  >
-                                    <SiPaytm className="w-6 h-6" style={{ color: '#00BAF2' }} />
-                                    <span className="text-sm font-medium">Paytm</span>
-                                  </a>
-                                  <a
-                                    href={`upi://pay?pa=caliphworldfoundation.9605399676.ibz@icici&pn=Kerala%20Startup%20Fest&am=${getPaymentAmount()}&cu=INR`}
-                                    className="flex items-center justify-center gap-2 p-3 rounded-lg border bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                                    data-testid="button-other-upi"
-                                  >
-                                    <Smartphone className="w-6 h-6 text-primary" />
-                                    <span className="text-sm font-medium">Other UPI</span>
-                                  </a>
-                                </div>
-
-                                <div className="flex items-center gap-3 w-full my-2">
-                                  <div className="flex-1 h-px bg-border"></div>
-                                  <span className="text-xs text-muted-foreground">or scan QR</span>
-                                  <div className="flex-1 h-px bg-border"></div>
-                                </div>
-
-                                <div className="bg-white p-4 rounded-lg shadow-sm">
-                                  <img 
-                                    src={ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage} 
-                                    alt="Payment QR Code" 
-                                    className="w-48 h-48 object-contain"
-                                    data-testid="img-payment-qr"
-                                  />
-                                </div>
-
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={handleDownloadQR}
-                                  className="gap-2"
-                                  data-testid="button-download-qr"
-                                >
-                                  <Download className="w-4 h-4" />
-                                  Download QR Code
-                                </Button>
-
-                                <p className="text-xs text-center text-muted-foreground">
-                                  Scan this QR code with any UPI app to make payment
-                                </p>
-                                
-                                <div className="w-full mt-2 p-3 rounded-lg bg-muted/50 border text-center">
-                                  <p className="text-xs text-muted-foreground mb-1">Or pay directly to UPI ID:</p>
-                                  <p className="font-mono text-sm font-medium text-foreground select-all" data-testid="text-upi-id">
-                                    caliphworldfoundation.9605399676.ibz@icici
-                                  </p>
-                                </div>
-                              </div>
-                            )}
                           </div>
 
-                          {/* Only show screenshot upload for QR payment method */}
-                          {paymentMethod === "qr" && (
+                          {/* Screenshot upload section */}
+                          {(
                             <div className="w-full max-w-md space-y-4">
                               {/* Warning about screenshot manipulation */}
                               <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700">
