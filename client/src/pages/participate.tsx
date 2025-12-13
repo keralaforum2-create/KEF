@@ -3872,7 +3872,7 @@ export default function Participate() {
                                   <FormItem>
                                     <FormLabel className="flex items-center gap-2">
                                       <User className="w-4 h-4" />
-                                      Upload Your Photo (Optional)
+                                      Upload Your Photo <span className="text-destructive">*</span>
                                     </FormLabel>
                                     <FormControl>
                                       <div className="space-y-3">
@@ -3903,7 +3903,7 @@ export default function Participate() {
                                       </div>
                                     </FormControl>
                                     <p className="text-xs text-muted-foreground mt-1">
-                                      Upload a clear photo of yourself for your event badge (Optional)
+                                      Upload a clear photo of yourself for your event badge (Required)
                                     </p>
                                     <FormMessage />
                                   </FormItem>
