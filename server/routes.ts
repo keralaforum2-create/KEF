@@ -176,9 +176,15 @@ export async function registerRoutes(
         message: "Registration successful", 
         registration 
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating registration:", error);
-      return res.status(500).json({ message: "Internal server error" });
+      const errorMessage = error?.message || "Internal server error";
+      const isDbError = errorMessage.includes("relation") || errorMessage.includes("database") || errorMessage.includes("connection");
+      return res.status(500).json({ 
+        message: isDbError 
+          ? "Database connection error. Please check your database configuration." 
+          : `Registration failed: ${errorMessage}`
+      });
     }
   });
 
