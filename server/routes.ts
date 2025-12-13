@@ -48,6 +48,7 @@ const upload = multer({
 
 const uploadFields = upload.fields([
   { name: 'paymentScreenshot', maxCount: 1 },
+  { name: 'profilePhoto', maxCount: 1 },
   { name: 'pitchSupportingFiles', maxCount: 1 },
   { name: 'studentsPdf', maxCount: 1 }
 ]);
@@ -150,6 +151,7 @@ export async function registerRoutes(
       const data = {
         ...req.body,
         paymentScreenshot: `/uploads/${files.paymentScreenshot[0].filename}`,
+        profilePhoto: files?.profilePhoto?.[0] ? `/uploads/${files.profilePhoto[0].filename}` : undefined,
         pitchSupportingFiles: files?.pitchSupportingFiles?.[0] ? `/uploads/${files.pitchSupportingFiles[0].filename}` : undefined,
         paymentStatus: "screenshot_uploaded",
       };

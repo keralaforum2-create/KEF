@@ -52,7 +52,9 @@ import {
   CreditCard,
   Loader2,
   ShieldCheck,
-  Smartphone
+  Smartphone,
+  AlertTriangle,
+  User
 } from "lucide-react";
 
 import {
@@ -102,6 +104,7 @@ const registrationSchema = z.object({
   teamMember3Grade: z.string().optional(),
   teamMember3Age: z.string().optional(),
   paymentScreenshot: z.any().optional(),
+  profilePhoto: z.any().optional(),
   pitchStartupName: z.string().optional(),
   pitchElevatorPitch: z.string().max(300, "Elevator pitch must be under 50 words").optional(),
   pitchProblemStatement: z.string().optional(),
@@ -243,6 +246,7 @@ export default function Participate() {
       teamMember3Grade: "",
       teamMember3Age: "",
       paymentScreenshot: undefined,
+      profilePhoto: undefined,
       pitchStartupName: "",
       pitchElevatorPitch: "",
       pitchProblemStatement: "",
@@ -704,6 +708,17 @@ export default function Participate() {
       }
       if (screenshotFile) {
         formData.append("paymentScreenshot", screenshotFile);
+      }
+
+      // Handle profile photo
+      let profilePhotoFile: File | undefined;
+      if (data.profilePhoto instanceof File) {
+        profilePhotoFile = data.profilePhoto;
+      } else if (data.profilePhoto instanceof FileList && data.profilePhoto.length > 0) {
+        profilePhotoFile = data.profilePhoto[0];
+      }
+      if (profilePhotoFile) {
+        formData.append("profilePhoto", profilePhotoFile);
       }
 
       formData.append("pitchStartupName", data.pitchStartupName || "");
@@ -3926,6 +3941,21 @@ export default function Participate() {
                           {/* Only show screenshot upload for QR payment method */}
                           {paymentMethod === "qr" && (
                             <div className="w-full max-w-md space-y-4">
+                              {/* Warning about screenshot manipulation */}
+                              <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700">
+                                <div className="flex items-start gap-2">
+                                  <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                                  <div>
+                                    <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+                                      Warning: Do not manipulate payment screenshots
+                                    </p>
+                                    <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
+                                      Submitting fake or edited payment screenshots will result in immediate ban and your registration will be cancelled. All payments are verified manually.
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+
                               <FormField
                                 control={form.control}
                                 name="paymentScreenshot"
@@ -3960,6 +3990,52 @@ export default function Participate() {
                                     </FormControl>
                                     <p className="text-xs text-muted-foreground mt-1">
                                       Upload a screenshot of your payment confirmation (Required)
+                                    </p>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+
+                              {/* Profile Photo Upload */}
+                              <FormField
+                                control={form.control}
+                                name="profilePhoto"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center gap-2">
+                                      <User className="w-4 h-4" />
+                                      Upload Your Photo (Optional)
+                                    </FormLabel>
+                                    <FormControl>
+                                      <div className="space-y-3">
+                                        <Input
+                                          type="file"
+                                          accept="image/*"
+                                          onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                              form.setValue("profilePhoto", file);
+                                            }
+                                          }}
+                                          className="cursor-pointer"
+                                          data-testid="input-profile-photo"
+                                        />
+                                        {form.watch("profilePhoto") && (
+                                          <motion.div 
+                                            className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800"
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                          >
+                                            <CheckCircle className="w-4 h-4 text-blue-600" />
+                                            <span className="text-sm text-blue-700 dark:text-blue-400">
+                                              Photo uploaded: {(form.watch("profilePhoto") as File)?.name}
+                                            </span>
+                                          </motion.div>
+                                        )}
+                                      </div>
+                                    </FormControl>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                      Upload a clear photo of yourself for your event badge (Optional)
                                     </p>
                                     <FormMessage />
                                   </FormItem>
