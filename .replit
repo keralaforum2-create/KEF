@@ -49,13 +49,8 @@ integrations = ["resend:1.0.0", "google-sheet:1.0.0"]
 [userenv]
 
 [userenv.shared]
-NEON_DATABASE_URL = "postgresql://neondb_owner:npg_A4xHkEF8XJOU@ep-proud-art-a61a8bdj.us-west-2.aws.neon.tech/neondb?sslmode=require"
-NEON_PGHOST = "ep-proud-art-a61a8bdj.us-west-2.aws.neon.tech"
-NEON_PGPASSWORD = "npg_A4xHkEF8XJOU"
-NEON_PGDATABASE = "neondb"
-NEON_PGUSER = "neondb_owner"
-NEON_PGPORT = "5432"
 PHONEPE_CLIENT_ID = "PGTESTPAYUAT86"
 PHONEPE_CLIENT_SECRET = "96434309-7796-489d-8924-ab56988a6076"
 PHONEPE_ENVIRONMENT = "SANDBOX"
 DEPLOYMENT_URL = "https://a87b309a-6b4f-4068-9592-39c629deb694-00-rtft164bhexf.riker.replit.dev"
+SUPABASE_DATABASE_URL = "postgresql://postgres.imwnftzbdkolckyiywgd:keralastartupfest@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres"
