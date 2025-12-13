@@ -52,21 +52,21 @@ export default function Partners() {
                   className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6"
                   whileHover={{ rotate: 10, scale: 1.1 }}
                 >
-                  <Users className="w-7 h-7 text-primary" />
+                  <TrendingUp className="w-7 h-7 text-primary" />
                 </motion.div>
-                <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-6" data-testid="text-investor-mentor">
-                  Join as Investor or Mentor
+                <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-6" data-testid="text-investor">
+                  Join as Investor
                 </h2>
                 <p className="text-muted-foreground mb-6">
-                  Kerala Startup Fest is a great place to meet fresh minds, early-stage ideas and future founders.
+                  Kerala Startup Fest is a great place to discover promising startups and early-stage ideas with high potential.
                 </p>
-                <p className="text-muted-foreground mb-6">As an investor or mentor, you can:</p>
+                <p className="text-muted-foreground mb-6">As an investor, you can:</p>
                 <ul className="space-y-4 mb-8">
                   {[
-                    "Discover new ideas early",
-                    "Guide young entrepreneurs",
-                    "Support promising startups with funding, time or networks",
-                    "Be part of a long-term startup movement in Kerala"
+                    "Discover new investment opportunities early",
+                    "Connect with passionate young founders",
+                    "Support promising startups with funding",
+                    "Build your portfolio in Kerala's startup ecosystem"
                   ].map((item, index) => (
                     <motion.li 
                       key={index}
@@ -81,24 +81,14 @@ export default function Partners() {
                     </motion.li>
                   ))}
                 </ul>
-                <div className="flex flex-wrap gap-4">
-                  <Link href="/contact">
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                      <Button className="font-semibold" data-testid="button-apply-investor">
-                        Join as Investor
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </motion.div>
-                  </Link>
-                  <Link href="/contact">
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                      <Button variant="outline" className="font-semibold" data-testid="button-apply-mentor">
-                        Join as Mentor
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </motion.div>
-                  </Link>
-                </div>
+                <Link href="/contact">
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                    <Button className="font-semibold" data-testid="button-apply-investor">
+                      Apply as Investor
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </motion.div>
+                </Link>
               </div>
             </ScrollFadeLeft>
             <ScrollFadeRight>
@@ -129,12 +119,64 @@ export default function Partners() {
               >
                 <img 
                   src={partnershipImage} 
-                  alt="Partnership and Investment" 
+                  alt="Mentorship" 
                   className="w-full h-full rounded-3xl object-cover shadow-lg"
                 />
               </motion.div>
             </ScrollFadeLeft>
             <ScrollFadeRight className="order-1 lg:order-2">
+              <div>
+                <motion.div 
+                  className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6"
+                  whileHover={{ rotate: 10, scale: 1.1 }}
+                >
+                  <Users className="w-7 h-7 text-primary" />
+                </motion.div>
+                <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-6" data-testid="text-mentor">
+                  Join as Mentor
+                </h2>
+                <p className="text-muted-foreground mb-6">
+                  Share your expertise and guide the next generation of entrepreneurs at Kerala Startup Fest.
+                </p>
+                <p className="text-muted-foreground mb-6">As a mentor, you can:</p>
+                <ul className="space-y-4 mb-8">
+                  {[
+                    "Guide young entrepreneurs with your experience",
+                    "Help startups refine their ideas and strategies",
+                    "Build meaningful connections with future founders",
+                    "Be part of a long-term startup movement in Kerala"
+                  ].map((item, index) => (
+                    <motion.li 
+                      key={index}
+                      className="flex items-start gap-3"
+                      initial={{ opacity: 0, x: 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span>{item}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+                <Link href="/contact">
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                    <Button className="font-semibold" data-testid="button-apply-mentor">
+                      Apply as Mentor
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </motion.div>
+                </Link>
+              </div>
+            </ScrollFadeRight>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-card">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <ScrollFadeLeft>
               <div>
                 <motion.div 
                   className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6"
@@ -179,12 +221,25 @@ export default function Partners() {
                   </motion.div>
                 </Link>
               </div>
+            </ScrollFadeLeft>
+            <ScrollFadeRight>
+              <motion.div 
+                className="relative"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img 
+                  src={partnershipImage} 
+                  alt="Partnership and Investment" 
+                  className="w-full h-full rounded-3xl object-cover shadow-lg"
+                />
+              </motion.div>
             </ScrollFadeRight>
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-card">
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-12" data-testid="text-why-partner">
