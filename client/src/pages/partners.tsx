@@ -24,6 +24,7 @@ import {
 } from "@/lib/animations";
 import investorImage from "@assets/Building Strong Relationships for Business Growth with a B2B PR_1764503880578.jpg";
 import partnershipImage from "@assets/stock_images/business_partnership_7f868df6.jpg";
+import mentorImage from "@assets/stock_images/mentor_guiding_young_1b72b370.jpg";
 
 export default function Partners() {
   return (
@@ -118,7 +119,7 @@ export default function Partners() {
                 transition={{ duration: 0.3 }}
               >
                 <img 
-                  src={partnershipImage} 
+                  src={mentorImage} 
                   alt="Mentorship" 
                   className="w-full h-full rounded-3xl object-cover shadow-lg"
                 />
