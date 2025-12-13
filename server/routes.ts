@@ -6,7 +6,7 @@ import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { sendRegistrationEmails } from "./email";
+import { sendRegistrationEmails, sendContactNotification } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { randomUUID } from "crypto";
 import { resolveBaseUrl } from "./utils/request";
@@ -117,6 +117,19 @@ export async function registerRoutes(
       }
       
       const contact = await storage.createContact(result.data);
+      
+      // Send email notification to admin
+      sendContactNotification({
+        id: contact.id.toString(),
+        name: contact.name,
+        email: contact.email,
+        phone: contact.phone,
+        partnerType: contact.userType,
+        message: contact.message,
+      }).catch((err) => {
+        console.error("Failed to send contact notification email:", err);
+      });
+      
       return res.status(201).json({ 
         message: "Contact form submitted successfully", 
         contact 

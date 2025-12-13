@@ -356,6 +356,86 @@ function generatePitchIdeaEmailHtml(data: RegistrationData): string {
   `;
 }
 
+interface ContactData {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  partnerType: string;
+  message: string;
+}
+
+function generateContactNotificationHtml(data: ContactData): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>New Contact Form Submission - Kerala Startup Fest 2026</title>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
+      <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-radius: 16px; padding: 30px; text-align: center; color: white;">
+          <h1 style="margin: 0; font-size: 24px; font-weight: bold;">New Contact Form Submission</h1>
+          <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">Kerala Startup Fest 2026</p>
+        </div>
+        
+        <div style="background: white; border-radius: 16px; padding: 30px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <div style="background: #f0fdf4; border: 2px solid #86efac; border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 20px;">
+            <p style="margin: 0; font-size: 16px; color: #166534;">
+              <strong>Partner Type:</strong> ${data.partnerType}
+            </p>
+          </div>
+          
+          <h3 style="color: #333; margin: 0 0 15px 0; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Contact Details</h3>
+          
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Name:</strong> ${data.name}</td></tr>
+            <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Email:</strong> <a href="mailto:${data.email}" style="color: #059669;">${data.email}</a></td></tr>
+            ${data.phone ? `<tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Phone:</strong> ${data.phone}</td></tr>` : ''}
+          </table>
+          
+          <h3 style="color: #333; margin: 20px 0 15px 0; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Message</h3>
+          <div style="background: #f9fafb; border-radius: 8px; padding: 15px;">
+            <p style="margin: 0; white-space: pre-wrap;">${data.message}</p>
+          </div>
+        </div>
+        
+        <div style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+          <p style="margin: 0;">This is an automated notification from Kerala Startup Fest 2026</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+export async function sendContactNotification(data: ContactData): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { client: resend, fromEmail } = await getResendClient();
+    
+    console.log(`Sending contact notification to admin: ${ADMIN_EMAIL}`);
+    
+    const adminEmailResult = await resend.emails.send({
+      from: fromEmail,
+      to: ADMIN_EMAIL,
+      subject: `New Contact: ${data.name} - ${data.partnerType}`,
+      html: generateContactNotificationHtml(data),
+    });
+    console.log('Contact notification email result:', JSON.stringify(adminEmailResult, null, 2));
+    
+    console.log(`Contact notification sent successfully for ${data.name}`);
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending contact notification email:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to send contact notification' 
+    };
+  }
+}
+
 export async function sendRegistrationEmails(data: RegistrationData, baseUrl: string): Promise<{ success: boolean; error?: string }> {
   try {
     const { client: resend, fromEmail } = await getResendClient();
