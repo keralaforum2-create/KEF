@@ -1,5 +1,12 @@
 import crypto from 'crypto';
 import axios from 'axios';
+import https from 'https';
+
+// Create HTTPS agent with proper certificate handling for production environments
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: true, // Keep SSL verification enabled
+  keepAlive: true,
+});
 
 // Hardcoded PhonePe Configuration
 // Change to 'PRODUCTION' and use production credentials when ready for live payments
@@ -100,7 +107,8 @@ export async function initiatePayment(params: PaymentInitiateParams): Promise<Pa
           'X-VERIFY': checksum,
           'Accept': 'application/json'
         },
-        timeout: 30000
+        timeout: 30000,
+        httpsAgent
       }
     );
 
@@ -144,7 +152,8 @@ export async function checkPaymentStatus(merchantTransactionId: string): Promise
           'X-VERIFY': checksum,
           'X-MERCHANT-ID': MERCHANT_ID
         },
-        timeout: 30000
+        timeout: 30000,
+        httpsAgent
       }
     );
 
