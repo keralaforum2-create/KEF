@@ -103,7 +103,9 @@ const registrationSchema = z.object({
   teamMember3Grade: z.string().optional(),
   teamMember3Age: z.string().optional(),
   paymentScreenshot: z.any().optional(),
-  profilePhoto: z.any().optional(),
+  profilePhoto: z.any().refine((file) => file instanceof File, {
+    message: "Profile photo is required",
+  }),
   pitchStartupName: z.string().optional(),
   pitchElevatorPitch: z.string().max(300, "Elevator pitch must be under 50 words").optional(),
   pitchProblemStatement: z.string().optional(),
@@ -709,15 +711,9 @@ export default function Participate() {
         formData.append("paymentScreenshot", screenshotFile);
       }
 
-      // Handle profile photo
-      let profilePhotoFile: File | undefined;
+      // Handle profile photo (required field)
       if (data.profilePhoto instanceof File) {
-        profilePhotoFile = data.profilePhoto;
-      } else if (data.profilePhoto instanceof FileList && data.profilePhoto.length > 0) {
-        profilePhotoFile = data.profilePhoto[0];
-      }
-      if (profilePhotoFile) {
-        formData.append("profilePhoto", profilePhotoFile);
+        formData.append("profilePhoto", data.profilePhoto);
       }
 
       formData.append("pitchStartupName", data.pitchStartupName || "");
