@@ -81,14 +81,24 @@ export default function Partners() {
                     </motion.li>
                   ))}
                 </ul>
-                <Link href="/contact">
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                    <Button className="font-semibold" data-testid="button-apply-investor">
-                      Apply as Investor / Mentor
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </motion.div>
-                </Link>
+                <div className="flex flex-wrap gap-4">
+                  <Link href="/contact">
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                      <Button className="font-semibold" data-testid="button-apply-investor">
+                        Join as Investor
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </motion.div>
+                  </Link>
+                  <Link href="/contact">
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                      <Button variant="outline" className="font-semibold" data-testid="button-apply-mentor">
+                        Join as Mentor
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </motion.div>
+                  </Link>
+                </div>
               </div>
             </ScrollFadeLeft>
             <ScrollFadeRight>
