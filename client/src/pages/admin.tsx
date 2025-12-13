@@ -46,27 +46,27 @@ export default function Admin() {
 
   const { data: registrations, isLoading: loadingRegistrations } = useQuery<Registration[]>({
     queryKey: ["/api/registrations"],
-    refetchInterval: 5000,
+    refetchInterval: 2000,
   });
 
   const { data: contacts, isLoading: loadingContacts } = useQuery<Contact[]>({
     queryKey: ["/api/contacts"],
-    refetchInterval: 5000,
+    refetchInterval: 2000,
   });
 
   const { data: investorMentors, isLoading: loadingInvestors } = useQuery<InvestorMentor[]>({
     queryKey: ["/api/investor-mentors"],
-    refetchInterval: 5000,
+    refetchInterval: 2000,
   });
 
   const { data: sponsorships, isLoading: loadingSponsorships } = useQuery<Sponsorship[]>({
     queryKey: ["/api/sponsorships"],
-    refetchInterval: 5000,
+    refetchInterval: 2000,
   });
 
   const { data: bulkRegistrations, isLoading: loadingBulk } = useQuery<BulkRegistration[]>({
     queryKey: ["/api/bulk-registrations"],
-    refetchInterval: 5000,
+    refetchInterval: 2000,
   });
 
   const queryClient = useQueryClient();
