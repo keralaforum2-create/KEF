@@ -276,6 +276,7 @@ export default function Admin() {
                           <Table>
                             <TableHeader>
                               <TableRow>
+                                <TableHead>Photo</TableHead>
                                 <TableHead>Payment Method</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Registration ID</TableHead>
@@ -298,6 +299,20 @@ export default function Admin() {
                                   className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ${reg.paymentStatus === 'failed' || reg.paymentStatus === 'pending' ? 'bg-amber-50/50 dark:bg-amber-900/10' : ''}`}
                                   data-testid={`row-registration-${reg.id}`}
                                 >
+                                  <TableCell>
+                                    {reg.profilePhoto ? (
+                                      <img 
+                                        src={reg.profilePhoto} 
+                                        alt={reg.fullName}
+                                        className="w-8 h-8 rounded-full object-cover border border-border"
+                                        data-testid={`img-profile-thumbnail-${reg.id}`}
+                                      />
+                                    ) : (
+                                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                                        <Users className="w-4 h-4 text-muted-foreground" />
+                                      </div>
+                                    )}
+                                  </TableCell>
                                   <TableCell>
                                     <Badge className={paymentInfo.method === 'Pay Online' 
                                       ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' 
@@ -742,7 +757,7 @@ export default function Admin() {
                                         <Button
                                           variant="outline"
                                           size="sm"
-                                          onClick={() => window.open(bulk.studentsPdf, '_blank')}
+                                          onClick={() => window.open(bulk.studentsPdf!, '_blank')}
                                           data-testid={`button-pdf-bulk-${bulk.id}`}
                                         >
                                           <FileText className="w-4 h-4 mr-1" />
@@ -1175,21 +1190,79 @@ export default function Admin() {
                   </div>
                 </div>
                 
+                {selectedReg.profilePhoto && (
+                  <div className="border-t pt-4">
+                    <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                      <Users className="w-4 h-4" />
+                      Profile Photo
+                    </label>
+                    <div className="mt-2 flex flex-col sm:flex-row items-start gap-4">
+                      <a href={selectedReg.profilePhoto} target="_blank" rel="noopener noreferrer">
+                        <img 
+                          src={selectedReg.profilePhoto} 
+                          alt="Profile Photo" 
+                          className="w-32 h-32 rounded-lg border border-border object-cover bg-muted/20 cursor-pointer"
+                          data-testid="img-profile-photo-admin"
+                        />
+                      </a>
+                      <div className="flex flex-col gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const link = document.createElement('a');
+                            link.href = selectedReg.profilePhoto!;
+                            link.download = `profile-${selectedReg.registrationId}.jpg`;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                          }}
+                          data-testid="button-download-profile-photo"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Download Photo
+                        </Button>
+                        <p className="text-xs text-muted-foreground">Click image to view full size</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {selectedReg.paymentScreenshot && (
                   <div className="border-t pt-4">
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                       <ImageIcon className="w-4 h-4" />
                       Payment Screenshot
                     </label>
-                    <a href={selectedReg.paymentScreenshot} target="_blank" rel="noopener noreferrer">
-                      <img 
-                        src={selectedReg.paymentScreenshot} 
-                        alt="Payment Screenshot" 
-                        className="w-full rounded-lg border border-border mt-2 max-h-96 object-contain bg-muted/20 cursor-pointer"
-                        data-testid="img-payment-screenshot-admin"
-                      />
-                    </a>
-                    <p className="text-xs text-muted-foreground mt-1">Click image to view full size</p>
+                    <div className="mt-2">
+                      <a href={selectedReg.paymentScreenshot} target="_blank" rel="noopener noreferrer">
+                        <img 
+                          src={selectedReg.paymentScreenshot} 
+                          alt="Payment Screenshot" 
+                          className="w-full rounded-lg border border-border max-h-96 object-contain bg-muted/20 cursor-pointer"
+                          data-testid="img-payment-screenshot-admin"
+                        />
+                      </a>
+                      <div className="flex items-center justify-between mt-2">
+                        <p className="text-xs text-muted-foreground">Click image to view full size</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            const link = document.createElement('a');
+                            link.href = selectedReg.paymentScreenshot!;
+                            link.download = `payment-${selectedReg.registrationId}.jpg`;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                          }}
+                          data-testid="button-download-payment-screenshot"
+                        >
+                          <Download className="w-4 h-4 mr-2" />
+                          Download
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 )}
               </motion.div>
