@@ -8,5 +8,8 @@ if (!databaseUrl) {
   throw new Error("DATABASE_URL must be set. Did you forget to provision a database?");
 }
 
-const pool = new Pool({ connectionString: databaseUrl });
+const pool = new Pool({ 
+  connectionString: databaseUrl,
+  ssl: process.env.SUPABASE_DATABASE_URL ? { rejectUnauthorized: false } : undefined
+});
 export const db = drizzle(pool, { schema });
