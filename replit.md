@@ -40,8 +40,13 @@ Preferred communication style: Simple, everyday language.
 ### Payment System
 - **Method**: QR code-based payment with mandatory screenshot upload for verification.
 - **Tiers**: Business Quiz Only (₹99), Normal Ticket (₹199), Premium Ticket (₹599).
-- **Process**: User selects ticket, QR code displayed, user scans/pays, uploads screenshot, registration submitted.
-- **Validation**: Frontend file upload validation, backend rejection without screenshot.
+- **Process**: User selects ticket, QR code displayed, user scans/pays, uploads screenshot, AI verifies, registration submitted.
+- **AI Payment Verification**: Uses Google Gemini API to automatically verify payment screenshots.
+  - Checks payment is made to "CALIPH WORLD FOUNDATION"
+  - Verifies amount matches expected registration cost
+  - Confirms screenshot is from genuine banking app
+  - Requires `GOOGLE_API_KEY` secret
+- **Validation**: Frontend file upload validation, AI verification on backend, rejection if verification fails.
 
 ### Email Notifications
 - **Service**: Resend API (`RESEND_API_KEY` required).
