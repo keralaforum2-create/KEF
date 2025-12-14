@@ -25,6 +25,8 @@ interface RegistrationData {
   institution?: string | null;
   registrationType: string;
   contestName?: string | null;
+  ticketCategory?: string | null;
+  sessionName?: string | null;
   participantType?: string | null;
   schoolGrade?: string | null;
   collegeYear?: string | null;
@@ -64,6 +66,16 @@ interface RegistrationData {
 }
 
 function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): string {
+  // Determine the registration type for the message
+  let registrationTypeText = '';
+  if (data.registrationType === 'contest') {
+    registrationTypeText = `Contest (${data.contestName || 'Contest'})`;
+  } else if (data.ticketCategory === 'premium') {
+    registrationTypeText = 'Premium Pass';
+  } else {
+    registrationTypeText = 'Normal Pass';
+  }
+
   return `
     <!DOCTYPE html>
     <html>
@@ -77,18 +89,26 @@ function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): str
         <div style="background: linear-gradient(135deg, #dc2626 0%, #f97316 100%); border-radius: 16px; padding: 40px; text-align: center; color: white;">
           <h1 style="margin: 0 0 10px 0; font-size: 32px; font-weight: bold;">Kerala Startup Fest</h1>
           <p style="margin: 0; font-size: 48px; font-weight: bold; color: #fbbf24;">2026</p>
-          <p style="margin: 20px 0 0 0; font-size: 14px; opacity: 0.9;">January 7-8, 2026 | Calicut Beach</p>
+          <p style="margin: 20px 0 0 0; font-size: 14px; opacity: 0.9;">January 07 & 08, 2026 | Aspin Courtyards, Calicut Beach</p>
         </div>
         
         <div style="background: white; border-radius: 16px; padding: 30px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <h2 style="color: #dc2626; margin: 0 0 20px 0; text-align: center;">Your Event Ticket</h2>
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Dear Startup Enthusiast,</p>
           
-          <div style="background: #fef2f2; border: 2px solid #fecaca; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px;">
-            <p style="margin: 0 0 5px 0; font-size: 12px; color: #666; text-transform: uppercase;">Ticket ID</p>
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+            Thank you for registering for the <strong>${registrationTypeText}</strong> of Kerala Startup Fest 2026, to be held on January 07 & 08 at Aspin Courtyards, Calicut Beach.
+          </p>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+            Your registration has been successfully confirmed.
+          </p>
+          
+          <div style="background: #fef2f2; border: 2px solid #fecaca; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0;">
+            <p style="margin: 0 0 5px 0; font-size: 12px; color: #666; text-transform: uppercase;">Your Ticket ID</p>
             <p style="margin: 0; font-size: 24px; font-weight: bold; color: #dc2626; font-family: monospace;">${data.registrationId}</p>
           </div>
           
-          <table style="width: 100%; border-collapse: collapse;">
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
             <tr>
               <td style="padding: 10px 0; border-bottom: 1px solid #eee;">
                 <span style="color: #666; font-size: 12px; text-transform: uppercase;">Name</span><br>
@@ -105,12 +125,6 @@ function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): str
               <td style="padding: 10px 0; border-bottom: 1px solid #eee;">
                 <span style="color: #666; font-size: 12px; text-transform: uppercase;">Phone</span><br>
                 <strong style="color: #333; font-size: 16px;">${data.phone}</strong>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">
-                <span style="color: #666; font-size: 12px; text-transform: uppercase;">Participation Type</span><br>
-                <strong style="color: #333; font-size: 16px;">${data.registrationType === 'expert-session' ? 'Expert Session' : 'Contest'}</strong>
               </td>
             </tr>
             ${data.contestName ? `
@@ -143,18 +157,22 @@ function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): str
             ` : ''}
           </table>
           
-          <div style="text-align: center; margin-top: 30px;">
+          <div style="text-align: center; margin: 30px 0;">
             <a href="${ticketUrl}" style="display: inline-block; background: #dc2626; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">View Your Ticket</a>
           </div>
           
-          <p style="text-align: center; color: #666; font-size: 12px; margin-top: 20px;">
-            Click the button above to view and download your ticket with QR code
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+            We will share the detailed schedule and delegate instructions shortly.
+          </p>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 20px 0 0 0;">
+            For any queries, feel free to contact us.
           </p>
         </div>
         
-        <div style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
-          <p style="margin: 0;">Thank you for registering for Kerala Startup Fest 2026!</p>
-          <p style="margin: 5px 0 0 0;">We look forward to seeing you there.</p>
+        <div style="text-align: center; padding: 20px; color: #333;">
+          <p style="margin: 0; font-weight: bold; font-size: 16px;">Kerala Startup Fest Team</p>
+          <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Kerala Economic Forum</p>
         </div>
       </div>
     </body>
