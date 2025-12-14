@@ -22,6 +22,7 @@ import {
 } from "@/lib/animations";
 import califphLifeSchoolLogo from "@assets/PhotoshopExtension_Image_1764498269153.png";
 import keralaEconomicForumLogo from "@assets/KERALA ECONOMIC FORUM LOGO RESOLUTION 00_1764498454572.png";
+import festivalCreatorsImage from "@assets/cube_rotate_1765692614588.jpg";
 
 export default function About() {
   return (
@@ -92,19 +93,13 @@ export default function About() {
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="aspect-square rounded-3xl bg-gradient-to-br from-primary/20 via-primary/10 to-transparent flex items-center justify-center">
-                  <div className="text-center p-8">
-                    <motion.div
-                      animate={{ 
-                        y: [0, -10, 0],
-                        rotate: [0, 5, 0]
-                      }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <Lightbulb className="w-24 h-24 text-primary mx-auto mb-6 opacity-80" />
-                    </motion.div>
-                    <p className="font-serif text-2xl font-bold text-primary">Ideas to Impact</p>
-                  </div>
+                <div className="rounded-3xl overflow-hidden shadow-xl">
+                  <img 
+                    src={festivalCreatorsImage} 
+                    alt="Kerala Startup Fest 2026 - A Festival That Creates Founders"
+                    className="w-full h-auto object-cover"
+                    data-testid="img-festival-creators"
+                  />
                 </div>
               </motion.div>
             </ScrollFadeRight>
