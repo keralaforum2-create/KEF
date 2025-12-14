@@ -92,6 +92,8 @@ Preferred communication style: Simple, everyday language.
 
 ### Email Service
 - **Resend**: Transactional email API.
+- **Configuration**: Uses `RESEND_API_KEY` secret (manually configured, not using Replit integration).
+- **Admin Backup**: All registrations are emailed to keralastartupfest@gmail.com as backup.
 
 ### Fonts
 - **Google Fonts**: Inter, Space Grotesk.
