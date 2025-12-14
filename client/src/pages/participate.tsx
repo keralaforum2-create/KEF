@@ -309,6 +309,16 @@ export default function Participate() {
     }
   }, [searchString, form]);
 
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   const registrationType = form.watch("registrationType");
   const contestName = form.watch("contestName");
   const participantType = form.watch("participantType");
@@ -667,6 +677,156 @@ export default function Participate() {
         variant: "destructive",
       });
     } finally {
+      setIsProcessingOnlinePayment(false);
+    }
+  };
+
+  // Handle Razorpay online payment
+  const handleRazorpayPayment = async () => {
+    const isValid = await form.trigger();
+    if (!isValid) {
+      toast({
+        title: "Please complete the form",
+        description: "Fill in all required fields before proceeding to payment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsProcessingOnlinePayment(true);
+
+    try {
+      const formData = form.getValues();
+      const amount = getPaymentAmount();
+
+      const registrationData = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        age: formData.age || "",
+        institution: formData.institution || "",
+        ticketCategory: formData.ticketCategory || "silver",
+        registrationType: formData.registrationType,
+        contestName: formData.contestName || "",
+        sessionName: formData.registrationType === "expert-session" ? "Expert Session" : "",
+        participantType: formData.participantType || "",
+        schoolGrade: formData.schoolGrade || "",
+        collegeYear: formData.collegeYear || "",
+        collegeCourse: formData.collegeCourse || "",
+        teamMember1Name: formData.teamMember1Name || "",
+        teamMember1Email: formData.teamMember1Email || "",
+        teamMember1Phone: formData.teamMember1Phone || "",
+        teamMember1Grade: formData.teamMember1Grade || "",
+        teamMember1Age: formData.teamMember1Age || "",
+        teamMember2Name: formData.teamMember2Name || "",
+        teamMember2Email: formData.teamMember2Email || "",
+        teamMember2Phone: formData.teamMember2Phone || "",
+        teamMember2Grade: formData.teamMember2Grade || "",
+        teamMember2Age: formData.teamMember2Age || "",
+        teamMember3Name: formData.teamMember3Name || "",
+        teamMember3Email: formData.teamMember3Email || "",
+        teamMember3Phone: formData.teamMember3Phone || "",
+        teamMember3Grade: formData.teamMember3Grade || "",
+        teamMember3Age: formData.teamMember3Age || "",
+        pitchStartupName: formData.pitchStartupName || "",
+        pitchElevatorPitch: formData.pitchElevatorPitch || "",
+        pitchProblemStatement: formData.pitchProblemStatement || "",
+        pitchProposedSolution: formData.pitchProposedSolution || "",
+        pitchProductName: formData.pitchProductName || "",
+        pitchProductDescription: formData.pitchProductDescription || "",
+        pitchPricingModel: formData.pitchPricingModel || "",
+        pitchCostPerUnit: formData.pitchCostPerUnit || "",
+        pitchSellingPrice: formData.pitchSellingPrice || "",
+        pitchProfitPerUnit: formData.pitchProfitPerUnit || "",
+        pitchTotalCapitalRequired: formData.pitchTotalCapitalRequired || "",
+        pitchRevenuePerUser: formData.pitchRevenuePerUser || "",
+        pitchTargetCustomers: formData.pitchTargetCustomers || "",
+        pitchMarketSize: formData.pitchMarketSize || "",
+        pitchCompetitorAnalysis: formData.pitchCompetitorAnalysis || "",
+        pitchRevenueModel: formData.pitchRevenueModel || "",
+        pitchRevenueStreams: JSON.stringify(formData.pitchRevenueStreams || []),
+        pitchYear1Revenue: formData.pitchYear1Revenue || "",
+        pitchYear2Revenue: formData.pitchYear2Revenue || "",
+        pitchYear3Revenue: formData.pitchYear3Revenue || "",
+        pitchYear4Revenue: formData.pitchYear4Revenue || "",
+        pitchYear5Revenue: formData.pitchYear5Revenue || "",
+        pitchExpectedRoi: formData.pitchExpectedRoi || "",
+        pitchBreakevenPeriod: formData.pitchBreakevenPeriod || "",
+        pitchFeasibilityReasons: formData.pitchFeasibilityReasons || "",
+        pitchCurrentStage: formData.pitchCurrentStage || "",
+        pitchDemoVideoLink: formData.pitchDemoVideoLink || "",
+        pitchDeclarationConfirmed: formData.pitchDeclarationConfirmed ? "true" : "false",
+      };
+
+      const response = await apiRequest("POST", "/api/razorpay/create-order", {
+        registrationData,
+        amount,
+      });
+
+      const data = await response.json();
+
+      if (!data.success || !data.order) {
+        throw new Error(data.message || "Failed to create payment order");
+      }
+
+      const options = {
+        key: data.keyId,
+        amount: data.order.amount,
+        currency: data.order.currency,
+        name: "Kerala Startup Fest 2026",
+        description: `Registration - ${formData.ticketCategory || 'silver'} ticket`,
+        order_id: data.order.id,
+        prefill: data.prefill,
+        theme: {
+          color: "#3B82F6",
+        },
+        handler: async function (response: any) {
+          try {
+            const verifyResponse = await apiRequest("POST", "/api/razorpay/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            const verifyData = await verifyResponse.json();
+
+            if (verifyData.success) {
+              toast({
+                title: "Payment Successful!",
+                description: "Your registration has been confirmed.",
+              });
+              window.location.href = `/payment-success?registrationId=${verifyData.registrationId}`;
+            } else {
+              throw new Error(verifyData.message || "Payment verification failed");
+            }
+          } catch (error: any) {
+            toast({
+              title: "Payment Verification Failed",
+              description: error.message || "Please contact support.",
+              variant: "destructive",
+            });
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setIsProcessingOnlinePayment(false);
+            toast({
+              title: "Payment Cancelled",
+              description: "You can try again or use QR code payment.",
+            });
+          },
+        },
+      };
+
+      const razorpay = new (window as any).Razorpay(options);
+      razorpay.open();
+    } catch (error: any) {
+      console.error("Razorpay payment error:", error);
+      toast({
+        title: "Payment Failed",
+        description: error.message || "Failed to initiate payment. Please try QR code payment.",
+        variant: "destructive",
+      });
       setIsProcessingOnlinePayment(false);
     }
   };
@@ -3862,6 +4022,34 @@ export default function Participate() {
                               <p className="text-xs text-center text-muted-foreground">
                                 Scan this QR code with any UPI app to make payment
                               </p>
+
+                              <div className="w-full border-t pt-4 mt-2">
+                                <p className="text-sm text-center text-muted-foreground mb-3">Or pay securely online</p>
+                                <Button
+                                  type="button"
+                                  variant="default"
+                                  size="lg"
+                                  onClick={handleRazorpayPayment}
+                                  disabled={isProcessingOnlinePayment}
+                                  className="w-full gap-2"
+                                  data-testid="button-pay-online"
+                                >
+                                  {isProcessingOnlinePayment ? (
+                                    <>
+                                      <Loader2 className="w-4 h-4 animate-spin" />
+                                      Processing...
+                                    </>
+                                  ) : (
+                                    <>
+                                      <CreditCard className="w-4 h-4" />
+                                      Pay Online - Rs {getPaymentAmount()}
+                                    </>
+                                  )}
+                                </Button>
+                                <p className="text-xs text-center text-muted-foreground mt-2">
+                                  Secure payment via Razorpay (Cards, UPI, NetBanking)
+                                </p>
+                              </div>
                               
                               <div className="w-full mt-2 p-3 rounded-lg bg-muted/50 border text-center">
                                 <p className="text-xs text-muted-foreground mb-1">Or pay directly to UPI ID:</p>

@@ -8,6 +8,7 @@ import path from "path";
 import fs from "fs";
 import { sendRegistrationEmails, sendContactNotification } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
+import { createRazorpayOrder, verifyRazorpayPayment } from "./razorpay";
 import { randomUUID } from "crypto";
 import { resolveBaseUrl } from "./utils/request";
 import { verifyPaymentScreenshot, verifyBulkPaymentScreenshot } from "./paymentVerification";
@@ -666,6 +667,144 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error checking payment status:", error);
       return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Razorpay Routes
+  app.post("/api/razorpay/create-order", async (req: Request, res) => {
+    try {
+      const { registrationData, amount } = req.body;
+
+      if (!registrationData || !amount) {
+        return res.status(400).json({
+          message: "Registration data and amount are required"
+        });
+      }
+
+      const result = insertRegistrationSchema.safeParse({
+        ...registrationData,
+        paymentStatus: "pending",
+        paymentScreenshot: "razorpay_payment"
+      });
+
+      if (!result.success) {
+        const validationError = fromError(result.error);
+        return res.status(400).json({
+          message: "Validation failed",
+          error: validationError.toString()
+        });
+      }
+
+      const receipt = `RZP${Date.now()}${randomUUID().slice(0, 8)}`;
+      
+      const registrationWithPayment = {
+        ...result.data,
+        razorpayOrderId: receipt,
+        paymentAmount: String(amount)
+      };
+
+      const registration = await storage.createRegistration(registrationWithPayment as any);
+
+      const orderResult = await createRazorpayOrder({
+        amount: Number(amount),
+        receipt,
+        notes: {
+          registrationId: String(registration.id),
+          fullName: registrationData.fullName,
+          email: registrationData.email,
+        }
+      });
+
+      if (!orderResult.success || !orderResult.order) {
+        await storage.updateRegistrationPayment(registration.id, {
+          paymentStatus: "failed"
+        });
+        return res.status(400).json({
+          message: orderResult.error || "Failed to create order"
+        });
+      }
+
+      await storage.updateRegistrationPayment(registration.id, {
+        razorpayOrderId: orderResult.order.id
+      });
+
+      console.log("Razorpay order created:", orderResult.order.id);
+      return res.json({
+        success: true,
+        order: orderResult.order,
+        keyId: orderResult.keyId,
+        registrationId: registration.registrationId,
+        prefill: {
+          name: registrationData.fullName,
+          email: registrationData.email,
+          contact: registrationData.phone
+        }
+      });
+    } catch (error) {
+      console.error("Razorpay order creation error:", error);
+      return res.status(500).json({
+        message: "Internal server error",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  app.post("/api/razorpay/verify", async (req: Request, res) => {
+    try {
+      const { razorpay_order_id, razorpay_payment_id, razorpay_signature, registrationId } = req.body;
+
+      if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+        return res.status(400).json({
+          message: "Missing payment verification parameters"
+        });
+      }
+
+      const verifyResult = verifyRazorpayPayment({
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature
+      });
+
+      if (!verifyResult.success) {
+        console.error("Razorpay verification failed:", verifyResult.error);
+        return res.status(400).json({
+          success: false,
+          message: verifyResult.error || "Payment verification failed"
+        });
+      }
+
+      const registration = await storage.getRegistrationByRazorpayOrderId(razorpay_order_id);
+
+      if (!registration) {
+        console.error("Registration not found for Razorpay order:", razorpay_order_id);
+        return res.status(404).json({
+          success: false,
+          message: "Registration not found"
+        });
+      }
+
+      await storage.updateRegistrationPayment(registration.id, {
+        razorpayPaymentId: razorpay_payment_id,
+        paymentStatus: 'paid'
+      });
+
+      const baseUrl = resolveBaseUrl(req);
+      
+      sendRegistrationEmails(registration, baseUrl).catch((err) => {
+        console.error('Failed to send registration emails:', err);
+      });
+
+      console.log("Razorpay payment verified successfully:", razorpay_payment_id);
+      return res.json({
+        success: true,
+        registrationId: registration.registrationId
+      });
+    } catch (error) {
+      console.error("Razorpay verification error:", error);
+      return res.status(500).json({
+        message: "Internal server error",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 

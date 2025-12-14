@@ -37,7 +37,8 @@ export interface IStorage {
   getRegistrations(): Promise<Registration[]>;
   getRegistrationByRegistrationId(registrationId: string): Promise<Registration | undefined>;
   getRegistrationByMerchantTransactionId(merchantTransactionId: string): Promise<Registration | undefined>;
-  updateRegistrationPayment(id: string, paymentData: { phonepeTransactionId?: string; paymentStatus: string }): Promise<Registration | undefined>;
+  getRegistrationByRazorpayOrderId(razorpayOrderId: string): Promise<Registration | undefined>;
+  updateRegistrationPayment(id: string, paymentData: { phonepeTransactionId?: string; razorpayOrderId?: string; razorpayPaymentId?: string; paymentStatus?: string }): Promise<Registration | undefined>;
   
   createInvestorMentor(application: InsertInvestorMentor): Promise<InvestorMentor>;
   getInvestorMentors(): Promise<InvestorMentor[]>;
@@ -110,12 +111,28 @@ export class DatabaseStorage implements IStorage {
     return result[0];
   }
 
-  async updateRegistrationPayment(id: string, paymentData: { phonepeTransactionId?: string; paymentStatus: string }): Promise<Registration | undefined> {
+  async getRegistrationByRazorpayOrderId(razorpayOrderId: string): Promise<Registration | undefined> {
+    const result = await db.select().from(registrations).where(eq(registrations.razorpayOrderId, razorpayOrderId));
+    return result[0];
+  }
+
+  async updateRegistrationPayment(id: string, paymentData: { phonepeTransactionId?: string; razorpayOrderId?: string; razorpayPaymentId?: string; paymentStatus?: string }): Promise<Registration | undefined> {
+    const updateData: any = {};
+    if (paymentData.phonepeTransactionId !== undefined) {
+      updateData.phonepeTransactionId = paymentData.phonepeTransactionId;
+    }
+    if (paymentData.razorpayOrderId !== undefined) {
+      updateData.razorpayOrderId = paymentData.razorpayOrderId;
+    }
+    if (paymentData.razorpayPaymentId !== undefined) {
+      updateData.razorpayPaymentId = paymentData.razorpayPaymentId;
+    }
+    if (paymentData.paymentStatus !== undefined) {
+      updateData.paymentStatus = paymentData.paymentStatus;
+    }
+    
     const result = await db.update(registrations)
-      .set({
-        phonepeTransactionId: paymentData.phonepeTransactionId,
-        paymentStatus: paymentData.paymentStatus
-      })
+      .set(updateData)
       .where(eq(registrations.id, id))
       .returning();
     return result[0];
