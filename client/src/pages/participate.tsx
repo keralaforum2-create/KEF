@@ -309,13 +309,26 @@ export default function Participate() {
     }
   }, [searchString, form]);
 
+  const [razorpayLoaded, setRazorpayLoaded] = useState(false);
+  
   useEffect(() => {
+    if ((window as any).Razorpay) {
+      setRazorpayLoaded(true);
+      return;
+    }
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
+    script.onload = () => setRazorpayLoaded(true);
+    script.onerror = () => {
+      console.error("Failed to load Razorpay script");
+      setRazorpayLoaded(false);
+    };
     document.body.appendChild(script);
     return () => {
-      document.body.removeChild(script);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
     };
   }, []);
 
@@ -683,6 +696,15 @@ export default function Participate() {
 
   // Handle Razorpay online payment
   const handleRazorpayPayment = async () => {
+    if (!razorpayLoaded || !(window as any).Razorpay) {
+      toast({
+        title: "Payment not available",
+        description: "Payment gateway is loading. Please try again in a moment or use QR code payment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const isValid = await form.trigger();
     if (!isValid) {
       toast({
