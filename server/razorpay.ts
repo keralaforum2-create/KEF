@@ -6,10 +6,16 @@ const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || '';
 
 console.log('Razorpay Key ID configured:', RAZORPAY_KEY_ID ? 'Yes' : 'No');
 
-const razorpay = new Razorpay({
-  key_id: RAZORPAY_KEY_ID,
-  key_secret: RAZORPAY_KEY_SECRET,
-});
+let razorpay: Razorpay | null = null;
+
+if (RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET) {
+  razorpay = new Razorpay({
+    key_id: RAZORPAY_KEY_ID,
+    key_secret: RAZORPAY_KEY_SECRET,
+  });
+} else {
+  console.log('Razorpay credentials not configured - payment features will be disabled');
+}
 
 export interface RazorpayOrderParams {
   amount: number;
@@ -56,6 +62,9 @@ export async function createRazorpayOrder(params: RazorpayOrderParams): Promise<
       notes: params.notes || {},
     };
 
+    if (!razorpay) {
+      throw new Error('Razorpay not initialized');
+    }
     const order = await razorpay.orders.create(options);
 
     return {
