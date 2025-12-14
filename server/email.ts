@@ -158,7 +158,11 @@ function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): str
           </table>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${ticketUrl}" style="display: inline-block; background: #dc2626; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">View Your Ticket</a>
+            <a href="${ticketUrl}" style="display: inline-block; background: #dc2626; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-bottom: 12px;">View Your Ticket</a>
+          </div>
+          
+          <div style="text-align: center; margin: 15px 0;">
+            <a href="${ticketUrl}?download=true" style="display: inline-block; background: #16a34a; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">Download Ticket as PDF</a>
           </div>
           
           <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 20px 0;">
@@ -180,7 +184,7 @@ function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): str
   `;
 }
 
-function generateAdminNotificationHtml(data: RegistrationData): string {
+function generateAdminNotificationHtml(data: RegistrationData, ticketUrl?: string): string {
   const isPitchRoom = data.contestName === 'The Pitch Room';
   
   let pitchDetails = '';
@@ -258,6 +262,17 @@ function generateAdminNotificationHtml(data: RegistrationData): string {
             ${data.teamMember1Name ? `<tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Team Member 1:</strong> ${data.teamMember1Name}</td></tr>` : ''}
             ${data.teamMember2Name ? `<tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Team Member 2:</strong> ${data.teamMember2Name}</td></tr>` : ''}
           </table>
+          
+          ${ticketUrl ? `
+          <div style="background: #eff6ff; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-top: 20px; text-align: center;">
+            <h3 style="color: #1e40af; margin: 0 0 15px 0;">Ticket Access</h3>
+            <p style="margin: 0 0 15px 0; color: #1e40af; font-size: 14px;">View or download the registrant's ticket:</p>
+            <div style="display: inline-block;">
+              <a href="${ticketUrl}" style="display: inline-block; background: #3b82f6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px; margin-right: 10px;">View Ticket</a>
+              <a href="${ticketUrl}?download=true" style="display: inline-block; background: #16a34a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px;">Download PDF</a>
+            </div>
+          </div>
+          ` : ''}
           
           ${pitchDetails}
         </div>
@@ -451,7 +466,7 @@ export async function sendRegistrationEmails(data: RegistrationData, baseUrl: st
       from: fromEmail,
       to: ADMIN_EMAIL,
       subject: `New Registration: ${data.fullName} - ${data.registrationId}`,
-      html: generateAdminNotificationHtml(data),
+      html: generateAdminNotificationHtml(data, ticketUrl),
     });
     console.log('Admin email result:', JSON.stringify(adminEmailResult, null, 2));
     

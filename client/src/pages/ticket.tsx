@@ -34,6 +34,7 @@ export default function Ticket() {
   const [error, setError] = useState<string | null>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [autoDownloadTriggered, setAutoDownloadTriggered] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
 
   const generateTicketNumber = (registrationId: string) => {
@@ -134,6 +135,18 @@ export default function Ticket() {
       fetchTicket();
     }
   }, [id]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const shouldDownload = urlParams.get('download') === 'true';
+    
+    if (shouldDownload && ticket && qrCodeUrl && !autoDownloadTriggered && !loading) {
+      setAutoDownloadTriggered(true);
+      setTimeout(() => {
+        downloadTicketAsPDF();
+      }, 1000);
+    }
+  }, [ticket, qrCodeUrl, loading, autoDownloadTriggered]);
 
   if (loading) {
     return (
