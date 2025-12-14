@@ -11,7 +11,7 @@ function getResendClient() {
   
   return {
     client: new Resend(apiKey),
-    fromEmail: 'Kerala Startup Fest <onboarding@resend.dev>'
+    fromEmail: 'Kerala Startup Fest <noreply@keralastartupfest.com>'
   };
 }
 
