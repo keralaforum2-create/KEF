@@ -617,7 +617,7 @@ export default function Home() {
           
           <motion.div 
             ref={partnersRef}
-            className="flex flex-col items-center justify-center gap-8"
+            className="flex flex-row flex-wrap items-center justify-center gap-8 md:gap-16"
             initial="hidden"
             animate={partnersInView ? "visible" : "hidden"}
             variants={{
@@ -631,7 +631,7 @@ export default function Home() {
             <motion.div 
               className="flex flex-col items-center text-center"
               variants={{
-                hidden: { opacity: 0, y: 30 },
+                hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
               }}
             >
@@ -659,7 +659,7 @@ export default function Home() {
             <motion.div 
               className="flex flex-col items-center text-center"
               variants={{
-                hidden: { opacity: 0, y: 30 },
+                hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
               }}
             >

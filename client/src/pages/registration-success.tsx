@@ -40,7 +40,7 @@ export default function RegistrationSuccess() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Payment Successful!
+              Registration Confirmed!
             </motion.h1>
             <motion.p 
               className="text-white/90"

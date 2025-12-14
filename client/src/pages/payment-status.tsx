@@ -89,7 +89,7 @@ export default function PaymentStatus() {
             <>
               <CheckCircle className="h-16 w-16 text-green-500" />
               <div className="text-center">
-                <h3 className="text-xl font-semibold text-green-600">Payment Successful!</h3>
+                <h3 className="text-xl font-semibold text-green-600">Registration Confirmed!</h3>
                 <p className="text-muted-foreground mt-2">
                   Your registration is complete. A confirmation email has been sent.
                 </p>
