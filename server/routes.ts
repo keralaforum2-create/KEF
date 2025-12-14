@@ -10,6 +10,7 @@ import { sendRegistrationEmails, sendContactNotification } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { randomUUID } from "crypto";
 import { resolveBaseUrl } from "./utils/request";
+import { verifyPaymentScreenshot, verifyBulkPaymentScreenshot } from "./paymentVerification";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 
@@ -77,9 +78,48 @@ export async function registerRoutes(
           initiate: "/api/phonepe/initiate",
           callback: "/api/phonepe/callback",
           status: "/api/phonepe/status/:merchantTransactionId"
+        },
+        verification: {
+          verify: "/api/verify-payment"
         }
       }
     });
+  });
+
+  // AI Payment Verification Endpoint (standalone)
+  app.post("/api/verify-payment", upload.single('paymentScreenshot'), async (req: Request, res) => {
+    try {
+      const file = req.file;
+      
+      if (!file) {
+        return res.status(400).json({ 
+          message: "Payment screenshot is required for verification." 
+        });
+      }
+      
+      const paymentScreenshotPath = `/uploads/${file.filename}`;
+      const expectedAmount = parseInt(req.body.expectedAmount) || 199;
+      
+      console.log(`Verifying payment screenshot with AI, expected amount: ${expectedAmount}`);
+      const verificationResult = await verifyPaymentScreenshot(paymentScreenshotPath, expectedAmount);
+      
+      // Clean up uploaded file after verification
+      const fullPath = `${process.cwd()}${paymentScreenshotPath}`;
+      if (fs.existsSync(fullPath)) {
+        fs.unlinkSync(fullPath);
+      }
+      
+      return res.json({
+        success: verificationResult.isValid,
+        verification: verificationResult
+      });
+    } catch (error) {
+      console.error("Error verifying payment:", error);
+      return res.status(500).json({ 
+        message: "Payment verification failed",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
   });
 
   app.post("/api/admin/login", async (req, res) => {
@@ -161,12 +201,41 @@ export async function registerRoutes(
         });
       }
       
+      const paymentScreenshotPath = `/uploads/${files.paymentScreenshot[0].filename}`;
+      
+      // Get expected amount from request (default to 199 for regular registration)
+      const expectedAmount = req.body.expectedAmount ? parseInt(req.body.expectedAmount) : 199;
+      
+      // AI-powered payment verification
+      console.log("Verifying payment screenshot with AI...");
+      const verificationResult = await verifyPaymentScreenshot(paymentScreenshotPath, expectedAmount);
+      console.log("Payment verification result:", JSON.stringify(verificationResult, null, 2));
+      
+      if (!verificationResult.isValid) {
+        // Delete the uploaded file since verification failed
+        const fullPath = `${process.cwd()}${paymentScreenshotPath}`;
+        if (fs.existsSync(fullPath)) {
+          fs.unlinkSync(fullPath);
+        }
+        return res.status(400).json({ 
+          message: "Payment verification failed",
+          error: verificationResult.reason,
+          verification: {
+            isValid: false,
+            confidence: verificationResult.confidence,
+            detectedAmount: verificationResult.amount,
+            detectedRecipient: verificationResult.recipientName
+          }
+        });
+      }
+      
       const data = {
         ...req.body,
-        paymentScreenshot: `/uploads/${files.paymentScreenshot[0].filename}`,
+        paymentScreenshot: paymentScreenshotPath,
         profilePhoto: files?.profilePhoto?.[0] ? `/uploads/${files.profilePhoto[0].filename}` : undefined,
         pitchSupportingFiles: files?.pitchSupportingFiles?.[0] ? `/uploads/${files.pitchSupportingFiles[0].filename}` : undefined,
-        paymentStatus: "screenshot_uploaded",
+        paymentStatus: "ai_verified",
+        aiVerificationResult: JSON.stringify(verificationResult),
       };
       
       const result = insertRegistrationSchema.safeParse(data);
@@ -188,8 +257,14 @@ export async function registerRoutes(
       });
       
       return res.status(201).json({ 
-        message: "Registration successful", 
-        registration 
+        message: "Registration successful - Payment verified by AI", 
+        registration,
+        verification: {
+          isValid: true,
+          confidence: verificationResult.confidence,
+          detectedAmount: verificationResult.amount,
+          transactionId: verificationResult.transactionId
+        }
       });
     } catch (error: any) {
       console.error("Error creating registration:", error);
@@ -605,10 +680,41 @@ export async function registerRoutes(
         });
       }
       
+      const paymentScreenshotPath = `/uploads/${file.filename}`;
+      
+      // Get expected amount from request (calculate based on number of students)
+      const numberOfStudents = parseInt(req.body.numberOfStudents) || 1;
+      const pricePerStudent = parseInt(req.body.pricePerStudent) || 149;
+      const expectedAmount = parseInt(req.body.expectedAmount) || (numberOfStudents * pricePerStudent);
+      
+      // AI-powered payment verification for bulk registration
+      console.log(`Verifying bulk payment screenshot with AI for ${numberOfStudents} students, expected amount: ${expectedAmount}`);
+      const verificationResult = await verifyBulkPaymentScreenshot(paymentScreenshotPath, expectedAmount, numberOfStudents);
+      console.log("Bulk payment verification result:", JSON.stringify(verificationResult, null, 2));
+      
+      if (!verificationResult.isValid) {
+        // Delete the uploaded file since verification failed
+        const fullPath = `${process.cwd()}${paymentScreenshotPath}`;
+        if (fs.existsSync(fullPath)) {
+          fs.unlinkSync(fullPath);
+        }
+        return res.status(400).json({ 
+          message: "Payment verification failed",
+          error: verificationResult.reason,
+          verification: {
+            isValid: false,
+            confidence: verificationResult.confidence,
+            detectedAmount: verificationResult.amount,
+            expectedAmount: expectedAmount,
+            detectedRecipient: verificationResult.recipientName
+          }
+        });
+      }
+      
       const data = {
         ...req.body,
-        paymentScreenshot: `/uploads/${file.filename}`,
-        paymentStatus: "screenshot_uploaded",
+        paymentScreenshot: paymentScreenshotPath,
+        paymentStatus: "ai_verified",
       };
       
       const result = insertBulkRegistrationSchema.safeParse(data);
@@ -624,7 +730,6 @@ export async function registerRoutes(
       const bulkRegistration = await storage.createBulkRegistration(result.data);
       
       // Create individual student tickets
-      const numberOfStudents = parseInt(bulkRegistration.numberOfStudents);
       const studentTickets = [];
       
       for (let i = 1; i <= numberOfStudents; i++) {
@@ -638,9 +743,16 @@ export async function registerRoutes(
       }
       
       return res.status(201).json({ 
-        message: "Bulk registration successful", 
+        message: "Bulk registration successful - Payment verified by AI", 
         bulkRegistration,
-        studentTickets 
+        studentTickets,
+        verification: {
+          isValid: true,
+          confidence: verificationResult.confidence,
+          detectedAmount: verificationResult.amount,
+          expectedAmount: expectedAmount,
+          transactionId: verificationResult.transactionId
+        }
       });
     } catch (error) {
       console.error("Error creating bulk registration:", error);
