@@ -3827,9 +3827,9 @@ export default function Participate() {
                                           <Check className="w-4 h-4 text-gray-600 flex-shrink-0" />
                                           <span>Access to sessions</span>
                                         </li>
-                                        <li className="flex items-center gap-2 text-muted-foreground">
-                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
-                                          <span>ID card, notepad & pen</span>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-gray-600 flex-shrink-0" />
+                                          <span>ID card</span>
                                         </li>
                                         <li className="flex items-center gap-2 text-muted-foreground">
                                           <X className="w-4 h-4 text-red-400 flex-shrink-0" />
@@ -4081,7 +4081,7 @@ export default function Participate() {
                             disabled={mutation.isPending}
                             data-testid="button-submit-registration"
                           >
-                            {mutation.isPending ? "Registering..." : "Register for KSF 2026"}
+                            {mutation.isPending ? "Confirming..." : "Confirm the Ticket"}
                             <Send className="w-4 h-4 ml-2" />
                           </Button>
                         </motion.div>

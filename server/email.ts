@@ -70,10 +70,14 @@ function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): str
   let registrationTypeText = '';
   if (data.registrationType === 'contest') {
     registrationTypeText = `Contest (${data.contestName || 'Contest'})`;
-  } else if (data.ticketCategory === 'premium') {
-    registrationTypeText = 'Premium Pass';
+  } else if (data.ticketCategory === 'platinum') {
+    registrationTypeText = 'Platinum Pass';
+  } else if (data.ticketCategory === 'gold') {
+    registrationTypeText = 'Gold Pass';
+  } else if (data.ticketCategory === 'silver') {
+    registrationTypeText = 'Silver Pass';
   } else {
-    registrationTypeText = 'Normal Pass';
+    registrationTypeText = 'Event Pass';
   }
 
   return `
