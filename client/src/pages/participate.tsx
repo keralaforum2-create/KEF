@@ -83,7 +83,7 @@ const registrationSchema = z.object({
   institution: z.string().optional(),
   contestName: z.string().optional(),
   participantType: z.enum(["school-student", "college-student", "commoner"]).optional(),
-  ticketCategory: z.enum(["normal", "premium"]).optional(),
+  ticketCategory: z.enum(["silver", "gold", "platinum"]).optional(),
   schoolGrade: z.string().optional(),
   collegeYear: z.string().optional(),
   collegeCourse: z.string().optional(),
@@ -207,7 +207,7 @@ export default function Participate() {
     mentorEmail: "",
     mentorPhone: "",
     numberOfStudents: "5",
-    ticketCategory: "normal" as "normal" | "premium",
+    ticketCategory: "silver" as "silver" | "gold" | "platinum",
     paymentScreenshot: null as File | null,
   });
   const [bulkRegistrationId, setBulkRegistrationId] = useState<string | null>(null);
@@ -327,8 +327,8 @@ export default function Participate() {
     const link = document.createElement("a");
     const currentTicketCategory = form.getValues("ticketCategory");
     
-    link.href = currentTicketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage;
-    link.download = currentTicketCategory === "premium" ? "premium-payment-qr-code.png" : "normal-payment-qr-code.png";
+    link.href = currentTicketCategory === "platinum" ? premiumQrCodeImage : normalQrCodeImage;
+    link.download = currentTicketCategory === "platinum" ? "platinum-payment-qr-code.png" : "silver-payment-qr-code.png";
     
     document.body.appendChild(link);
     link.click();
@@ -375,13 +375,16 @@ export default function Participate() {
   // Get payment amount based on ticket type and contest
   const getPaymentAmount = () => {
     if (isBusinessQuiz) return 199;
-    if (ticketCategory === "premium") return 799;
-    return 199;
+    if (ticketCategory === "platinum") return 799;
+    if (ticketCategory === "gold") return 499;
+    return 199; // silver
   };
 
   // Get bulk registration price per student
   const getBulkPricePerStudent = () => {
-    return bulkFormData.ticketCategory === "premium" ? 799 : 199;
+    if (bulkFormData.ticketCategory === "platinum") return 799;
+    if (bulkFormData.ticketCategory === "gold") return 499;
+    return 199; // silver
   };
 
   // Get bulk registration total amount
@@ -481,7 +484,7 @@ export default function Participate() {
           mentorEmail: "",
           mentorPhone: "",
           numberOfStudents: "",
-          ticketCategory: "normal",
+          ticketCategory: "silver",
           paymentScreenshot: null,
         });
         setStudentsPdfFile(null);
@@ -590,7 +593,7 @@ export default function Participate() {
         phone: formData.phone,
         age: formData.age || "",
         institution: formData.institution || "",
-        ticketCategory: formData.ticketCategory || "normal",
+        ticketCategory: formData.ticketCategory || "silver",
         registrationType: formData.registrationType,
         contestName: formData.contestName || "",
         sessionName: formData.registrationType === "expert-session" ? "Expert Session" : "",
@@ -676,7 +679,7 @@ export default function Participate() {
       formData.append("phone", data.phone);
       formData.append("age", data.age || "");
       formData.append("institution", data.institution || "");
-      formData.append("ticketCategory", data.ticketCategory || "normal");
+      formData.append("ticketCategory", data.ticketCategory || "silver");
       formData.append("registrationType", data.registrationType);
       formData.append("contestName", data.contestName || "");
       formData.append("sessionName", data.registrationType === "expert-session" ? "Expert Session" : "");
@@ -835,7 +838,7 @@ export default function Participate() {
       mentorEmail: "",
       mentorPhone: "",
       numberOfStudents: "5",
-      ticketCategory: "normal",
+      ticketCategory: "silver",
       paymentScreenshot: null,
     });
   };
@@ -1922,32 +1925,46 @@ export default function Participate() {
                                     <Ticket className="w-4 h-4" />
                                     Select Ticket Type
                                   </h4>
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div
-                                      onClick={() => setBulkFormData({...bulkFormData, ticketCategory: "normal"})}
+                                      onClick={() => setBulkFormData({...bulkFormData, ticketCategory: "silver"})}
                                       className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
-                                        bulkFormData.ticketCategory === "normal"
-                                          ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30"
-                                          : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
+                                        bulkFormData.ticketCategory === "silver"
+                                          ? "border-gray-400 bg-gray-50 dark:bg-gray-950/30"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
                                       }`}
-                                      data-testid="card-bulk-ticket-normal"
+                                      data-testid="card-bulk-ticket-silver"
                                     >
                                       <div className="flex justify-between items-center">
-                                        <span className="font-medium">Normal Ticket</span>
-                                        <span className="font-bold text-blue-600">Rs 199/student</span>
+                                        <span className="font-medium">Silver Ticket</span>
+                                        <span className="font-bold text-gray-600">Rs 199/student</span>
                                       </div>
                                     </div>
                                     <div
-                                      onClick={() => setBulkFormData({...bulkFormData, ticketCategory: "premium"})}
+                                      onClick={() => setBulkFormData({...bulkFormData, ticketCategory: "gold"})}
                                       className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
-                                        bulkFormData.ticketCategory === "premium"
+                                        bulkFormData.ticketCategory === "gold"
+                                          ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-950/30"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-yellow-400"
+                                      }`}
+                                      data-testid="card-bulk-ticket-gold"
+                                    >
+                                      <div className="flex justify-between items-center">
+                                        <span className="font-medium">Gold Ticket</span>
+                                        <span className="font-bold text-yellow-600">Rs 499/student</span>
+                                      </div>
+                                    </div>
+                                    <div
+                                      onClick={() => setBulkFormData({...bulkFormData, ticketCategory: "platinum"})}
+                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                                        bulkFormData.ticketCategory === "platinum"
                                           ? "border-teal-500 bg-teal-50 dark:bg-teal-950/30"
                                           : "border-gray-200 dark:border-gray-700 hover:border-teal-300"
                                       }`}
-                                      data-testid="card-bulk-ticket-premium"
+                                      data-testid="card-bulk-ticket-platinum"
                                     >
                                       <div className="flex justify-between items-center">
-                                        <span className="font-medium">Premium Ticket</span>
+                                        <span className="font-medium">Platinum Ticket</span>
                                         <span className="font-bold text-teal-600">Rs 799/student</span>
                                       </div>
                                     </div>
@@ -3585,25 +3602,147 @@ export default function Participate() {
                                   )}
                                 </FormLabel>
                                 <FormControl>
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                    {/* Premium Ticket Card */}
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                                    {/* Silver Ticket Card */}
                                     <div
-                                      onClick={() => field.onChange("premium")}
+                                      onClick={() => field.onChange("silver")}
                                       className={`relative cursor-pointer rounded-xl border-2 p-5 transition-all ${
-                                        field.value === "premium"
+                                        field.value === "silver"
+                                          ? "border-gray-400 bg-gray-50 dark:bg-gray-950/30 shadow-lg"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
+                                      }`}
+                                      data-testid="card-ticket-silver"
+                                    >
+                                      {field.value === "silver" && (
+                                        <div className="absolute top-3 right-3">
+                                          <CheckCircle className="w-6 h-6 text-gray-500" />
+                                        </div>
+                                      )}
+                                      <div className="flex items-center gap-2 mb-4">
+                                        <div className="w-3 h-3 rounded-full bg-gray-400" />
+                                        <h4 className="font-bold text-lg">Silver Ticket</h4>
+                                      </div>
+                                      
+                                      <ul className="space-y-2 mb-5 text-sm">
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-gray-600 flex-shrink-0" />
+                                          <span>Access to stalls</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-gray-600 flex-shrink-0" />
+                                          <span>Access to sessions</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>ID card, notepad & pen</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Lunch & Tea</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Startup Fest Kit</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Front-row seating</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Priority Q&A</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Higher networking opportunities</span>
+                                        </li>
+                                      </ul>
+                                      
+                                      <div className="border-t pt-4 flex items-center justify-between">
+                                        <span className="text-sm text-muted-foreground">Price:</span>
+                                        <span className="font-bold text-xl text-gray-600">Rs 199/-</span>
+                                      </div>
+                                    </div>
+
+                                    {/* Gold Ticket Card */}
+                                    <div
+                                      onClick={() => field.onChange("gold")}
+                                      className={`relative cursor-pointer rounded-xl border-2 p-5 transition-all ${
+                                        field.value === "gold"
+                                          ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-950/30 shadow-lg"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-yellow-400"
+                                      }`}
+                                      data-testid="card-ticket-gold"
+                                    >
+                                      {field.value === "gold" && (
+                                        <div className="absolute top-3 right-3">
+                                          <CheckCircle className="w-6 h-6 text-yellow-500" />
+                                        </div>
+                                      )}
+                                      <div className="flex items-center gap-2 mb-4">
+                                        <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                                        <h4 className="font-bold text-lg">Gold Ticket</h4>
+                                      </div>
+                                      
+                                      <ul className="space-y-2 mb-5 text-sm">
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+                                          <span>Access to stalls</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+                                          <span>Access to sessions</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+                                          <span>ID card, notepad & pen</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <Check className="w-4 h-4 text-yellow-600 flex-shrink-0" />
+                                          <span>Lunch & Tea included</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Startup Fest Kit</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Front-row seating</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Priority Q&A</span>
+                                        </li>
+                                        <li className="flex items-center gap-2 text-muted-foreground">
+                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
+                                          <span>Higher networking opportunities</span>
+                                        </li>
+                                      </ul>
+                                      
+                                      <div className="border-t pt-4 flex items-center justify-between">
+                                        <span className="text-sm text-muted-foreground">Price:</span>
+                                        <span className="font-bold text-xl text-yellow-600">Rs 499/-</span>
+                                      </div>
+                                    </div>
+
+                                    {/* Platinum Ticket Card */}
+                                    <div
+                                      onClick={() => field.onChange("platinum")}
+                                      className={`relative cursor-pointer rounded-xl border-2 p-5 transition-all ${
+                                        field.value === "platinum"
                                           ? "border-teal-500 bg-teal-50 dark:bg-teal-950/30 shadow-lg"
                                           : "border-gray-200 dark:border-gray-700 hover:border-teal-300"
                                       }`}
-                                      data-testid="card-ticket-premium"
+                                      data-testid="card-ticket-platinum"
                                     >
-                                      {field.value === "premium" && (
+                                      {field.value === "platinum" && (
                                         <div className="absolute top-3 right-3">
                                           <CheckCircle className="w-6 h-6 text-teal-500" />
                                         </div>
                                       )}
                                       <div className="flex items-center gap-2 mb-4">
                                         <div className="w-3 h-3 rounded-full bg-teal-500" />
-                                        <h4 className="font-bold text-lg">Premium Ticket</h4>
+                                        <h4 className="font-bold text-lg">Platinum Ticket</h4>
                                       </div>
                                       
                                       <ul className="space-y-2 mb-5 text-sm">
@@ -3649,67 +3788,6 @@ export default function Participate() {
                                         </div>
                                       </div>
                                     </div>
-
-                                    {/* Normal Ticket Card */}
-                                    <div
-                                      onClick={() => field.onChange("normal")}
-                                      className={`relative cursor-pointer rounded-xl border-2 p-5 transition-all ${
-                                        field.value === "normal"
-                                          ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30 shadow-lg"
-                                          : "border-gray-200 dark:border-gray-700 hover:border-blue-300"
-                                      }`}
-                                      data-testid="card-ticket-normal"
-                                    >
-                                      {field.value === "normal" && (
-                                        <div className="absolute top-3 right-3">
-                                          <CheckCircle className="w-6 h-6 text-blue-500" />
-                                        </div>
-                                      )}
-                                      <div className="flex items-center gap-2 mb-4">
-                                        <div className="w-3 h-3 rounded-full bg-blue-500" />
-                                        <h4 className="font-bold text-lg">Normal Ticket</h4>
-                                      </div>
-                                      
-                                      <ul className="space-y-2 mb-5 text-sm">
-                                        <li className="flex items-center gap-2">
-                                          <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                                          <span>Access to stalls</span>
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                          <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                                          <span>Access to sessions</span>
-                                        </li>
-                                        <li className="flex items-center gap-2">
-                                          <Check className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                                          <span>ID card, notepad & pen</span>
-                                        </li>
-                                        <li className="flex items-center gap-2 text-muted-foreground">
-                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
-                                          <span>Startup Fest Kit</span>
-                                        </li>
-                                        <li className="flex items-center gap-2 text-muted-foreground">
-                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
-                                          <span>Front-row seating</span>
-                                        </li>
-                                        <li className="flex items-center gap-2 text-muted-foreground">
-                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
-                                          <span>Priority Q&A</span>
-                                        </li>
-                                        <li className="flex items-center gap-2 text-muted-foreground">
-                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
-                                          <span>Extra networking access</span>
-                                        </li>
-                                        <li className="flex items-center gap-2 text-muted-foreground">
-                                          <X className="w-4 h-4 text-red-400 flex-shrink-0" />
-                                          <span>Lunch & Tea</span>
-                                        </li>
-                                      </ul>
-                                      
-                                      <div className="border-t pt-4 flex items-center justify-between">
-                                        <span className="text-sm text-muted-foreground">Price:</span>
-                                        <span className="font-bold text-xl text-blue-600">Rs 199/-</span>
-                                      </div>
-                                    </div>
                                   </div>
                                 </FormControl>
                                 <FormMessage />
@@ -3740,9 +3818,11 @@ export default function Participate() {
                           <p className="text-sm text-muted-foreground font-medium">
                             {isBusinessQuiz 
                               ? "Pay ₹199/-"
-                              : ticketCategory === "premium" 
+                              : ticketCategory === "platinum" 
                                 ? "Pay ₹799/-"
-                                : "Pay ₹199/-"
+                                : ticketCategory === "gold"
+                                  ? "Pay ₹499/-"
+                                  : "Pay ₹199/-"
                             }
                           </p>
                         </div>
@@ -3760,7 +3840,7 @@ export default function Participate() {
                             <div className="flex flex-col items-center gap-4">
                               <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm">
                                 <img 
-                                  src={ticketCategory === "premium" ? premiumQrCodeImage : normalQrCodeImage} 
+                                  src={ticketCategory === "platinum" ? premiumQrCodeImage : normalQrCodeImage} 
                                   alt="Payment QR Code" 
                                   className="w-48 h-48 object-contain"
                                   data-testid="img-payment-qr"
