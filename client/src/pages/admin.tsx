@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, ImageIcon, Download, CreditCard, QrCode, Filter, FileText } from "lucide-react";
+import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, Download, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration } from "@shared/schema";
@@ -35,7 +35,6 @@ export default function Admin() {
   const [selectedInvestor, setSelectedInvestor] = useState<InvestorMentor | null>(null);
   const [selectedSponsorship, setSelectedSponsorship] = useState<Sponsorship | null>(null);
   const [selectedBulkReg, setSelectedBulkReg] = useState<BulkRegistration | null>(null);
-  const [showOnlyPaid, setShowOnlyPaid] = useState(false);
   
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
@@ -154,23 +153,6 @@ export default function Admin() {
   };
 
   const allRegistrations = registrations || [];
-  const paidRegistrations = registrations?.filter(r => 
-    r.paymentStatus === 'paid' || r.paymentStatus === 'screenshot_uploaded'
-  ) || [];
-  const pendingPaymentRegistrations = registrations?.filter(r => 
-    !r.paymentStatus || r.paymentStatus === 'pending' || r.paymentStatus === 'failed'
-  ) || [];
-  
-  const displayedRegistrations = showOnlyPaid ? paidRegistrations : allRegistrations;
-  
-  const getPaymentMethod = (reg: Registration): { method: string; icon: typeof CreditCard } => {
-    if (reg.paymentScreenshot === 'phonepe_payment' || reg.phonepeMerchantTransactionId) {
-      return { method: 'Pay Online', icon: CreditCard };
-    } else if (reg.paymentScreenshot && reg.paymentScreenshot.startsWith('/')) {
-      return { method: 'QR Scan', icon: QrCode };
-    }
-    return { method: 'Pending', icon: CreditCard };
-  };
   
   const statCards = [
     { icon: UserCheck, label: "Total Registrations", value: allRegistrations.length, testId: "text-registration-count" },
@@ -258,27 +240,13 @@ export default function Admin() {
                         <div className="overflow-x-auto">
                           <div className="mb-4 flex flex-wrap items-center gap-2">
                             <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                              Paid: {paidRegistrations.length}
+                              Total Registrations: {allRegistrations.length}
                             </Badge>
-                            <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300">
-                              Pending/Failed: {pendingPaymentRegistrations.length}
-                            </Badge>
-                            <Button
-                              variant={showOnlyPaid ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => setShowOnlyPaid(!showOnlyPaid)}
-                              data-testid="button-toggle-paid-filter"
-                            >
-                              <Filter className="w-4 h-4 mr-1" />
-                              {showOnlyPaid ? "Showing Paid Only" : "Showing All"}
-                            </Button>
                           </div>
                           <Table>
                             <TableHeader>
                               <TableRow>
                                 <TableHead>Photo</TableHead>
-                                <TableHead>Payment Method</TableHead>
-                                <TableHead>Status</TableHead>
                                 <TableHead>Registration ID</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
@@ -287,16 +255,14 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {displayedRegistrations.map((reg, index) => {
-                                const paymentInfo = getPaymentMethod(reg);
-                                const PaymentIcon = paymentInfo.icon;
+                              {allRegistrations.map((reg, index) => {
                                 return (
                                 <motion.tr
                                   key={reg.id}
                                   initial={{ opacity: 0, x: -10 }}
                                   animate={{ opacity: 1, x: 0 }}
                                   transition={{ delay: index * 0.03 }}
-                                  className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ${reg.paymentStatus === 'failed' || reg.paymentStatus === 'pending' ? 'bg-amber-50/50 dark:bg-amber-900/10' : ''}`}
+                                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
                                   data-testid={`row-registration-${reg.id}`}
                                 >
                                   <TableCell>
@@ -311,32 +277,6 @@ export default function Admin() {
                                       <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
                                         <Users className="w-4 h-4 text-muted-foreground" />
                                       </div>
-                                    )}
-                                  </TableCell>
-                                  <TableCell>
-                                    <Badge className={paymentInfo.method === 'Pay Online' 
-                                      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' 
-                                      : paymentInfo.method === 'QR Scan' 
-                                        ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
-                                        : 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300'
-                                    }>
-                                      <PaymentIcon className="w-3 h-3 mr-1" />
-                                      {paymentInfo.method}
-                                    </Badge>
-                                  </TableCell>
-                                  <TableCell>
-                                    {reg.paymentStatus === 'paid' || reg.paymentStatus === 'screenshot_uploaded' ? (
-                                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                                        Paid
-                                      </Badge>
-                                    ) : reg.paymentStatus === 'failed' ? (
-                                      <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300">
-                                        Failed
-                                      </Badge>
-                                    ) : (
-                                      <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300">
-                                        Pending
-                                      </Badge>
                                     )}
                                   </TableCell>
                                   <TableCell className="font-mono text-xs text-primary">{reg.registrationId}</TableCell>
@@ -1177,13 +1117,7 @@ export default function Admin() {
                   </div>
                 )}
                 
-                <div className="grid grid-cols-2 gap-4 border-t pt-4">
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">Payment Status</label>
-                    <Badge className={selectedReg.paymentStatus === "completed" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"}>
-                      {selectedReg.paymentStatus || "Pending"}
-                    </Badge>
-                  </div>
+                <div className="border-t pt-4">
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">Registered On</label>
                     <p className="text-sm">{selectedReg.createdAt ? new Date(selectedReg.createdAt).toLocaleString() : "-"}</p>
@@ -1228,43 +1162,6 @@ export default function Admin() {
                   </div>
                 )}
 
-                {selectedReg.paymentScreenshot && (
-                  <div className="border-t pt-4">
-                    <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                      <ImageIcon className="w-4 h-4" />
-                      Payment Screenshot
-                    </label>
-                    <div className="mt-2">
-                      <a href={selectedReg.paymentScreenshot} target="_blank" rel="noopener noreferrer">
-                        <img 
-                          src={selectedReg.paymentScreenshot} 
-                          alt="Payment Screenshot" 
-                          className="w-full rounded-lg border border-border max-h-96 object-contain bg-muted/20 cursor-pointer"
-                          data-testid="img-payment-screenshot-admin"
-                        />
-                      </a>
-                      <div className="flex items-center justify-between mt-2">
-                        <p className="text-xs text-muted-foreground">Click image to view full size</p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            const link = document.createElement('a');
-                            link.href = selectedReg.paymentScreenshot!;
-                            link.download = `payment-${selectedReg.registrationId}.jpg`;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                          }}
-                          data-testid="button-download-payment-screenshot"
-                        >
-                          <Download className="w-4 h-4 mr-2" />
-                          Download
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </motion.div>
             </DialogContent>
           </Dialog>

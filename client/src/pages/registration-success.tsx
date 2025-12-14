@@ -1,12 +1,21 @@
-import { useParams, Link } from "wouter";
+import { useEffect } from "react";
+import { useParams, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { CheckCircle2, MessageCircle, Home, ArrowRight } from "lucide-react";
-import { SiWhatsapp } from "react-icons/si";
+import { CheckCircle2, Loader2 } from "lucide-react";
 
 export default function RegistrationSuccess() {
   const { id } = useParams<{ id: string }>();
+  const [, setLocation] = useLocation();
+
+  useEffect(() => {
+    if (id) {
+      const timer = setTimeout(() => {
+        setLocation(`/ticket/${id}`);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [id, setLocation]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-card flex items-center justify-center p-4">
@@ -31,7 +40,7 @@ export default function RegistrationSuccess() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Thank You for Registering!
+              Payment Successful!
             </motion.h1>
             <motion.p 
               className="text-white/90"
@@ -59,54 +68,14 @@ export default function RegistrationSuccess() {
                 </p>
               </div>
 
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 bg-muted/50 rounded-lg p-4">
-                  <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center flex-shrink-0">
-                    <SiWhatsapp className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div className="text-left">
-                    <p className="font-medium text-foreground">
-                      Your Ticket Will Be Sent to WhatsApp
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      We will send your event ticket to your registered WhatsApp number within 24 hours.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 bg-muted/50 rounded-lg p-4">
-                  <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center flex-shrink-0">
-                    <MessageCircle className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div className="text-left">
-                    <p className="font-medium text-foreground">
-                      Confirmation Email Sent
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      A confirmation email has been sent to your registered email address.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-border">
-                <p className="text-sm text-muted-foreground mb-4">
-                  If you don't receive your ticket within 24 hours, please contact us.
+              <div className="flex flex-col items-center gap-4">
+                <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                <p className="text-muted-foreground">
+                  Redirecting to your ticket...
                 </p>
-                <div className="flex flex-wrap gap-3 justify-center">
-                  <Link href="/">
-                    <Button variant="outline" data-testid="button-go-home">
-                      <Home className="w-4 h-4 mr-2" />
-                      Go to Home
-                    </Button>
-                  </Link>
-                  <Link href="/contact">
-                    <Button data-testid="button-contact-us">
-                      Contact Us
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </Link>
-                </div>
+                <p className="text-sm text-muted-foreground">
+                  A confirmation email has been sent to your registered email address.
+                </p>
               </div>
             </motion.div>
           </CardContent>

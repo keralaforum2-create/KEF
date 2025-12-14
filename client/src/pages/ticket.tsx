@@ -365,22 +365,6 @@ export default function Ticket() {
           )}
         </motion.div>
 
-        {ticket.paymentScreenshot && (
-          <motion.div 
-            className="mt-4 bg-card border border-card-border rounded-lg p-6"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <h2 className="text-lg font-semibold mb-4">Payment Proof</h2>
-            <img 
-              src={ticket.paymentScreenshot} 
-              alt="Payment screenshot" 
-              className="w-full max-w-md rounded-lg border border-border object-contain"
-              data-testid="img-payment-screenshot"
-            />
-          </motion.div>
-        )}
 
         <motion.div 
           className="mt-6 text-center"
