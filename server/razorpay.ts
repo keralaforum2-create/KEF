@@ -123,6 +123,9 @@ export function verifyRazorpayPayment(params: RazorpayVerifyParams): RazorpayVer
 
 export async function fetchRazorpayPayment(paymentId: string) {
   try {
+    if (!razorpay) {
+      throw new Error('Razorpay not initialized');
+    }
     const payment = await razorpay.payments.fetch(paymentId);
     return {
       success: true,

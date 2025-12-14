@@ -2166,86 +2166,45 @@ export default function Participate() {
                                 <div className="border-t pt-4">
                                   <h4 className="font-medium mb-3 flex items-center gap-2">
                                     <CreditCard className="w-4 h-4" />
-                                    Payment Method
+                                    Payment
                                   </h4>
 
                                   <div className="space-y-4">
-                                    <div className="bg-white dark:bg-gray-900 p-4 rounded-lg text-center">
-                                      <img 
-                                        src={bulkQrCodeImage} 
-                                        alt="Bulk Registration Payment QR" 
-                                        className="w-48 h-48 mx-auto"
-                                        data-testid="img-bulk-qr-code"
-                                      />
-                                      <p className="text-sm text-muted-foreground mt-2">
-                                        Scan this QR code with any UPI app
+                                    <div className="bg-primary/10 rounded-lg p-4 text-center">
+                                      <p className="text-sm text-muted-foreground mb-1">Amount to Pay:</p>
+                                      <p className="text-2xl font-bold text-primary">
+                                        Rs {getBulkTotalAmount().toLocaleString()}/-
                                       </p>
-                                      <p className="text-xs text-muted-foreground">
-                                        Or pay directly to UPI ID: <strong>caliphworldfoundation.9605399676.ibz@icici</strong>
-                                      </p>
-                                    </div>
-                                    
-                                    <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                                      <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-2 flex items-center gap-2">
-                                        <Building2 className="w-4 h-4" />
-                                        Bank Transfer Details
-                                      </h5>
-                                      <div className="text-sm space-y-1 text-blue-700 dark:text-blue-300">
-                                        <p><strong>Account Name:</strong> CALIPH WORLD FOUNDATION</p>
-                                        <p><strong>Bank:</strong> ICICI BANK</p>
-                                        <p><strong>Branch:</strong> MUKKAM BRANCH</p>
-                                        <p><strong>A/C No:</strong> 265405000474</p>
-                                        <p><strong>IFSC:</strong> ICIC0002654</p>
-                                      </div>
-                                    </div>
-
-                                    <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
-                                      <p className="text-sm text-amber-800 dark:text-amber-200 font-medium">
-                                        Amount to Pay: Rs {getBulkTotalAmount().toLocaleString()}/-
-                                      </p>
-                                      <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                                      <p className="text-xs text-muted-foreground mt-1">
                                         ({bulkFormData.numberOfStudents || 0} students x Rs {getBulkPricePerStudent()})
                                       </p>
                                     </div>
-                                    <div>
-                                      <label className="text-sm font-medium">Upload Payment Screenshot *</label>
-                                      <Input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) => {
-                                          const file = e.target.files?.[0];
-                                          if (file) {
-                                            setBulkFormData({...bulkFormData, paymentScreenshot: file as any});
-                                          }
-                                        }}
-                                        className="mt-1"
-                                        data-testid="input-bulk-payment-screenshot"
-                                      />
-                                      <p className="text-xs text-muted-foreground mt-1">Upload screenshot of your payment confirmation</p>
-                                    </div>
+                                    
+                                    <Button
+                                      type="button"
+                                      size="lg"
+                                      className="w-full gap-2"
+                                      onClick={handleBulkRegistrationSubmit}
+                                      disabled={isBulkSubmitting || isProcessingOnlinePayment}
+                                      data-testid="button-bulk-pay-online"
+                                    >
+                                      {isBulkSubmitting || isProcessingOnlinePayment ? (
+                                        <>
+                                          <Loader2 className="w-4 h-4 animate-spin" />
+                                          Processing...
+                                        </>
+                                      ) : (
+                                        <>
+                                          <CreditCard className="w-4 h-4" />
+                                          Pay Online - Rs {getBulkTotalAmount().toLocaleString()}
+                                        </>
+                                      )}
+                                    </Button>
+                                    <p className="text-xs text-center text-muted-foreground">
+                                      Secure payment via Razorpay (Cards, UPI, NetBanking)
+                                    </p>
                                   </div>
                                 </div>
-
-                                <Button
-                                  type="button"
-                                  size="lg"
-                                  className="w-full"
-                                  onClick={handleBulkRegistrationSubmit}
-                                  disabled={isBulkSubmitting || isProcessingOnlinePayment}
-                                  data-testid="button-bulk-submit"
-                                >
-                                  {isBulkSubmitting ? (
-                                    <>
-                                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                      Processing...
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Send className="w-4 h-4 mr-2" />
-                                      Submit Registration
-                                    </>
-                                  )}
-                                </Button>
 
                                 <div className="mt-6">
                                   <div className="flex items-center gap-3 w-full my-4">
@@ -3763,6 +3722,60 @@ export default function Participate() {
                         />
                       </motion.div>
 
+                      {/* Profile Photo Upload - placed after Institution */}
+                      <motion.div
+                        custom={4.2}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={formFieldVariants}
+                      >
+                        <FormField
+                          control={form.control}
+                          name="profilePhoto"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="flex items-center gap-2">
+                                <User className="w-4 h-4" />
+                                Upload Your Photo <span className="text-destructive">*</span>
+                              </FormLabel>
+                              <FormControl>
+                                <div className="space-y-3">
+                                  <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                      const file = e.target.files?.[0];
+                                      if (file) {
+                                        form.setValue("profilePhoto", file);
+                                      }
+                                    }}
+                                    className="cursor-pointer"
+                                    data-testid="input-profile-photo"
+                                  />
+                                  {form.watch("profilePhoto") && (
+                                    <motion.div 
+                                      className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800"
+                                      initial={{ opacity: 0, y: -10 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                    >
+                                      <CheckCircle className="w-4 h-4 text-blue-600" />
+                                      <span className="text-sm text-blue-700 dark:text-blue-400">
+                                        Photo uploaded: {(form.watch("profilePhoto") as File)?.name}
+                                      </span>
+                                    </motion.div>
+                                  )}
+                                </div>
+                              </FormControl>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Upload a clear photo of yourself for your event badge (Required)
+                              </p>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </motion.div>
+
                       {registrationType === "expert-session" && (
                         <motion.div
                           custom={4.5}
@@ -4018,189 +4031,34 @@ export default function Participate() {
                               </p>
                             </div>
 
-                            {/* QR Code Payment Section */}
+                            {/* Online Payment Section */}
                             <div className="flex flex-col items-center gap-4">
-                              <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm">
-                                <img 
-                                  src={ticketCategory === "platinum" ? premiumQrCodeImage : normalQrCodeImage} 
-                                  alt="Payment QR Code" 
-                                  className="w-48 h-48 object-contain"
-                                  data-testid="img-payment-qr"
-                                />
-                              </div>
-
                               <Button
                                 type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={handleDownloadQR}
-                                className="gap-2"
-                                data-testid="button-download-qr"
+                                variant="default"
+                                size="lg"
+                                onClick={handleRazorpayPayment}
+                                disabled={isProcessingOnlinePayment}
+                                className="w-full gap-2"
+                                data-testid="button-pay-online"
                               >
-                                <Download className="w-4 h-4" />
-                                Download QR Code
+                                {isProcessingOnlinePayment ? (
+                                  <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Processing...
+                                  </>
+                                ) : (
+                                  <>
+                                    <CreditCard className="w-4 h-4" />
+                                    Pay Online - Rs {getPaymentAmount()}
+                                  </>
+                                )}
                               </Button>
-
                               <p className="text-xs text-center text-muted-foreground">
-                                Scan this QR code with any UPI app to make payment
+                                Secure payment via Razorpay (Cards, UPI, NetBanking)
                               </p>
-
-                              <div className="w-full border-t pt-4 mt-2">
-                                <p className="text-sm text-center text-muted-foreground mb-3">Or pay securely online</p>
-                                <Button
-                                  type="button"
-                                  variant="default"
-                                  size="lg"
-                                  onClick={handleRazorpayPayment}
-                                  disabled={isProcessingOnlinePayment}
-                                  className="w-full gap-2"
-                                  data-testid="button-pay-online"
-                                >
-                                  {isProcessingOnlinePayment ? (
-                                    <>
-                                      <Loader2 className="w-4 h-4 animate-spin" />
-                                      Processing...
-                                    </>
-                                  ) : (
-                                    <>
-                                      <CreditCard className="w-4 h-4" />
-                                      Pay Online - Rs {getPaymentAmount()}
-                                    </>
-                                  )}
-                                </Button>
-                                <p className="text-xs text-center text-muted-foreground mt-2">
-                                  Secure payment via Razorpay (Cards, UPI, NetBanking)
-                                </p>
-                              </div>
-                              
-                              <div className="w-full mt-2 p-3 rounded-lg bg-muted/50 border text-center">
-                                <p className="text-xs text-muted-foreground mb-1">Or pay directly to UPI ID:</p>
-                                <p className="font-mono text-sm font-medium text-foreground select-all" data-testid="text-upi-id">
-                                  caliphworldfoundation.9605399676.ibz@icici
-                                </p>
-                              </div>
-
-                              <div className="w-full p-4 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800">
-                                <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-2 flex items-center gap-2">
-                                  <Building2 className="w-4 h-4" />
-                                  Bank Transfer Details
-                                </h5>
-                                <div className="text-sm space-y-1 text-blue-700 dark:text-blue-300">
-                                  <p><strong>Account Name:</strong> CALIPH WORLD FOUNDATION</p>
-                                  <p><strong>Bank:</strong> ICICI BANK</p>
-                                  <p><strong>Branch:</strong> MUKKAM BRANCH</p>
-                                  <p><strong>A/C No:</strong> 265405000474</p>
-                                  <p><strong>IFSC:</strong> ICIC0002654</p>
-                                </div>
-                              </div>
                             </div>
                           </div>
-
-                          {/* Screenshot upload section */}
-                          {(
-                            <div className="w-full max-w-md space-y-4">
-                              {/* Warning about screenshot manipulation */}
-                              <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-700">
-                                <div className="flex items-start gap-2">
-                                  <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                                  <div>
-                                    <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
-                                      Warning: Do not manipulate payment screenshots
-                                    </p>
-                                    <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
-                                      Submitting fake or edited payment screenshots will result in immediate ban and your registration will be cancelled. All payments are verified manually.
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <FormField
-                                control={form.control}
-                                name="paymentScreenshot"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center gap-2">
-                                      <span className="text-destructive">*</span>
-                                      Upload Payment Screenshot
-                                    </FormLabel>
-                                    <FormControl>
-                                      <div className="space-y-3">
-                                        <Input
-                                          type="file"
-                                          accept="image/*"
-                                          onChange={handleFileChange}
-                                          className="cursor-pointer"
-                                          data-testid="input-payment-screenshot"
-                                        />
-                                        {form.watch("paymentScreenshot") && (
-                                          <motion.div 
-                                            className="flex items-center gap-2 p-3 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800"
-                                            initial={{ opacity: 0, y: -10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                          >
-                                            <CheckCircle className="w-4 h-4 text-green-600" />
-                                            <span className="text-sm text-green-700 dark:text-green-400">
-                                              Screenshot uploaded: {(form.watch("paymentScreenshot") as File)?.name}
-                                            </span>
-                                          </motion.div>
-                                        )}
-                                      </div>
-                                    </FormControl>
-                                    <p className="text-xs text-muted-foreground mt-1">
-                                      Upload a screenshot of your payment confirmation (Required)
-                                    </p>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-
-                              {/* Profile Photo Upload */}
-                              <FormField
-                                control={form.control}
-                                name="profilePhoto"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center gap-2">
-                                      <User className="w-4 h-4" />
-                                      Upload Your Photo <span className="text-destructive">*</span>
-                                    </FormLabel>
-                                    <FormControl>
-                                      <div className="space-y-3">
-                                        <Input
-                                          type="file"
-                                          accept="image/*"
-                                          onChange={(e) => {
-                                            const file = e.target.files?.[0];
-                                            if (file) {
-                                              form.setValue("profilePhoto", file);
-                                            }
-                                          }}
-                                          className="cursor-pointer"
-                                          data-testid="input-profile-photo"
-                                        />
-                                        {form.watch("profilePhoto") && (
-                                          <motion.div 
-                                            className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800"
-                                            initial={{ opacity: 0, y: -10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                          >
-                                            <CheckCircle className="w-4 h-4 text-blue-600" />
-                                            <span className="text-sm text-blue-700 dark:text-blue-400">
-                                              Photo uploaded: {(form.watch("profilePhoto") as File)?.name}
-                                            </span>
-                                          </motion.div>
-                                        )}
-                                      </div>
-                                    </FormControl>
-                                    <p className="text-xs text-muted-foreground mt-1">
-                                      Upload a clear photo of yourself for your event badge (Required)
-                                    </p>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-                          )}
                         </div>
                       </motion.div>
                       
