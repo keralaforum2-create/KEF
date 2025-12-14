@@ -102,9 +102,15 @@ Respond with JSON in this exact format:
       ]
     });
 
-    const rawJson = response.text;
+    // Handle response - response.text is a property in @google/genai SDK
+    let rawJson: string | undefined;
+    if (typeof response.text === 'function') {
+      rawJson = await (response as any).text();
+    } else {
+      rawJson = response.text;
+    }
     
-    if (rawJson) {
+    if (rawJson && typeof rawJson === 'string') {
       const result: PaymentVerificationResult = JSON.parse(rawJson);
       console.log("Payment verification result:", JSON.stringify(result, null, 2));
       return result;
