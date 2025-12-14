@@ -617,7 +617,7 @@ export default function Home() {
           
           <motion.div 
             ref={partnersRef}
-            className="flex flex-col sm:flex-row items-center justify-center gap-12 sm:gap-20"
+            className="flex flex-col items-center justify-center gap-8"
             initial="hidden"
             animate={partnersInView ? "visible" : "hidden"}
             variants={{
@@ -637,14 +637,24 @@ export default function Home() {
             >
               <div className="h-24 flex items-center justify-center mb-4">
                 <img 
-                  src={caliphLifeSchoolLogo} 
-                  alt="Caliph Life School"
+                  src={keralaEconomicForumLogo} 
+                  alt="Kerala Economic Forum"
                   className="h-20 w-auto object-contain"
-                  data-testid="img-caliph-life-school"
+                  data-testid="img-kerala-economic-forum"
                 />
               </div>
-              <h3 className="font-semibold text-lg">Caliph Life School</h3>
+              <h3 className="font-semibold text-lg">Kerala Economic Forum</h3>
             </motion.div>
+            
+            <motion.p 
+              className="text-muted-foreground text-lg font-medium"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { opacity: 1, transition: { duration: 0.5 } }
+              }}
+            >
+              in association with
+            </motion.p>
             
             <motion.div 
               className="flex flex-col items-center text-center"
@@ -655,13 +665,13 @@ export default function Home() {
             >
               <div className="h-24 flex items-center justify-center mb-4">
                 <img 
-                  src={keralaEconomicForumLogo} 
-                  alt="Kerala Economic Forum"
+                  src={caliphLifeSchoolLogo} 
+                  alt="Caliph Life School"
                   className="h-20 w-auto object-contain"
-                  data-testid="img-kerala-economic-forum"
+                  data-testid="img-caliph-life-school"
                 />
               </div>
-              <h3 className="font-semibold text-lg">Kerala Economic Forum</h3>
+              <h3 className="font-semibold text-lg">Caliph Life School</h3>
             </motion.div>
           </motion.div>
         </div>
