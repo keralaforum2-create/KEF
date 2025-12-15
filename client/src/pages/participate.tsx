@@ -3894,7 +3894,7 @@ export default function Participate() {
                                         </li>
                                         <li className="flex items-center gap-2">
                                           <Check className="w-4 h-4 text-yellow-600 flex-shrink-0" />
-                                          <span>Lunch & Tea included</span>
+                                          <span>Lunch included</span>
                                         </li>
                                         <li className="flex items-center gap-2 text-muted-foreground">
                                           <X className="w-4 h-4 text-red-400 flex-shrink-0" />
