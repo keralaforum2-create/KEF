@@ -80,7 +80,7 @@ const registrationSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   age: z.string().optional(),
-  institution: z.string().optional(),
+  institution: z.string().min(2, "Institution/Organization name is required"),
   contestName: z.string().optional(),
   participantType: z.enum(["school-student", "college-student", "commoner"]).optional(),
   ticketCategory: z.enum(["silver", "gold", "platinum"]).optional(),
@@ -3708,7 +3708,7 @@ export default function Participate() {
                           name="institution"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Institution / Organization</FormLabel>
+                              <FormLabel>Institution / Organization <span className="text-destructive">*</span></FormLabel>
                               <FormControl>
                                 <Input 
                                   placeholder="Your school, college or organization" 
