@@ -71,6 +71,10 @@ import businessQuizQrCodeImage from "@assets/99_1764749383754.png";
 import bulkQrCodeImage from "@assets/upi_qr_bulk.png";
 import eventPosterImage from "@assets/Screenshot_2025-12-02_221240_1764693826335.png";
 import ticketBgImage from "@assets/Beige_Black_Minimalist_Event_Music_Festival_Concert_Ticket_1764742314478.png";
+import jamPosterImage from "@assets/IMG_3895_1765874849748.jpeg";
+import cameraCraftPosterImage from "@assets/IMG_3897_1765874870193.jpeg";
+import businessQuizPosterImage from "@assets/IMG_3896_1765874882186.jpeg";
+import pitchRoomPosterImage from "@assets/IMG_3894_1765874893392.jpeg";
 
 const registrationSchema = z.object({
   registrationType: z.enum(["expert-session", "contest"], {
