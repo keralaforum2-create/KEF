@@ -152,6 +152,22 @@ export default function Admin() {
     return variants[type] || "bg-gray-100 text-gray-800";
   };
 
+  const getTicketCategoryBadge = (category: string | null | undefined) => {
+    const variants: Record<string, string> = {
+      platinum: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+      gold: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300",
+      silver: "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
+      premium: "bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300",
+      normal: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+    };
+    return variants[category || ""] || "bg-gray-100 text-gray-800";
+  };
+
+  const formatTicketCategory = (category: string | null | undefined) => {
+    if (!category) return "-";
+    return category.charAt(0).toUpperCase() + category.slice(1);
+  };
+
   const allRegistrations = registrations || [];
   
   const statCards = [
@@ -250,6 +266,7 @@ export default function Admin() {
                                 <TableHead>Registration ID</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
+                                <TableHead>Ticket Category</TableHead>
                                 <TableHead>Type</TableHead>
                                 <TableHead>Action</TableHead>
                               </TableRow>
@@ -283,12 +300,21 @@ export default function Admin() {
                                   <TableCell className="font-medium">{reg.fullName}</TableCell>
                                   <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
                                   <TableCell>
+                                    {reg.ticketCategory ? (
+                                      <Badge className={getTicketCategoryBadge(reg.ticketCategory)}>
+                                        {formatTicketCategory(reg.ticketCategory)}
+                                      </Badge>
+                                    ) : (
+                                      <span className="text-muted-foreground text-sm">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
                                     <Badge className={getRegistrationTypeBadge(reg.registrationType)}>
                                       {reg.registrationType === "expert-session" ? "Expert Session" : "Contest"}
                                     </Badge>
                                   </TableCell>
                                   <TableCell>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 flex-wrap">
                                       <Button
                                         variant="outline"
                                         size="sm"
@@ -298,6 +324,24 @@ export default function Admin() {
                                         <Eye className="w-4 h-4 mr-1" />
                                         View
                                       </Button>
+                                      {reg.profilePhoto && (
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => {
+                                            const link = document.createElement('a');
+                                            link.href = reg.profilePhoto!;
+                                            link.download = `photo-${reg.registrationId}.jpg`;
+                                            document.body.appendChild(link);
+                                            link.click();
+                                            document.body.removeChild(link);
+                                          }}
+                                          data-testid={`button-download-photo-${reg.id}`}
+                                        >
+                                          <Download className="w-4 h-4 mr-1" />
+                                          Photo
+                                        </Button>
+                                      )}
                                       <Button
                                         variant="default"
                                         size="sm"
