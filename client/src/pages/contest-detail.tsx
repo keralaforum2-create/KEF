@@ -19,11 +19,17 @@ import {
 } from "lucide-react";
 import { ScrollFadeUp, StaggerContainer, StaggerItem } from "@/lib/animations";
 
+import jamPoster from "@assets/IMG_3895_1765875326518.jpeg";
+import cameraCraftPoster from "@assets/IMG_3897_1765875367534.jpeg";
+import businessQuizPoster from "@assets/IMG_3896_1765875373117.jpeg";
+import pitchRoomPoster from "@assets/IMG_3894_1765875378347.jpeg";
+
 interface ContestData {
   id: string;
   title: string;
   tagline: string;
   badge: string;
+  poster: string;
   language?: string;
   category?: string;
   introduction: string;
@@ -56,6 +62,7 @@ const contestsData: Record<string, ContestData> = {
     title: "The Pitch Room",
     tagline: "Where bold ideas meet real opportunities",
     badge: "Age 10 to 29",
+    poster: pitchRoomPoster,
     introduction: "The Pitch Room is Kerala Startup Fest's flagship idea-submission platform created to discover realistic, buildable, and scalable ideas from students and young innovators. This competition is not for imaginary concepts — we invite ideas that can be turned into real startups with proper execution, mentoring, and funding. Participants submit their ideas online → shortlisted innovators proceed to an online screening → the Top 10 finalists pitch live at Kerala Startup Fest 2026, directly in front of real funders, investors, startup advisors, and venture capitalists. Winners receive cash prizes up to ₹50,000, along with incubation support and opportunities for real funding.",
     eligibility: [
       "School students, college students and young adults up to age 29",
@@ -142,6 +149,7 @@ const contestsData: Record<string, ContestData> = {
     title: "National Level Inter School Business Quiz",
     tagline: "Test your business knowledge and brand awareness",
     badge: "Grade 8-12",
+    poster: businessQuizPoster,
     introduction: "A national level inter-school business quiz that tests real-world business awareness and brand knowledge. This quiz is designed for school students who are curious about the world of business, brands, and entrepreneurship.",
     eligibility: [
       "Open to Grade 8 to 12 students across the country",
@@ -186,6 +194,7 @@ const contestsData: Record<string, ContestData> = {
     title: "Camera Craft – Photography & Reel-Making Contest",
     tagline: "National Level Manual Photography & Reel-Making Contest",
     badge: "School & College Students",
+    poster: cameraCraftPoster,
     category: "Offline, Multi-Round Competition",
     introduction: "Camera Craft is a national level photography and reel-making contest that tests creativity, technical skills, and storytelling. Conducted as a series of rounds covering both Photography and Videography/Reels, participants compete for the title through multiple elimination rounds with cumulative scoring.",
     eligibility: [
@@ -262,6 +271,7 @@ const contestsData: Record<string, ContestData> = {
     title: "State Level Just A Minute (JAM) Contest",
     tagline: "One minute. One topic. Unlimited creativity.",
     badge: "School & College Students",
+    poster: jamPoster,
     language: "Malayalam Only",
     category: "Individual Event",
     introduction: "A one-minute fun battle of spontaneity, wit, speed, and quick thinking. Participants are given a topic and must speak for exactly one minute without hesitation, repetition, or deviation. A classic challenge that tests your communication skills and presence of mind.",
@@ -346,18 +356,41 @@ export default function ContestDetail() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-primary/5 via-background to-accent/5">
+      {/* Poster Section */}
+      <section className="pt-8 pb-4 bg-gradient-to-br from-primary/5 via-background to-accent/5">
         <div className="container mx-auto px-4">
           <ScrollFadeUp>
             <Link href="/contests">
-              <Button variant="ghost" className="mb-6" data-testid="button-back-contests">
+              <Button variant="ghost" className="mb-4" data-testid="button-back-contests">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Contests
               </Button>
             </Link>
           </ScrollFadeUp>
+          
+          <ScrollFadeUp delay={0.1}>
+            <div className="flex justify-center mb-8">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="rounded-lg overflow-hidden shadow-xl max-w-md w-full"
+              >
+                <img 
+                  src={contest.poster} 
+                  alt={`${contest.title} Poster`}
+                  className="w-full h-auto object-contain"
+                  data-testid="img-contest-poster"
+                />
+              </motion.div>
+            </div>
+          </ScrollFadeUp>
+        </div>
+      </section>
 
+      {/* Hero Section */}
+      <section className="py-8 md:py-12 bg-gradient-to-br from-primary/5 via-background to-accent/5">
+        <div className="container mx-auto px-4">
           <ScrollFadeUp delay={0.1}>
             <Badge variant="outline" className="mb-4">{contest.badge}</Badge>
             <h1 className="text-4xl md:text-5xl font-bold mb-4" data-testid="text-contest-title">
