@@ -22,7 +22,10 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, Download, FileText } from "lucide-react";
+import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, Download, FileText, Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration } from "@shared/schema";
@@ -35,6 +38,20 @@ export default function Admin() {
   const [selectedInvestor, setSelectedInvestor] = useState<InvestorMentor | null>(null);
   const [selectedSponsorship, setSelectedSponsorship] = useState<Sponsorship | null>(null);
   const [selectedBulkReg, setSelectedBulkReg] = useState<BulkRegistration | null>(null);
+  
+  // Admin registration form state
+  const [adminRegForm, setAdminRegForm] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    age: "",
+    institution: "",
+    registrationType: "expert-session" as "expert-session" | "contest",
+    contestName: "",
+    sessionName: "",
+    ticketCategory: "silver" as "silver" | "gold" | "platinum" | "normal" | "premium",
+    participantType: "commoner" as "school-student" | "college-student" | "commoner",
+  });
   
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
@@ -122,6 +139,44 @@ export default function Admin() {
       toast({ title: "Failed to delete sponsorship", variant: "destructive" });
     },
   });
+
+  const adminRegisterMutation = useMutation({
+    mutationFn: async (data: typeof adminRegForm) => {
+      return await apiRequest("POST", "/api/admin/register", data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
+      toast({ title: "Registration added successfully! Email sent to the user." });
+      setAdminRegForm({
+        fullName: "",
+        email: "",
+        phone: "",
+        age: "",
+        institution: "",
+        registrationType: "expert-session",
+        contestName: "",
+        sessionName: "",
+        ticketCategory: "silver",
+        participantType: "commoner",
+      });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Failed to add registration", 
+        description: error?.message || "An error occurred",
+        variant: "destructive" 
+      });
+    },
+  });
+
+  const handleAdminRegSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!adminRegForm.fullName || !adminRegForm.email || !adminRegForm.phone) {
+      toast({ title: "Please fill in all required fields", variant: "destructive" });
+      return;
+    }
+    adminRegisterMutation.mutate(adminRegForm);
+  };
 
   const getRegistrationTypeBadge = (type: string) => {
     const variants: Record<string, string> = {
@@ -231,6 +286,10 @@ export default function Admin() {
                 </TabsTrigger>
                 <TabsTrigger value="bulk" data-testid="tab-bulk">
                   Bulk Registrations ({bulkRegistrations?.length || 0})
+                </TabsTrigger>
+                <TabsTrigger value="add-registration" data-testid="tab-add-registration">
+                  <Plus className="w-4 h-4 mr-1" />
+                  Add Registration
                 </TabsTrigger>
               </TabsList>
 
@@ -761,6 +820,213 @@ export default function Admin() {
                           <p className="text-muted-foreground">No bulk registrations yet</p>
                         </div>
                       )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="add-registration">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Plus className="w-5 h-5" />
+                        Add Manual Registration
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <form onSubmit={handleAdminRegSubmit} className="space-y-6 max-w-2xl">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="fullName">Full Name *</Label>
+                            <Input
+                              id="fullName"
+                              value={adminRegForm.fullName}
+                              onChange={(e) => setAdminRegForm(prev => ({ ...prev, fullName: e.target.value }))}
+                              placeholder="Enter full name"
+                              required
+                              data-testid="input-admin-fullname"
+                            />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <Label htmlFor="email">Email *</Label>
+                            <Input
+                              id="email"
+                              type="email"
+                              value={adminRegForm.email}
+                              onChange={(e) => setAdminRegForm(prev => ({ ...prev, email: e.target.value }))}
+                              placeholder="Enter email"
+                              required
+                              data-testid="input-admin-email"
+                            />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <Label htmlFor="phone">Phone Number *</Label>
+                            <Input
+                              id="phone"
+                              value={adminRegForm.phone}
+                              onChange={(e) => setAdminRegForm(prev => ({ ...prev, phone: e.target.value }))}
+                              placeholder="Enter phone number"
+                              required
+                              data-testid="input-admin-phone"
+                            />
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <Label htmlFor="age">Age</Label>
+                            <Input
+                              id="age"
+                              value={adminRegForm.age}
+                              onChange={(e) => setAdminRegForm(prev => ({ ...prev, age: e.target.value }))}
+                              placeholder="Enter age"
+                              data-testid="input-admin-age"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="institution">Institution</Label>
+                            <Input
+                              id="institution"
+                              value={adminRegForm.institution}
+                              onChange={(e) => setAdminRegForm(prev => ({ ...prev, institution: e.target.value }))}
+                              placeholder="School/College/Company"
+                              data-testid="input-admin-institution"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label htmlFor="participantType">Participant Type</Label>
+                            <Select
+                              value={adminRegForm.participantType}
+                              onValueChange={(value) => setAdminRegForm(prev => ({ ...prev, participantType: value as any }))}
+                            >
+                              <SelectTrigger data-testid="select-admin-participant-type">
+                                <SelectValue placeholder="Select participant type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="school-student">School Student</SelectItem>
+                                <SelectItem value="college-student">College Student</SelectItem>
+                                <SelectItem value="commoner">General Public</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+
+                        <div className="border-t pt-4 space-y-4">
+                          <h3 className="font-semibold">Registration Details</h3>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="registrationType">Registration Type *</Label>
+                              <Select
+                                value={adminRegForm.registrationType}
+                                onValueChange={(value) => setAdminRegForm(prev => ({ 
+                                  ...prev, 
+                                  registrationType: value as any,
+                                  contestName: value === "expert-session" ? "" : prev.contestName,
+                                  sessionName: value === "contest" ? "" : prev.sessionName,
+                                }))}
+                              >
+                                <SelectTrigger data-testid="select-admin-registration-type">
+                                  <SelectValue placeholder="Select registration type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="expert-session">Expert Session</SelectItem>
+                                  <SelectItem value="contest">Contest</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="ticketCategory">Ticket Category</Label>
+                              <Select
+                                value={adminRegForm.ticketCategory}
+                                onValueChange={(value) => setAdminRegForm(prev => ({ ...prev, ticketCategory: value as any }))}
+                              >
+                                <SelectTrigger data-testid="select-admin-ticket-category">
+                                  <SelectValue placeholder="Select ticket category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="silver">Silver</SelectItem>
+                                  <SelectItem value="gold">Gold</SelectItem>
+                                  <SelectItem value="platinum">Platinum</SelectItem>
+                                  <SelectItem value="normal">Normal</SelectItem>
+                                  <SelectItem value="premium">Premium</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            {adminRegForm.registrationType === "expert-session" && (
+                              <div className="space-y-2 md:col-span-2">
+                                <Label htmlFor="sessionName">Session Name</Label>
+                                <Input
+                                  id="sessionName"
+                                  value={adminRegForm.sessionName}
+                                  onChange={(e) => setAdminRegForm(prev => ({ ...prev, sessionName: e.target.value }))}
+                                  placeholder="Enter session name"
+                                  data-testid="input-admin-session-name"
+                                />
+                              </div>
+                            )}
+
+                            {adminRegForm.registrationType === "contest" && (
+                              <div className="space-y-2 md:col-span-2">
+                                <Label htmlFor="contestName">Contest Name</Label>
+                                <Select
+                                  value={adminRegForm.contestName}
+                                  onValueChange={(value) => setAdminRegForm(prev => ({ ...prev, contestName: value }))}
+                                >
+                                  <SelectTrigger data-testid="select-admin-contest-name">
+                                    <SelectValue placeholder="Select contest" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="The Pitch Room">The Pitch Room</SelectItem>
+                                    <SelectItem value="Code Clash">Code Clash</SelectItem>
+                                    <SelectItem value="Case Study">Case Study</SelectItem>
+                                    <SelectItem value="Startup Sprint">Startup Sprint</SelectItem>
+                                    <SelectItem value="Other">Other</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex gap-4 pt-4">
+                          <Button 
+                            type="submit" 
+                            disabled={adminRegisterMutation.isPending}
+                            data-testid="button-admin-submit-registration"
+                          >
+                            {adminRegisterMutation.isPending ? "Adding..." : "Add Registration"}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setAdminRegForm({
+                              fullName: "",
+                              email: "",
+                              phone: "",
+                              age: "",
+                              institution: "",
+                              registrationType: "expert-session",
+                              contestName: "",
+                              sessionName: "",
+                              ticketCategory: "silver",
+                              participantType: "commoner",
+                            })}
+                            data-testid="button-admin-clear-form"
+                          >
+                            Clear Form
+                          </Button>
+                        </div>
+                      </form>
                     </CardContent>
                   </Card>
                 </motion.div>

@@ -415,6 +415,65 @@ export async function registerRoutes(
     }
   });
 
+  // Admin manual registration endpoint (no payment required)
+  app.post("/api/admin/register", async (req: Request, res) => {
+    try {
+      const { fullName, email, phone, registrationType, contestName, sessionName, ticketCategory, age, institution, participantType } = req.body;
+      
+      if (!fullName || !email || !phone || !registrationType) {
+        return res.status(400).json({ 
+          message: "Full name, email, phone, and registration type are required" 
+        });
+      }
+
+      // Prepare data for validation using the shared schema
+      const registrationData = {
+        fullName,
+        email,
+        phone,
+        age: age || "N/A",
+        institution: institution || undefined,
+        registrationType,
+        contestName: contestName || undefined,
+        sessionName: sessionName || undefined,
+        ticketCategory: ticketCategory || undefined,
+        participantType: participantType || undefined,
+        paymentStatus: "admin_added",
+        paymentScreenshot: "admin_registration",
+      };
+
+      // Validate using the shared schema
+      const result = insertRegistrationSchema.safeParse(registrationData);
+      
+      if (!result.success) {
+        const validationError = fromError(result.error);
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          error: validationError.toString() 
+        });
+      }
+
+      const registration = await storage.createRegistration(result.data);
+
+      const baseUrl = resolveBaseUrl(req);
+      
+      // Send ticket email to the user
+      sendRegistrationEmails(registration, baseUrl).catch((err) => {
+        console.error('Failed to send registration emails:', err);
+      });
+
+      return res.status(201).json({ 
+        message: "Registration added successfully", 
+        registration 
+      });
+    } catch (error: any) {
+      console.error("Error creating admin registration:", error);
+      return res.status(500).json({ 
+        message: error?.message || "Internal server error" 
+      });
+    }
+  });
+
   // Payment create endpoint - alias for phonepe/initiate
   app.post("/api/payment/create", async (req: Request, res) => {
     try {
