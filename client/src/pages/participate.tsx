@@ -1846,12 +1846,20 @@ export default function Participate() {
                 {["An individual", "A team", "From institution"].map((item, index) => (
                   <motion.div 
                     key={item}
-                    className="flex items-center gap-3 p-4 rounded-xl bg-background border border-border"
+                    className="flex items-center gap-3 p-4 rounded-xl bg-background border border-border cursor-pointer"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ scale: 1.02 }}
+                    onClick={() => {
+                      form.setValue("registrationType", "expert-session");
+                      setShowForm(true);
+                      setTimeout(() => {
+                        document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
+                      }, 100);
+                    }}
+                    data-testid={`button-join-${item.toLowerCase().replace(/\s+/g, '-')}`}
                   >
                     <CheckCircle2 className="w-5 h-5 text-primary" />
                     <span className="font-medium">{item}</span>
