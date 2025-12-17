@@ -226,14 +226,10 @@ export default function Admin() {
 
   const allRegistrations = registrations || [];
   const contestRegistrations = allRegistrations.filter(r => r.registrationType === "contest");
-  const paidStatuses = ['paid', 'screenshot_uploaded'];
-  const paidExpertSessionRegistrations = allRegistrations.filter(r => 
-    r.registrationType === "expert-session" && paidStatuses.includes(r.paymentStatus || '')
-  );
-  const filteredExpertSessionRegistrations = expertCategoryFilter === "all" 
-    ? paidExpertSessionRegistrations 
-    : paidExpertSessionRegistrations.filter(r => r.ticketCategory === expertCategoryFilter);
   const expertSessionRegistrations = allRegistrations.filter(r => r.registrationType === "expert-session");
+  const filteredExpertSessionRegistrations = expertCategoryFilter === "all" 
+    ? expertSessionRegistrations 
+    : expertSessionRegistrations.filter(r => r.ticketCategory === expertCategoryFilter);
 
   const escapeCSVField = (field: string | null | undefined): string => {
     if (field === null || field === undefined) return '""';
@@ -356,7 +352,7 @@ export default function Admin() {
                   Contest ({contestRegistrations.length})
                 </TabsTrigger>
                 <TabsTrigger value="expert-registrations" data-testid="tab-expert-registrations">
-                  Expert Session ({paidExpertSessionRegistrations.length})
+                  Expert Session ({expertSessionRegistrations.length})
                 </TabsTrigger>
                 <TabsTrigger value="contacts" data-testid="tab-contacts">
                   Contacts ({contacts?.length || 0})
@@ -685,7 +681,7 @@ export default function Admin() {
                       <CardTitle className="flex items-center justify-between gap-2 flex-wrap">
                         <div className="flex items-center gap-2">
                           <Users className="w-5 h-5" />
-                          Expert Session Registrations (Paid Only)
+                          Expert Session Registrations
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
                           <Button
@@ -720,16 +716,15 @@ export default function Admin() {
                           onClick={() => setExpertCategoryFilter("all")}
                           data-testid="button-filter-all"
                         >
-                          All ({paidExpertSessionRegistrations.length})
+                          All ({expertSessionRegistrations.length})
                         </Button>
                         <Button
                           variant={expertCategoryFilter === "platinum" ? "default" : "outline"}
                           size="sm"
                           onClick={() => setExpertCategoryFilter("platinum")}
-                          className={expertCategoryFilter === "platinum" ? "" : ""}
                           data-testid="button-filter-platinum"
                         >
-                          Platinum ({paidExpertSessionRegistrations.filter(r => r.ticketCategory === "platinum").length})
+                          Platinum ({expertSessionRegistrations.filter(r => r.ticketCategory === "platinum").length})
                         </Button>
                         <Button
                           variant={expertCategoryFilter === "gold" ? "default" : "outline"}
@@ -737,7 +732,7 @@ export default function Admin() {
                           onClick={() => setExpertCategoryFilter("gold")}
                           data-testid="button-filter-gold"
                         >
-                          Gold ({paidExpertSessionRegistrations.filter(r => r.ticketCategory === "gold").length})
+                          Gold ({expertSessionRegistrations.filter(r => r.ticketCategory === "gold").length})
                         </Button>
                         <Button
                           variant={expertCategoryFilter === "silver" ? "default" : "outline"}
@@ -745,7 +740,7 @@ export default function Admin() {
                           onClick={() => setExpertCategoryFilter("silver")}
                           data-testid="button-filter-silver"
                         >
-                          Silver ({paidExpertSessionRegistrations.filter(r => r.ticketCategory === "silver").length})
+                          Silver ({expertSessionRegistrations.filter(r => r.ticketCategory === "silver").length})
                         </Button>
                       </div>
                       {loadingRegistrations ? (
@@ -820,8 +815,8 @@ export default function Admin() {
                           <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
                           <p className="text-muted-foreground">
                             {expertCategoryFilter !== "all" 
-                              ? `No paid ${expertCategoryFilter} registrations yet` 
-                              : "No paid expert session registrations yet"}
+                              ? `No ${expertCategoryFilter} registrations yet` 
+                              : "No expert session registrations yet"}
                           </p>
                         </div>
                       )}
