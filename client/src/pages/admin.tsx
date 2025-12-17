@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, Download, FileText, Plus } from "lucide-react";
+import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, Download, FileText, Plus, Image, FileSpreadsheet } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -224,6 +224,75 @@ export default function Admin() {
   };
 
   const allRegistrations = registrations || [];
+  const contestRegistrations = allRegistrations.filter(r => r.registrationType === "contest");
+  const expertSessionRegistrations = allRegistrations.filter(r => r.registrationType === "expert-session");
+
+  const escapeCSVField = (field: string | null | undefined): string => {
+    if (field === null || field === undefined) return '""';
+    const str = String(field);
+    const escaped = str.replace(/"/g, '""');
+    return `"${escaped}"`;
+  };
+
+  const exportToCSV = (data: Registration[], filename: string) => {
+    const headers = ["Registration ID", "Name", "Email", "Phone", "Ticket Category", "Registration Type", "Contest/Session", "Institution", "Created At"];
+    const csvRows = [
+      headers.map(h => escapeCSVField(h)).join(","),
+      ...data.map(r => [
+        escapeCSVField(r.registrationId),
+        escapeCSVField(r.fullName),
+        escapeCSVField(r.email),
+        escapeCSVField(r.phone),
+        escapeCSVField(r.ticketCategory || "-"),
+        escapeCSVField(r.registrationType === "expert-session" ? "Expert Session" : "Contest"),
+        escapeCSVField(r.contestName || r.sessionName || "-"),
+        escapeCSVField(r.institution || "-"),
+        escapeCSVField(r.createdAt ? new Date(r.createdAt).toLocaleDateString() : "-")
+      ].join(","))
+    ];
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${filename}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportToPDF = (data: Registration[], title: string, filename: string) => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Kerala Startup Fest 2026", 105, 15, { align: "center" });
+    doc.setFontSize(14);
+    doc.text(title, 105, 25, { align: "center" });
+    doc.setFontSize(10);
+    doc.text(`Total: ${data.length} registrations`, 105, 32, { align: "center" });
+    
+    let y = 45;
+    const pageHeight = doc.internal.pageSize.getHeight();
+    
+    data.forEach((r, index) => {
+      if (y > pageHeight - 30) {
+        doc.addPage();
+        y = 20;
+      }
+      
+      doc.setFont("helvetica", "bold");
+      doc.text(`${index + 1}. ${r.fullName}`, 15, y);
+      doc.setFont("helvetica", "normal");
+      y += 5;
+      doc.text(`   ID: ${r.registrationId} | ${r.email} | ${r.phone}`, 15, y);
+      y += 5;
+      const typeText = r.registrationType === "expert-session" ? "Expert Session" : "Contest";
+      const programText = r.contestName || r.sessionName || "-";
+      const categoryText = r.ticketCategory ? r.ticketCategory.toUpperCase() : "-";
+      doc.text(`   Type: ${typeText} | Program: ${programText} | Category: ${categoryText}`, 15, y);
+      y += 8;
+    });
+    
+    doc.save(`${filename}.pdf`);
+  };
   
   const statCards = [
     { icon: UserCheck, label: "Total Registrations", value: allRegistrations.length, testId: "text-registration-count" },
@@ -271,9 +340,15 @@ export default function Admin() {
 
           <ScrollFadeUp delay={0.3}>
             <Tabs defaultValue="registrations" className="w-full">
-              <TabsList className="mb-6 flex flex-wrap">
+              <TabsList className="mb-6 flex flex-wrap gap-1">
                 <TabsTrigger value="registrations" data-testid="tab-registrations">
-                  Registrations ({allRegistrations.length})
+                  All ({allRegistrations.length})
+                </TabsTrigger>
+                <TabsTrigger value="contest-registrations" data-testid="tab-contest-registrations">
+                  Contest ({contestRegistrations.length})
+                </TabsTrigger>
+                <TabsTrigger value="expert-registrations" data-testid="tab-expert-registrations">
+                  Expert Session ({expertSessionRegistrations.length})
                 </TabsTrigger>
                 <TabsTrigger value="contacts" data-testid="tab-contacts">
                   Contacts ({contacts?.length || 0})
@@ -285,11 +360,11 @@ export default function Admin() {
                   Sponsorships ({sponsorships?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger value="bulk" data-testid="tab-bulk">
-                  Bulk Registrations ({bulkRegistrations?.length || 0})
+                  Bulk ({bulkRegistrations?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger value="add-registration" data-testid="tab-add-registration">
                   <Plus className="w-4 h-4 mr-1" />
-                  Add Registration
+                  Add
                 </TabsTrigger>
               </TabsList>
 
@@ -301,9 +376,33 @@ export default function Admin() {
                 >
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <UserCheck className="w-5 h-5" />
-                        Event Registrations
+                      <CardTitle className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <UserCheck className="w-5 h-5" />
+                          All Registrations
+                        </div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => exportToCSV(allRegistrations, "KSF2026-All-Registrations")}
+                            disabled={allRegistrations.length === 0}
+                            data-testid="button-export-csv-all"
+                          >
+                            <FileSpreadsheet className="w-4 h-4 mr-1" />
+                            Export CSV
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => exportToPDF(allRegistrations, "All Registrations", "KSF2026-All-Registrations")}
+                            disabled={allRegistrations.length === 0}
+                            data-testid="button-export-pdf-all"
+                          >
+                            <FileText className="w-4 h-4 mr-1" />
+                            Export PDF
+                          </Button>
+                        </div>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -315,7 +414,13 @@ export default function Admin() {
                         <div className="overflow-x-auto">
                           <div className="mb-4 flex flex-wrap items-center gap-2">
                             <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                              Total Registrations: {allRegistrations.length}
+                              Total: {allRegistrations.length}
+                            </Badge>
+                            <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                              Expert Sessions: {expertSessionRegistrations.length}
+                            </Badge>
+                            <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                              Contests: {contestRegistrations.length}
                             </Badge>
                           </div>
                           <Table>
@@ -438,6 +543,238 @@ export default function Admin() {
                           <p className="text-sm text-muted-foreground mt-1">
                             Registrations will appear here when people sign up for the event.
                           </p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="contest-registrations">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <Briefcase className="w-5 h-5" />
+                          Contest Registrations
+                        </div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => exportToCSV(contestRegistrations, "KSF2026-Contest-Registrations")}
+                            disabled={contestRegistrations.length === 0}
+                            data-testid="button-export-csv-contest"
+                          >
+                            <FileSpreadsheet className="w-4 h-4 mr-1" />
+                            Export CSV
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => exportToPDF(contestRegistrations, "Contest Registrations", "KSF2026-Contest-Registrations")}
+                            disabled={contestRegistrations.length === 0}
+                            data-testid="button-export-pdf-contest"
+                          >
+                            <FileText className="w-4 h-4 mr-1" />
+                            Export PDF
+                          </Button>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingRegistrations ? (
+                        <div className="text-center py-8 text-muted-foreground">Loading...</div>
+                      ) : contestRegistrations.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Photo</TableHead>
+                                <TableHead>Registration ID</TableHead>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Contest</TableHead>
+                                <TableHead>Category</TableHead>
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {contestRegistrations.map((reg, index) => (
+                                <motion.tr
+                                  key={reg.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.03 }}
+                                  className="border-b transition-colors hover:bg-muted/50"
+                                  data-testid={`row-contest-${reg.id}`}
+                                >
+                                  <TableCell>
+                                    {reg.profilePhoto ? (
+                                      <img src={reg.profilePhoto} alt={reg.fullName} className="w-8 h-8 rounded-full object-cover border border-border" />
+                                    ) : (
+                                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                                        <Users className="w-4 h-4 text-muted-foreground" />
+                                      </div>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="font-mono text-xs text-primary">{reg.registrationId}</TableCell>
+                                  <TableCell className="font-medium">{reg.fullName}</TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
+                                  <TableCell>
+                                    <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                                      {reg.contestName || "-"}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    {reg.ticketCategory ? (
+                                      <Badge className={getTicketCategoryBadge(reg.ticketCategory)}>
+                                        {formatTicketCategory(reg.ticketCategory)}
+                                      </Badge>
+                                    ) : "-"}
+                                  </TableCell>
+                                  <TableCell>
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <Button variant="outline" size="sm" onClick={() => setSelectedReg(reg)} data-testid={`button-view-contest-${reg.id}`}>
+                                        <Eye className="w-4 h-4 mr-1" />View
+                                      </Button>
+                                      {reg.profilePhoto && (
+                                        <Button variant="outline" size="sm" onClick={() => { const link = document.createElement('a'); link.href = reg.profilePhoto!; link.download = `photo-${reg.registrationId}.jpg`; document.body.appendChild(link); link.click(); document.body.removeChild(link); }} data-testid={`button-download-photo-contest-${reg.id}`}>
+                                          <Image className="w-4 h-4 mr-1" />Photo
+                                        </Button>
+                                      )}
+                                    </div>
+                                  </TableCell>
+                                </motion.tr>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <div className="text-center py-12">
+                          <Briefcase className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+                          <p className="text-muted-foreground">No contest registrations yet</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="expert-registrations">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <Users className="w-5 h-5" />
+                          Expert Session Registrations
+                        </div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => exportToCSV(expertSessionRegistrations, "KSF2026-ExpertSession-Registrations")}
+                            disabled={expertSessionRegistrations.length === 0}
+                            data-testid="button-export-csv-expert"
+                          >
+                            <FileSpreadsheet className="w-4 h-4 mr-1" />
+                            Export CSV
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => exportToPDF(expertSessionRegistrations, "Expert Session Registrations", "KSF2026-ExpertSession-Registrations")}
+                            disabled={expertSessionRegistrations.length === 0}
+                            data-testid="button-export-pdf-expert"
+                          >
+                            <FileText className="w-4 h-4 mr-1" />
+                            Export PDF
+                          </Button>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingRegistrations ? (
+                        <div className="text-center py-8 text-muted-foreground">Loading...</div>
+                      ) : expertSessionRegistrations.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Photo</TableHead>
+                                <TableHead>Registration ID</TableHead>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Session</TableHead>
+                                <TableHead>Category</TableHead>
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {expertSessionRegistrations.map((reg, index) => (
+                                <motion.tr
+                                  key={reg.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.03 }}
+                                  className="border-b transition-colors hover:bg-muted/50"
+                                  data-testid={`row-expert-${reg.id}`}
+                                >
+                                  <TableCell>
+                                    {reg.profilePhoto ? (
+                                      <img src={reg.profilePhoto} alt={reg.fullName} className="w-8 h-8 rounded-full object-cover border border-border" />
+                                    ) : (
+                                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                                        <Users className="w-4 h-4 text-muted-foreground" />
+                                      </div>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="font-mono text-xs text-primary">{reg.registrationId}</TableCell>
+                                  <TableCell className="font-medium">{reg.fullName}</TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
+                                  <TableCell>
+                                    <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                                      {reg.sessionName || "Expert Session"}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    {reg.ticketCategory ? (
+                                      <Badge className={getTicketCategoryBadge(reg.ticketCategory)}>
+                                        {formatTicketCategory(reg.ticketCategory)}
+                                      </Badge>
+                                    ) : "-"}
+                                  </TableCell>
+                                  <TableCell>
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <Button variant="outline" size="sm" onClick={() => setSelectedReg(reg)} data-testid={`button-view-expert-${reg.id}`}>
+                                        <Eye className="w-4 h-4 mr-1" />View
+                                      </Button>
+                                      {reg.profilePhoto && (
+                                        <Button variant="outline" size="sm" onClick={() => { const link = document.createElement('a'); link.href = reg.profilePhoto!; link.download = `photo-${reg.registrationId}.jpg`; document.body.appendChild(link); link.click(); document.body.removeChild(link); }} data-testid={`button-download-photo-expert-${reg.id}`}>
+                                          <Image className="w-4 h-4 mr-1" />Photo
+                                        </Button>
+                                      )}
+                                    </div>
+                                  </TableCell>
+                                </motion.tr>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <div className="text-center py-12">
+                          <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+                          <p className="text-muted-foreground">No expert session registrations yet</p>
                         </div>
                       )}
                     </CardContent>
@@ -1054,6 +1391,45 @@ export default function Admin() {
                   <p className="text-sm text-muted-foreground mb-1">Registration ID</p>
                   <p className="text-xl font-bold text-primary font-mono">{selectedReg.registrationId}</p>
                 </div>
+
+                {selectedReg.profilePhoto && (
+                  <div className="flex flex-col items-center gap-3 p-4 bg-muted/30 rounded-lg">
+                    <label className="text-sm font-medium text-muted-foreground">Profile Photo</label>
+                    <img 
+                      src={selectedReg.profilePhoto} 
+                      alt={selectedReg.fullName}
+                      className="w-32 h-32 rounded-full object-cover border-2 border-primary"
+                      data-testid="img-profile-large"
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.open(selectedReg.profilePhoto!, '_blank')}
+                        data-testid="button-view-photo-large"
+                      >
+                        <Eye className="w-4 h-4 mr-1" />
+                        View Full Size
+                      </Button>
+                      <Button
+                        variant="default"
+                        size="sm"
+                        onClick={() => {
+                          const link = document.createElement('a');
+                          link.href = selectedReg.profilePhoto!;
+                          link.download = `photo-${selectedReg.registrationId}.jpg`;
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                        data-testid="button-download-photo-large"
+                      >
+                        <Download className="w-4 h-4 mr-1" />
+                        Download Photo
+                      </Button>
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex justify-end mb-4">
                   <Button
