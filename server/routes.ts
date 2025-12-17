@@ -230,10 +230,21 @@ export async function registerRoutes(
         });
       }
       
+      // Convert profile photo to base64 for persistent storage
+      let profilePhotoBase64: string | undefined;
+      if (files?.profilePhoto?.[0]) {
+        const photoPath = files.profilePhoto[0].path;
+        const photoBuffer = fs.readFileSync(photoPath);
+        const mimeType = files.profilePhoto[0].mimetype;
+        profilePhotoBase64 = `data:${mimeType};base64,${photoBuffer.toString('base64')}`;
+        // Clean up the temp file
+        fs.unlinkSync(photoPath);
+      }
+
       const data = {
         ...req.body,
         paymentScreenshot: paymentScreenshotPath,
-        profilePhoto: files?.profilePhoto?.[0] ? `/uploads/${files.profilePhoto[0].filename}` : undefined,
+        profilePhoto: profilePhotoBase64,
         pitchSupportingFiles: files?.pitchSupportingFiles?.[0] ? `/uploads/${files.pitchSupportingFiles[0].filename}` : undefined,
         paymentStatus: "ai_verified",
         aiVerificationResult: JSON.stringify(verificationResult),
