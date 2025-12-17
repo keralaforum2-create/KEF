@@ -75,6 +75,7 @@ import jamPosterImage from "@assets/IMG_3895_1765874849748.jpeg";
 import cameraCraftPosterImage from "@assets/IMG_3897_1765874870193.jpeg";
 import businessQuizPosterImage from "@assets/IMG_3896_1765874882186.jpeg";
 import pitchRoomPosterImage from "@assets/IMG_3894_1765874893392.jpeg";
+import iAmAttendingPosterImage from "@assets/I_AM_ATTENDING_1765954025812.jpg";
 
 const registrationSchema = z.object({
   registrationType: z.enum(["expert-session", "contest"], {
@@ -219,6 +220,10 @@ export default function Participate() {
   const [isBulkSubmitting, setIsBulkSubmitting] = useState(false);
   const [studentsPdfFile, setStudentsPdfFile] = useState<File | null>(null);
   const [uploadedPdfPath, setUploadedPdfPath] = useState<string | null>(null);
+  const [profilePhotoDataUrl, setProfilePhotoDataUrl] = useState<string | null>(null);
+  const [showPosterModal, setShowPosterModal] = useState(false);
+  const [generatedPoster, setGeneratedPoster] = useState<string | null>(null);
+  const [isGeneratingPoster, setIsGeneratingPoster] = useState(false);
   
   const form = useForm<RegistrationFormData>({
     resolver: zodResolver(registrationSchema),

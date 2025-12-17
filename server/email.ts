@@ -169,6 +169,15 @@ function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): str
             <a href="${ticketUrl}?download=true" style="display: inline-block; background: #16a34a; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">Download Ticket as PDF</a>
           </div>
           
+          <div style="background: linear-gradient(135deg, #f59e0b 0%, #eab308 100%); border-radius: 12px; padding: 25px; margin: 25px 0; text-align: center;">
+            <div style="width: 50px; height: 50px; background: white; border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>
+            </div>
+            <h3 style="color: white; margin: 0 0 10px 0; font-size: 20px; font-weight: bold;">You Have a Gift!</h3>
+            <p style="color: white; margin: 0 0 15px 0; font-size: 14px; opacity: 0.95;">Generate your personalized "I AM ATTENDING" poster and share it with friends!</p>
+            <a href="${ticketUrl}" style="display: inline-block; background: white; color: #b45309; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px;">Open Your Gift</a>
+          </div>
+          
           <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 20px 0;">
             We will share the detailed schedule and delegate instructions shortly.
           </p>

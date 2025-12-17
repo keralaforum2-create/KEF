@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "wouter";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, AlertCircle, Download, ExternalLink } from "lucide-react";
+import { ArrowLeft, AlertCircle, Download, ExternalLink, Gift, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import ticketBgImage from "@assets/Beige_Black_Minimalist_Event_Music_Festival_Concert_Ticket_1764742314478.png";
+import iAmAttendingPosterImage from "@assets/I_AM_ATTENDING_1765954025812.jpg";
 
 interface Ticket {
   id: string;
@@ -25,6 +26,7 @@ interface Ticket {
   paymentScreenshot?: string;
   ticketType?: string;
   ticketCategory?: string;
+  profilePhoto?: string;
 }
 
 export default function Ticket() {
@@ -36,6 +38,9 @@ export default function Ticket() {
   const [downloading, setDownloading] = useState(false);
   const [autoDownloadTriggered, setAutoDownloadTriggered] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
+  const [showPosterModal, setShowPosterModal] = useState(false);
+  const [generatedPoster, setGeneratedPoster] = useState<string | null>(null);
+  const [isGeneratingPoster, setIsGeneratingPoster] = useState(false);
 
   const generateTicketNumber = (registrationId: string) => {
     const hash = registrationId.split('').reduce((acc, char) => {
@@ -96,6 +101,122 @@ export default function Ticket() {
       console.error("Failed to download ticket:", err);
     } finally {
       setDownloading(false);
+    }
+  };
+
+  const generateAttendingPoster = async () => {
+    if (!ticket) return;
+    
+    setIsGeneratingPoster(true);
+    setShowPosterModal(true);
+    
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Canvas context not available');
+      
+      const posterImg = new Image();
+      posterImg.crossOrigin = 'anonymous';
+      
+      await new Promise<void>((resolve, reject) => {
+        posterImg.onload = () => resolve();
+        posterImg.onerror = reject;
+        posterImg.src = iAmAttendingPosterImage;
+      });
+      
+      canvas.width = posterImg.width;
+      canvas.height = posterImg.height;
+      ctx.drawImage(posterImg, 0, 0);
+      
+      let photoLoaded = false;
+      if (ticket.profilePhoto) {
+        try {
+          const userImg = new Image();
+          userImg.crossOrigin = 'anonymous';
+          
+          await new Promise<void>((resolve) => {
+            userImg.onload = () => {
+              photoLoaded = true;
+              resolve();
+            };
+            userImg.onerror = () => resolve();
+            userImg.src = ticket.profilePhoto!;
+          });
+          
+          if (photoLoaded && userImg.complete && userImg.naturalWidth > 0) {
+            const circleX = canvas.width * 0.42;
+            const circleY = canvas.height * 0.32;
+            const circleRadius = canvas.width * 0.18;
+            
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.clip();
+            
+            const scale = Math.max(
+              (circleRadius * 2) / userImg.width,
+              (circleRadius * 2) / userImg.height
+            );
+            const scaledWidth = userImg.width * scale;
+            const scaledHeight = userImg.height * scale;
+            const imgX = circleX - scaledWidth / 2;
+            const imgY = circleY - scaledHeight / 2;
+            
+            ctx.drawImage(userImg, imgX, imgY, scaledWidth, scaledHeight);
+            ctx.restore();
+          }
+        } catch {
+          photoLoaded = false;
+        }
+      }
+      
+      if (!photoLoaded) {
+        const circleX = canvas.width * 0.42;
+        const circleY = canvas.height * 0.32;
+        const circleRadius = canvas.width * 0.18;
+        
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fillStyle = '#e5e7eb';
+        ctx.fill();
+        
+        ctx.fillStyle = '#9ca3af';
+        ctx.font = `bold ${canvas.width * 0.08}px Arial, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const initials = ticket.fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        ctx.fillText(initials, circleX, circleY);
+        ctx.restore();
+      }
+      
+      ctx.fillStyle = '#1a1a1a';
+      ctx.font = `bold ${canvas.width * 0.035}px Arial, sans-serif`;
+      ctx.textAlign = 'left';
+      const nameX = canvas.width * 0.52;
+      const nameY = canvas.height * 0.56;
+      ctx.fillText(ticket.fullName.toUpperCase(), nameX, nameY);
+      
+      ctx.font = `${canvas.width * 0.018}px Arial, sans-serif`;
+      ctx.fillStyle = '#666666';
+      const institutionY = nameY + canvas.width * 0.03;
+      ctx.fillText(ticket.institution.toUpperCase(), nameX, institutionY);
+      
+      const posterDataUrl = canvas.toDataURL('image/png');
+      setGeneratedPoster(posterDataUrl);
+      
+      const link = document.createElement('a');
+      link.download = `I_AM_ATTENDING_KSF2026_${ticket.registrationId}.png`;
+      link.href = posterDataUrl;
+      link.click();
+      
+    } catch (err) {
+      console.error('Failed to generate poster:', err);
+      setGeneratedPoster(null);
+    } finally {
+      setIsGeneratingPoster(false);
     }
   };
 
@@ -367,6 +488,52 @@ export default function Ticket() {
 
 
         <motion.div 
+          className="mt-8"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+        >
+          <Card className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-950/30 dark:to-yellow-950/30 border-amber-200 dark:border-amber-800">
+            <CardContent className="p-6 text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.6, type: "spring", stiffness: 300 }}
+                className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg"
+              >
+                <Gift className="w-8 h-8 text-white" />
+              </motion.div>
+              <h3 className="text-xl font-bold text-amber-800 dark:text-amber-300 mb-2">
+                You have a gift!
+              </h3>
+              <p className="text-sm text-amber-700 dark:text-amber-400 mb-4">
+                Generate your personalized "I AM ATTENDING" poster and share it with your friends!
+              </p>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Button 
+                  onClick={generateAttendingPoster}
+                  disabled={isGeneratingPoster}
+                  className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white font-semibold px-8"
+                  data-testid="button-open-gift"
+                >
+                  {isGeneratingPoster ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Gift className="w-4 h-4 mr-2" />
+                      Open Your Gift
+                    </>
+                  )}
+                </Button>
+              </motion.div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div 
           className="mt-6 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -380,6 +547,74 @@ export default function Ticket() {
           </p>
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {showPosterModal && (
+          <motion.div
+            className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative w-full max-w-2xl"
+            >
+              <button
+                onClick={() => setShowPosterModal(false)}
+                className="absolute -top-12 right-0 text-white hover:text-gray-300 z-10"
+                data-testid="button-close-poster-modal"
+              >
+                <X className="w-8 h-8" />
+              </button>
+              
+              {isGeneratingPoster ? (
+                <div className="bg-white rounded-xl p-12 text-center">
+                  <Loader2 className="w-12 h-12 animate-spin text-amber-500 mx-auto mb-4" />
+                  <p className="text-lg font-medium text-gray-700">Generating your poster...</p>
+                </div>
+              ) : generatedPoster ? (
+                <div className="bg-white rounded-xl overflow-hidden">
+                  <img 
+                    src={generatedPoster} 
+                    alt="I AM ATTENDING KSF 2026" 
+                    className="w-full h-auto"
+                    data-testid="img-generated-poster"
+                  />
+                  <div className="p-4 bg-gray-50 flex flex-wrap justify-center gap-3">
+                    <Button
+                      onClick={() => {
+                        const link = document.createElement('a');
+                        link.download = `I_AM_ATTENDING_KSF2026_${ticket?.registrationId}.png`;
+                        link.href = generatedPoster;
+                        link.click();
+                      }}
+                      className="bg-gradient-to-r from-amber-500 to-yellow-500"
+                      data-testid="button-download-poster"
+                    >
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Poster
+                    </Button>
+                    <Button
+                      onClick={() => setShowPosterModal(false)}
+                      variant="outline"
+                      data-testid="button-close-poster"
+                    >
+                      Close
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-white rounded-xl p-12 text-center">
+                  <p className="text-gray-500">Failed to generate poster. Please try again.</p>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
