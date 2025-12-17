@@ -1734,7 +1734,19 @@ export default function Participate() {
           
           <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12" staggerDelay={0.1}>
             <StaggerItem>
-              <motion.div whileHover={{ scale: 1.05, y: -5 }} transition={{ duration: 0.2 }}>
+              <motion.div 
+                whileHover={{ scale: 1.05, y: -5 }} 
+                transition={{ duration: 0.2 }}
+                onClick={() => {
+                  form.setValue("registrationType", "expert-session");
+                  form.setValue("participantType", "school-student");
+                  setShowForm(true);
+                  setTimeout(() => {
+                    document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
+                  }, 100);
+                }}
+                className="cursor-pointer"
+              >
                 <Card className="h-full">
                   <CardContent className="p-8 text-center">
                     <motion.div 
@@ -1747,13 +1759,29 @@ export default function Participate() {
                     <p className="text-muted-foreground text-sm">
                       Young innovators ready to explore the world of startups and entrepreneurship.
                     </p>
+                    <Button className="mt-4 w-full" data-testid="button-join-school">
+                      Register Now
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </CardContent>
                 </Card>
               </motion.div>
             </StaggerItem>
             
             <StaggerItem>
-              <motion.div whileHover={{ scale: 1.05, y: -5 }} transition={{ duration: 0.2 }}>
+              <motion.div 
+                whileHover={{ scale: 1.05, y: -5 }} 
+                transition={{ duration: 0.2 }}
+                onClick={() => {
+                  form.setValue("registrationType", "expert-session");
+                  form.setValue("participantType", "college-student");
+                  setShowForm(true);
+                  setTimeout(() => {
+                    document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
+                  }, 100);
+                }}
+                className="cursor-pointer"
+              >
                 <Card className="h-full">
                   <CardContent className="p-8 text-center">
                     <motion.div 
@@ -1766,13 +1794,29 @@ export default function Participate() {
                     <p className="text-muted-foreground text-sm">
                       University students looking to turn their ideas into reality.
                     </p>
+                    <Button className="mt-4 w-full" data-testid="button-join-college">
+                      Register Now
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </CardContent>
                 </Card>
               </motion.div>
             </StaggerItem>
             
             <StaggerItem>
-              <motion.div whileHover={{ scale: 1.05, y: -5 }} transition={{ duration: 0.2 }}>
+              <motion.div 
+                whileHover={{ scale: 1.05, y: -5 }} 
+                transition={{ duration: 0.2 }}
+                onClick={() => {
+                  form.setValue("registrationType", "expert-session");
+                  form.setValue("participantType", "commoner");
+                  setShowForm(true);
+                  setTimeout(() => {
+                    document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
+                  }, 100);
+                }}
+                className="cursor-pointer"
+              >
                 <Card className="h-full">
                   <CardContent className="p-8 text-center">
                     <motion.div 
@@ -1785,6 +1829,10 @@ export default function Participate() {
                     <p className="text-muted-foreground text-sm">
                       Aspiring young entrepreneurs with startup dreams.
                     </p>
+                    <Button className="mt-4 w-full" data-testid="button-join-entrepreneur">
+                      Register Now
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
                   </CardContent>
                 </Card>
               </motion.div>
