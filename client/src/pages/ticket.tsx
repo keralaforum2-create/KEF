@@ -8,7 +8,7 @@ import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import ticketBgImage from "@assets/Beige_Black_Minimalist_Event_Music_Festival_Concert_Ticket_1764742314478.png";
-import iAmAttendingPosterImage from "@assets/I_AM_ATTENDING_1765956431257.jpg";
+import iAmAttendingPosterImage from "@assets/I_AM_ATTENDING_1765963893271.jpg";
 
 interface Ticket {
   id: string;
@@ -128,6 +128,10 @@ export default function Ticket() {
       canvas.height = posterImg.height;
       ctx.drawImage(posterImg, 0, 0);
       
+      const circleX = canvas.width * 0.35;
+      const circleY = canvas.height * 0.38;
+      const circleRadius = canvas.width * 0.145;
+      
       let photoLoaded = false;
       if (ticket.profilePhoto) {
         try {
@@ -144,10 +148,6 @@ export default function Ticket() {
           });
           
           if (photoLoaded && userImg.complete && userImg.naturalWidth > 0) {
-            const circleX = canvas.width * 0.42;
-            const circleY = canvas.height * 0.32;
-            const circleRadius = canvas.width * 0.18;
-            
             ctx.save();
             ctx.beginPath();
             ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
@@ -172,10 +172,6 @@ export default function Ticket() {
       }
       
       if (!photoLoaded) {
-        const circleX = canvas.width * 0.42;
-        const circleY = canvas.height * 0.32;
-        const circleRadius = canvas.width * 0.18;
-        
         ctx.save();
         ctx.beginPath();
         ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
@@ -184,7 +180,7 @@ export default function Ticket() {
         ctx.fill();
         
         ctx.fillStyle = '#9ca3af';
-        ctx.font = `bold ${canvas.width * 0.08}px Arial, sans-serif`;
+        ctx.font = `bold ${canvas.width * 0.06}px Arial, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const initials = ticket.fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
@@ -193,10 +189,10 @@ export default function Ticket() {
       }
       
       ctx.fillStyle = '#1a1a1a';
-      ctx.font = `bold ${canvas.width * 0.035}px Arial, sans-serif`;
+      ctx.font = `bold ${canvas.width * 0.028}px Arial, sans-serif`;
       ctx.textAlign = 'left';
       const nameX = canvas.width * 0.52;
-      const nameY = canvas.height * 0.56;
+      const nameY = canvas.height * 0.545;
       ctx.fillText(ticket.fullName.toUpperCase(), nameX, nameY);
       
       const posterDataUrl = canvas.toDataURL('image/png');
