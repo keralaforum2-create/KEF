@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { generateAttendingPoster } from './posterGenerator';
 
 const ADMIN_EMAIL = 'keralastartupfest@gmail.com';
 
@@ -34,6 +35,7 @@ interface RegistrationData {
   teamMember1Name?: string | null;
   teamMember2Name?: string | null;
   paymentScreenshot?: string | null;
+  profilePhoto?: string | null;
   pitchStartupName?: string | null;
   pitchElevatorPitch?: string | null;
   pitchProblemStatement?: string | null;
@@ -467,11 +469,30 @@ export async function sendRegistrationEmails(data: RegistrationData, baseUrl: st
     console.log(`Sending email to admin: ${ADMIN_EMAIL}`);
     console.log(`Using from email: ${fromEmail}`);
     
+    let posterAttachment: { filename: string; content: Buffer } | null = null;
+    try {
+      console.log('Generating personalized poster...');
+      const posterBuffer = await generateAttendingPoster({
+        fullName: data.fullName,
+        profilePhoto: data.profilePhoto,
+      });
+      if (posterBuffer) {
+        posterAttachment = {
+          filename: `I_AM_ATTENDING_KSF2026_${data.registrationId}.png`,
+          content: posterBuffer,
+        };
+        console.log('Poster generated successfully');
+      }
+    } catch (posterErr) {
+      console.error('Failed to generate poster for email:', posterErr);
+    }
+    
     const customerEmailResult = await resend.emails.send({
       from: fromEmail,
       to: data.email,
       subject: `Your Kerala Startup Fest 2026 Ticket - ${data.registrationId}`,
       html: generateTicketEmailHtml(data, ticketUrl),
+      attachments: posterAttachment ? [posterAttachment] : undefined,
     });
     console.log('Customer email result:', JSON.stringify(customerEmailResult, null, 2));
     
