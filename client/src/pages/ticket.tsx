@@ -203,11 +203,16 @@ export default function Ticket() {
         ctx.restore();
       }
       
+      const nameX = canvas.width * 0.52;
+      const nameY = canvas.height * 0.545;
+      const institutionY = canvas.height * 0.585;
+      
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(nameX - 10, nameY - canvas.height * 0.04, canvas.width * 0.35, canvas.height * 0.12);
+      
       ctx.fillStyle = '#1a1a1a';
       ctx.font = `bold ${canvas.width * 0.028}px Arial, sans-serif`;
       ctx.textAlign = 'left';
-      const nameX = canvas.width * 0.52;
-      const nameY = canvas.height * 0.545;
       ctx.fillText(ticket.fullName.toUpperCase(), nameX, nameY);
       
       const posterDataUrl = canvas.toDataURL('image/png');
