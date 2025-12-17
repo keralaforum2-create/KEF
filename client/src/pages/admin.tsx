@@ -38,6 +38,7 @@ export default function Admin() {
   const [selectedInvestor, setSelectedInvestor] = useState<InvestorMentor | null>(null);
   const [selectedSponsorship, setSelectedSponsorship] = useState<Sponsorship | null>(null);
   const [selectedBulkReg, setSelectedBulkReg] = useState<BulkRegistration | null>(null);
+  const [expertCategoryFilter, setExpertCategoryFilter] = useState<"all" | "platinum" | "gold" | "silver">("all");
   
   // Admin registration form state
   const [adminRegForm, setAdminRegForm] = useState({
@@ -225,6 +226,13 @@ export default function Admin() {
 
   const allRegistrations = registrations || [];
   const contestRegistrations = allRegistrations.filter(r => r.registrationType === "contest");
+  const paidStatuses = ['paid', 'screenshot_uploaded'];
+  const paidExpertSessionRegistrations = allRegistrations.filter(r => 
+    r.registrationType === "expert-session" && paidStatuses.includes(r.paymentStatus || '')
+  );
+  const filteredExpertSessionRegistrations = expertCategoryFilter === "all" 
+    ? paidExpertSessionRegistrations 
+    : paidExpertSessionRegistrations.filter(r => r.ticketCategory === expertCategoryFilter);
   const expertSessionRegistrations = allRegistrations.filter(r => r.registrationType === "expert-session");
 
   const escapeCSVField = (field: string | null | undefined): string => {
@@ -348,7 +356,7 @@ export default function Admin() {
                   Contest ({contestRegistrations.length})
                 </TabsTrigger>
                 <TabsTrigger value="expert-registrations" data-testid="tab-expert-registrations">
-                  Expert Session ({expertSessionRegistrations.length})
+                  Expert Session ({paidExpertSessionRegistrations.length})
                 </TabsTrigger>
                 <TabsTrigger value="contacts" data-testid="tab-contacts">
                   Contacts ({contacts?.length || 0})
@@ -677,14 +685,14 @@ export default function Admin() {
                       <CardTitle className="flex items-center justify-between gap-2 flex-wrap">
                         <div className="flex items-center gap-2">
                           <Users className="w-5 h-5" />
-                          Expert Session Registrations
+                          Expert Session Registrations (Paid Only)
                         </div>
                         <div className="flex items-center gap-2 flex-wrap">
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => exportToCSV(expertSessionRegistrations, "KSF2026-ExpertSession-Registrations")}
-                            disabled={expertSessionRegistrations.length === 0}
+                            onClick={() => exportToCSV(filteredExpertSessionRegistrations, "KSF2026-ExpertSession-Registrations")}
+                            disabled={filteredExpertSessionRegistrations.length === 0}
                             data-testid="button-export-csv-expert"
                           >
                             <FileSpreadsheet className="w-4 h-4 mr-1" />
@@ -693,8 +701,8 @@ export default function Admin() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => exportToPDF(expertSessionRegistrations, "Expert Session Registrations", "KSF2026-ExpertSession-Registrations")}
-                            disabled={expertSessionRegistrations.length === 0}
+                            onClick={() => exportToPDF(filteredExpertSessionRegistrations, "Expert Session Registrations", "KSF2026-ExpertSession-Registrations")}
+                            disabled={filteredExpertSessionRegistrations.length === 0}
                             data-testid="button-export-pdf-expert"
                           >
                             <FileText className="w-4 h-4 mr-1" />
@@ -704,9 +712,45 @@ export default function Admin() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
+                      <div className="mb-4 flex flex-wrap items-center gap-2">
+                        <span className="text-sm text-muted-foreground mr-2">Filter by Category:</span>
+                        <Button
+                          variant={expertCategoryFilter === "all" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setExpertCategoryFilter("all")}
+                          data-testid="button-filter-all"
+                        >
+                          All ({paidExpertSessionRegistrations.length})
+                        </Button>
+                        <Button
+                          variant={expertCategoryFilter === "platinum" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setExpertCategoryFilter("platinum")}
+                          className={expertCategoryFilter === "platinum" ? "" : ""}
+                          data-testid="button-filter-platinum"
+                        >
+                          Platinum ({paidExpertSessionRegistrations.filter(r => r.ticketCategory === "platinum").length})
+                        </Button>
+                        <Button
+                          variant={expertCategoryFilter === "gold" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setExpertCategoryFilter("gold")}
+                          data-testid="button-filter-gold"
+                        >
+                          Gold ({paidExpertSessionRegistrations.filter(r => r.ticketCategory === "gold").length})
+                        </Button>
+                        <Button
+                          variant={expertCategoryFilter === "silver" ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setExpertCategoryFilter("silver")}
+                          data-testid="button-filter-silver"
+                        >
+                          Silver ({paidExpertSessionRegistrations.filter(r => r.ticketCategory === "silver").length})
+                        </Button>
+                      </div>
                       {loadingRegistrations ? (
                         <div className="text-center py-8 text-muted-foreground">Loading...</div>
-                      ) : expertSessionRegistrations.length > 0 ? (
+                      ) : filteredExpertSessionRegistrations.length > 0 ? (
                         <div className="overflow-x-auto">
                           <Table>
                             <TableHeader>
@@ -721,7 +765,7 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {expertSessionRegistrations.map((reg, index) => (
+                              {filteredExpertSessionRegistrations.map((reg, index) => (
                                 <motion.tr
                                   key={reg.id}
                                   initial={{ opacity: 0, x: -10 }}
@@ -774,7 +818,11 @@ export default function Admin() {
                       ) : (
                         <div className="text-center py-12">
                           <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-                          <p className="text-muted-foreground">No expert session registrations yet</p>
+                          <p className="text-muted-foreground">
+                            {expertCategoryFilter !== "all" 
+                              ? `No paid ${expertCategoryFilter} registrations yet` 
+                              : "No paid expert session registrations yet"}
+                          </p>
                         </div>
                       )}
                     </CardContent>
