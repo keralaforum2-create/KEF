@@ -402,14 +402,14 @@ export default function Participate() {
   // Get payment amount based on ticket type and contest
   const getPaymentAmount = () => {
     if (isBusinessQuiz) return 199;
-    if (ticketCategory === "platinum") return 799;
+    if (ticketCategory === "platinum") return 999;
     if (ticketCategory === "gold") return 499;
     return 199; // silver
   };
 
   // Get bulk registration price per student
   const getBulkPricePerStudent = () => {
-    if (bulkFormData.ticketCategory === "platinum") return 799;
+    if (bulkFormData.ticketCategory === "platinum") return 999;
     if (bulkFormData.ticketCategory === "gold") return 499;
     return 199; // silver
   };
@@ -2151,7 +2151,7 @@ export default function Participate() {
                                     >
                                       <div className="flex justify-between items-center">
                                         <span className="font-medium">Platinum Ticket</span>
-                                        <span className="font-bold text-teal-600">Rs 799/student</span>
+                                        <span className="font-bold text-teal-600">Rs 999/student</span>
                                       </div>
                                     </div>
                                   </div>
@@ -4018,7 +4018,7 @@ export default function Participate() {
                             {isBusinessQuiz 
                               ? "Pay ₹199/-"
                               : ticketCategory === "platinum" 
-                                ? "Pay ₹799/-"
+                                ? "Pay ₹999/-"
                                 : ticketCategory === "gold"
                                   ? "Pay ₹499/-"
                                   : "Pay ₹199/-"
