@@ -135,38 +135,53 @@ export default function Ticket() {
       let photoLoaded = false;
       if (ticket.profilePhoto) {
         try {
-          const userImg = new Image();
-          userImg.crossOrigin = 'anonymous';
+          const photoUrl = ticket.profilePhoto.startsWith('http') 
+            ? ticket.profilePhoto 
+            : `${window.location.origin}${ticket.profilePhoto}`;
           
-          await new Promise<void>((resolve) => {
-            userImg.onload = () => {
-              photoLoaded = true;
-              resolve();
-            };
-            userImg.onerror = () => resolve();
-            userImg.src = ticket.profilePhoto!;
-          });
-          
-          if (photoLoaded && userImg.complete && userImg.naturalWidth > 0) {
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
-            ctx.closePath();
-            ctx.clip();
+          const response = await fetch(photoUrl);
+          if (response.ok) {
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
             
-            const scale = Math.max(
-              (circleRadius * 2) / userImg.width,
-              (circleRadius * 2) / userImg.height
-            );
-            const scaledWidth = userImg.width * scale;
-            const scaledHeight = userImg.height * scale;
-            const imgX = circleX - scaledWidth / 2;
-            const imgY = circleY - scaledHeight / 2;
+            const userImg = new Image();
             
-            ctx.drawImage(userImg, imgX, imgY, scaledWidth, scaledHeight);
-            ctx.restore();
+            await new Promise<void>((resolve) => {
+              userImg.onload = () => {
+                photoLoaded = true;
+                resolve();
+              };
+              userImg.onerror = () => {
+                console.error('Failed to load profile photo');
+                resolve();
+              };
+              userImg.src = blobUrl;
+            });
+            
+            if (photoLoaded && userImg.complete && userImg.naturalWidth > 0) {
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(circleX, circleY, circleRadius, 0, Math.PI * 2);
+              ctx.closePath();
+              ctx.clip();
+              
+              const scale = Math.max(
+                (circleRadius * 2) / userImg.width,
+                (circleRadius * 2) / userImg.height
+              );
+              const scaledWidth = userImg.width * scale;
+              const scaledHeight = userImg.height * scale;
+              const imgX = circleX - scaledWidth / 2;
+              const imgY = circleY - scaledHeight / 2;
+              
+              ctx.drawImage(userImg, imgX, imgY, scaledWidth, scaledHeight);
+              ctx.restore();
+            }
+            
+            URL.revokeObjectURL(blobUrl);
           }
-        } catch {
+        } catch (err) {
+          console.error('Error loading profile photo:', err);
           photoLoaded = false;
         }
       }
