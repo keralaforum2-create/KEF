@@ -8,7 +8,7 @@ import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import ticketBgImage from "@assets/Beige_Black_Minimalist_Event_Music_Festival_Concert_Ticket_1764742314478.png";
-import iAmAttendingPosterImage from "@assets/I_AM_ATTENDING_1765963893271.jpg";
+import iAmAttendingPosterImage from "@assets/I_AM_ATTENDING_1765966396366.jpg";
 
 interface Ticket {
   id: string;
@@ -203,13 +203,16 @@ export default function Ticket() {
         ctx.restore();
       }
       
-      const nameX = canvas.width * 0.52;
-      const nameY = canvas.height * 0.545;
-      const institutionY = canvas.height * 0.585;
+      const textAreaX = canvas.width * 0.50;
+      const textAreaY = canvas.height * 0.50;
+      const textAreaWidth = canvas.width * 0.40;
+      const textAreaHeight = canvas.height * 0.15;
       
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(nameX - 10, nameY - canvas.height * 0.04, canvas.width * 0.35, canvas.height * 0.12);
+      ctx.fillRect(textAreaX, textAreaY, textAreaWidth, textAreaHeight);
       
+      const nameX = canvas.width * 0.52;
+      const nameY = canvas.height * 0.565;
       ctx.fillStyle = '#1a1a1a';
       ctx.font = `bold ${canvas.width * 0.028}px Arial, sans-serif`;
       ctx.textAlign = 'left';
