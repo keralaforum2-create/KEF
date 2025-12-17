@@ -8,7 +8,7 @@ import QRCode from "qrcode";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import ticketBgImage from "@assets/Beige_Black_Minimalist_Event_Music_Festival_Concert_Ticket_1764742314478.png";
-import iAmAttendingPosterImage from "@assets/I_AM_ATTENDING_1765954025812.jpg";
+import iAmAttendingPosterImage from "@assets/I_AM_ATTENDING_1765956431257.jpg";
 
 interface Ticket {
   id: string;
@@ -198,11 +198,6 @@ export default function Ticket() {
       const nameX = canvas.width * 0.52;
       const nameY = canvas.height * 0.56;
       ctx.fillText(ticket.fullName.toUpperCase(), nameX, nameY);
-      
-      ctx.font = `${canvas.width * 0.018}px Arial, sans-serif`;
-      ctx.fillStyle = '#666666';
-      const institutionY = nameY + canvas.width * 0.03;
-      ctx.fillText(ticket.institution.toUpperCase(), nameX, institutionY);
       
       const posterDataUrl = canvas.toDataURL('image/png');
       setGeneratedPoster(posterDataUrl);
