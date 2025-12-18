@@ -1478,18 +1478,21 @@ export default function Admin() {
                 </div>
 
                 {selectedReg.profilePhoto && (
-                  <div className="flex flex-col items-center gap-3 p-4 bg-muted/30 rounded-lg">
-                    <label className="text-sm font-medium text-muted-foreground">Profile Photo</label>
+                  <div className="flex flex-col items-center gap-3 p-4 bg-gradient-to-br from-primary/10 to-muted/30 rounded-lg border border-primary/20">
+                    <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                      <Image className="w-4 h-4" />
+                      Profile Photo
+                    </label>
                     <img 
                       src={selectedReg.profilePhoto} 
                       alt={selectedReg.fullName}
-                      className="w-32 h-32 rounded-full object-cover border-2 border-primary"
+                      className="w-56 h-56 rounded-lg object-cover border-4 border-primary shadow-lg hover:shadow-xl transition-shadow"
                       data-testid="img-profile-large"
                     />
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap justify-center">
                       <Button
                         variant="outline"
-                        size="sm"
+                        size="default"
                         onClick={() => window.open(selectedReg.profilePhoto!, '_blank')}
                         data-testid="button-view-photo-large"
                       >
@@ -1498,7 +1501,7 @@ export default function Admin() {
                       </Button>
                       <Button
                         variant="default"
-                        size="sm"
+                        size="default"
                         onClick={() => {
                           const link = document.createElement('a');
                           link.href = selectedReg.profilePhoto!;
