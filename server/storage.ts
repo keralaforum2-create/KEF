@@ -182,9 +182,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getPendingRegistrations(): Promise<Registration[]> {
+    const pendingStatuses = ['pending', 'screenshot_uploaded', null, undefined, ''];
     const result = await db.select().from(registrations)
       .orderBy(desc(registrations.createdAt));
-    return result.filter(r => r.paymentStatus === 'pending' || !r.paymentStatus);
+    return result.filter(r => !r.paymentStatus || pendingStatuses.includes(r.paymentStatus));
   }
 
   async createInvestorMentor(insertData: InsertInvestorMentor): Promise<InvestorMentor> {
