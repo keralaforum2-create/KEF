@@ -107,7 +107,6 @@ const registrationSchema = z.object({
   teamMember3Phone: z.string().optional(),
   teamMember3Grade: z.string().optional(),
   teamMember3Age: z.string().optional(),
-  paymentScreenshot: z.any().optional(),
   profilePhoto: z.any().refine((file) => file instanceof File, {
     message: "Profile photo is required",
   }),
@@ -201,11 +200,9 @@ export default function Participate() {
   const [showForm, setShowForm] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [submittedData, setSubmittedData] = useState<RegistrationFormData | null>(null);
-  const [paymentMethod, setPaymentMethod] = useState<"qr" | "online">("qr");
   const [isProcessingOnlinePayment, setIsProcessingOnlinePayment] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
   const [registrationMode, setRegistrationMode] = useState<"individual" | "bulk">("individual");
-  const [bulkPaymentMethod, setBulkPaymentMethod] = useState<"qr" | "online">("qr");
   const [bulkFormData, setBulkFormData] = useState({
     institutionName: "",
     mentorName: "",
@@ -213,7 +210,6 @@ export default function Participate() {
     mentorPhone: "",
     numberOfStudents: "5",
     ticketCategory: "silver" as "silver" | "gold" | "platinum",
-    paymentScreenshot: null as File | null,
   });
   const [bulkRegistrationId, setBulkRegistrationId] = useState<string | null>(null);
   const [bulkStudentTickets, setBulkStudentTickets] = useState<Array<{studentRegistrationId: string; studentNumber: string}>>([]);
@@ -255,7 +251,6 @@ export default function Participate() {
       teamMember3Phone: "",
       teamMember3Grade: "",
       teamMember3Age: "",
-      paymentScreenshot: undefined,
       profilePhoto: undefined,
       pitchStartupName: "",
       pitchElevatorPitch: "",
@@ -894,16 +889,6 @@ export default function Participate() {
       formData.append("teamMember3Grade", data.teamMember3Grade || "");
       formData.append("teamMember3Age", data.teamMember3Age || "");
       
-      // Handle both File and FileList for payment screenshot
-      let screenshotFile: File | undefined;
-      if (data.paymentScreenshot instanceof File) {
-        screenshotFile = data.paymentScreenshot;
-      } else if (data.paymentScreenshot instanceof FileList && data.paymentScreenshot.length > 0) {
-        screenshotFile = data.paymentScreenshot[0];
-      }
-      if (screenshotFile) {
-        formData.append("paymentScreenshot", screenshotFile);
-      }
 
       // Handle profile photo (required field)
       if (data.profilePhoto instanceof File) {
@@ -975,21 +960,6 @@ export default function Participate() {
   });
 
   const onSubmit = (data: RegistrationFormData) => {
-    // Validate payment screenshot for QR payment method
-    if (paymentMethod === "qr") {
-      const hasScreenshot = data.paymentScreenshot instanceof File || 
-        (data.paymentScreenshot instanceof FileList && data.paymentScreenshot.length > 0);
-      
-      if (!hasScreenshot) {
-        toast({
-          title: "Payment Screenshot Required",
-          description: "Please upload your payment screenshot before submitting.",
-          variant: "destructive",
-        });
-        return;
-      }
-    }
-    
     setSubmittedData(data);
     mutation.mutate(data);
   };

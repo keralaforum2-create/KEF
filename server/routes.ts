@@ -195,41 +195,6 @@ export async function registerRoutes(
     try {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
       
-      // Validate payment screenshot is uploaded
-      if (!files?.paymentScreenshot?.[0]) {
-        return res.status(400).json({ 
-          message: "Payment screenshot is required. Please upload your payment confirmation before registering." 
-        });
-      }
-      
-      const paymentScreenshotPath = `/uploads/${files.paymentScreenshot[0].filename}`;
-      
-      // Get expected amount from request (default to 199 for regular registration)
-      const expectedAmount = req.body.expectedAmount ? parseInt(req.body.expectedAmount) : 199;
-      
-      // AI-powered payment verification
-      console.log("Verifying payment screenshot with AI...");
-      const verificationResult = await verifyPaymentScreenshot(paymentScreenshotPath, expectedAmount);
-      console.log("Payment verification result:", JSON.stringify(verificationResult, null, 2));
-      
-      if (!verificationResult.isValid) {
-        // Delete the uploaded file since verification failed
-        const fullPath = `${process.cwd()}${paymentScreenshotPath}`;
-        if (fs.existsSync(fullPath)) {
-          fs.unlinkSync(fullPath);
-        }
-        return res.status(400).json({ 
-          message: "Payment verification failed",
-          error: verificationResult.reason,
-          verification: {
-            isValid: false,
-            confidence: verificationResult.confidence,
-            detectedAmount: verificationResult.amount,
-            detectedRecipient: verificationResult.recipientName
-          }
-        });
-      }
-      
       // Convert profile photo to base64 for persistent storage
       let profilePhotoBase64: string | undefined;
       if (files?.profilePhoto?.[0]) {
@@ -243,11 +208,9 @@ export async function registerRoutes(
 
       const data = {
         ...req.body,
-        paymentScreenshot: paymentScreenshotPath,
         profilePhoto: profilePhotoBase64,
         pitchSupportingFiles: files?.pitchSupportingFiles?.[0] ? `/uploads/${files.pitchSupportingFiles[0].filename}` : undefined,
-        paymentStatus: "ai_verified",
-        aiVerificationResult: JSON.stringify(verificationResult),
+        paymentStatus: "pending",
       };
       
       const result = insertRegistrationSchema.safeParse(data);
@@ -269,14 +232,8 @@ export async function registerRoutes(
       });
       
       return res.status(201).json({ 
-        message: "Registration successful - Payment verified by AI", 
+        message: "Registration successful - Proceed to payment", 
         registration,
-        verification: {
-          isValid: true,
-          confidence: verificationResult.confidence,
-          detectedAmount: verificationResult.amount,
-          transactionId: verificationResult.transactionId
-        }
       });
     } catch (error: any) {
       console.error("Error creating registration:", error);
