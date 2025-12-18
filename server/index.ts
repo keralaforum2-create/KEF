@@ -7,6 +7,7 @@ import path from "path";
 import fs from "fs";
 import cors from "cors";
 import { registerPhonepeRoutes } from "../routes/index";
+import { startReminderScheduler } from "./reminderScheduler";
 
 // SSL certificate workaround for external hosting platforms (Render, Railway, etc.)
 // This helps with "self-signed certificate in certificate chain" errors
@@ -185,6 +186,9 @@ app.use((req, res, next) => {
     },
     () => {
       log(`serving on port ${port}`);
+      // Start email reminder scheduler
+      startReminderScheduler();
+      console.log("📧 Email reminder scheduler started");
     },
   );
 })();

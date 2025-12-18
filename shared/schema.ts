@@ -82,6 +82,7 @@ export const registrations = pgTable("registrations", {
   phonepeTransactionId: text("phonepe_transaction_id"),
   paymentAmount: text("payment_amount"),
   paymentStatus: text("payment_status"),
+  reminderSentAt: timestamp("reminder_sent_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
