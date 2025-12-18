@@ -35,6 +35,7 @@ export interface IStorage {
   
   createRegistration(registration: InsertRegistration): Promise<Registration>;
   getRegistrations(): Promise<Registration[]>;
+  getPaidRegistrations(): Promise<Registration[]>;
   getRegistrationByRegistrationId(registrationId: string): Promise<Registration | undefined>;
   getRegistrationByMerchantTransactionId(merchantTransactionId: string): Promise<Registration | undefined>;
   getRegistrationByRazorpayOrderId(razorpayOrderId: string): Promise<Registration | undefined>;

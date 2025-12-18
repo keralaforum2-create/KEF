@@ -254,7 +254,7 @@ export async function registerRoutes(
 
   app.get("/api/registrations", async (req, res) => {
     try {
-      const registrations = await storage.getRegistrations();
+      const registrations = await storage.getPaidRegistrations();
       return res.json(registrations);
     } catch (error) {
       console.error("Error fetching registrations:", error);
