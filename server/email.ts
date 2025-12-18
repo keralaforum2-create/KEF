@@ -117,6 +117,18 @@ function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): str
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
             <tr>
               <td style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                <span style="color: #666; font-size: 12px; text-transform: uppercase;">Ticket Date</span><br>
+                <strong style="color: #333; font-size: 16px;">January 7 & 8, 2026</strong>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                <span style="color: #666; font-size: 12px; text-transform: uppercase;">Venue</span><br>
+                <strong style="color: #333; font-size: 16px;">Aspin Courtyards, Calicut</strong>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">
                 <span style="color: #666; font-size: 12px; text-transform: uppercase;">Name</span><br>
                 <strong style="color: #333; font-size: 16px;">${data.fullName}</strong>
               </td>

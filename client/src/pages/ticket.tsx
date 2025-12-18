@@ -445,8 +445,16 @@ export default function Ticket() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <h2 className="text-lg font-semibold mb-4">Attendee Details</h2>
+          <h2 className="text-lg font-semibold mb-4">Event & Attendee Details</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-muted-foreground">Event Date</p>
+              <p className="font-medium">January 7 & 8, 2026</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Venue</p>
+              <p className="font-medium">Aspin Courtyards, Calicut</p>
+            </div>
             <div>
               <p className="text-sm text-muted-foreground">Name</p>
               <p className="font-medium">{ticket.fullName}</p>
