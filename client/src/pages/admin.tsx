@@ -66,6 +66,11 @@ export default function Admin() {
     refetchInterval: 2000,
   });
 
+  const { data: pendingRegistrations, isLoading: loadingPendingRegistrations } = useQuery<Registration[]>({
+    queryKey: ["/api/pending-registrations"],
+    refetchInterval: 2000,
+  });
+
   const { data: contacts, isLoading: loadingContacts } = useQuery<Contact[]>({
     queryKey: ["/api/contacts"],
     refetchInterval: 2000,
@@ -167,6 +172,20 @@ export default function Admin() {
         description: error?.message || "An error occurred",
         variant: "destructive" 
       });
+    },
+  });
+
+  const approveRegistrationMutation = useMutation({
+    mutationFn: async (registrationId: string) => {
+      return await apiRequest("POST", `/api/registrations/${registrationId}/approve`, {});
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/pending-registrations"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
+      toast({ title: "Registration approved and email sent!" });
+    },
+    onError: () => {
+      toast({ title: "Failed to approve registration", variant: "destructive" });
     },
   });
 
@@ -353,6 +372,9 @@ export default function Admin() {
                 </TabsTrigger>
                 <TabsTrigger value="expert-registrations" data-testid="tab-expert-registrations">
                   Expert Session ({expertSessionRegistrations.length})
+                </TabsTrigger>
+                <TabsTrigger value="pending-registrations" data-testid="tab-pending-registrations">
+                  Pending ({pendingRegistrations?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger value="contacts" data-testid="tab-contacts">
                   Contacts ({contacts?.length || 0})
@@ -860,6 +882,99 @@ export default function Admin() {
                               ? `No ${expertCategoryFilter} registrations yet` 
                               : "No expert session registrations yet"}
                           </p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="pending-registrations">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <AlertTriangle className="w-5 h-5" />
+                        Pending Registrations (Awaiting Approval)
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingPendingRegistrations ? (
+                        <div className="text-center py-8 text-muted-foreground">
+                          Loading pending registrations...
+                        </div>
+                      ) : (pendingRegistrations || []).length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Photo</TableHead>
+                                <TableHead>Registration ID</TableHead>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Type</TableHead>
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {(pendingRegistrations || []).map((reg, index) => (
+                                <motion.tr
+                                  key={reg.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.03 }}
+                                  className="border-b transition-colors hover:bg-muted/50"
+                                  data-testid={`row-pending-registration-${reg.id}`}
+                                >
+                                  <TableCell>
+                                    {reg.profilePhoto ? (
+                                      <img 
+                                        src={reg.profilePhoto} 
+                                        alt={reg.fullName}
+                                        className="w-10 h-10 rounded object-cover"
+                                      />
+                                    ) : (
+                                      <div className="w-10 h-10 rounded bg-muted flex items-center justify-center">
+                                        <Users className="w-5 h-5 text-muted-foreground" />
+                                      </div>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="font-mono text-xs text-primary">{reg.registrationId}</TableCell>
+                                  <TableCell className="font-medium">{reg.fullName}</TableCell>
+                                  <TableCell className="text-sm">{reg.email}</TableCell>
+                                  <TableCell>
+                                    <Badge className={getRegistrationTypeBadge(reg.registrationType)}>
+                                      {reg.registrationType === "expert-session" ? "Expert Session" : "Contest"}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <div className="flex items-center gap-2">
+                                      <Button
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => approveRegistrationMutation.mutate(reg.registrationId)}
+                                        disabled={approveRegistrationMutation.isPending}
+                                        data-testid={`button-approve-registration-${reg.id}`}
+                                      >
+                                        <CheckCircle2 className="w-4 h-4 mr-1" />
+                                        Approve
+                                      </Button>
+                                    </div>
+                                  </TableCell>
+                                </motion.tr>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <div className="text-center py-12">
+                          <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4 opacity-50" />
+                          <p className="text-muted-foreground">No pending registrations</p>
+                          <p className="text-sm text-muted-foreground mt-1">All registrations have been approved!</p>
                         </div>
                       )}
                     </CardContent>

@@ -36,6 +36,7 @@ export interface IStorage {
   createRegistration(registration: InsertRegistration): Promise<Registration>;
   getRegistrations(): Promise<Registration[]>;
   getPaidRegistrations(): Promise<Registration[]>;
+  getPendingRegistrations(): Promise<Registration[]>;
   getRegistrationByRegistrationId(registrationId: string): Promise<Registration | undefined>;
   getRegistrationByMerchantTransactionId(merchantTransactionId: string): Promise<Registration | undefined>;
   getRegistrationByRazorpayOrderId(razorpayOrderId: string): Promise<Registration | undefined>;
@@ -178,6 +179,12 @@ export class DatabaseStorage implements IStorage {
     const result = await db.select().from(registrations)
       .orderBy(desc(registrations.createdAt));
     return result.filter(r => paidStatuses.includes(r.paymentStatus || ''));
+  }
+
+  async getPendingRegistrations(): Promise<Registration[]> {
+    const result = await db.select().from(registrations)
+      .orderBy(desc(registrations.createdAt));
+    return result.filter(r => r.paymentStatus === 'pending' || !r.paymentStatus);
   }
 
   async createInvestorMentor(insertData: InsertInvestorMentor): Promise<InvestorMentor> {

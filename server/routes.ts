@@ -262,6 +262,46 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/pending-registrations", async (req, res) => {
+    try {
+      const registrations = await storage.getPendingRegistrations();
+      return res.json(registrations);
+    } catch (error) {
+      console.error("Error fetching pending registrations:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/registrations/:id/approve", async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      const registration = await storage.getRegistrationByRegistrationId(id);
+      if (!registration) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      await storage.updateRegistrationPayment(registration.id, {
+        paymentStatus: 'paid'
+      });
+
+      const baseUrl = resolveBaseUrl(req);
+      sendRegistrationEmails(registration, baseUrl).catch((err) => {
+        console.error('Failed to send registration emails:', err);
+      });
+
+      console.log("Registration approved and email sent:", id);
+      return res.json({
+        success: true,
+        message: "Registration approved and email sent",
+        registrationId: id
+      });
+    } catch (error) {
+      console.error("Error approving registration:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.get("/api/ticket/:registrationId", async (req, res) => {
     try {
       const { registrationId } = req.params;
