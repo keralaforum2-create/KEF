@@ -236,12 +236,6 @@ export async function registerRoutes(
       
       const registration = await storage.createRegistration(result.data);
       
-      const baseUrl = resolveBaseUrl(req);
-      
-      sendRegistrationEmails(registration, baseUrl).catch((err) => {
-        console.error('Failed to send registration emails:', err);
-      });
-      
       return res.status(201).json({ 
         message: "Registration successful - Proceed to payment", 
         registration,
