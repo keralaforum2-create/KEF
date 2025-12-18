@@ -224,8 +224,7 @@ export default function Admin() {
     return category.charAt(0).toUpperCase() + category.slice(1);
   };
 
-  const successfulPaymentStatuses = ["ai_verified", "paid", "screenshot_uploaded"];
-  const allRegistrations = (registrations || []).filter(r => successfulPaymentStatuses.includes(r.paymentStatus));
+  const allRegistrations = registrations || [];
   const contestRegistrations = allRegistrations.filter(r => r.registrationType === "contest");
   const expertSessionRegistrations = allRegistrations.filter(r => r.registrationType === "expert-session");
   const filteredExpertSessionRegistrations = expertCategoryFilter === "all" 
@@ -435,6 +434,7 @@ export default function Admin() {
                                 <TableHead>Registration ID</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
+                                <TableHead>Payment Status</TableHead>
                                 <TableHead>Ticket Category</TableHead>
                                 <TableHead>Type</TableHead>
                                 <TableHead>Action</TableHead>
@@ -456,18 +456,23 @@ export default function Admin() {
                                       <img 
                                         src={reg.profilePhoto} 
                                         alt={reg.fullName}
-                                        className="w-8 h-8 rounded-full object-cover border border-border"
+                                        className="w-12 h-12 rounded-lg object-cover border border-border"
                                         data-testid={`img-profile-thumbnail-${reg.id}`}
                                       />
                                     ) : (
-                                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                                        <Users className="w-4 h-4 text-muted-foreground" />
+                                      <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
+                                        <Users className="w-6 h-6 text-muted-foreground" />
                                       </div>
                                     )}
                                   </TableCell>
                                   <TableCell className="font-mono text-xs text-primary">{reg.registrationId}</TableCell>
                                   <TableCell className="font-medium">{reg.fullName}</TableCell>
                                   <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
+                                  <TableCell>
+                                    <Badge className={reg.paymentStatus === "paid" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"}>
+                                      {reg.paymentStatus === "paid" ? "Paid" : "Pending"}
+                                    </Badge>
+                                  </TableCell>
                                   <TableCell>
                                     {reg.ticketCategory ? (
                                       <Badge className={getTicketCategoryBadge(reg.ticketCategory)}>
@@ -610,6 +615,7 @@ export default function Admin() {
                                 <TableHead>Registration ID</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
+                                <TableHead>Payment Status</TableHead>
                                 <TableHead>Contest</TableHead>
                                 <TableHead>Category</TableHead>
                                 <TableHead>Action</TableHead>
@@ -627,16 +633,21 @@ export default function Admin() {
                                 >
                                   <TableCell>
                                     {reg.profilePhoto ? (
-                                      <img src={reg.profilePhoto} alt={reg.fullName} className="w-8 h-8 rounded-full object-cover border border-border" />
+                                      <img src={reg.profilePhoto} alt={reg.fullName} className="w-12 h-12 rounded-lg object-cover border border-border" />
                                     ) : (
-                                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                                        <Users className="w-4 h-4 text-muted-foreground" />
+                                      <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
+                                        <Users className="w-6 h-6 text-muted-foreground" />
                                       </div>
                                     )}
                                   </TableCell>
                                   <TableCell className="font-mono text-xs text-primary">{reg.registrationId}</TableCell>
                                   <TableCell className="font-medium">{reg.fullName}</TableCell>
                                   <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
+                                  <TableCell>
+                                    <Badge className={reg.paymentStatus === "paid" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"}>
+                                      {reg.paymentStatus === "paid" ? "Paid" : "Pending"}
+                                    </Badge>
+                                  </TableCell>
                                   <TableCell>
                                     <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
                                       {reg.contestName || "-"}
@@ -779,6 +790,7 @@ export default function Admin() {
                                 <TableHead>Registration ID</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
+                                <TableHead>Payment Status</TableHead>
                                 <TableHead>Session</TableHead>
                                 <TableHead>Category</TableHead>
                                 <TableHead>Action</TableHead>
@@ -796,16 +808,21 @@ export default function Admin() {
                                 >
                                   <TableCell>
                                     {reg.profilePhoto ? (
-                                      <img src={reg.profilePhoto} alt={reg.fullName} className="w-8 h-8 rounded-full object-cover border border-border" />
+                                      <img src={reg.profilePhoto} alt={reg.fullName} className="w-12 h-12 rounded-lg object-cover border border-border" />
                                     ) : (
-                                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                                        <Users className="w-4 h-4 text-muted-foreground" />
+                                      <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center">
+                                        <Users className="w-6 h-6 text-muted-foreground" />
                                       </div>
                                     )}
                                   </TableCell>
                                   <TableCell className="font-mono text-xs text-primary">{reg.registrationId}</TableCell>
                                   <TableCell className="font-medium">{reg.fullName}</TableCell>
                                   <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
+                                  <TableCell>
+                                    <Badge className={reg.paymentStatus === "paid" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"}>
+                                      {reg.paymentStatus === "paid" ? "Paid" : "Pending"}
+                                    </Badge>
+                                  </TableCell>
                                   <TableCell>
                                     <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
                                       {reg.sessionName || "Expert Session"}
