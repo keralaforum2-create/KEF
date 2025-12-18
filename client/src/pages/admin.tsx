@@ -224,7 +224,8 @@ export default function Admin() {
     return category.charAt(0).toUpperCase() + category.slice(1);
   };
 
-  const allRegistrations = registrations || [];
+  const successfulPaymentStatuses = ["ai_verified", "paid", "screenshot_uploaded"];
+  const allRegistrations = (registrations || []).filter(r => successfulPaymentStatuses.includes(r.paymentStatus));
   const contestRegistrations = allRegistrations.filter(r => r.registrationType === "contest");
   const expertSessionRegistrations = allRegistrations.filter(r => r.registrationType === "expert-session");
   const filteredExpertSessionRegistrations = expertCategoryFilter === "all" 
