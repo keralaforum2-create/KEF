@@ -954,6 +954,15 @@ export default function Admin() {
                                   <TableCell>
                                     <div className="flex items-center gap-2">
                                       <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedReg(reg)}
+                                        data-testid={`button-view-pending-${reg.id}`}
+                                      >
+                                        <Eye className="w-4 h-4 mr-1" />
+                                        View
+                                      </Button>
+                                      <Button
                                         variant="default"
                                         size="sm"
                                         onClick={() => approveRegistrationMutation.mutate(reg.registrationId)}
