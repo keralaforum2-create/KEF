@@ -528,3 +528,29 @@ export async function sendRegistrationEmails(data: RegistrationData, baseUrl: st
     };
   }
 }
+
+export async function sendTicketEmail(data: RegistrationData, baseUrl: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { client: resend, fromEmail } = await getResendClient();
+    const ticketUrl = `${baseUrl}/ticket/${data.registrationId}`;
+    
+    console.log(`Sending ticket email to: ${data.email}`);
+    
+    const result = await resend.emails.send({
+      from: fromEmail,
+      to: data.email,
+      subject: `Your Kerala Startup Fest 2026 Ticket - ${data.registrationId}`,
+      html: generateTicketEmailHtml(data, ticketUrl),
+    });
+    
+    console.log('Ticket email result:', JSON.stringify(result, null, 2));
+    console.log(`Ticket email sent successfully to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending ticket email:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to send ticket email' 
+    };
+  }
+}
