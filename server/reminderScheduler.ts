@@ -12,13 +12,13 @@ export async function startReminderScheduler() {
     isRunning = true;
     
     try {
-      // Check if today is 7 days before event
+      // Check if we should send reminders (only in January, one time)
       if (!shouldSendReminders()) {
         isRunning = false;
         return;
       }
       
-      console.log("🔔 Starting email reminder batch...");
+      console.log("🔔 Starting email reminder batch (January)...");
       
       // Get all registrations with payment status "paid" that haven't been reminded
       const registrationsToRemind = await db

@@ -3,15 +3,15 @@ import nodemailer from "nodemailer";
 
 // Event date - April 18, 2026
 const EVENT_DATE = new Date("2026-04-18T10:00:00Z");
-const REMINDER_DAYS_BEFORE = 7;
 
 // Check if we should send reminders today
 export function shouldSendReminders(): boolean {
   const now = new Date();
-  const daysUntilEvent = Math.ceil((EVENT_DATE.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
   
-  // Send reminder exactly 7 days before event
-  return daysUntilEvent === REMINDER_DAYS_BEFORE;
+  // Send reminder only in January (one time, between Jan 1 and Jan 31)
+  const isJanuary = now.getMonth() === 0; // 0 = January
+  
+  return isJanuary;
 }
 
 // Get email body template
@@ -22,7 +22,7 @@ export function getEmailTemplate(name: string, registrationId: string, eventType
   const daysUntilEvent = Math.ceil((EVENT_DATE.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
   
   return {
-    subject: `🚀 Your Kerala Startup Fest 2026 Reminder - ${daysUntilEvent} Days Away!`,
+    subject: `🚀 Kerala Startup Fest 2026 - Event Reminder (${daysUntilEvent} Days Away)`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -52,7 +52,7 @@ export function getEmailTemplate(name: string, registrationId: string, eventType
             <div class="content">
               <h2>Hi ${name}! 👋</h2>
               
-              <p>We're excited to have you join us at <strong>Kerala Startup Fest 2026</strong>! This is a reminder that the event is happening in just <strong>${daysUntilEvent} days</strong>.</p>
+              <p>Thank you for registering for <strong>Kerala Startup Fest 2026</strong>! Mark your calendars - the event is happening in approximately <strong>${daysUntilEvent} days</strong>.</p>
               
               <div class="highlight">
                 <strong>📅 Event Date & Time:</strong><br>
