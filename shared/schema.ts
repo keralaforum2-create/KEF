@@ -109,7 +109,7 @@ export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   teamMember2Name: z.string().optional(),
   teamMember3Name: z.string().optional(),
   paymentScreenshot: z.string().optional(),
-  profilePhoto: z.string().optional(),
+  profilePhoto: z.string().nullable().optional(),
   pitchStartupName: z.string().optional(),
   pitchElevatorPitch: z.string().max(300, "Elevator pitch must be under 50 words").optional(),
   pitchProblemStatement: z.string().optional(),

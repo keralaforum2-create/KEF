@@ -497,12 +497,18 @@ export default function Admin() {
                                           variant="outline"
                                           size="sm"
                                           onClick={() => {
-                                            const link = document.createElement('a');
-                                            link.href = reg.profilePhoto!;
-                                            link.download = `photo-${reg.registrationId}.jpg`;
-                                            document.body.appendChild(link);
-                                            link.click();
-                                            document.body.removeChild(link);
+                                            try {
+                                              const link = document.createElement('a');
+                                              link.href = reg.profilePhoto!;
+                                              link.download = `photo-${reg.registrationId}.jpg`;
+                                              link.style.display = 'none';
+                                              document.body.appendChild(link);
+                                              link.click();
+                                              setTimeout(() => document.body.removeChild(link), 100);
+                                            } catch (err) {
+                                              console.error('Download failed:', err);
+                                              toast({ title: "Download failed", variant: "destructive" });
+                                            }
                                           }}
                                           data-testid={`button-download-photo-${reg.id}`}
                                         >
@@ -648,7 +654,25 @@ export default function Admin() {
                                         <Eye className="w-4 h-4 mr-1" />View
                                       </Button>
                                       {reg.profilePhoto && (
-                                        <Button variant="outline" size="sm" onClick={() => { const link = document.createElement('a'); link.href = reg.profilePhoto!; link.download = `photo-${reg.registrationId}.jpg`; document.body.appendChild(link); link.click(); document.body.removeChild(link); }} data-testid={`button-download-photo-contest-${reg.id}`}>
+                                        <Button 
+                                          variant="outline" 
+                                          size="sm" 
+                                          onClick={() => {
+                                            try {
+                                              const link = document.createElement('a');
+                                              link.href = reg.profilePhoto!;
+                                              link.download = `photo-${reg.registrationId}.jpg`;
+                                              link.style.display = 'none';
+                                              document.body.appendChild(link);
+                                              link.click();
+                                              setTimeout(() => document.body.removeChild(link), 100);
+                                            } catch (err) {
+                                              console.error('Download failed:', err);
+                                              toast({ title: "Download failed", variant: "destructive" });
+                                            }
+                                          }} 
+                                          data-testid={`button-download-photo-contest-${reg.id}`}
+                                        >
                                           <Image className="w-4 h-4 mr-1" />Photo
                                         </Button>
                                       )}
