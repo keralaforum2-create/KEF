@@ -281,12 +281,16 @@ export async function registerRoutes(
         return res.status(404).json({ message: "Registration not found" });
       }
 
-      await storage.updateRegistrationPayment(registration.id, {
+      const updatedRegistration = await storage.updateRegistrationPayment(registration.id, {
         paymentStatus: 'paid'
       });
 
+      if (!updatedRegistration) {
+        return res.status(500).json({ message: "Failed to update registration" });
+      }
+
       const baseUrl = resolveBaseUrl(req);
-      sendRegistrationEmails(registration, baseUrl).catch((err) => {
+      sendRegistrationEmails(updatedRegistration, baseUrl).catch((err) => {
         console.error('Failed to send registration emails:', err);
       });
 
