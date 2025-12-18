@@ -69,6 +69,17 @@ export async function registerRoutes(
     });
   });
 
+  // Registration stats endpoint
+  app.get("/api/stats", async (_req, res) => {
+    try {
+      const stats = await storage.getRegistrationStats();
+      return res.json(stats);
+    } catch (error) {
+      console.error("Error fetching stats:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // API info endpoint for testing
   app.get("/api/info", (_req, res) => {
     return res.json({

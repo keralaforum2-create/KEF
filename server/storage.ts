@@ -39,6 +39,7 @@ export interface IStorage {
   getRegistrationByMerchantTransactionId(merchantTransactionId: string): Promise<Registration | undefined>;
   getRegistrationByRazorpayOrderId(razorpayOrderId: string): Promise<Registration | undefined>;
   updateRegistrationPayment(id: string, paymentData: { phonepeTransactionId?: string; razorpayOrderId?: string; razorpayPaymentId?: string; paymentStatus?: string }): Promise<Registration | undefined>;
+  getRegistrationStats(): Promise<{ totalRegistrations: number; totalPaid: number; totalPending: number; contestRegistrations: number; expertSessionRegistrations: number; }>;
   
   createInvestorMentor(application: InsertInvestorMentor): Promise<InvestorMentor>;
   getInvestorMentors(): Promise<InvestorMentor[]>;
@@ -146,6 +147,29 @@ export class DatabaseStorage implements IStorage {
   async getAllRegistrations(): Promise<Registration[]> {
     return await db.select().from(registrations)
       .orderBy(desc(registrations.createdAt));
+  }
+
+  async getRegistrationStats(): Promise<{
+    totalRegistrations: number;
+    totalPaid: number;
+    totalPending: number;
+    contestRegistrations: number;
+    expertSessionRegistrations: number;
+  }> {
+    const allRegs = await db.select().from(registrations);
+    const totalRegistrations = allRegs.length;
+    const totalPaid = allRegs.filter(r => r.paymentStatus === 'paid').length;
+    const totalPending = allRegs.filter(r => r.paymentStatus !== 'paid').length;
+    const contestRegistrations = allRegs.filter(r => r.registrationType === 'contest').length;
+    const expertSessionRegistrations = allRegs.filter(r => r.registrationType === 'expert-session').length;
+    
+    return {
+      totalRegistrations,
+      totalPaid,
+      totalPending,
+      contestRegistrations,
+      expertSessionRegistrations,
+    };
   }
   
   async getPaidRegistrations(): Promise<Registration[]> {
