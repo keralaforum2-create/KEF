@@ -141,8 +141,13 @@ app.use((req, res, next) => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
       let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+      // Don't log large response payloads to prevent memory issues
+      if (capturedJsonResponse && typeof capturedJsonResponse === 'object') {
+        if (Array.isArray(capturedJsonResponse)) {
+          logLine += ` (${capturedJsonResponse.length} items)`;
+        } else if (capturedJsonResponse.success !== undefined) {
+          logLine += ` (${capturedJsonResponse.success ? 'success' : 'failed'})`;
+        }
       }
 
       log(logLine);
