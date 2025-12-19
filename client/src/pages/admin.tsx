@@ -28,7 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration } from "@shared/schema";
+import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration, ReferralCode } from "@shared/schema";
 import { ScrollFadeUp, StaggerContainer, StaggerItem, CardWave } from "@/lib/animations";
 
 export default function Admin() {
@@ -39,6 +39,12 @@ export default function Admin() {
   const [selectedSponsorship, setSelectedSponsorship] = useState<Sponsorship | null>(null);
   const [selectedBulkReg, setSelectedBulkReg] = useState<BulkRegistration | null>(null);
   const [expertCategoryFilter, setExpertCategoryFilter] = useState<"all" | "platinum" | "gold" | "silver">("all");
+  
+  // Referral code form state
+  const [referralCodeForm, setReferralCodeForm] = useState({
+    code: "",
+    discountPercentage: "",
+  });
   
   // Admin registration form state
   const [adminRegForm, setAdminRegForm] = useState({
@@ -89,6 +95,19 @@ export default function Admin() {
   const { data: bulkRegistrations, isLoading: loadingBulk } = useQuery<BulkRegistration[]>({
     queryKey: ["/api/bulk-registrations"],
     refetchInterval: 2000,
+  });
+
+  const { data: referralCodes, isLoading: loadingReferralCodes } = useQuery<ReferralCode[]>({
+    queryKey: ["/api/admin/referral-codes"],
+    refetchInterval: 2000,
+    queryFn: async () => {
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch("/api/admin/referral-codes", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (!response.ok) throw new Error("Failed to fetch referral codes");
+      return response.json();
+    }
   });
 
   const queryClient = useQueryClient();
@@ -143,6 +162,72 @@ export default function Admin() {
     },
     onError: () => {
       toast({ title: "Failed to delete sponsorship", variant: "destructive" });
+    },
+  });
+
+  const createReferralCodeMutation = useMutation({
+    mutationFn: async (data: { code: string; discountPercentage: number }) => {
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch("/api/admin/referral-codes", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+      });
+      if (!response.ok) throw new Error("Failed to create referral code");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/referral-codes"] });
+      toast({ title: "Referral code created successfully" });
+      setReferralCodeForm({ code: "", discountPercentage: "" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Failed to create referral code", description: error?.message, variant: "destructive" });
+    },
+  });
+
+  const deleteReferralCodeMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch(`/api/admin/referral-codes/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (!response.ok) throw new Error("Failed to delete referral code");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/referral-codes"] });
+      toast({ title: "Referral code deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete referral code", variant: "destructive" });
+    },
+  });
+
+  const updateReferralCodeMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: { isActive: boolean } }) => {
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch(`/api/admin/referral-codes/${id}`, {
+        method: "PATCH",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+      });
+      if (!response.ok) throw new Error("Failed to update referral code");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/referral-codes"] });
+      toast({ title: "Referral code updated successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to update referral code", variant: "destructive" });
     },
   });
 
@@ -1367,6 +1452,147 @@ export default function Admin() {
                         <div className="text-center py-12">
                           <Building2 className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
                           <p className="text-muted-foreground">No bulk registrations yet</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="referral-codes">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Plus className="w-5 h-5" />
+                        Add New Gift Code
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <form onSubmit={(e) => {
+                        e.preventDefault();
+                        if (!referralCodeForm.code || !referralCodeForm.discountPercentage) {
+                          toast({ title: "Please fill all fields", variant: "destructive" });
+                          return;
+                        }
+                        createReferralCodeMutation.mutate({
+                          code: referralCodeForm.code.toUpperCase(),
+                          discountPercentage: parseInt(referralCodeForm.discountPercentage)
+                        });
+                      }} className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <Label htmlFor="code" className="text-sm font-medium">Code *</Label>
+                            <Input
+                              id="code"
+                              placeholder="e.g., SUMMER20"
+                              value={referralCodeForm.code}
+                              onChange={(e) => setReferralCodeForm({...referralCodeForm, code: e.target.value})}
+                              data-testid="input-referral-code"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="discount" className="text-sm font-medium">Discount % *</Label>
+                            <Input
+                              id="discount"
+                              type="number"
+                              min="1"
+                              max="100"
+                              placeholder="e.g., 20"
+                              value={referralCodeForm.discountPercentage}
+                              onChange={(e) => setReferralCodeForm({...referralCodeForm, discountPercentage: e.target.value})}
+                              data-testid="input-discount-percentage"
+                            />
+                          </div>
+                        </div>
+                        <Button 
+                          type="submit" 
+                          disabled={createReferralCodeMutation.isPending}
+                          data-testid="button-create-referral-code"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add Code
+                        </Button>
+                      </form>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <MessageSquare className="w-5 h-5" />
+                        Gift Codes ({referralCodes?.length || 0})
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingReferralCodes ? (
+                        <div className="text-center py-8 text-muted-foreground">Loading codes...</div>
+                      ) : referralCodes && referralCodes.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Code</TableHead>
+                                <TableHead>Discount %</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Created</TableHead>
+                                <TableHead>Actions</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {referralCodes.map((code) => (
+                                <TableRow key={code.id} data-testid={`row-referral-code-${code.id}`}>
+                                  <TableCell className="font-mono font-bold">{code.code}</TableCell>
+                                  <TableCell>
+                                    <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                                      {code.discountPercentage}%
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Badge className={code.isActive 
+                                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                                      : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                                    }>
+                                      {code.isActive ? "Active" : "Inactive"}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">
+                                    {new Date(code.createdAt).toLocaleDateString()}
+                                  </TableCell>
+                                  <TableCell className="space-x-2">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => updateReferralCodeMutation.mutate({
+                                        id: code.id,
+                                        data: { isActive: !code.isActive }
+                                      })}
+                                      data-testid={`button-toggle-code-${code.id}`}
+                                    >
+                                      {code.isActive ? "Disable" : "Enable"}
+                                    </Button>
+                                    <Button
+                                      variant="destructive"
+                                      size="sm"
+                                      onClick={() => deleteReferralCodeMutation.mutate(code.id)}
+                                      data-testid={`button-delete-code-${code.id}`}
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <div className="text-center py-8 text-muted-foreground">
+                          No gift codes created yet. Add one above!
                         </div>
                       )}
                     </CardContent>
