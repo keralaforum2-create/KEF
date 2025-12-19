@@ -70,37 +70,37 @@ export default function Admin() {
 
   const { data: registrations, isLoading: loadingRegistrations } = useQuery<Registration[]>({
     queryKey: ["/api/registrations"],
-    refetchInterval: 2000,
+    refetchInterval: 5000,
   });
 
   const { data: pendingRegistrations, isLoading: loadingPendingRegistrations } = useQuery<Registration[]>({
     queryKey: ["/api/pending-registrations"],
-    refetchInterval: 2000,
+    refetchInterval: 5000,
   });
 
   const { data: contacts, isLoading: loadingContacts } = useQuery<Contact[]>({
     queryKey: ["/api/contacts"],
-    refetchInterval: 2000,
+    refetchInterval: 5000,
   });
 
   const { data: investorMentors, isLoading: loadingInvestors } = useQuery<InvestorMentor[]>({
     queryKey: ["/api/investor-mentors"],
-    refetchInterval: 2000,
+    refetchInterval: 5000,
   });
 
   const { data: sponsorships, isLoading: loadingSponsorships } = useQuery<Sponsorship[]>({
     queryKey: ["/api/sponsorships"],
-    refetchInterval: 2000,
+    refetchInterval: 5000,
   });
 
   const { data: bulkRegistrations, isLoading: loadingBulk } = useQuery<BulkRegistration[]>({
     queryKey: ["/api/bulk-registrations"],
-    refetchInterval: 2000,
+    refetchInterval: 5000,
   });
 
   const { data: referralCodes, isLoading: loadingReferralCodes } = useQuery<ReferralCode[]>({
     queryKey: ["/api/admin/referral-codes"],
-    refetchInterval: 2000,
+    refetchInterval: 5000,
     queryFn: async () => {
       const token = localStorage.getItem("admin_token");
       const response = await fetch("/api/admin/referral-codes", {

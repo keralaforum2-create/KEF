@@ -25,7 +25,7 @@ import {
   referralCodes,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
@@ -184,17 +184,17 @@ export class DatabaseStorage implements IStorage {
   }
   
   async getPaidRegistrations(): Promise<Registration[]> {
-    const paidStatuses = ['paid', 'screenshot_uploaded'];
     const result = await db.select().from(registrations)
+      .where(eq(registrations.paymentStatus, 'paid'))
       .orderBy(desc(registrations.createdAt));
-    return result.filter(r => paidStatuses.includes(r.paymentStatus || ''));
+    return result;
   }
 
   async getPendingRegistrations(): Promise<Registration[]> {
-    const pendingStatuses = ['pending', 'screenshot_uploaded', null, undefined, ''];
     const result = await db.select().from(registrations)
+      .where(sql`${registrations.paymentStatus} IS NULL OR ${registrations.paymentStatus} != 'paid'`)
       .orderBy(desc(registrations.createdAt));
-    return result.filter(r => !r.paymentStatus || pendingStatuses.includes(r.paymentStatus));
+    return result;
   }
 
   async createInvestorMentor(insertData: InsertInvestorMentor): Promise<InvestorMentor> {
