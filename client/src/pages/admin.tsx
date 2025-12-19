@@ -299,6 +299,33 @@ export default function Admin() {
     },
   });
 
+  const deletePendingRegistrationMutation = useMutation({
+    mutationFn: async (registrationId: string) => {
+      try {
+        const response = await fetch(`/api/registrations/${registrationId}`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" }
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || `Failed to delete registration (${response.status})`);
+        }
+        return response.json();
+      } catch (err: any) {
+        throw new Error(err.message || "Failed to delete registration");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/pending-registrations"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
+      toast({ title: "Registration deleted successfully!" });
+    },
+    onError: (error: any) => {
+      const errorMessage = error?.message || "Failed to delete registration";
+      toast({ title: "Delete Error", description: errorMessage, variant: "destructive" });
+    },
+  });
+
   const handleAdminRegSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!adminRegForm.fullName || !adminRegForm.email || !adminRegForm.phone) {
@@ -1084,6 +1111,20 @@ export default function Admin() {
                                       >
                                         <CheckCircle2 className="w-4 h-4 mr-1" />
                                         Approve
+                                      </Button>
+                                      <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => {
+                                          if (window.confirm(`Delete registration for ${reg.fullName}?`)) {
+                                            deletePendingRegistrationMutation.mutate(reg.id);
+                                          }
+                                        }}
+                                        disabled={deletePendingRegistrationMutation.isPending}
+                                        data-testid={`button-delete-pending-${reg.id}`}
+                                      >
+                                        <Trash2 className="w-4 h-4 mr-1" />
+                                        Delete
                                       </Button>
                                     </div>
                                   </TableCell>
