@@ -13,6 +13,8 @@ import Contests from "@/pages/contests";
 import Participate from "@/pages/participate";
 import Partners from "@/pages/partners";
 import Contact from "@/pages/contact";
+import Speakers from "@/pages/speakers";
+import FAQ from "@/pages/faq";
 import AdminLogin from "@/pages/admin-login";
 import Admin from "@/pages/admin";
 import Ticket from "@/pages/ticket";
@@ -57,6 +59,8 @@ function Router() {
       <Route path="/participate" component={Participate} />
       <Route path="/partners" component={Partners} />
       <Route path="/contact" component={Contact} />
+      <Route path="/speakers" component={Speakers} />
+      <Route path="/faq" component={FAQ} />
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/admin" component={Admin} />
       <Route path="/ticket/:id" component={Ticket} />

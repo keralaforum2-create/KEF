@@ -18,8 +18,7 @@ import {
   Briefcase,
   GraduationCap,
   Building2,
-  HandshakeIcon,
-  Download
+  HandshakeIcon
 } from "lucide-react";
 import {
   HeroAnimation,
@@ -37,7 +36,6 @@ import waveElement from "@assets/keral_startup_element_1764698110061.png";
 import cubeLogo from "@assets/cube_1764739470058.png";
 import caliphLifeSchoolLogo from "@assets/PhotoshopExtension_Image-removebg-preview_1764739146810.png";
 import keralaEconomicForumLogo from "@assets/Screenshot_2025-11-29_222342-removebg-preview-removebg-preview_1764759226182.png";
-import ksfHandbook from "@assets/KSF_HANDBOOK_KEF_1764768821195.pdf";
 
 export default function Home() {
   const partnersRef = useRef<HTMLDivElement>(null);
@@ -126,17 +124,16 @@ export default function Home() {
                         </Button>
                       </div>
                     </Link>
-                    <a href={ksfHandbook} download="KSF_Handbook.pdf">
+                    <Link href="/speakers">
                       <Button 
                         variant="outline" 
                         size="lg" 
                         className="font-bold text-base px-10 py-6 border-2 border-gray-700 text-gray-700 min-w-[200px] text-lg" 
-                        data-testid="button-brochure"
+                        data-testid="button-speakers"
                       >
-                        <Download className="w-5 h-5 mr-2" />
-                        Download Brochure
+                        Our Speakers
                       </Button>
-                    </a>
+                    </Link>
                   </div>
                 </HeroSubAnimation>
               </div>
@@ -490,6 +487,12 @@ export default function Home() {
               <Link href="/contests">
                 <Button size="lg" variant="outline" className="font-semibold" data-testid="button-explore-contests">
                   Explore Contests
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+              <Link href="/faq">
+                <Button size="lg" variant="outline" className="font-semibold" data-testid="button-explore-faq">
+                  FAQ
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
