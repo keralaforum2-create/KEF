@@ -387,19 +387,33 @@ export async function registerRoutes(
       }
 
       const baseUrl = resolveBaseUrl(req);
-      sendRegistrationEmails(updatedRegistration, baseUrl).catch((err) => {
-        console.error('Failed to send registration emails:', err);
+      // Send emails with a timeout to prevent request hanging
+      const emailPromise = sendRegistrationEmails(updatedRegistration, baseUrl)
+        .catch((err) => {
+          console.error('Failed to send registration emails:', err);
+        });
+      
+      // Set a timeout for email sending (10 seconds)
+      Promise.race([
+        emailPromise,
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Email sending timeout')), 10000)
+        )
+      ]).catch((err) => {
+        console.error('Email sending warning (non-blocking):', err.message);
       });
 
-      console.log("Registration approved and email sent:", id);
+      console.log("Registration approved:", id);
       return res.json({
         success: true,
-        message: "Registration approved and email sent",
+        message: "Registration approved successfully",
         registrationId: id
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error approving registration:", error);
-      return res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ 
+        message: error?.message || "Failed to approve registration" 
+      });
     }
   });
 

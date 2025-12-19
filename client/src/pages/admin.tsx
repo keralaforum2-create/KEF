@@ -272,7 +272,20 @@ export default function Admin() {
 
   const approveRegistrationMutation = useMutation({
     mutationFn: async (registrationId: string) => {
-      return await apiRequest("POST", `/api/registrations/${registrationId}/approve`, {});
+      try {
+        const response = await fetch(`/api/registrations/${registrationId}/approve`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({})
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || `Failed to approve registration (${response.status})`);
+        }
+        return response.json();
+      } catch (err: any) {
+        throw new Error(err.message || "Failed to approve registration");
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/pending-registrations"] });
@@ -281,7 +294,8 @@ export default function Admin() {
       toast({ title: "Registration approved successfully!" });
     },
     onError: (error: any) => {
-      toast({ title: "Failed to approve registration", description: error?.message, variant: "destructive" });
+      const errorMessage = error?.message || "Failed to approve registration";
+      toast({ title: "Approval Error", description: errorMessage, variant: "destructive" });
     },
   });
 
