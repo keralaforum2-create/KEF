@@ -446,6 +446,15 @@ export default function Participate() {
     else if (ticketCategory === "gold") baseAmount = 499;
     else baseAmount = 199; // silver
     
+    // For Pitch Room, multiply amount by number of team members
+    if (isPitchRoom) {
+      let teamMemberCount = 1; // At least the main participant
+      if (form.watch("teamMember1Name")) teamMemberCount++;
+      if (form.watch("teamMember2Name")) teamMemberCount++;
+      if (form.watch("teamMember3Name")) teamMemberCount++;
+      return 199 * teamMemberCount;
+    }
+    
     return baseAmount;
   };
 
@@ -3904,13 +3913,15 @@ export default function Participate() {
                             Application Fees
                           </h3>
                           <p className="text-sm text-muted-foreground font-medium">
-                            {isBusinessQuiz 
-                              ? "Pay ₹199/-"
-                              : ticketCategory === "platinum" 
-                                ? "Pay ₹999/-"
-                                : ticketCategory === "gold"
-                                  ? "Pay ₹499/-"
-                                  : "Pay ₹199/-"
+                            {isPitchRoom
+                              ? `Pay ₹${getPaymentAmount()}/-${form.watch("teamMember1Name") || form.watch("teamMember2Name") || form.watch("teamMember3Name") ? " (" + [form.watch("teamMember1Name") ? 2 : 1, form.watch("teamMember2Name") ? 1 : 0, form.watch("teamMember3Name") ? 1 : 0].reduce((a, b) => a + b) + " members)" : ""}`
+                              : isBusinessQuiz 
+                                ? "Pay ₹199/-"
+                                : ticketCategory === "platinum" 
+                                  ? "Pay ₹999/-"
+                                  : ticketCategory === "gold"
+                                    ? "Pay ₹499/-"
+                                    : "Pay ₹199/-"
                             }
                           </p>
                         </div>
