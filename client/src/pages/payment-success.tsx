@@ -154,38 +154,26 @@ export default function PaymentSuccess() {
                 transition={{ delay: 0.5 }}
                 className="text-center space-y-6"
               >
-                {registrationData && (
-                  <>
-                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-                      <p className="text-sm text-green-800 dark:text-green-300 font-medium mb-1">
-                        Your Registration ID
-                      </p>
-                      <p className="text-lg font-mono font-bold text-green-600 dark:text-green-400" data-testid="text-registration-id">
-                        {registrationId}
-                      </p>
-                    </div>
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                  <p className="text-sm text-green-800 dark:text-green-300 font-medium mb-1">
+                    Your Registration ID
+                  </p>
+                  <p className="text-lg font-mono font-bold text-green-600 dark:text-green-400" data-testid="text-registration-id">
+                    {registrationId}
+                  </p>
+                </div>
 
-                    <p className="text-muted-foreground text-sm">
-                      Welcome, <span className="font-medium text-foreground">{registrationData.fullName}</span>!
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                  <div className="flex items-center justify-center gap-2 mb-2">
+                    <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    <p className="text-sm text-blue-800 dark:text-blue-300 font-medium">
+                      Email Verification
                     </p>
-
-                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                        <p className="text-sm text-blue-800 dark:text-blue-300 font-medium">
-                          Email Verification
-                        </p>
-                      </div>
-                      <p className="text-sm text-blue-700 dark:text-blue-400">
-                        A verification link has been sent to <span className="font-medium">{registrationData.email}</span>. Please check your email and verify your registration.
-                      </p>
-                    </div>
-
-                    <p className="text-muted-foreground text-sm">
-                      Keep your Registration ID safe for reference and future events.
-                    </p>
-                  </>
-                )}
+                  </div>
+                  <p className="text-sm text-blue-700 dark:text-blue-400">
+                    A verification link has been sent to your email. Please verify your registration to complete the process.
+                  </p>
+                </div>
 
                 <Button 
                   onClick={() => setLocation("/participate")} 
