@@ -202,6 +202,8 @@ export default function Participate() {
   const [downloading, setDownloading] = useState(false);
   const [submittedData, setSubmittedData] = useState<RegistrationFormData | null>(null);
   const [isProcessingOnlinePayment, setIsProcessingOnlinePayment] = useState(false);
+  const [discountPercentage, setDiscountPercentage] = useState(0);
+  const [validatedGiftCode, setValidatedGiftCode] = useState<string | null>(null);
   const ticketRef = useRef<HTMLDivElement>(null);
   const [registrationMode, setRegistrationMode] = useState<"individual" | "bulk">("individual");
   const [bulkFormData, setBulkFormData] = useState({
@@ -400,12 +402,60 @@ export default function Participate() {
     }
   };
 
+  // Validate and apply gift code discount
+  const validateGiftCode = async (code: string) => {
+    if (!code.trim()) {
+      setDiscountPercentage(0);
+      setValidatedGiftCode(null);
+      return;
+    }
+    try {
+      const response = await fetch("/api/referral-codes/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: code.toUpperCase() })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setDiscountPercentage(data.discount || 0);
+        setValidatedGiftCode(data.code);
+        toast({
+          title: "Gift code applied!",
+          description: `${data.discount}% discount activated`,
+        });
+      } else {
+        setDiscountPercentage(0);
+        setValidatedGiftCode(null);
+        toast({
+          title: "Invalid gift code",
+          description: "This gift code is not valid or has expired",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      setDiscountPercentage(0);
+      setValidatedGiftCode(null);
+    }
+  };
+
   // Get payment amount based on ticket type and contest
   const getPaymentAmount = () => {
-    if (isBusinessQuiz) return 199;
-    if (ticketCategory === "platinum") return 999;
-    if (ticketCategory === "gold") return 499;
-    return 199; // silver
+    let baseAmount = 199;
+    if (isBusinessQuiz) baseAmount = 199;
+    else if (ticketCategory === "platinum") baseAmount = 999;
+    else if (ticketCategory === "gold") baseAmount = 499;
+    else baseAmount = 199; // silver
+    
+    return baseAmount;
+  };
+
+  // Get discounted price
+  const getDiscountedAmount = () => {
+    const baseAmount = getPaymentAmount();
+    if (discountPercentage > 0) {
+      return Math.round(baseAmount - (baseAmount * discountPercentage / 100));
+    }
+    return baseAmount;
   };
 
   // Get bulk registration price per student
@@ -874,7 +924,7 @@ export default function Participate() {
       formData.append("schoolGrade", data.schoolGrade || "");
       formData.append("collegeYear", data.collegeYear || "");
       formData.append("collegeCourse", data.collegeCourse || "");
-      formData.append("referralCode", data.referralCode || "");
+      formData.append("referralCode", validatedGiftCode || data.referralCode || "");
       formData.append("teamMember1Name", data.teamMember1Name || "");
       formData.append("teamMember1Email", data.teamMember1Email || "");
       formData.append("teamMember1Phone", data.teamMember1Phone || "");
