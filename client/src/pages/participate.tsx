@@ -3902,50 +3902,6 @@ export default function Participate() {
                         viewport={{ once: true }}
                         variants={formFieldVariants}
                       >
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 pb-6 border-b relative">
-                          <div className="absolute -right-0 top-0 bottom-0 w-1 bg-gradient-to-b from-yellow-400 via-blue-500 to-teal-500"></div>
-                          
-                          <div className="flex flex-col items-center">
-                            <div className="w-48 h-48 rounded-lg bg-muted/20 flex items-center justify-center mb-4">
-                              <div className="text-6xl font-bold text-center opacity-20">KSF</div>
-                            </div>
-                            
-                            <div className="w-full bg-muted/30 rounded-lg p-4">
-                              <p className="text-xs text-muted-foreground mb-3 font-medium text-center">Event Starts In</p>
-                              <div className="flex justify-center gap-3">
-                                {(() => {
-                                  const eventDate = new Date(2026, 0, 7, 8, 0, 0);
-                                  const now = new Date();
-                                  const diff = eventDate.getTime() - now.getTime();
-                                  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                                  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                                  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                                  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                                  
-                                  return [
-                                    { value: String(days).padStart(2, '0'), label: 'DAYS' },
-                                    { value: String(hours).padStart(2, '0'), label: 'HRS' },
-                                    { value: String(minutes).padStart(2, '0'), label: 'MIN' },
-                                    { value: String(seconds).padStart(2, '0'), label: 'SEC' }
-                                  ].map((item, idx) => (
-                                    <div key={idx} className="text-center">
-                                      <div className="font-bold text-xl text-blue-600 dark:text-blue-400">{item.value}</div>
-                                      <div className="text-xs text-muted-foreground font-medium mt-1">{item.label}</div>
-                                    </div>
-                                  ));
-                                })()}
-                              </div>
-                            </div>
-                          </div>
-                          
-                          <div className="flex flex-col justify-center">
-                            <p className="text-xs text-muted-foreground uppercase tracking-widest mb-2">First of its kind in the state</p>
-                            <h2 className="font-serif text-4xl font-bold mb-4">KERALA STARTUP FEST 26</h2>
-                            <p className="text-lg text-muted-foreground mb-1 font-semibold">2026 JAN 7-8</p>
-                            <p className="text-base text-muted-foreground font-medium">KOZHIKODE</p>
-                          </div>
-                        </div>
-
                         <div className="text-center mb-6">
                           <motion.div 
                             className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-3"
