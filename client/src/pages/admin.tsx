@@ -33,6 +33,7 @@ import { ScrollFadeUp, StaggerContainer, StaggerItem, CardWave } from "@/lib/ani
 
 export default function Admin() {
   const [, setLocation] = useLocation();
+  const [activeTab, setActiveTab] = useState("registrations");
   const [selectedReg, setSelectedReg] = useState<Registration | null>(null);
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [selectedInvestor, setSelectedInvestor] = useState<InvestorMentor | null>(null);
@@ -267,10 +268,11 @@ export default function Admin() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/pending-registrations"] });
       queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
-      toast({ title: "Registration approved and email sent!" });
+      setActiveTab("registrations");
+      toast({ title: "Registration approved successfully!" });
     },
-    onError: () => {
-      toast({ title: "Failed to approve registration", variant: "destructive" });
+    onError: (error: any) => {
+      toast({ title: "Failed to approve registration", description: error?.message, variant: "destructive" });
     },
   });
 
@@ -447,7 +449,7 @@ export default function Admin() {
           </div>
 
           <ScrollFadeUp delay={0.3}>
-            <Tabs defaultValue="registrations" className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="mb-6 flex flex-wrap gap-1">
                 <TabsTrigger value="registrations" data-testid="tab-registrations">
                   All ({allRegistrations.length})
