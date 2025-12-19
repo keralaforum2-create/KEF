@@ -130,9 +130,20 @@ export default function FAQ() {
             Contact our support team for any queries not covered here.
           </p>
           <a href="mailto:support@keralastartusfest.com">
-            <Button variant="outline" data-testid="button-contact-support">
-              Contact Support
-            </Button>
+            <div 
+              className="relative p-[3px] rounded-lg inline-block shadow-lg"
+              style={{
+                background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+              }}
+              data-testid="button-contact-support-border"
+            >
+              <Button 
+                className="font-semibold text-base px-8 py-6 bg-white text-gray-800 border-0 rounded-md" 
+                data-testid="button-contact-support"
+              >
+                Contact Support
+              </Button>
+            </div>
           </a>
         </div>
       </div>
