@@ -177,7 +177,10 @@ export default function Admin() {
         },
         body: JSON.stringify(data)
       });
-      if (!response.ok) throw new Error("Failed to create referral code");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to create referral code (${response.status})`);
+      }
       return response.json();
     },
     onSuccess: () => {
@@ -197,15 +200,18 @@ export default function Admin() {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });
-      if (!response.ok) throw new Error("Failed to delete referral code");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to delete referral code (${response.status})`);
+      }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/referral-codes"] });
       toast({ title: "Referral code deleted successfully" });
     },
-    onError: () => {
-      toast({ title: "Failed to delete referral code", variant: "destructive" });
+    onError: (error: any) => {
+      toast({ title: "Failed to delete referral code", description: error?.message, variant: "destructive" });
     },
   });
 
@@ -220,15 +226,18 @@ export default function Admin() {
         },
         body: JSON.stringify(data)
       });
-      if (!response.ok) throw new Error("Failed to update referral code");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Failed to update referral code (${response.status})`);
+      }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/referral-codes"] });
       toast({ title: "Referral code updated successfully" });
     },
-    onError: () => {
-      toast({ title: "Failed to update referral code", variant: "destructive" });
+    onError: (error: any) => {
+      toast({ title: "Failed to update referral code", description: error?.message, variant: "destructive" });
     },
   });
 
