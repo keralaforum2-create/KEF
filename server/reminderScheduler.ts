@@ -7,6 +7,12 @@ let isRunning = false;
 let schedulerInterval: NodeJS.Timeout | null = null;
 
 export async function startReminderScheduler() {
+  // Disable scheduler on production to prevent memory issues
+  if (process.env.NODE_ENV === "production") {
+    console.log("📧 Email reminder scheduler disabled on production");
+    return;
+  }
+
   // Prevent multiple scheduler instances
   if (schedulerInterval) {
     console.log("⚠️ Reminder scheduler already running");

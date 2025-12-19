@@ -126,15 +126,21 @@ export async function registerRoutes(
       }
       const result = insertReferralCodeSchema.safeParse(req.body);
       if (!result.success) {
+        console.error("Validation error:", result.error);
         return res.status(400).json({ 
-          message: fromError(result.error).toString() 
+          message: fromError(result.error).toString(),
+          errors: result.error.issues.map(issue => ({ path: issue.path.join('.'), message: issue.message }))
         });
       }
       const newCode = await storage.createReferralCode(result.data);
+      console.log("Referral code created:", newCode);
       return res.json(newCode);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating referral code:", error);
-      return res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ 
+        message: error?.message || "Internal server error",
+        code: error?.code
+      });
     }
   });
 
