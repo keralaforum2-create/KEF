@@ -1,4 +1,4 @@
-import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -25,6 +25,26 @@ export const insertContactSchema = createInsertSchema(contactSubmissions).omit({
 
 export type InsertContact = z.infer<typeof insertContactSchema>;
 export type Contact = typeof contactSubmissions.$inferSelect;
+
+export const referralCodes = pgTable("referral_codes", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  code: text("code").notNull().unique(),
+  discountPercentage: integer("discount_percentage").notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertReferralCodeSchema = createInsertSchema(referralCodes).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  code: z.string().min(3, "Code must be at least 3 characters").toUpperCase(),
+  discountPercentage: z.number().min(1, "Discount must be at least 1%").max(100, "Discount cannot exceed 100%"),
+  isActive: z.boolean().optional(),
+});
+
+export type InsertReferralCode = z.infer<typeof insertReferralCodeSchema>;
+export type ReferralCode = typeof referralCodes.$inferSelect;
 
 export const registrations = pgTable("registrations", {
   id: varchar("id", { length: 36 }).primaryKey(),
@@ -81,6 +101,9 @@ export const registrations = pgTable("registrations", {
   phonepeMerchantTransactionId: text("phonepe_merchant_transaction_id"),
   phonepeTransactionId: text("phonepe_transaction_id"),
   paymentAmount: text("payment_amount"),
+  referralCode: text("referral_code"),
+  discountedAmount: text("discounted_amount"),
+  originalAmount: text("original_amount"),
   paymentStatus: text("payment_status"),
   reminderSentAt: timestamp("reminder_sent_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -140,6 +163,9 @@ export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   pitchSupportingFiles: z.string().optional(),
   pitchDemoVideoLink: z.string().optional(),
   pitchDeclarationConfirmed: z.string().optional(),
+  referralCode: z.string().optional(),
+  discountedAmount: z.string().optional(),
+  originalAmount: z.string().optional(),
   paymentStatus: z.string().optional(),
 });
 

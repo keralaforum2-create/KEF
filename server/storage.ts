@@ -13,6 +13,8 @@ import {
   type InsertBulkRegistration,
   type BulkStudent,
   type InsertBulkStudent,
+  type ReferralCode,
+  type InsertReferralCode,
   users,
   contactSubmissions,
   registrations,
@@ -20,6 +22,7 @@ import {
   sponsorshipInquiries,
   bulkRegistrations,
   bulkRegistrationStudents,
+  referralCodes,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
@@ -64,6 +67,12 @@ export interface IStorage {
   createBulkStudent(student: InsertBulkStudent): Promise<BulkStudent>;
   getBulkStudentsByBulkRegistrationId(bulkRegistrationId: string): Promise<BulkStudent[]>;
   getBulkStudentByStudentRegistrationId(studentRegistrationId: string): Promise<BulkStudent | undefined>;
+  
+  createReferralCode(code: InsertReferralCode): Promise<ReferralCode>;
+  getReferralCodes(): Promise<ReferralCode[]>;
+  getReferralCodeByCode(code: string): Promise<ReferralCode | undefined>;
+  updateReferralCode(id: string, data: Partial<InsertReferralCode>): Promise<ReferralCode | undefined>;
+  deleteReferralCode(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -282,6 +291,38 @@ export class DatabaseStorage implements IStorage {
   async getBulkStudentByStudentRegistrationId(studentRegistrationId: string): Promise<BulkStudent | undefined> {
     const result = await db.select().from(bulkRegistrationStudents).where(eq(bulkRegistrationStudents.studentRegistrationId, studentRegistrationId));
     return result[0];
+  }
+
+  async createReferralCode(insertCode: InsertReferralCode): Promise<ReferralCode> {
+    const id = randomUUID();
+    const result = await db.insert(referralCodes).values({ 
+      ...insertCode, 
+      id,
+      code: insertCode.code.toUpperCase()
+    }).returning();
+    return result[0];
+  }
+
+  async getReferralCodes(): Promise<ReferralCode[]> {
+    return await db.select().from(referralCodes).orderBy(desc(referralCodes.createdAt));
+  }
+
+  async getReferralCodeByCode(code: string): Promise<ReferralCode | undefined> {
+    const result = await db.select().from(referralCodes)
+      .where(eq(referralCodes.code, code.toUpperCase()));
+    return result[0];
+  }
+
+  async updateReferralCode(id: string, data: Partial<InsertReferralCode>): Promise<ReferralCode | undefined> {
+    const result = await db.update(referralCodes)
+      .set(data)
+      .where(eq(referralCodes.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteReferralCode(id: string): Promise<void> {
+    await db.delete(referralCodes).where(eq(referralCodes.id, id));
   }
 }
 

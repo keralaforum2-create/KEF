@@ -1,7 +1,7 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema, insertBulkRegistrationSchema } from "@shared/schema";
+import { insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema, insertBulkRegistrationSchema, insertReferralCodeSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
@@ -76,6 +76,97 @@ export async function registerRoutes(
       return res.json(stats);
     } catch (error) {
       console.error("Error fetching stats:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Validate referral code endpoint
+  app.post("/api/referral-codes/validate", async (req, res) => {
+    try {
+      const { code } = req.body;
+      if (!code) {
+        return res.status(400).json({ valid: false, message: "Code is required" });
+      }
+      const referralCode = await storage.getReferralCodeByCode(code);
+      if (!referralCode || !referralCode.isActive) {
+        return res.status(400).json({ valid: false, message: "Invalid or inactive referral code" });
+      }
+      return res.json({ 
+        valid: true, 
+        discount: referralCode.discountPercentage,
+        code: referralCode.code
+      });
+    } catch (error) {
+      console.error("Error validating referral code:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get all referral codes (admin)
+  app.get("/api/admin/referral-codes", async (req, res) => {
+    try {
+      const token = req.headers.authorization?.replace("Bearer ", "");
+      if (token !== ADMIN_PASSWORD) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const codes = await storage.getReferralCodes();
+      return res.json(codes);
+    } catch (error) {
+      console.error("Error fetching referral codes:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Create referral code (admin)
+  app.post("/api/admin/referral-codes", async (req, res) => {
+    try {
+      const token = req.headers.authorization?.replace("Bearer ", "");
+      if (token !== ADMIN_PASSWORD) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const result = insertReferralCodeSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: fromError(result.error).toString() 
+        });
+      }
+      const newCode = await storage.createReferralCode(result.data);
+      return res.json(newCode);
+    } catch (error) {
+      console.error("Error creating referral code:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Update referral code (admin)
+  app.patch("/api/admin/referral-codes/:id", async (req, res) => {
+    try {
+      const token = req.headers.authorization?.replace("Bearer ", "");
+      if (token !== ADMIN_PASSWORD) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const updated = await storage.updateReferralCode(req.params.id, req.body);
+      if (!updated) {
+        return res.status(404).json({ message: "Referral code not found" });
+      }
+      return res.json(updated);
+    } catch (error) {
+      console.error("Error updating referral code:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Delete referral code (admin)
+  app.delete("/api/admin/referral-codes/:id", async (req, res) => {
+    try {
+      const token = req.headers.authorization?.replace("Bearer ", "");
+      if (token !== ADMIN_PASSWORD) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      await storage.deleteReferralCode(req.params.id);
+      return res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting referral code:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });

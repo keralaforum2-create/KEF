@@ -392,6 +392,9 @@ export default function Admin() {
                   <Plus className="w-4 h-4 mr-1" />
                   Add
                 </TabsTrigger>
+                <TabsTrigger value="referral-codes" data-testid="tab-referral-codes">
+                  Gift Codes
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="registrations">

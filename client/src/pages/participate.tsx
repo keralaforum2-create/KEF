@@ -89,6 +89,7 @@ const registrationSchema = z.object({
   contestName: z.string().optional(),
   participantType: z.enum(["school-student", "college-student", "commoner"]).optional(),
   ticketCategory: z.enum(["silver", "gold", "platinum"]).optional(),
+  referralCode: z.string().optional(),
   schoolGrade: z.string().optional(),
   collegeYear: z.string().optional(),
   collegeCourse: z.string().optional(),
@@ -873,6 +874,7 @@ export default function Participate() {
       formData.append("schoolGrade", data.schoolGrade || "");
       formData.append("collegeYear", data.collegeYear || "");
       formData.append("collegeCourse", data.collegeCourse || "");
+      formData.append("referralCode", data.referralCode || "");
       formData.append("teamMember1Name", data.teamMember1Name || "");
       formData.append("teamMember1Email", data.teamMember1Email || "");
       formData.append("teamMember1Phone", data.teamMember1Phone || "");
