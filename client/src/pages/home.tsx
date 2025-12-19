@@ -137,14 +137,21 @@ export default function Home() {
                       </Button>
                     </Link>
                     <Link href="/faq">
-                      <Button 
-                        variant="outline" 
-                        size="lg" 
-                        className="font-bold text-base px-10 py-6 border-2 border-gray-700 text-gray-700 min-w-[200px] text-lg" 
-                        data-testid="button-faq-hero"
+                      <div 
+                        className="relative p-[3px] rounded-md min-w-[200px] shadow-xl"
+                        style={{
+                          background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                        }}
+                        data-testid="button-faq-hero-border"
                       >
-                        FAQ
-                      </Button>
+                        <Button 
+                          size="lg" 
+                          className="font-bold text-base px-10 py-6 bg-white text-gray-800 w-full text-lg border-0 rounded-[4px]" 
+                          data-testid="button-faq-hero"
+                        >
+                          FAQ
+                        </Button>
+                      </div>
                     </Link>
                   </div>
                 </HeroSubAnimation>
