@@ -53,22 +53,50 @@ export default function Home() {
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
               {/* Left - Rotating 3D Cube Logo */}
-              <HeroAnimation>
-                <motion.div 
-                  className="flex justify-center lg:justify-center order-2 lg:order-1"
-                  initial={{ opacity: 0, x: -50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                >
-                  <div className="rotating-logo-container" data-testid="rotating-cube-logo">
-                    <img 
-                      src={cubeLogo} 
-                      alt="Kerala Startup Fest Logo" 
-                      className="rotating-logo w-72 sm:w-80 md:w-96 lg:w-[420px] h-auto"
-                    />
+              <div className="flex flex-col items-center order-2 lg:order-1">
+                <HeroAnimation>
+                  <motion.div 
+                    className="flex justify-center lg:justify-center"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                  >
+                    <div className="rotating-logo-container" data-testid="rotating-cube-logo">
+                      <img 
+                        src={cubeLogo} 
+                        alt="Kerala Startup Fest Logo" 
+                        className="rotating-logo w-72 sm:w-80 md:w-96 lg:w-[420px] h-auto"
+                      />
+                    </div>
+                  </motion.div>
+                </HeroAnimation>
+                
+                <HeroSubAnimation delay={0.7}>
+                  <div className="mt-8 flex justify-center gap-3 sm:gap-4">
+                    {(() => {
+                      const eventDate = new Date(2026, 0, 7, 8, 0, 0);
+                      const now = new Date();
+                      const diff = eventDate.getTime() - now.getTime();
+                      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                      
+                      return [
+                        { value: String(days).padStart(2, '0'), label: 'DAYS' },
+                        { value: String(hours).padStart(2, '0'), label: 'HRS' },
+                        { value: String(minutes).padStart(2, '0'), label: 'MIN' },
+                        { value: String(seconds).padStart(2, '0'), label: 'SEC' }
+                      ].map((item, idx) => (
+                        <div key={idx} className="text-center">
+                          <div className="font-black text-3xl sm:text-4xl text-blue-600">{item.value}</div>
+                          <div className="text-xs sm:text-sm text-gray-600 font-semibold uppercase tracking-wider mt-1">{item.label}</div>
+                        </div>
+                      ));
+                    })()}
                   </div>
-                </motion.div>
-              </HeroAnimation>
+                </HeroSubAnimation>
+              </div>
               
               {/* Right - Text Content */}
               <div className="text-center lg:text-left order-1 lg:order-2">
@@ -155,58 +183,6 @@ export default function Home() {
                     </Link>
                   </div>
                 </HeroSubAnimation>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Countdown Timer Section */}
-        <div className="relative py-16 sm:py-20 bg-white border-b">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative p-8 sm:p-12 rounded-lg border-l-[4px]" style={{ borderColor: 'transparent' }}>
-              <div className="absolute inset-0 rounded-lg" style={{
-                backgroundImage: 'linear-gradient(90deg, transparent 0%, transparent 97%, #FACC15 97%, #FACC15 99%, #1E3A8A 99%, #1E3A8A 99.5%, #DC2626 99.5%, #1E3A8A 100%)',
-              }}></div>
-              
-              <div className="relative z-10 text-center">
-                <p className="text-xs sm:text-sm text-gray-500 uppercase tracking-[0.25em] mb-4 font-medium">First of its kind in the state</p>
-                
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6 text-gray-900">
-                  KERALA STARTUP FEST 26
-                </h2>
-                
-                <div className="mb-8">
-                  <p className="text-lg sm:text-xl font-bold text-gray-800 mb-2">2026 JAN 7-8</p>
-                  <p className="text-base sm:text-lg font-semibold text-gray-600">KOZHIKODE</p>
-                </div>
-                
-                <div className="bg-gray-50 rounded-lg p-6 sm:p-8 max-w-2xl mx-auto border border-gray-200">
-                  <p className="text-xs sm:text-sm text-gray-600 mb-4 font-medium uppercase tracking-wider">Event Starts In</p>
-                  
-                  <div className="flex justify-center gap-4 sm:gap-6">
-                    {(() => {
-                      const eventDate = new Date(2026, 0, 7, 8, 0, 0);
-                      const now = new Date();
-                      const diff = eventDate.getTime() - now.getTime();
-                      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                      
-                      return [
-                        { value: String(days).padStart(2, '0'), label: 'DAYS' },
-                        { value: String(hours).padStart(2, '0'), label: 'HRS' },
-                        { value: String(minutes).padStart(2, '0'), label: 'MIN' },
-                        { value: String(seconds).padStart(2, '0'), label: 'SEC' }
-                      ].map((item, idx) => (
-                        <div key={idx} className="text-center">
-                          <div className="font-black text-4xl sm:text-5xl text-blue-600 mb-2">{item.value}</div>
-                          <div className="text-xs sm:text-sm text-gray-600 font-semibold uppercase tracking-wider">{item.label}</div>
-                        </div>
-                      ));
-                    })()}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
