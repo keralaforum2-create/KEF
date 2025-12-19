@@ -96,25 +96,24 @@ export default function FAQ() {
           </Button>
         </Link>
 
-        <div 
-          className="mb-12 relative pl-6"
-        >
+        <div className="mb-12">
           <div 
-            className="absolute left-0 top-0 bottom-0 w-1"
+            className="p-8 mb-6"
             style={{
               background: 'linear-gradient(to bottom, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
             }}
-          />
-          <ScrollFadeUp>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-gray-900" data-testid="text-faq-title">
-              Frequently Asked <span className="text-red-600">Questions</span>
-            </h1>
-          </ScrollFadeUp>
-          <ScrollFadeUp delay={0.1}>
-            <p className="text-lg text-gray-600">
-              Find answers to common questions about Kerala Startup Fest 2026.
-            </p>
-          </ScrollFadeUp>
+          >
+            <ScrollFadeUp>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-white" data-testid="text-faq-title">
+                Frequently Asked <span className="text-white">Questions</span>
+              </h1>
+            </ScrollFadeUp>
+            <ScrollFadeUp delay={0.1}>
+              <p className="text-lg text-white">
+                Find answers to common questions about Kerala Startup Fest 2026.
+              </p>
+            </ScrollFadeUp>
+          </div>
         </div>
 
         <StaggerContainer className="space-y-4" staggerDelay={0.05}>

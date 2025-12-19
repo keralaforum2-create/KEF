@@ -32,8 +32,8 @@ export default function AdminLogin() {
     mutationFn: async (pwd: string) => {
       return apiRequest("POST", "/api/admin/login", { password: pwd });
     },
-    onSuccess: () => {
-      localStorage.setItem("admin_token", "authenticated");
+    onSuccess: (_, pwd) => {
+      localStorage.setItem("admin_token", pwd);
       toast({
         title: "Login successful!",
         description: "Redirecting to admin dashboard...",
