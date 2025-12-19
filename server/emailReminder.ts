@@ -5,17 +5,17 @@ import nodemailer from "nodemailer";
 const EVENT_DATE = new Date("2026-04-18T10:00:00Z");
 
 // Singleton instances to prevent memory leaks
-let resendClient: Resend | null = null;
+let resendClient: any = null;
 let nodemailerTransporter: any = null;
 
-function getResendClient(): Resend {
+function getResendClient(): any {
   if (!resendClient) {
     resendClient = new Resend(process.env.RESEND_API_KEY);
   }
   return resendClient;
 }
 
-function getNodemailerTransporter() {
+function getNodemailerTransporter(): any {
   if (!nodemailerTransporter) {
     nodemailerTransporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || "smtp.gmail.com",
