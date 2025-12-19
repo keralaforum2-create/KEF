@@ -3,10 +3,12 @@ import { useLocation, useSearch } from "wouter";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Loader2, Ticket, AlertCircle } from "lucide-react";
+import { CheckCircle2, Loader2, Mail, AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface RegistrationData {
   fullName: string;
+  email: string;
   ticketCategory: string;
   registrationType: string;
   contestName?: string;
@@ -17,10 +19,13 @@ export default function PaymentSuccess() {
   const search = useSearch();
   const searchParams = new URLSearchParams(search);
   const registrationId = searchParams.get("registrationId");
+  const { toast } = useToast();
   
   const [registrationData, setRegistrationData] = useState<RegistrationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
     if (registrationId) {
@@ -48,6 +53,40 @@ export default function PaymentSuccess() {
     }
   }, [registrationId]);
 
+  const handleConfirmRegistration = async () => {
+    if (!registrationId) return;
+    
+    setConfirming(true);
+    try {
+      // Mark registration as confirmed
+      const response = await fetch(`/api/registration/${registrationId}/confirm`, {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        setConfirmed(true);
+        toast({
+          title: "Registration Confirmed!",
+          description: "Check your email for verification details.",
+        });
+      } else {
+        toast({
+          title: "Confirmation Error",
+          description: "Failed to confirm registration. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setConfirming(false);
+    }
+  };
+
   const getTicketTypeDisplay = () => {
     if (!registrationData) return null;
     if (registrationData.registrationType === 'contest') {
@@ -59,12 +98,6 @@ export default function PaymentSuccess() {
     return 'Normal Pass';
   };
 
-  const viewTicket = () => {
-    if (registrationId) {
-      setLocation(`/ticket/${registrationId}`);
-    }
-  };
-
   if (!registrationId) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-card flex items-center justify-center p-4">
@@ -74,6 +107,108 @@ export default function PaymentSuccess() {
             Go to Registration
           </Button>
         </Card>
+      </div>
+    );
+  }
+
+  if (confirmed) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-card flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-lg"
+        >
+          <Card className="overflow-hidden">
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-8 text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+              >
+                <CheckCircle2 className="w-20 h-20 text-white mx-auto mb-4" />
+              </motion.div>
+              <motion.h1 
+                className="text-3xl font-bold text-white mb-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                Thank You!
+              </motion.h1>
+              <motion.p 
+                className="text-white/90"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                Your Registration is Confirmed
+              </motion.p>
+            </div>
+
+            <CardContent className="p-8">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="text-center space-y-6"
+              >
+                {registrationData && (
+                  <>
+                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                      <p className="text-sm text-green-800 dark:text-green-300 font-medium mb-1">
+                        Your Registration ID
+                      </p>
+                      <p className="text-lg font-mono font-bold text-green-600 dark:text-green-400" data-testid="text-registration-id">
+                        {registrationId}
+                      </p>
+                    </div>
+
+                    <p className="text-muted-foreground text-sm">
+                      Welcome, <span className="font-medium text-foreground">{registrationData.fullName}</span>!
+                    </p>
+
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                        <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                        <p className="text-sm text-blue-800 dark:text-blue-300 font-medium">
+                          Email Verification
+                        </p>
+                      </div>
+                      <p className="text-sm text-blue-700 dark:text-blue-400">
+                        A verification link has been sent to <span className="font-medium">{registrationData.email}</span>. Please check your email and verify your registration.
+                      </p>
+                    </div>
+
+                    <p className="text-muted-foreground text-sm">
+                      Keep your Registration ID safe for reference and future events.
+                    </p>
+                  </>
+                )}
+
+                <Button 
+                  onClick={() => setLocation("/participate")} 
+                  size="lg" 
+                  variant="outline"
+                  className="w-full"
+                  data-testid="button-return-home"
+                >
+                  Back to Home
+                </Button>
+              </motion.div>
+            </CardContent>
+          </Card>
+
+          <motion.p 
+            className="text-center text-muted-foreground text-sm mt-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+          >
+            See you at Kerala Startup Fest 2026!
+          </motion.p>
+        </motion.div>
       </div>
     );
   }
@@ -101,7 +236,7 @@ export default function PaymentSuccess() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Registration Confirmed!
+              Payment Successful!
             </motion.h1>
             <motion.p 
               className="text-white/90"
@@ -152,20 +287,6 @@ export default function PaymentSuccess() {
                     </p>
                   </div>
 
-                  {getTicketTypeDisplay() && (
-                    <div className="bg-card border rounded-lg p-4">
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <Ticket className="w-5 h-5 text-primary" />
-                        <p className="text-sm text-muted-foreground font-medium">
-                          Your Ticket Type
-                        </p>
-                      </div>
-                      <p className="text-xl font-bold text-foreground" data-testid="text-ticket-type">
-                        {getTicketTypeDisplay()}
-                      </p>
-                    </div>
-                  )}
-
                   {registrationData && (
                     <p className="text-muted-foreground text-sm">
                       Welcome, <span className="font-medium text-foreground">{registrationData.fullName}</span>!
@@ -173,20 +294,29 @@ export default function PaymentSuccess() {
                   )}
 
                   <p className="text-muted-foreground text-sm">
-                    A confirmation email with your ticket has been sent to your registered email address.
+                    Your payment has been processed successfully.
                   </p>
                 </>
               )}
 
               <Button 
-                onClick={viewTicket} 
+                onClick={handleConfirmRegistration} 
                 size="lg" 
                 className="w-full"
-                disabled={loading}
-                data-testid="button-view-ticket"
+                disabled={loading || confirming}
+                data-testid="button-confirm-registration"
               >
-                <Ticket className="w-4 h-4 mr-2" />
-                View & Download Your Ticket
+                {confirming ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Confirming...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Confirm Registration
+                  </>
+                )}
               </Button>
             </motion.div>
           </CardContent>

@@ -6,7 +6,7 @@ import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { sendRegistrationEmails, sendContactNotification } from "./email";
+import { sendRegistrationEmails, sendContactNotification, sendTicketEmail } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { createRazorpayOrder, verifyRazorpayPayment } from "./razorpay";
 import { randomUUID } from "crypto";
@@ -318,6 +318,43 @@ export async function registerRoutes(
       return res.json(registration);
     } catch (error) {
       console.error("Error fetching ticket:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/registration/:registrationId/confirm", async (req, res) => {
+    try {
+      const { registrationId } = req.params;
+      const registration = await storage.getRegistrationByRegistrationId(registrationId);
+      
+      if (!registration) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+      
+      // Update registration status to confirmed
+      const updatedRegistration = await storage.updateRegistrationPayment(registration.id, {
+        paymentStatus: 'confirmed'
+      });
+
+      if (!updatedRegistration) {
+        return res.status(500).json({ message: "Failed to confirm registration" });
+      }
+
+      // Send verification email
+      const baseUrl = resolveBaseUrl(req);
+      const ticketUrl = `${baseUrl}/ticket/${registrationId}`;
+      await sendTicketEmail(updatedRegistration, baseUrl).catch((err: any) => {
+        console.error('Failed to send ticket email:', err);
+      });
+
+      console.log("Registration confirmed:", registrationId);
+      return res.json({
+        success: true,
+        message: "Registration confirmed successfully",
+        registrationId
+      });
+    } catch (error) {
+      console.error("Error confirming registration:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });
