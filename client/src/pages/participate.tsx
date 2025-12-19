@@ -3626,6 +3626,52 @@ export default function Participate() {
                         />
                       </motion.div>
 
+                      {/* Gift Code Input - placed after profile photo */}
+                      <motion.div
+                        custom={4.3}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={formFieldVariants}
+                      >
+                        <FormField
+                          control={form.control}
+                          name="referralCode"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="flex items-center gap-2">
+                                <Ticket className="w-4 h-4" />
+                                Gift Code (Optional)
+                              </FormLabel>
+                              <div className="flex gap-2">
+                                <FormControl>
+                                  <Input 
+                                    placeholder="Enter gift code for discount" 
+                                    {...field}
+                                    value={field.value || ""}
+                                    data-testid="input-gift-code"
+                                  />
+                                </FormControl>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  onClick={() => validateGiftCode(field.value || "")}
+                                  data-testid="button-apply-gift-code"
+                                >
+                                  Apply
+                                </Button>
+                              </div>
+                              {validatedGiftCode && (
+                                <p className="text-xs text-green-600 dark:text-green-400 font-medium mt-1">
+                                  Code applied! {discountPercentage}% discount
+                                </p>
+                              )}
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </motion.div>
+
                       {registrationType === "expert-session" && (
                         <motion.div
                           custom={4.5}
@@ -3871,11 +3917,31 @@ export default function Participate() {
 
                         <div className="flex flex-col items-center gap-6">
                           <div className="w-full max-w-md p-6 rounded-xl bg-muted/30 border">
-                            <div className="text-center mb-4">
-                              <p className="text-sm text-muted-foreground mb-1">Amount to Pay:</p>
-                              <p className="font-bold text-3xl text-primary">
-                                ₹{getPaymentAmount()}
-                              </p>
+                            <div className="text-center mb-4 space-y-2">
+                              {discountPercentage > 0 ? (
+                                <>
+                                  <p className="text-sm text-muted-foreground mb-1">Original Price:</p>
+                                  <p className="text-sm line-through text-muted-foreground font-medium">
+                                    ₹{getPaymentAmount()}
+                                  </p>
+                                  <div className="flex items-center justify-center gap-2 py-2">
+                                    <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-xs font-bold">
+                                      {discountPercentage}% off
+                                    </span>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground mb-1">Final Amount:</p>
+                                  <p className="font-bold text-3xl text-green-600 dark:text-green-400">
+                                    ₹{getDiscountedAmount()}
+                                  </p>
+                                </>
+                              ) : (
+                                <>
+                                  <p className="text-sm text-muted-foreground mb-1">Amount to Pay:</p>
+                                  <p className="font-bold text-3xl text-primary">
+                                    ₹{getPaymentAmount()}
+                                  </p>
+                                </>
+                              )}
                             </div>
 
                             {/* Online Payment Section */}
@@ -3897,7 +3963,7 @@ export default function Participate() {
                                 ) : (
                                   <>
                                     <CreditCard className="w-4 h-4" />
-                                    Pay Online - Rs {getPaymentAmount()}
+                                    Pay Online - Rs {getDiscountedAmount()}
                                   </>
                                 )}
                               </Button>
