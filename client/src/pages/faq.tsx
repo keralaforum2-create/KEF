@@ -96,7 +96,15 @@ export default function FAQ() {
           </Button>
         </Link>
 
-        <div className="mb-12">
+        <div 
+          className="mb-12 relative pl-6"
+        >
+          <div 
+            className="absolute left-0 top-0 bottom-0 w-1"
+            style={{
+              background: 'linear-gradient(to bottom, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+            }}
+          />
           <ScrollFadeUp>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-gray-900" data-testid="text-faq-title">
               Frequently Asked <span className="text-red-600">Questions</span>
