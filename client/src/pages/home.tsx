@@ -124,6 +124,8 @@ export default function Home() {
                         </Button>
                       </div>
                     </Link>
+                  </div>
+                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-4">
                     <Link href="/speakers">
                       <Button 
                         variant="outline" 
@@ -132,6 +134,16 @@ export default function Home() {
                         data-testid="button-speakers"
                       >
                         Our Speakers
+                      </Button>
+                    </Link>
+                    <Link href="/faq">
+                      <Button 
+                        variant="outline" 
+                        size="lg" 
+                        className="font-bold text-base px-10 py-6 border-2 border-gray-700 text-gray-700 min-w-[200px] text-lg" 
+                        data-testid="button-faq-hero"
+                      >
+                        FAQ
                       </Button>
                     </Link>
                   </div>
@@ -487,12 +499,6 @@ export default function Home() {
               <Link href="/contests">
                 <Button size="lg" variant="outline" className="font-semibold" data-testid="button-explore-contests">
                   Explore Contests
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-              <Link href="/faq">
-                <Button size="lg" variant="outline" className="font-semibold" data-testid="button-explore-faq">
-                  FAQ
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </Link>
