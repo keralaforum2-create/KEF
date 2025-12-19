@@ -4,10 +4,17 @@ import { registrations } from "../shared/schema";
 import { sql } from "drizzle-orm";
 
 let isRunning = false;
+let schedulerInterval: NodeJS.Timeout | null = null;
 
 export async function startReminderScheduler() {
+  // Prevent multiple scheduler instances
+  if (schedulerInterval) {
+    console.log("⚠️ Reminder scheduler already running");
+    return;
+  }
+
   // Run every 24 hours
-  setInterval(async () => {
+  schedulerInterval = setInterval(async () => {
     if (isRunning) return;
     isRunning = true;
     
@@ -73,4 +80,12 @@ export async function startReminderScheduler() {
       isRunning = false;
     }
   }, 24 * 60 * 60 * 1000); // Run every 24 hours
+}
+
+export function stopReminderScheduler() {
+  if (schedulerInterval) {
+    clearInterval(schedulerInterval);
+    schedulerInterval = null;
+    console.log("📧 Reminder scheduler stopped");
+  }
 }

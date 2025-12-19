@@ -4,6 +4,32 @@ import nodemailer from "nodemailer";
 // Event date - April 18, 2026
 const EVENT_DATE = new Date("2026-04-18T10:00:00Z");
 
+// Singleton instances to prevent memory leaks
+let resendClient: Resend | null = null;
+let nodemailerTransporter: any = null;
+
+function getResendClient(): Resend {
+  if (!resendClient) {
+    resendClient = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resendClient;
+}
+
+function getNodemailerTransporter() {
+  if (!nodemailerTransporter) {
+    nodemailerTransporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || "smtp.gmail.com",
+      port: parseInt(process.env.SMTP_PORT || "587"),
+      secure: process.env.SMTP_SECURE === "true",
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+  }
+  return nodemailerTransporter;
+}
+
 // Check if we should send reminders today
 export function shouldSendReminders(): boolean {
   const now = new Date();
@@ -99,7 +125,7 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
     // Try Resend first if API key is available
     const resendApiKey = process.env.RESEND_API_KEY;
     if (resendApiKey) {
-      const resend = new Resend(resendApiKey);
+      const resend = getResendClient();
       await resend.emails.send({
         from: "Kerala Startup Fest <noreply@keralastartupsest.com>",
         to,
@@ -110,15 +136,7 @@ export async function sendEmail(to: string, subject: string, html: string): Prom
     }
     
     // Fallback to Nodemailer
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port: parseInt(process.env.SMTP_PORT || "587"),
-      secure: process.env.SMTP_SECURE === "true",
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+    const transporter = getNodemailerTransporter();
     
     await transporter.sendMail({
       from: process.env.SMTP_FROM || "Kerala Startup Fest <noreply@keralastartupsest.com>",
