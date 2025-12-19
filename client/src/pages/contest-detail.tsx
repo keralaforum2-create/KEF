@@ -15,7 +15,8 @@ import {
   Award,
   Lightbulb,
   Video,
-  MessageSquare
+  MessageSquare,
+  AlertTriangle
 } from "lucide-react";
 import { ScrollFadeUp, StaggerContainer, StaggerItem } from "@/lib/animations";
 
@@ -350,6 +351,34 @@ export default function ContestDetail() {
             </Link>
           </CardContent>
         </Card>
+      </div>
+    );
+  }
+
+  if (contestId === "business-quiz") {
+    return (
+      <div className="min-h-screen flex items-center justify-center pt-20 pb-20">
+        <div className="max-w-md mx-auto">
+          <Link href="/contests" className="mb-4 inline-block">
+            <Button variant="ghost" data-testid="button-back-contests">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Contests
+            </Button>
+          </Link>
+          
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="border rounded-lg p-12 bg-muted/20 text-center space-y-6"
+          >
+            <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto" />
+            <div>
+              <h2 className="font-serif text-2xl font-bold text-primary mb-2">Registrations Closed</h2>
+              <p className="text-muted-foreground">The "National Level Inter School Business Quiz" registrations are currently closed.</p>
+            </div>
+          </motion.div>
+        </div>
       </div>
     );
   }
