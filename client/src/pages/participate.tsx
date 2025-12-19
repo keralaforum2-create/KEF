@@ -3272,6 +3272,7 @@ export default function Participate() {
                         )}
                       </AnimatePresence>
 
+                      {!isBusinessQuiz && (
                       <motion.div
                         custom={1}
                         initial="hidden"
@@ -3316,7 +3317,9 @@ export default function Participate() {
                           )}
                         />
                       </motion.div>
+                      )}
                       
+                      {!isBusinessQuiz && (
                       <motion.div
                         custom={2}
                         initial="hidden"
@@ -3364,6 +3367,7 @@ export default function Participate() {
                           />
                         )}
                       </motion.div>
+                      )}
 
                       {!isPitchRoom && !isBusinessQuiz && (
                         <motion.div
