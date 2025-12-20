@@ -150,7 +150,7 @@ export default function Speakers() {
                     Share your expertise and inspire the next generation of entrepreneurs. Join our panel of expert speakers.
                   </p>
                 </div>
-                <Link href="/participate?type=speaker">
+                <Link href="/speaker-register">
                   <Button 
                     variant="default" 
                     className="bg-white text-red-600 hover:bg-gray-100 whitespace-nowrap"

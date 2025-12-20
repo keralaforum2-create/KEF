@@ -1717,5 +1717,48 @@ export async function registerRoutes(
     }
   });
 
+  // Speaker Applications endpoint
+  const speakerApplications: any[] = [];
+
+  app.post("/api/speaker-applications", async (req, res) => {
+    try {
+      const applicationData = req.body;
+      
+      // Store the application
+      const application = {
+        id: randomUUID(),
+        ...applicationData,
+        submittedAt: new Date().toISOString(),
+        status: "pending"
+      };
+      
+      speakerApplications.push(application);
+      
+      // Send email notification
+      try {
+        await sendContactNotification({
+          name: applicationData.founderName,
+          email: applicationData.email,
+          subject: `Speaker Application Received - Made in Kerala Podcast`,
+          message: `Thank you for applying to be a podcast speaker at Kerala Startup Fest 2026. Your application has been received. Our team will review it and contact you within 3-5 business days.`
+        });
+      } catch (emailError) {
+        console.error("Error sending speaker application confirmation email:", emailError);
+      }
+      
+      return res.json({
+        success: true,
+        applicationId: application.id,
+        message: "Application submitted successfully"
+      });
+    } catch (error) {
+      console.error("Error submitting speaker application:", error);
+      return res.status(500).json({ 
+        success: false,
+        message: "Failed to submit application"
+      });
+    }
+  });
+
   return httpServer;
 }
