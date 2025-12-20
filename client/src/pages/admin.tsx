@@ -46,6 +46,7 @@ export default function Admin() {
     code: "",
     discountPercentage: 0,
   });
+  const [giftCodeError, setGiftCodeError] = useState<string>("");
   
   // Admin registration form state
   const [adminRegForm, setAdminRegForm] = useState({
@@ -189,17 +190,27 @@ export default function Admin() {
       });
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `Failed to create referral code (${response.status})`);
+        const errorMessage = errorData.message || `Failed to create gift code (${response.status})`;
+        console.error("Gift code creation error:", { status: response.status, errorData });
+        throw new Error(errorMessage);
       }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/referral-codes"] });
-      toast({ title: "Referral code created successfully" });
+      toast({ title: "Gift code created successfully" });
       setReferralCodeForm({ code: "", discountPercentage: 0 });
+      setGiftCodeError("");
     },
     onError: (error: any) => {
-      toast({ title: "Failed to create referral code", description: error?.message, variant: "destructive" });
+      const errorMsg = error?.message || "Failed to create gift code";
+      setGiftCodeError(errorMsg);
+      console.error("Gift code mutation error:", error);
+      toast({ 
+        title: "Gift Code Creation Failed", 
+        description: errorMsg, 
+        variant: "destructive" 
+      });
     },
   });
 
@@ -1625,7 +1636,9 @@ export default function Admin() {
                     <CardContent>
                       <form onSubmit={(e) => {
                         e.preventDefault();
+                        setGiftCodeError("");
                         if (!referralCodeForm.code || referralCodeForm.discountPercentage <= 0) {
+                          setGiftCodeError("Please fill all fields with valid values");
                           toast({ title: "Please fill all fields", variant: "destructive" });
                           return;
                         }
@@ -1634,6 +1647,15 @@ export default function Admin() {
                           discountPercentage: referralCodeForm.discountPercentage
                         });
                       }} className="space-y-4">
+                        {giftCodeError && (
+                          <div className="p-4 rounded-md bg-destructive/10 border border-destructive/30 flex items-start gap-3" data-testid="error-gift-code">
+                            <AlertTriangle className="w-5 h-5 text-destructive mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="font-semibold text-destructive">Gift Code Creation Failed</p>
+                              <p className="text-sm text-destructive/90 mt-1">{giftCodeError}</p>
+                            </div>
+                          </div>
+                        )}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <Label htmlFor="code" className="text-sm font-medium">Code *</Label>
@@ -1641,7 +1663,10 @@ export default function Admin() {
                               id="code"
                               placeholder="e.g., SUMMER20"
                               value={referralCodeForm.code}
-                              onChange={(e) => setReferralCodeForm({...referralCodeForm, code: e.target.value})}
+                              onChange={(e) => {
+                                setReferralCodeForm({...referralCodeForm, code: e.target.value});
+                                setGiftCodeError("");
+                              }}
                               data-testid="input-referral-code"
                             />
                           </div>
@@ -1654,7 +1679,10 @@ export default function Admin() {
                               max="100"
                               placeholder="e.g., 20"
                               value={referralCodeForm.discountPercentage || ""}
-                              onChange={(e) => setReferralCodeForm({...referralCodeForm, discountPercentage: parseInt(e.target.value) || 0})}
+                              onChange={(e) => {
+                                setReferralCodeForm({...referralCodeForm, discountPercentage: parseInt(e.target.value) || 0});
+                                setGiftCodeError("");
+                              }}
                               data-testid="input-discount-percentage"
                             />
                           </div>
@@ -1664,8 +1692,14 @@ export default function Admin() {
                           disabled={createReferralCodeMutation.isPending}
                           data-testid="button-create-referral-code"
                         >
-                          <Plus className="w-4 h-4 mr-2" />
-                          Add Code
+                          {createReferralCodeMutation.isPending ? (
+                            <>Creating...</>
+                          ) : (
+                            <>
+                              <Plus className="w-4 h-4 mr-2" />
+                              Add Code
+                            </>
+                          )}
                         </Button>
                       </form>
                     </CardContent>
