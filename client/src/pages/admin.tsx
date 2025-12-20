@@ -44,7 +44,7 @@ export default function Admin() {
   // Referral code form state
   const [referralCodeForm, setReferralCodeForm] = useState({
     code: "",
-    discountPercentage: "",
+    discountPercentage: 0,
   });
   
   // Admin registration form state
@@ -186,7 +186,7 @@ export default function Admin() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/referral-codes"] });
       toast({ title: "Referral code created successfully" });
-      setReferralCodeForm({ code: "", discountPercentage: "" });
+      setReferralCodeForm({ code: "", discountPercentage: 0 });
     },
     onError: (error: any) => {
       toast({ title: "Failed to create referral code", description: error?.message, variant: "destructive" });
@@ -1609,13 +1609,13 @@ export default function Admin() {
                     <CardContent>
                       <form onSubmit={(e) => {
                         e.preventDefault();
-                        if (!referralCodeForm.code || !referralCodeForm.discountPercentage) {
+                        if (!referralCodeForm.code || referralCodeForm.discountPercentage <= 0) {
                           toast({ title: "Please fill all fields", variant: "destructive" });
                           return;
                         }
                         createReferralCodeMutation.mutate({
                           code: referralCodeForm.code.toUpperCase(),
-                          discountPercentage: parseInt(referralCodeForm.discountPercentage)
+                          discountPercentage: referralCodeForm.discountPercentage
                         });
                       }} className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1637,8 +1637,8 @@ export default function Admin() {
                               min="1"
                               max="100"
                               placeholder="e.g., 20"
-                              value={referralCodeForm.discountPercentage}
-                              onChange={(e) => setReferralCodeForm({...referralCodeForm, discountPercentage: e.target.value})}
+                              value={referralCodeForm.discountPercentage || ""}
+                              onChange={(e) => setReferralCodeForm({...referralCodeForm, discountPercentage: parseInt(e.target.value) || 0})}
                               data-testid="input-discount-percentage"
                             />
                           </div>
