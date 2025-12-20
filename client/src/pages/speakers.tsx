@@ -1,6 +1,7 @@
-import { ArrowLeft, X } from "lucide-react";
+import { ArrowLeft, X, Presentation } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { ScrollFadeUp } from "@/lib/animations";
 import { useState } from "react";
 import ajilImage from "@assets/AJIL_HILITE_1766212685898.jpg";
@@ -133,6 +134,34 @@ export default function Speakers() {
               </div>
             </ScrollFadeUp>
           ))}
+        </div>
+
+        {/* Be a Speaker Section */}
+        <div className="mt-20 pt-16 border-t border-gray-200">
+          <ScrollFadeUp>
+            <Card className="bg-red-600 text-white p-8 rounded-lg">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Presentation className="w-6 h-6" />
+                    <h3 className="text-2xl sm:text-3xl font-bold">Be a Speaker</h3>
+                  </div>
+                  <p className="text-red-100 text-lg">
+                    Share your expertise and inspire the next generation of entrepreneurs. Join our panel of expert speakers.
+                  </p>
+                </div>
+                <Link href="/participate?type=speaker">
+                  <Button 
+                    variant="default" 
+                    className="bg-white text-red-600 hover:bg-gray-100 whitespace-nowrap"
+                    data-testid="button-register-speaker"
+                  >
+                    Register Now
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+          </ScrollFadeUp>
         </div>
       </div>
 
