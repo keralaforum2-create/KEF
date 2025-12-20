@@ -71,16 +71,17 @@ export default function Admin() {
 
   const { data: registrations, isLoading: loadingRegistrations } = useQuery<Registration[]>({
     queryKey: ["/api/registrations"],
-    refetchInterval: 10000,
-    staleTime: 5000,
+    refetchInterval: 30000,
+    staleTime: 20000,
   });
 
   const { data: pendingRegistrations, isLoading: loadingPendingRegistrations, isError: pendingError } = useQuery<Registration[]>({
     queryKey: ["/api/pending-registrations"],
-    refetchInterval: 5000,
-    staleTime: 2000,
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * Math.pow(2, attemptIndex), 10000),
+    refetchInterval: 30000,
+    staleTime: 20000,
+    retry: 1,
+    retryDelay: 2000,
+    gcTime: 60000,
   });
 
   const { data: contacts, isLoading: loadingContacts } = useQuery<Contact[]>({
@@ -109,7 +110,9 @@ export default function Admin() {
 
   const { data: referralCodes, isLoading: loadingReferralCodes } = useQuery<ReferralCode[]>({
     queryKey: ["/api/admin/referral-codes"],
-    refetchInterval: 5000,
+    refetchInterval: 30000,
+    staleTime: 20000,
+    retry: 1,
     queryFn: async () => {
       const token = localStorage.getItem("admin_token");
       const response = await fetch("/api/admin/referral-codes", {
