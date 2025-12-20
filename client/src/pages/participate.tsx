@@ -140,6 +140,8 @@ const registrationSchema = z.object({
   pitchSupportingFiles: z.any().optional(),
   pitchDemoVideoLink: z.string().optional(),
   pitchDeclarationConfirmed: z.boolean().optional(),
+  speakerPortfolio: z.any().optional(),
+  speakerLinkedIn: z.string().optional(),
 });
 
 type RegistrationFormData = z.infer<typeof registrationSchema>;
@@ -2379,6 +2381,70 @@ export default function Participate() {
                               </h3>
                               <p className="text-sm text-muted-foreground">Share your expertise with the startup community</p>
                               <p className="text-sm font-semibold text-primary mt-2">Registration Fee: ₹399/-</p>
+                            </div>
+
+                            <div className="space-y-4">
+                              <FormField
+                                control={form.control}
+                                name="speakerLinkedIn"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>LinkedIn Profile Link</FormLabel>
+                                    <FormControl>
+                                      <Input 
+                                        placeholder="https://linkedin.com/in/yourprofile" 
+                                        {...field}
+                                        value={field.value || ""}
+                                        data-testid="input-speaker-linkedin"
+                                      />
+                                    </FormControl>
+                                    <p className="text-xs text-muted-foreground">Share your professional LinkedIn profile</p>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+
+                              <FormField
+                                control={form.control}
+                                name="speakerPortfolio"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Upload Portfolio (Optional)</FormLabel>
+                                    <FormControl>
+                                      <div className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition">
+                                        <Input
+                                          type="file"
+                                          onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                              field.onChange(file);
+                                            }
+                                          }}
+                                          accept=".pdf,.doc,.docx,.zip"
+                                          className="cursor-pointer"
+                                          data-testid="input-speaker-portfolio"
+                                        />
+                                        <p className="text-sm text-muted-foreground mt-2">
+                                          Upload portfolio, resume, or presentation (PDF, DOC, DOCX, ZIP)
+                                        </p>
+                                      </div>
+                                    </FormControl>
+                                    {form.watch("speakerPortfolio") && (
+                                      <motion.div 
+                                        className="flex items-center gap-2 p-3 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800"
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                      >
+                                        <CheckCircle className="w-4 h-4 text-green-600" />
+                                        <span className="text-sm text-green-700 dark:text-green-400">
+                                          File uploaded: {(form.watch("speakerPortfolio") as File)?.name}
+                                        </span>
+                                      </motion.div>
+                                    )}
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
                             </div>
                           </motion.div>
                         )}

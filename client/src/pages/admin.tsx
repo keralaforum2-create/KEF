@@ -2384,6 +2384,28 @@ export default function Admin() {
                   </div>
                 </div>
                 
+                {selectedReg.registrationType === "speaker" && selectedReg.speakerLinkedIn && (
+                  <div className="border-t pt-4">
+                    <label className="text-sm font-medium text-muted-foreground">LinkedIn Profile</label>
+                    <p className="text-base break-all">
+                      <a href={selectedReg.speakerLinkedIn} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                        {selectedReg.speakerLinkedIn}
+                      </a>
+                    </p>
+                  </div>
+                )}
+
+                {selectedReg.registrationType === "speaker" && selectedReg.speakerPortfolio && (
+                  <div className="border-t pt-4">
+                    <label className="text-sm font-medium text-muted-foreground">Portfolio File</label>
+                    <p className="text-base">
+                      <a href={selectedReg.speakerPortfolio} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-1">
+                        View/Download Portfolio
+                      </a>
+                    </p>
+                  </div>
+                )}
+
                 {selectedReg.profilePhoto && (
                   <div className="border-t pt-4">
                     <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
