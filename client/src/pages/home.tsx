@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion, useInView } from "framer-motion";
+import { LiveCountdown } from "@/components/LiveCountdown";
 import { useRef, useState } from "react";
 import { 
   Calendar, 
@@ -72,28 +73,8 @@ export default function Home() {
                 </HeroAnimation>
                 
                 <HeroSubAnimation delay={0.7}>
-                  <div className="mt-8 flex justify-center gap-3 sm:gap-4">
-                    {(() => {
-                      const eventDate = new Date(2026, 0, 7, 8, 0, 0);
-                      const now = new Date();
-                      const diff = eventDate.getTime() - now.getTime();
-                      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                      
-                      return [
-                        { value: String(days).padStart(2, '0'), label: 'DAYS' },
-                        { value: String(hours).padStart(2, '0'), label: 'HRS' },
-                        { value: String(minutes).padStart(2, '0'), label: 'MIN' },
-                        { value: String(seconds).padStart(2, '0'), label: 'SEC' }
-                      ].map((item, idx) => (
-                        <div key={idx} className="text-center">
-                          <div className="font-black text-3xl sm:text-4xl text-blue-600">{item.value}</div>
-                          <div className="text-xs sm:text-sm text-gray-600 font-semibold uppercase tracking-wider mt-1">{item.label}</div>
-                        </div>
-                      ));
-                    })()}
+                  <div className="mt-8">
+                    <LiveCountdown />
                   </div>
                 </HeroSubAnimation>
               </div>
