@@ -144,11 +144,8 @@ export default function Speakers() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
                     <Presentation className="w-6 h-6" />
-                    <h3 className="text-2xl sm:text-3xl font-bold">Be a Podcast Speaker</h3>
+                    <h3 className="text-2xl sm:text-3xl font-bold">Be a Live Podcast Speaker at KSF Venue</h3>
                   </div>
-                  <p className="text-red-100 text-lg">
-                    Be a live podcast speaker at KSF venue.
-                  </p>
                 </div>
                 <Link href="/speaker-register">
                   <Button 
