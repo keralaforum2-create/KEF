@@ -78,7 +78,7 @@ import pitchRoomPosterImage from "@assets/IMG_3894_1765874893392.jpeg";
 import iAmAttendingPosterImage from "@assets/I_AM_ATTENDING_1765954025812.jpg";
 
 const registrationSchema = z.object({
-  registrationType: z.enum(["expert-session", "contest"], {
+  registrationType: z.enum(["expert-session", "contest", "speaker"], {
     required_error: "Please select registration type",
   }),
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
@@ -2038,6 +2038,27 @@ export default function Participate() {
                               Register for Kerala Startup Fest Contest
                             </Button>
                           </motion.div>
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Button 
+                              size="lg" 
+                              variant="outline"
+                              className="w-full font-semibold text-base"
+                              onClick={() => {
+                                form.setValue("registrationType", "speaker");
+                                setShowForm(true);
+                                setTimeout(() => {
+                                  document.getElementById("register")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                }, 100);
+                              }}
+                              data-testid="button-register-speaker"
+                            >
+                              <Presentation className="w-5 h-5 mr-2" />
+                              Be a Speaker of Kerala Startup Fest
+                            </Button>
+                          </motion.div>
                         </div>
                       </CardContent>
                     </Card>
@@ -2071,7 +2092,9 @@ export default function Participate() {
                       <CardContent className="p-6 sm:p-8">
                         <div className="mb-6 p-4 rounded-lg bg-primary/10 border border-primary/20">
                           <p className="text-sm font-medium text-center">
-                            Registering for: <span className="text-primary font-semibold">{registrationType === "expert-session" ? "Expert Session" : "Contest"}</span>
+                            Registering for: <span className="text-primary font-semibold">
+                              {registrationType === "expert-session" ? "Expert Session" : registrationType === "speaker" ? "Be a Speaker" : "Contest"}
+                            </span>
                           </p>
                         </div>
                         
@@ -2331,9 +2354,30 @@ export default function Participate() {
                           )}
                         </AnimatePresence>
 
-                        {((registrationType === "expert-session" && registrationMode === "individual") || registrationType === "contest") && (
+                        {((registrationType === "expert-session" && registrationMode === "individual") || registrationType === "contest" || registrationType === "speaker") && (
                         <Form {...form}>
                           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
+                      <AnimatePresence>
+                        {registrationType === "speaker" && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="space-y-6 border rounded-lg p-6 bg-muted/20"
+                          >
+                            <div className="text-center mb-4">
+                              <h3 className="font-semibold text-lg flex items-center justify-center gap-2">
+                                <Presentation className="w-5 h-5 text-primary" />
+                                Speaker Registration Form
+                              </h3>
+                              <p className="text-sm text-muted-foreground">Share your expertise with the startup community</p>
+                              <p className="text-sm font-semibold text-primary mt-2">Registration Fee: ₹399/-</p>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
 
                       <AnimatePresence>
                         {registrationType === "contest" && (

@@ -121,7 +121,7 @@ export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   phone: z.string().min(10, "Please enter a valid phone number"),
   age: z.string().optional(),
   institution: z.string().optional(),
-  registrationType: z.enum(["expert-session", "contest"]),
+  registrationType: z.enum(["expert-session", "contest", "speaker"]),
   contestName: z.string().optional(),
   sessionName: z.string().optional(),
   ticketCategory: z.enum(["silver", "gold", "platinum", "normal", "premium"]).optional(),
