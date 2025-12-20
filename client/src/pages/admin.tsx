@@ -383,6 +383,7 @@ export default function Admin() {
   const allRegistrations = registrations || [];
   const contestRegistrations = allRegistrations.filter(r => r.registrationType === "contest");
   const expertSessionRegistrations = allRegistrations.filter(r => r.registrationType === "expert-session");
+  const speakerRegistrations = allRegistrations.filter(r => r.registrationType === "speaker");
   const filteredExpertSessionRegistrations = expertCategoryFilter === "all" 
     ? expertSessionRegistrations 
     : expertSessionRegistrations.filter(r => r.ticketCategory === expertCategoryFilter);
@@ -510,17 +511,14 @@ export default function Admin() {
                 <TabsTrigger value="expert-registrations" data-testid="tab-expert-registrations">
                   Expert Session ({expertSessionRegistrations.length})
                 </TabsTrigger>
+                <TabsTrigger value="speaker-registrations" data-testid="tab-speaker-registrations">
+                  Speakers ({speakerRegistrations.length})
+                </TabsTrigger>
                 <TabsTrigger value="pending-registrations" data-testid="tab-pending-registrations">
                   Pending ({pendingRegistrations?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger value="contacts" data-testid="tab-contacts">
                   Contacts ({contacts?.length || 0})
-                </TabsTrigger>
-                <TabsTrigger value="investors" data-testid="tab-investors">
-                  Investors/Mentors ({investorMentors?.length || 0})
-                </TabsTrigger>
-                <TabsTrigger value="sponsorships" data-testid="tab-sponsorships">
-                  Sponsorships ({sponsorships?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger value="bulk" data-testid="tab-bulk">
                   Bulk ({bulkRegistrations?.length || 0})
@@ -1022,6 +1020,75 @@ export default function Admin() {
                               ? `No ${expertCategoryFilter} registrations yet` 
                               : "No expert session registrations yet"}
                           </p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="speaker-registrations">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Users className="w-5 h-5" />
+                        Speaker Registrations
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingRegistrations ? (
+                        <div className="text-center py-8 text-muted-foreground">Loading...</div>
+                      ) : speakerRegistrations.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Registration ID</TableHead>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Phone</TableHead>
+                                <TableHead>Payment Status</TableHead>
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {speakerRegistrations.map((reg, index) => (
+                                <motion.tr
+                                  key={reg.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.03 }}
+                                  className="border-b transition-colors hover:bg-muted/50"
+                                  data-testid={`row-speaker-${reg.id}`}
+                                >
+                                  <TableCell className="font-mono text-xs text-primary">{reg.registrationId}</TableCell>
+                                  <TableCell className="font-medium">{reg.fullName}</TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
+                                  <TableCell className="text-sm">{reg.phone}</TableCell>
+                                  <TableCell>
+                                    <Badge className={reg.paymentStatus === "paid" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"}>
+                                      {reg.paymentStatus === "paid" ? "Paid" : "Pending"}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button variant="outline" size="sm" onClick={() => setSelectedReg(reg)} data-testid={`button-view-speaker-${reg.id}`}>
+                                      <Eye className="w-4 h-4 mr-1" />View
+                                    </Button>
+                                  </TableCell>
+                                </motion.tr>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <div className="text-center py-12">
+                          <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+                          <p className="text-muted-foreground">No speaker registrations yet</p>
                         </div>
                       )}
                     </CardContent>

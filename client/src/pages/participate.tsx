@@ -440,6 +440,11 @@ export default function Participate() {
 
   // Get payment amount based on ticket type and contest
   const getPaymentAmount = () => {
+    // Speaker registration has a fixed ₹399/- fee
+    if (registrationType === "speaker") {
+      return 399;
+    }
+    
     let baseAmount = 199;
     if (isBusinessQuiz) baseAmount = 199;
     else if (ticketCategory === "platinum") baseAmount = 999;
@@ -3476,7 +3481,7 @@ export default function Participate() {
                       </motion.div>
                       )}
 
-                      {!isPitchRoom && !isBusinessQuiz && (
+                      {!isPitchRoom && !isBusinessQuiz && registrationType !== "speaker" && (
                         <motion.div
                           custom={3}
                           initial="hidden"
@@ -3681,51 +3686,53 @@ export default function Participate() {
                         />
                       </motion.div>
 
-                      {/* Gift Code Input - placed after profile photo */}
-                      <motion.div
-                        custom={4.3}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        variants={formFieldVariants}
-                      >
-                        <FormField
-                          control={form.control}
-                          name="referralCode"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="flex items-center gap-2">
-                                <Ticket className="w-4 h-4" />
-                                Gift Code (Optional)
-                              </FormLabel>
-                              <div className="flex gap-2">
-                                <FormControl>
-                                  <Input 
-                                    placeholder="Enter gift code for discount" 
-                                    {...field}
-                                    value={field.value || ""}
-                                    data-testid="input-gift-code"
-                                  />
-                                </FormControl>
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  onClick={() => validateGiftCode(field.value || "")}
-                                  data-testid="button-apply-gift-code"
-                                >
-                                  Apply
-                                </Button>
-                              </div>
-                              {validatedGiftCode && (
-                                <p className="text-xs text-green-600 dark:text-green-400 font-medium mt-1">
-                                  Code applied! {discountPercentage}% discount
-                                </p>
-                              )}
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </motion.div>
+                      {/* Gift Code Input - placed after profile photo - hidden for speaker registration */}
+                      {registrationType !== "speaker" && (
+                        <motion.div
+                          custom={4.3}
+                          initial="hidden"
+                          whileInView="visible"
+                          viewport={{ once: true }}
+                          variants={formFieldVariants}
+                        >
+                          <FormField
+                            control={form.control}
+                            name="referralCode"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="flex items-center gap-2">
+                                  <Ticket className="w-4 h-4" />
+                                  Gift Code (Optional)
+                                </FormLabel>
+                                <div className="flex gap-2">
+                                  <FormControl>
+                                    <Input 
+                                      placeholder="Enter gift code for discount" 
+                                      {...field}
+                                      value={field.value || ""}
+                                      data-testid="input-gift-code"
+                                    />
+                                  </FormControl>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    onClick={() => validateGiftCode(field.value || "")}
+                                    data-testid="button-apply-gift-code"
+                                  >
+                                    Apply
+                                  </Button>
+                                </div>
+                                {validatedGiftCode && (
+                                  <p className="text-xs text-green-600 dark:text-green-400 font-medium mt-1">
+                                    Code applied! {discountPercentage}% discount
+                                  </p>
+                                )}
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </motion.div>
+                      )}
 
                       {registrationType === "expert-session" && (
                         <motion.div
