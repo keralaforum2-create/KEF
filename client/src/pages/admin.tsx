@@ -82,6 +82,11 @@ export default function Admin() {
     retry: 1,
     retryDelay: 2000,
     gcTime: 60000,
+    queryFn: async () => {
+      const response = await fetch("/api/pending-registrations");
+      if (!response.ok) throw new Error("Failed to fetch pending registrations");
+      return response.json();
+    }
   });
 
   const { data: contacts, isLoading: loadingContacts } = useQuery<Contact[]>({
