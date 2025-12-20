@@ -70,32 +70,38 @@ export default function Admin() {
 
   const { data: registrations, isLoading: loadingRegistrations } = useQuery<Registration[]>({
     queryKey: ["/api/registrations"],
-    refetchInterval: 5000,
+    refetchInterval: 10000,
+    staleTime: 5000,
   });
 
   const { data: pendingRegistrations, isLoading: loadingPendingRegistrations } = useQuery<Registration[]>({
     queryKey: ["/api/pending-registrations"],
-    refetchInterval: 5000,
+    refetchInterval: 3000,
+    staleTime: 1000,
   });
 
   const { data: contacts, isLoading: loadingContacts } = useQuery<Contact[]>({
     queryKey: ["/api/contacts"],
-    refetchInterval: 5000,
+    refetchInterval: 15000,
+    staleTime: 10000,
   });
 
   const { data: investorMentors, isLoading: loadingInvestors } = useQuery<InvestorMentor[]>({
     queryKey: ["/api/investor-mentors"],
-    refetchInterval: 5000,
+    refetchInterval: 15000,
+    staleTime: 10000,
   });
 
   const { data: sponsorships, isLoading: loadingSponsorships } = useQuery<Sponsorship[]>({
     queryKey: ["/api/sponsorships"],
-    refetchInterval: 5000,
+    refetchInterval: 15000,
+    staleTime: 10000,
   });
 
   const { data: bulkRegistrations, isLoading: loadingBulk } = useQuery<BulkRegistration[]>({
     queryKey: ["/api/bulk-registrations"],
-    refetchInterval: 5000,
+    refetchInterval: 15000,
+    staleTime: 10000,
   });
 
   const { data: referralCodes, isLoading: loadingReferralCodes } = useQuery<ReferralCode[]>({
@@ -120,9 +126,11 @@ export default function Admin() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/pending-registrations"] });
       toast({ title: "Registration deleted successfully" });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Delete error:", error);
       toast({ title: "Failed to delete registration", variant: "destructive" });
     },
   });

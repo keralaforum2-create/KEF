@@ -388,21 +388,11 @@ export async function registerRoutes(
       }
 
       const baseUrl = resolveBaseUrl(req);
-      // Send emails with a timeout to prevent request hanging
-      const emailPromise = sendRegistrationEmails(updatedRegistration, baseUrl)
+      // Send emails in background (non-blocking)
+      sendRegistrationEmails(updatedRegistration, baseUrl)
         .catch((err) => {
           console.error('Failed to send registration emails:', err);
         });
-      
-      // Set a timeout for email sending (10 seconds)
-      Promise.race([
-        emailPromise,
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Email sending timeout')), 10000)
-        )
-      ]).catch((err) => {
-        console.error('Email sending warning (non-blocking):', err.message);
-      });
 
       console.log("Registration approved:", id);
       return res.json({
