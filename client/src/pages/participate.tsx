@@ -4008,7 +4008,7 @@ export default function Participate() {
                             <CreditCard className="w-5 h-5 text-primary" />
                           </motion.div>
                           <h3 className="font-serif text-xl font-bold mb-2" data-testid="text-application-fees-form">
-                            Application Fees
+                            Payment Details
                           </h3>
                           
                           {isPitchRoom ? (

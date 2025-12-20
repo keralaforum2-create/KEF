@@ -58,31 +58,82 @@ export default function PaymentSuccess() {
     
     setConfirming(true);
     try {
-      // Mark registration as confirmed
-      const response = await fetch(`/api/registration/${registrationId}/confirm`, {
+      // Create Razorpay order for payment
+      const response = await fetch(`/api/razorpay/create-order`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ registrationId }),
       });
       
-      if (response.ok) {
-        setConfirmed(true);
-        toast({
-          title: "Registration Confirmed!",
-          description: "Check your email for verification details.",
-        });
-      } else {
-        toast({
-          title: "Confirmation Error",
-          description: "Failed to confirm registration. Please try again.",
-          variant: "destructive",
-        });
+      if (!response.ok) {
+        throw new Error('Failed to create payment order');
       }
+      
+      const data = await response.json();
+      
+      if (!data.success || !data.razorpayOrderId) {
+        throw new Error('Invalid payment order response');
+      }
+
+      // Initialize Razorpay payment
+      const options = {
+        key: data.razorpayKeyId,
+        amount: data.amount,
+        currency: 'INR',
+        order_id: data.razorpayOrderId,
+        handler: async (paymentResponse: any) => {
+          try {
+            const verifyResponse = await fetch(`/api/razorpay/verify`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: paymentResponse.razorpay_order_id,
+                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                razorpay_signature: paymentResponse.razorpay_signature,
+                registrationId,
+              }),
+            });
+
+            if (verifyResponse.ok) {
+              setConfirmed(true);
+              toast({
+                title: "Payment Successful!",
+                description: "Check your email for your ticket.",
+              });
+            } else {
+              throw new Error('Payment verification failed');
+            }
+          } catch (err) {
+            toast({
+              title: "Verification Error",
+              description: "Payment was successful but verification failed. Please check your email.",
+              variant: "destructive",
+            });
+          } finally {
+            setConfirming(false);
+          }
+        },
+        prefill: {
+          email: registrationData?.email || '',
+          contact: '',
+        },
+        theme: { color: '#3399cc' },
+      };
+
+      // Load and initialize Razorpay
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => {
+        const rzp = new (window as any).Razorpay(options);
+        rzp.open();
+      };
+      document.head.appendChild(script);
     } catch (err) {
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: "Failed to process payment. Please try again.",
         variant: "destructive",
       });
-    } finally {
       setConfirming(false);
     }
   };

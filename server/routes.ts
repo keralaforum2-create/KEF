@@ -895,8 +895,78 @@ export async function registerRoutes(
     }
   });
 
-  // Razorpay Routes
+  // Create Razorpay order for existing registration (called from payment-success page)
   app.post("/api/razorpay/create-order", async (req: Request, res) => {
+    try {
+      const { registrationId, registrationData, amount } = req.body;
+
+      // Handle two cases: 1) Existing registration (just registrationId), 2) New registration (registrationData + amount)
+      if (registrationId) {
+        // Case 1: Create order for existing registration after confirmation
+        const registration = await storage.getRegistrationByRegistrationId(registrationId);
+        
+        if (!registration) {
+          return res.status(404).json({ message: "Registration not found" });
+        }
+
+        // Calculate amount based on registration type
+        let orderAmount = 199; // Default
+        if (registration.registrationType === 'pitch-room') {
+          const teamCount = [registration.teamMember1Name, registration.teamMember2Name, registration.teamMember3Name].filter(Boolean).length || 1;
+          orderAmount = 199 * teamCount;
+        } else if (registration.registrationType === 'session') {
+          orderAmount = 199;
+        } else if (registration.registrationType === 'contest') {
+          orderAmount = registration.ticketCategory === 'platinum' ? 999 : registration.ticketCategory === 'gold' ? 499 : 199;
+        } else if (registration.registrationType === 'session-ticket') {
+          orderAmount = registration.ticketCategory === 'platinum' ? 999 : registration.ticketCategory === 'gold' ? 499 : 199;
+        }
+
+        const receipt = `RZP${Date.now()}${randomUUID().slice(0, 8)}`;
+        const orderResult = await createRazorpayOrder({
+          amount: orderAmount,
+          receipt,
+          notes: {
+            registrationId: registration.registrationId,
+            fullName: registration.fullName,
+            email: registration.email,
+          }
+        });
+
+        if (!orderResult.success || !orderResult.order) {
+          return res.status(400).json({ message: orderResult.error || "Failed to create order" });
+        }
+
+        await storage.updateRegistrationPayment(registration.id, {
+          razorpayOrderId: orderResult.order.id,
+          paymentAmount: String(orderAmount)
+        });
+
+        console.log("Razorpay order created for existing registration:", orderResult.order.id);
+        return res.json({
+          success: true,
+          razorpayOrderId: orderResult.order.id,
+          amount: orderAmount,
+          razorpayKeyId: orderResult.keyId,
+          registrationId: registration.registrationId
+        });
+      } else if (registrationData && amount) {
+        // Case 2: Create order for new registration
+        return res.status(400).json({ message: "This endpoint only supports existing registrations" });
+      } else {
+        return res.status(400).json({ message: "Registration ID or registration data is required" });
+      }
+    } catch (error) {
+      console.error("Razorpay order creation error:", error);
+      return res.status(500).json({
+        message: "Internal server error",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
+    }
+  });
+
+  // Legacy Razorpay create-order endpoint (for new registrations)
+  app.post("/api/razorpay/create-order-new", async (req: Request, res) => {
     try {
       const { registrationData, amount } = req.body;
 

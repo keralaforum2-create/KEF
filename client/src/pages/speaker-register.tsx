@@ -417,7 +417,7 @@ export default function SpeakerRegister() {
 
                   {/* Fee Section */}
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <h3 className="font-semibold mb-2">Application Fee</h3>
+                    <h3 className="font-semibold mb-2">Payment Required</h3>
                     <p className="text-lg font-bold text-blue-600 mb-3">₹3,999</p>
                     <p className="text-sm text-gray-700 mb-3">
                       Full refund will be provided to applicants who are not selected.
