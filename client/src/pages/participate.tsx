@@ -448,10 +448,12 @@ export default function Participate() {
     
     // For Pitch Room, multiply amount by number of team members
     if (isPitchRoom) {
-      let teamMemberCount = 1; // At least the main participant
+      let teamMemberCount = 0;
       if (form.watch("teamMember1Name")) teamMemberCount++;
       if (form.watch("teamMember2Name")) teamMemberCount++;
       if (form.watch("teamMember3Name")) teamMemberCount++;
+      // If no team members entered, minimum is 1
+      if (teamMemberCount === 0) teamMemberCount = 1;
       return 199 * teamMemberCount;
     }
     
@@ -3912,18 +3914,43 @@ export default function Participate() {
                           <h3 className="font-serif text-xl font-bold mb-2" data-testid="text-application-fees-form">
                             Application Fees
                           </h3>
-                          <p className="text-sm text-muted-foreground font-medium">
-                            {isPitchRoom
-                              ? `Pay ₹${getPaymentAmount()}/-`
-                              : isBusinessQuiz 
+                          
+                          {isPitchRoom ? (
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-center gap-4 text-sm font-medium">
+                                <span className="text-muted-foreground">Team Members: <span className="text-primary font-bold" data-testid="text-team-count">
+                                  {(() => {
+                                    let count = 0;
+                                    if (form.watch("teamMember1Name")) count++;
+                                    if (form.watch("teamMember2Name")) count++;
+                                    if (form.watch("teamMember3Name")) count++;
+                                    return count === 0 ? 1 : count;
+                                  })()}
+                                </span></span>
+                                <span className="text-muted-foreground">× ₹199 = <span className="text-teal-600 font-bold text-lg">₹{getPaymentAmount()}/-</span></span>
+                              </div>
+                              <p className="text-xs text-muted-foreground">
+                                {(() => {
+                                  let count = 0;
+                                  if (form.watch("teamMember1Name")) count++;
+                                  if (form.watch("teamMember2Name")) count++;
+                                  if (form.watch("teamMember3Name")) count++;
+                                  return count === 0 ? "Add team member names to adjust pricing" : `${count} team member${count !== 1 ? 's' : ''}`;
+                                })()}
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="text-sm text-muted-foreground font-medium">
+                              {isBusinessQuiz 
                                 ? "Pay ₹199/-"
                                 : ticketCategory === "platinum" 
                                   ? "Pay ₹999/-"
                                   : ticketCategory === "gold"
                                     ? "Pay ₹499/-"
                                     : "Pay ₹199/-"
-                            }
-                          </p>
+                              }
+                            </p>
+                          )}
                         </div>
 
                         <div className="flex flex-col items-center gap-6">
