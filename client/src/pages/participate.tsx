@@ -201,6 +201,7 @@ export default function Participate() {
   const [registrationId, setRegistrationId] = useState<string | null>(null);
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [showSpeakerDescription, setShowSpeakerDescription] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [submittedData, setSubmittedData] = useState<RegistrationFormData | null>(null);
   const [isProcessingOnlinePayment, setIsProcessingOnlinePayment] = useState(false);
@@ -1980,7 +1981,130 @@ export default function Participate() {
             </ScrollFadeUp>
             
             <AnimatePresence mode="wait">
-              {!showForm ? (
+              {showSpeakerDescription ? (
+                <motion.div
+                  key="speaker-description"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ScrollFadeUp delay={0.1}>
+                    <div className="mb-4">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => {
+                          setShowSpeakerDescription(false);
+                          form.setValue("registrationType", undefined as any);
+                        }}
+                        data-testid="button-back-to-selection"
+                      >
+                        <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
+                        Back to selection
+                      </Button>
+                    </div>
+                    <Card>
+                      <CardContent className="p-6 sm:p-8 space-y-6">
+                        <div className="flex items-center gap-3 pb-4 border-b">
+                          <Presentation className="w-6 h-6 text-primary" />
+                          <h2 className="text-2xl font-bold">Made in Kerala - 10-Minute Live Podcast</h2>
+                        </div>
+                        
+                        <div>
+                          <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                            <Presentation className="w-5 h-5" />
+                            Call for Speakers
+                          </h3>
+                          <p className="text-muted-foreground mb-4">
+                            On the days of Kerala Startup Fest, we are conducting exclusive short-format podcasts featuring selected startup founders. In just 10 minutes, founders share their real journey, insights, struggles, and learnings—no pitches, no scripts, just honest conversations.
+                          </p>
+                          <p className="text-muted-foreground">
+                            This is a unique opportunity to share your startup story, insights, and journey through a professionally handled podcast session.
+                          </p>
+                        </div>
+
+                        <div>
+                          <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                            <BookOpen className="w-5 h-5" />
+                            Podcast Details
+                          </h3>
+                          <ul className="space-y-2 text-muted-foreground">
+                            <li>📺 <strong>Format:</strong> One-to-one podcast interview</li>
+                            <li>⏱️ <strong>Duration:</strong> Maximum 10 minutes</li>
+                            <li>🎙️ <strong>Handled by:</strong> Official KSF Podcast Team Member</li>
+                            <li className="space-y-1">
+                              📤 <strong>Output:</strong>
+                              <ul className="ml-6 mt-1 space-y-1">
+                                <li>• Final edited video delivered to the participant</li>
+                                <li>• Branded with Kerala Economic Forum & Kerala Startup Fest watermark</li>
+                                <li>• Participants are free to circulate and publish the video on their own platforms</li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div>
+                          <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                            <Network className="w-5 h-5" />
+                            Publishing & Promotion
+                          </h3>
+                          <p className="text-muted-foreground mb-2">Best podcast episodes will be featured on:</p>
+                          <ul className="list-disc list-inside text-muted-foreground space-y-1">
+                            <li>KSF & KEF YouTube channels</li>
+                            <li>Instagram & Facebook official pages</li>
+                            <li>Wide digital visibility among students, founders, and the startup ecosystem</li>
+                          </ul>
+                        </div>
+
+                        <div>
+                          <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                            <CheckCircle className="w-5 h-5" />
+                            Selection Process
+                          </h3>
+                          <ul className="list-disc list-inside text-muted-foreground space-y-1">
+                            <li>Interested founders must apply to be a Podcast Speaker</li>
+                            <li>Selection is application-based</li>
+                            <li>Only selected candidates will be called for the podcast recording during KSF</li>
+                          </ul>
+                        </div>
+
+                        <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
+                          <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                            <CreditCard className="w-5 h-5" />
+                            Fee & Refund Policy
+                          </h3>
+                          <p className="text-muted-foreground">
+                            📋 <strong>Podcast Application Fee: ₹3,999/-</strong><br />
+                            ✅ Full refund will be provided to applicants who are not selected
+                          </p>
+                        </div>
+
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <Button 
+                            size="lg"
+                            className="w-full font-semibold text-base"
+                            onClick={() => {
+                              setShowSpeakerDescription(false);
+                              setShowForm(true);
+                              setTimeout(() => {
+                                document.getElementById("register")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                              }, 100);
+                            }}
+                            data-testid="button-continue-to-register"
+                          >
+                            Continue to Register
+                            <ArrowRight className="w-4 h-4 ml-2" />
+                          </Button>
+                        </motion.div>
+                      </CardContent>
+                    </Card>
+                  </ScrollFadeUp>
+                </motion.div>
+              ) : !showForm ? (
                 <motion.div
                   key="poster-selection"
                   initial={{ opacity: 0, y: 20 }}
@@ -2043,6 +2167,27 @@ export default function Participate() {
                             >
                               <Trophy className="w-5 h-5 mr-2" />
                               Register for Kerala Startup Fest Contest
+                            </Button>
+                          </motion.div>
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Button 
+                              size="lg" 
+                              variant="outline"
+                              className="w-full font-semibold text-base"
+                              onClick={() => {
+                                form.setValue("registrationType", "speaker");
+                                setShowSpeakerDescription(true);
+                                setTimeout(() => {
+                                  document.getElementById("register")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                }, 100);
+                              }}
+                              data-testid="button-register-speaker"
+                            >
+                              <Presentation className="w-5 h-5 mr-2" />
+                              Be a Podcast Speaker
                             </Button>
                           </motion.div>
                         </div>
