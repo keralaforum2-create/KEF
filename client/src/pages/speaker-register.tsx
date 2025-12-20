@@ -283,7 +283,7 @@ export default function SpeakerRegister() {
                   Fee & Refund Policy
                 </h3>
                 <p className="text-gray-700">
-                  📋 <strong>Podcast Application Fee: ₹399/-</strong><br />
+                  📋 <strong>Podcast Application Fee: ₹3999/-</strong><br />
                   ✅ Full refund will be provided to applicants who are not selected
                 </p>
               </div>
