@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useLocation } from "wouter";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Presentation, BookOpen, Network, CheckCircle, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -212,6 +212,86 @@ export default function SpeakerRegister() {
         </ScrollFadeUp>
 
         <ScrollFadeUp delay={0.2}>
+          <Card className="mb-8 border-none bg-gray-50">
+            <CardContent className="p-6 sm:p-8 space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b">
+                <Presentation className="w-6 h-6 text-red-600" />
+                <h2 className="text-2xl font-bold">Made in Kerala - 10-Minute Live Podcast</h2>
+              </div>
+              
+              <div>
+                <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                  <Presentation className="w-5 h-5" />
+                  Call for Speakers
+                </h3>
+                <p className="text-gray-700 mb-4">
+                  On the days of Kerala Startup Fest, we are conducting exclusive short-format podcasts featuring selected startup founders. In just 10 minutes, founders share their real journey, insights, struggles, and learnings—no pitches, no scripts, just honest conversations.
+                </p>
+                <p className="text-gray-700">
+                  This is a unique opportunity to share your startup story, insights, and journey through a professionally handled podcast session.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                  <BookOpen className="w-5 h-5" />
+                  Podcast Details
+                </h3>
+                <ul className="space-y-2 text-gray-700">
+                  <li>📺 <strong>Format:</strong> One-to-one podcast interview</li>
+                  <li>⏱️ <strong>Duration:</strong> Maximum 10 minutes</li>
+                  <li>🎙️ <strong>Handled by:</strong> Official KSF Podcast Team Member</li>
+                  <li className="space-y-1">
+                    📤 <strong>Output:</strong>
+                    <ul className="ml-6 mt-1 space-y-1">
+                      <li>• Final edited video delivered to the participant</li>
+                      <li>• Branded with Kerala Economic Forum & Kerala Startup Fest watermark</li>
+                      <li>• Participants are free to circulate and publish the video on their own platforms</li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                  <Network className="w-5 h-5" />
+                  Publishing & Promotion
+                </h3>
+                <p className="text-gray-700 mb-2">Best podcast episodes will be featured on:</p>
+                <ul className="list-disc list-inside text-gray-700 space-y-1">
+                  <li>KSF & KEF YouTube channels</li>
+                  <li>Instagram & Facebook official pages</li>
+                  <li>Wide digital visibility among students, founders, and the startup ecosystem</li>
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3 flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5" />
+                  Selection Process
+                </h3>
+                <ul className="list-disc list-inside text-gray-700 space-y-1">
+                  <li>Interested founders must apply to be a Podcast Speaker</li>
+                  <li>Selection is application-based</li>
+                  <li>Only selected candidates will be called for the podcast recording during KSF</li>
+                </ul>
+              </div>
+
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+                  <CreditCard className="w-5 h-5" />
+                  Fee & Refund Policy
+                </h3>
+                <p className="text-gray-700">
+                  📋 <strong>Podcast Application Fee: ₹399/-</strong><br />
+                  ✅ Full refund will be provided to applicants who are not selected
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </ScrollFadeUp>
+
+        <ScrollFadeUp delay={0.3}>
           <Card>
             <CardContent className="p-8">
               <Form {...form}>
