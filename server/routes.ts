@@ -1089,7 +1089,8 @@ export async function registerRoutes(
         console.error('Failed to send registration emails:', err);
       });
 
-      console.log("Razorpay payment verified successfully:", razorpay_payment_id);
+      console.log(`✓ Payment verified for ${registration.fullName} (ID: ${registration.registrationId}) - Payment ID: ${razorpay_payment_id}`);
+      console.log(`✓ Registration now shows in Admin Panel under 'Registrations' tab with status: PAID`);
       return res.json({
         success: true,
         registrationId: registration.registrationId
