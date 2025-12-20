@@ -421,6 +421,10 @@ export async function registerRoutes(
         return res.status(404).json({ message: "Ticket not found" });
       }
       
+      if (registration.paymentStatus !== 'paid') {
+        return res.status(403).json({ message: "Ticket not yet available. Payment must be confirmed first." });
+      }
+      
       return res.json(registration);
     } catch (error) {
       console.error("Error fetching ticket:", error);

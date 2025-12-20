@@ -29,25 +29,7 @@ export default function PaymentSuccess() {
 
   useEffect(() => {
     if (registrationId) {
-      fetch(`/api/ticket/${registrationId}`)
-        .then(res => {
-          if (!res.ok) {
-            throw new Error("Failed to fetch");
-          }
-          return res.json();
-        })
-        .then(data => {
-          if (data && !data.message && data.fullName) {
-            setRegistrationData(data);
-          } else {
-            setError(true);
-          }
-          setLoading(false);
-        })
-        .catch(() => {
-          setError(true);
-          setLoading(false);
-        });
+      setLoading(false);
     } else {
       setLoading(false);
     }
@@ -360,14 +342,20 @@ export default function PaymentSuccess() {
                     </p>
                   </div>
 
-                  {registrationData && (
-                    <p className="text-muted-foreground text-sm">
-                      Welcome, <span className="font-medium text-foreground">{registrationData.fullName}</span>!
-                    </p>
-                  )}
+                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-start gap-3">
+                    <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                    <div className="text-left">
+                      <p className="text-sm text-blue-800 dark:text-blue-300 font-medium">
+                        Ticket will be sent to your email
+                      </p>
+                      <p className="text-xs text-blue-700 dark:text-blue-400 mt-1">
+                        After confirming your registration, your digital ticket will be emailed to you within a few minutes.
+                      </p>
+                    </div>
+                  </div>
 
                   <p className="text-muted-foreground text-sm">
-                    Your payment has been processed successfully.
+                    Your payment has been processed successfully. Click the button below to confirm.
                   </p>
                 </>
               )}

@@ -74,10 +74,12 @@ export default function Admin() {
     staleTime: 5000,
   });
 
-  const { data: pendingRegistrations, isLoading: loadingPendingRegistrations } = useQuery<Registration[]>({
+  const { data: pendingRegistrations, isLoading: loadingPendingRegistrations, isError: pendingError } = useQuery<Registration[]>({
     queryKey: ["/api/pending-registrations"],
-    refetchInterval: 3000,
-    staleTime: 1000,
+    refetchInterval: 5000,
+    staleTime: 2000,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * Math.pow(2, attemptIndex), 10000),
   });
 
   const { data: contacts, isLoading: loadingContacts } = useQuery<Contact[]>({
@@ -1121,6 +1123,12 @@ export default function Admin() {
                       {loadingPendingRegistrations ? (
                         <div className="text-center py-8 text-muted-foreground">
                           Loading pending registrations...
+                        </div>
+                      ) : pendingError ? (
+                        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-center">
+                          <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400 mx-auto mb-2" />
+                          <p className="text-sm text-red-800 dark:text-red-300 font-medium">Failed to load pending registrations</p>
+                          <p className="text-xs text-red-700 dark:text-red-400 mt-1">Please check your database connection and try refreshing the page</p>
                         </div>
                       ) : (pendingRegistrations || []).length > 0 ? (
                         <div className="overflow-x-auto">
