@@ -853,7 +853,7 @@ export default function Participate() {
         pitchDeclarationConfirmed: formData.pitchDeclarationConfirmed ? "true" : "false",
       };
 
-      const response = await apiRequest("POST", "/api/razorpay/create-order", {
+      const response = await apiRequest("POST", "/api/razorpay/create-order-new", {
         registrationData,
         amount,
       });
