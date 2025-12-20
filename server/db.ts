@@ -16,8 +16,8 @@ const pool = new Pool({
   min: 5,  // Minimum number of connections to maintain
   idleTimeoutMillis: 30000, // Close idle connections after 30s
   connectionTimeoutMillis: 5000, // Connection timeout 5s
-  keepalives: true,
-  keepalivesIdleTimeout: 30000,
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 30000,
 });
 
 export const db = drizzle(pool, { schema });
