@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate, useLocation } from "wouter";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -35,6 +35,18 @@ export default function SpeakerRegister() {
   const [, navigate] = useLocation();
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
+  const [razorpayLoaded, setRazorpayLoaded] = useState(false);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => setRazorpayLoaded(true);
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const form = useForm<SpeakerFormData>({
     resolver: zodResolver(speakerSchema),
@@ -56,26 +68,86 @@ export default function SpeakerRegister() {
 
   const mutation = useMutation({
     mutationFn: async (data: SpeakerFormData) => {
-      const response = await apiRequest("/api/speaker-applications", {
+      if (!razorpayLoaded || !(window as any).Razorpay) {
+        throw new Error("Razorpay is not loaded");
+      }
+
+      // Create Razorpay order
+      const orderResponse = await apiRequest("/api/speaker-razorpay/create-order", {
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          email: data.email,
+          contactNumber: data.contactNumber,
+          founderName: data.founderName,
+          startupName: data.startupName,
+        }),
       });
-      return response;
+
+      if (!orderResponse.orderId) {
+        throw new Error("Failed to create payment order");
+      }
+
+      return new Promise((resolve, reject) => {
+        const options = {
+          key: orderResponse.keyId,
+          amount: 399900,
+          currency: "INR",
+          name: "Made in Kerala Podcast",
+          description: "Podcast Speaker Application Fee",
+          order_id: orderResponse.orderId,
+          handler: async function (response: any) {
+            try {
+              // Verify payment
+              const verifyResponse = await apiRequest("/api/speaker-razorpay/verify", {
+                method: "POST",
+                body: JSON.stringify({
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  applicationData: data,
+                }),
+              });
+
+              if (verifyResponse.success) {
+                resolve(verifyResponse);
+              } else {
+                reject(new Error("Payment verification failed"));
+              }
+            } catch (error) {
+              reject(error);
+            }
+          },
+          prefill: {
+            name: data.founderName,
+            email: data.email,
+            contact: data.contactNumber,
+          },
+          theme: {
+            color: "#dc2626",
+          },
+        };
+
+        const razorpay = new (window as any).Razorpay(options);
+        razorpay.on("payment.failed", function (response: any) {
+          reject(new Error("Payment failed: " + response.error.description));
+        });
+        razorpay.open();
+      });
     },
     onSuccess: () => {
       setSubmitted(true);
       toast({
         title: "Application Submitted",
-        description: "Thank you for applying! We'll review your application and contact you soon.",
+        description: "Thank you for your application! We'll review it and contact you soon.",
       });
       setTimeout(() => {
         navigate("/");
       }, 3000);
     },
-    onError: () => {
+    onError: (error) => {
       toast({
         title: "Error",
-        description: "Failed to submit application. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to process payment",
         variant: "destructive",
       });
     },
@@ -389,11 +461,18 @@ export default function SpeakerRegister() {
                     <Button 
                       type="submit" 
                       size="lg" 
-                      className="flex-1"
-                      disabled={mutation.isPending}
+                      className="flex-1 bg-red-600 hover:bg-red-700"
+                      disabled={mutation.isPending || !razorpayLoaded}
                       data-testid="button-submit-speaker"
                     >
-                      {mutation.isPending ? "Submitting..." : "Submit Application"}
+                      {mutation.isPending ? (
+                        <>
+                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          Processing Payment...
+                        </>
+                      ) : (
+                        "Submit & Pay ₹3,999"
+                      )}
                     </Button>
                     <Button 
                       type="button" 

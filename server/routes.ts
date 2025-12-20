@@ -9,6 +9,7 @@ import fs from "fs";
 import { sendRegistrationEmails, sendContactNotification, sendTicketEmail } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { createRazorpayOrder, verifyRazorpayPayment } from "./razorpay";
+import { randomUUID as uuid } from "crypto";
 import { randomUUID } from "crypto";
 import { resolveBaseUrl } from "./utils/request";
 import { verifyPaymentScreenshot, verifyBulkPaymentScreenshot } from "./paymentVerification";
@@ -1717,30 +1718,85 @@ export async function registerRoutes(
     }
   });
 
-  // Speaker Applications endpoint
+  // Speaker Applications - Razorpay integration
   const speakerApplications: any[] = [];
 
-  app.post("/api/speaker-applications", async (req, res) => {
+  app.post("/api/speaker-razorpay/create-order", async (req, res) => {
     try {
-      const applicationData = req.body;
+      const { email, contactNumber, founderName, startupName } = req.body;
       
-      // Store the application
+      const result = await createRazorpayOrder({
+        amount: 3999,
+        currency: "INR",
+        receipt: `speaker_${Date.now()}`,
+        notes: {
+          founderName,
+          startupName,
+          email,
+          contactNumber,
+          type: "speaker_application"
+        }
+      });
+
+      if (!result.success) {
+        return res.status(400).json({ 
+          success: false,
+          error: result.error || "Failed to create order"
+        });
+      }
+
+      return res.json({
+        success: true,
+        orderId: result.order?.id,
+        amount: result.order?.amount,
+        keyId: result.keyId
+      });
+    } catch (error) {
+      console.error("Error creating speaker Razorpay order:", error);
+      return res.status(500).json({ 
+        success: false,
+        error: "Failed to create payment order"
+      });
+    }
+  });
+
+  app.post("/api/speaker-razorpay/verify", async (req, res) => {
+    try {
+      const { razorpay_order_id, razorpay_payment_id, razorpay_signature, applicationData } = req.body;
+      
+      const verifyResult = verifyRazorpayPayment({
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature
+      });
+
+      if (!verifyResult.success) {
+        return res.status(400).json({
+          success: false,
+          error: verifyResult.error
+        });
+      }
+
+      // Store the application after successful payment
       const application = {
-        id: randomUUID(),
+        id: uuid(),
         ...applicationData,
+        paymentId: razorpay_payment_id,
+        orderId: razorpay_order_id,
         submittedAt: new Date().toISOString(),
-        status: "pending"
+        status: "pending",
+        paymentStatus: "completed"
       };
       
       speakerApplications.push(application);
-      
+
       // Send email notification
       try {
         await sendContactNotification({
           name: applicationData.founderName,
           email: applicationData.email,
           subject: `Speaker Application Received - Made in Kerala Podcast`,
-          message: `Thank you for applying to be a podcast speaker at Kerala Startup Fest 2026. Your application has been received. Our team will review it and contact you within 3-5 business days.`
+          message: `Thank you for your application to be a podcast speaker at Kerala Startup Fest 2026. Your payment of ₹3,999 has been received successfully. Our team will review your application and contact you within 3-5 business days.`
         });
       } catch (emailError) {
         console.error("Error sending speaker application confirmation email:", emailError);
@@ -1752,10 +1808,10 @@ export async function registerRoutes(
         message: "Application submitted successfully"
       });
     } catch (error) {
-      console.error("Error submitting speaker application:", error);
+      console.error("Error verifying speaker payment:", error);
       return res.status(500).json({ 
         success: false,
-        message: "Failed to submit application"
+        error: "Failed to verify payment"
       });
     }
   });
