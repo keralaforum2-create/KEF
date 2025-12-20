@@ -144,7 +144,7 @@ export default function Speakers() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
                     <Presentation className="w-6 h-6" />
-                    <h3 className="text-2xl sm:text-3xl font-bold">Be a Speaker of Kerala Startup Fest</h3>
+                    <h3 className="text-2xl sm:text-3xl font-bold">Be a Speaker</h3>
                   </div>
                   <p className="text-red-100 text-lg">
                     Share your expertise and inspire the next generation of entrepreneurs. Join our panel of expert speakers.
