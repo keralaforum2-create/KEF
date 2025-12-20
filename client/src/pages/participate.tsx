@@ -2079,7 +2079,7 @@ export default function Participate() {
                         <div className="mb-6 p-4 rounded-lg bg-primary/10 border border-primary/20">
                           <p className="text-sm font-medium text-center">
                             Registering for: <span className="text-primary font-semibold">
-                              {registrationType === "expert-session" ? "Expert Session" : registrationType === "speaker" ? "Be a Speaker" : "Contest"}
+                              {registrationType === "expert-session" ? "Expert Session" : registrationType === "speaker" ? "Be a Podcast Speaker" : "Contest"}
                             </span>
                           </p>
                         </div>

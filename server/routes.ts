@@ -415,9 +415,13 @@ export async function registerRoutes(
   app.get("/api/ticket/:registrationId", async (req, res) => {
     try {
       const { registrationId } = req.params;
+      console.log("Fetching ticket for registration ID:", registrationId);
+      
       const registration = await storage.getRegistrationByRegistrationId(registrationId);
+      console.log("Registration found:", registration ? "Yes" : "No");
       
       if (!registration) {
+        console.log("Available registrations count:", (await storage.getRegistrations()).length);
         return res.status(404).json({ message: "Ticket not found" });
       }
       
