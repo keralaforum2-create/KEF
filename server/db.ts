@@ -10,6 +10,14 @@ if (!databaseUrl) {
 
 const pool = new Pool({ 
   connectionString: databaseUrl,
-  ssl: process.env.SUPABASE_DATABASE_URL ? { rejectUnauthorized: false } : undefined
+  ssl: process.env.SUPABASE_DATABASE_URL ? { rejectUnauthorized: false } : undefined,
+  // Optimize for production performance
+  max: 20, // Maximum number of connections in pool
+  min: 5,  // Minimum number of connections to maintain
+  idleTimeoutMillis: 30000, // Close idle connections after 30s
+  connectionTimeoutMillis: 5000, // Connection timeout 5s
+  keepalives: true,
+  keepalivesIdleTimeout: 30000,
 });
+
 export const db = drizzle(pool, { schema });
