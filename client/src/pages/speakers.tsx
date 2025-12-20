@@ -147,7 +147,7 @@ export default function Speakers() {
                     <h3 className="text-2xl sm:text-3xl font-bold">Be a Podcast Speaker</h3>
                   </div>
                   <p className="text-red-100 text-lg">
-                    Be a live podcast speaker at KSF venue. Share your startup story and inspire the next generation of entrepreneurs.
+                    Be a live podcast speaker at KSF venue.
                   </p>
                 </div>
                 <Link href="/speaker-register">
