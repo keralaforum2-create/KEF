@@ -1,7 +1,6 @@
 import { ArrowLeft, X } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { ScrollFadeUp } from "@/lib/animations";
 import { useState } from "react";
 import ajilImage from "@assets/AJIL_HILITE_1766212685898.jpg";
@@ -20,86 +19,50 @@ import shrikumarImage from "@assets/V_A_SHRIKUMAR_1766212766568.jpg";
 const speakers = [
   {
     id: 1,
-    name: "Ajil Muhammed",
-    title: "CEO",
-    company: "HiLite Group",
     image: ajilImage,
   },
   {
     id: 2,
-    name: "Mohammed Alfan",
-    title: "Founder",
-    company: "Rows & Columns",
     image: alfanImage,
   },
   {
     id: 3,
-    name: "Jaizal Ali",
-    title: "Founder",
-    company: "RedTeam Hacker Academy",
     image: jaizalImage,
   },
   {
     id: 4,
-    name: "Jishnu P V",
-    title: "Founder & CEO",
-    company: "Elance",
     image: jishnuImage,
   },
   {
     id: 5,
-    name: "Naseef Neeruttichali",
-    title: "Founder & CEO",
-    company: "Flavors of Kerala",
     image: naseefImage,
   },
   {
     id: 6,
-    name: "Noureen Aysha",
-    title: "Co-founder",
-    company: "FemiSafe",
     image: noureenImage,
   },
   {
     id: 7,
-    name: "Rameez Moidu",
-    title: "Executive Director",
-    company: "KRS",
     image: rameezImage,
   },
   {
     id: 8,
-    name: "Rayhan Abdul Rahiman",
-    title: "CEO",
-    company: "Make Your Own Perfume (MYOP)",
     image: rayhanImage,
   },
   {
     id: 9,
-    name: "Shahad Moideen",
-    title: "CEO & Executive Director",
-    company: "Kenza TMIT",
     image: shahadImage,
   },
   {
     id: 10,
-    name: "Thajudeen Aboobaker",
-    title: "Founder & CEO",
-    company: "Urban Trash",
     image: thajudeenImage,
   },
   {
     id: 11,
-    name: "Umer Abdussalam",
-    title: "CEO",
-    company: "EdApt",
     image: umerImage,
   },
   {
     id: 12,
-    name: "V A Shrikumar",
-    title: "Film Maker",
-    company: "Ad Film Director",
     image: shrikumarImage,
   },
 ];
@@ -118,16 +81,10 @@ function SpeakerModal({ speaker, onClose }: { speaker: typeof speakers[0]; onClo
         
         <img 
           src={speaker.image} 
-          alt={speaker.name}
+          alt="Speaker poster"
           className="w-full h-auto object-cover"
           data-testid={`img-speaker-${speaker.id}`}
         />
-        
-        <div className="p-6">
-          <h2 className="text-2xl font-bold mb-2">{speaker.name}</h2>
-          <p className="text-lg text-gray-600 mb-1">{speaker.title}</p>
-          <p className="text-gray-500">{speaker.company}</p>
-        </div>
       </div>
     </div>
   );
@@ -162,25 +119,18 @@ export default function Speakers() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {speakers.map((speaker, index) => (
             <ScrollFadeUp key={speaker.id} delay={index * 0.05}>
-              <Card 
-                className="overflow-hidden cursor-pointer hover-elevate transition-all h-full" 
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md"
                 onClick={() => setSelectedSpeaker(speaker)}
                 data-testid={`card-speaker-${speaker.id}`}
               >
-                <div className="aspect-video overflow-hidden bg-gray-200">
-                  <img 
-                    src={speaker.image} 
-                    alt={speaker.name}
-                    className="w-full h-full object-cover"
-                    data-testid={`img-speaker-thumbnail-${speaker.id}`}
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="font-bold text-lg mb-2" data-testid={`text-speaker-name-${speaker.id}`}>{speaker.name}</h3>
-                  <p className="text-sm text-gray-600 mb-1" data-testid={`text-speaker-title-${speaker.id}`}>{speaker.title}</p>
-                  <p className="text-sm text-gray-500" data-testid={`text-speaker-company-${speaker.id}`}>{speaker.company}</p>
-                </div>
-              </Card>
+                <img 
+                  src={speaker.image} 
+                  alt="Speaker poster"
+                  className="w-full h-auto object-cover"
+                  data-testid={`img-speaker-thumbnail-${speaker.id}`}
+                />
+              </div>
             </ScrollFadeUp>
           ))}
         </div>
