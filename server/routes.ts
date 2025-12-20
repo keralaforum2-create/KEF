@@ -900,14 +900,23 @@ export async function registerRoutes(
     try {
       const { registrationId, registrationData, amount } = req.body;
 
+      console.log("Razorpay create-order request:", { registrationId, hasRegistrationData: !!registrationData, amount });
+
       // Handle two cases: 1) Existing registration (just registrationId), 2) New registration (registrationData + amount)
       if (registrationId) {
         // Case 1: Create order for existing registration after confirmation
+        console.log("Looking up registration by ID:", registrationId);
         const registration = await storage.getRegistrationByRegistrationId(registrationId);
         
         if (!registration) {
-          return res.status(404).json({ message: "Registration not found" });
+          console.error("❌ Registration not found for ID:", registrationId);
+          return res.status(404).json({ 
+            message: "Registration not found",
+            registrationId
+          });
         }
+        
+        console.log(`✓ Found registration: ${registration.fullName} (DB ID: ${registration.id})`);
 
         // Calculate amount based on registration type
         let orderAmount = 199; // Default
@@ -952,9 +961,17 @@ export async function registerRoutes(
         });
       } else if (registrationData && amount) {
         // Case 2: Create order for new registration
-        return res.status(400).json({ message: "This endpoint only supports existing registrations" });
+        console.warn("⚠️ Received new registration data with amount - use /api/razorpay/create-order-new instead");
+        return res.status(400).json({ 
+          message: "Use /api/razorpay/create-order-new endpoint for new registrations",
+          hint: "Please provide registrationId for existing registrations"
+        });
       } else {
-        return res.status(400).json({ message: "Registration ID or registration data is required" });
+        console.error("❌ Invalid request - missing registrationId and registrationData");
+        return res.status(400).json({ 
+          message: "Registration ID or registration data is required",
+          received: { hasRegistrationId: !!registrationId, hasRegistrationData: !!registrationData, amount }
+        });
       }
     } catch (error) {
       console.error("Razorpay order creation error:", error);

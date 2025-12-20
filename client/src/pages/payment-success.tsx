@@ -54,15 +54,23 @@ export default function PaymentSuccess() {
   }, [registrationId]);
 
   const handleConfirmRegistration = async () => {
-    if (!registrationId) return;
+    if (!registrationId) {
+      toast({
+        title: "Error",
+        description: "No registration ID found",
+        variant: "destructive",
+      });
+      return;
+    }
     
     setConfirming(true);
     try {
       // Create Razorpay order for payment
+      console.log("Creating Razorpay order with registrationId:", registrationId);
       const response = await fetch(`/api/razorpay/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ registrationId }),
+        body: JSON.stringify({ registrationId: String(registrationId) }),
       });
       
       if (!response.ok) {
