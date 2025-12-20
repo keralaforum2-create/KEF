@@ -65,32 +65,54 @@ export default function PaymentSuccess() {
     
     setConfirming(true);
     try {
+      console.log("🔄 Step 1: Creating Razorpay order with registrationId:", registrationId);
+      toast({
+        title: "Processing",
+        description: "Preparing your payment...",
+      });
+
       // Create Razorpay order for payment
-      console.log("Creating Razorpay order with registrationId:", registrationId);
       const response = await fetch(`/api/razorpay/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ registrationId: String(registrationId) }),
       });
       
-      if (!response.ok) {
-        throw new Error('Failed to create payment order');
-      }
-      
-      const data = await response.json();
-      
-      if (!data.success || !data.razorpayOrderId) {
-        throw new Error('Invalid payment order response');
+      const responseText = await response.text();
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (e) {
+        console.error("Failed to parse response:", responseText);
+        throw new Error('Invalid server response');
       }
 
-      // Initialize Razorpay payment
+      if (!response.ok) {
+        console.error("❌ Order creation failed:", data);
+        throw new Error(data.message || 'Failed to create payment order');
+      }
+      
+      if (!data.razorpayOrderId || !data.razorpayKeyId) {
+        console.error("❌ Invalid response data:", data);
+        throw new Error('Payment order incomplete');
+      }
+
+      console.log("✓ Step 2: Razorpay order created:", data.razorpayOrderId);
+
+      // Initialize Razorpay payment with proper error handling
       const options = {
         key: data.razorpayKeyId,
-        amount: data.amount,
+        amount: data.amount * 100, // Razorpay expects amount in paise
         currency: 'INR',
         order_id: data.razorpayOrderId,
         handler: async (paymentResponse: any) => {
+          console.log("✓ Step 3: Payment successful in Razorpay:", paymentResponse.razorpay_payment_id);
           try {
+            toast({
+              title: "Verifying Payment",
+              description: "Please wait...",
+            });
+
             const verifyResponse = await fetch(`/api/razorpay/verify`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -102,22 +124,39 @@ export default function PaymentSuccess() {
               }),
             });
 
-            if (verifyResponse.ok) {
-              setConfirmed(true);
-              toast({
-                title: "Payment Successful!",
-                description: "Check your email for your ticket.",
-              });
-            } else {
-              throw new Error('Payment verification failed');
+            const verifyData = await verifyResponse.json();
+            
+            if (!verifyResponse.ok) {
+              console.error("❌ Verification failed:", verifyData);
+              throw new Error(verifyData.message || 'Payment verification failed');
             }
+
+            console.log("✓ Step 4: Payment verified successfully");
+            setConfirmed(true);
+            toast({
+              title: "Payment Successful!",
+              description: "Check your email for your ticket.",
+            });
           } catch (err) {
+            console.error("Verification error:", err);
             toast({
               title: "Verification Error",
-              description: "Payment was successful but verification failed. Please check your email.",
+              description: err instanceof Error ? err.message : "Payment was successful but verification failed. Please check your email.",
               variant: "destructive",
             });
+            setConfirmed(true); // Show thank you anyway
           } finally {
+            setConfirming(false);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            console.log("Payment cancelled by user");
+            toast({
+              title: "Payment Cancelled",
+              description: "You can try again anytime.",
+              variant: "destructive",
+            });
             setConfirming(false);
           }
         },
@@ -125,21 +164,49 @@ export default function PaymentSuccess() {
           email: registrationData?.email || '',
           contact: '',
         },
-        theme: { color: '#3399cc' },
+        theme: { color: '#10b981' }, // Green theme
       };
 
-      // Load and initialize Razorpay
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.onload = () => {
-        const rzp = new (window as any).Razorpay(options);
-        rzp.open();
-      };
-      document.head.appendChild(script);
+      console.log("📱 Step 2.5: Loading Razorpay script...");
+      
+      // Load Razorpay script
+      return new Promise((resolve, reject) => {
+        if ((window as any).Razorpay) {
+          console.log("✓ Razorpay script already loaded");
+          const rzp = new (window as any).Razorpay(options);
+          rzp.open();
+          resolve(null);
+        } else {
+          const script = document.createElement('script');
+          script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          script.async = true;
+          
+          script.onload = () => {
+            console.log("✓ Razorpay script loaded successfully");
+            try {
+              const rzp = new (window as any).Razorpay(options);
+              rzp.open();
+              resolve(null);
+            } catch (e) {
+              console.error("Error opening Razorpay:", e);
+              reject(new Error("Failed to open payment gateway"));
+            }
+          };
+          
+          script.onerror = () => {
+            console.error("❌ Failed to load Razorpay script");
+            reject(new Error("Failed to load payment gateway"));
+          };
+          
+          document.head.appendChild(script);
+        }
+      });
     } catch (err) {
+      console.error("Payment flow error:", err);
+      const errorMessage = err instanceof Error ? err.message : "Failed to process payment";
       toast({
         title: "Error",
-        description: "Failed to process payment. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
       setConfirming(false);
