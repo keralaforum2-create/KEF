@@ -1071,17 +1071,28 @@ export async function registerRoutes(
       const registration = await storage.getRegistrationByRazorpayOrderId(razorpay_order_id);
 
       if (!registration) {
-        console.error("Registration not found for Razorpay order:", razorpay_order_id);
+        console.error("❌ Registration not found for Razorpay order:", razorpay_order_id);
         return res.status(404).json({
           success: false,
           message: "Registration not found"
         });
       }
 
-      await storage.updateRegistrationPayment(registration.id, {
+      console.log(`🔄 Updating registration status to PAID for ${registration.fullName} (DB ID: ${registration.id})`);
+      
+      const updatedReg = await storage.updateRegistrationPayment(registration.id, {
         razorpayPaymentId: razorpay_payment_id,
         paymentStatus: 'paid'
       });
+
+      if (!updatedReg || updatedReg.paymentStatus !== 'paid') {
+        console.error("❌ Failed to update payment status in database", { 
+          updatedStatus: updatedReg?.paymentStatus,
+          registrationId: registration.registrationId 
+        });
+      } else {
+        console.log(`✓ Database updated successfully: paymentStatus = '${updatedReg.paymentStatus}'`);
+      }
 
       const baseUrl = resolveBaseUrl(req);
       
