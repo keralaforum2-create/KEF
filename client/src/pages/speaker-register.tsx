@@ -68,7 +68,8 @@ export default function SpeakerRegister() {
 
   const mutation = useMutation({
     mutationFn: async (data: SpeakerFormData) => {
-      if (!razorpayLoaded || !(window as any).Razorpay) {
+      const RazorpayClass = (window as any).Razorpay;
+      if (!razorpayLoaded || !RazorpayClass) {
         throw new Error("Razorpay is not loaded");
       }
 
@@ -95,7 +96,7 @@ export default function SpeakerRegister() {
           name: "Made in Kerala Podcast",
           description: "Podcast Speaker Application Fee",
           order_id: orderResponse.orderId,
-          handler: async function (response: any) {
+          handler: async function (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) {
             try {
               // Verify payment
               const verifyResponse = await apiRequest("/api/speaker-razorpay/verify", {
@@ -127,8 +128,8 @@ export default function SpeakerRegister() {
           },
         };
 
-        const razorpay = new (window as any).Razorpay(options);
-        razorpay.on("payment.failed", function (response: any) {
+        const razorpay = new RazorpayClass(options);
+        razorpay.on("payment.failed", function (response: { error?: { description: string } }) {
           reject(new Error("Payment failed: " + response.error.description));
         });
         razorpay.open();

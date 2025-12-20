@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import multer from "multer";
 import compression from "compression";
+import type { RequestHandler } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
@@ -70,7 +71,7 @@ app.use(compression({
 }));
 
 // Add cache headers for static assets and GET endpoints
-app.use((req, res, next) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   if (req.method === 'GET') {
     // Cache static assets for 1 day
     if (req.path.startsWith('/uploads') || req.path.match(/\.(js|css|png|jpg|jpeg|gif|svg|woff|woff2)$/i)) {
