@@ -89,7 +89,7 @@ const contestsData: Record<string, ContestData> = {
           "Top entries will be shortlisted",
           "Selected participants will receive a mail confirming entry to Stage 2"
         ],
-        deadline: "December 20, 11:59 PM"
+        deadline: "December 28, 11:59 PM"
       },
       {
         title: "Stage 2 — Online Screening",
@@ -140,7 +140,7 @@ const contestsData: Record<string, ContestData> = {
       "Exciting special category prizes for all finalists"
     ],
     importantDates: [
-      { event: "Last Date for Submission", date: "December 20, 2025" },
+      { event: "Last Date for Submission", date: "December 28, 2025" },
       { event: "Online Screening", date: "December 2025" },
       { event: "Grand Finale", date: "January 07-08, 2026" }
     ]
