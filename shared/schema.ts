@@ -1,4 +1,4 @@
-import { pgTable, text, varchar, timestamp, integer, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, boolean, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -109,7 +109,11 @@ export const registrations = pgTable("registrations", {
   paymentStatus: text("payment_status"),
   reminderSentAt: timestamp("reminder_sent_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => ({
+  paymentStatusIdx: index("idx_payment_status").on(table.paymentStatus),
+  createdAtIdx: index("idx_created_at").on(table.createdAt),
+  paymentStatusCreatedAtIdx: index("idx_payment_status_created_at").on(table.paymentStatus, table.createdAt),
+}));
 
 export const insertRegistrationSchema = createInsertSchema(registrations).omit({
   id: true,
