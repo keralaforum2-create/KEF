@@ -1,5 +1,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import multer from "multer";
+import compression from "compression";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
@@ -56,6 +57,35 @@ app.use(cors({
 
 // Handle preflight requests
 app.options('*', cors());
+
+// Enable gzip compression for all responses
+app.use(compression({
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  },
+  level: 6
+}));
+
+// Add cache headers for static assets and GET endpoints
+app.use((req, res, next) => {
+  if (req.method === 'GET') {
+    // Cache static assets for 1 day
+    if (req.path.startsWith('/uploads') || req.path.match(/\.(js|css|png|jpg|jpeg|gif|svg|woff|woff2)$/i)) {
+      res.set('Cache-Control', 'public, max-age=86400');
+    }
+    // Cache API GET responses for 5 minutes
+    else if (req.path.startsWith('/api')) {
+      res.set('Cache-Control', 'public, max-age=300');
+    }
+  } else {
+    // Don't cache POST, PUT, DELETE requests
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  }
+  next();
+});
 
 // Setup multer for file uploads
 const uploadDir = path.join(process.cwd(), "uploads");
