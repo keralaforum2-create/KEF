@@ -138,8 +138,11 @@ export async function registerRoutes(
       return res.json(newCode);
     } catch (error: any) {
       console.error("Error creating referral code:", error);
-      return res.status(500).json({ 
-        message: error?.message || "Internal server error",
+      const isDbError = error?.message?.includes("database") || error?.message?.includes("connection") || error?.code;
+      return res.status(isDbError ? 503 : 500).json({ 
+        message: isDbError 
+          ? "Database error. Please ensure your database is configured correctly and accessible."
+          : error?.message || "Failed to create referral code",
         code: error?.code
       });
     }
@@ -362,11 +365,12 @@ export async function registerRoutes(
 
   app.get("/api/pending-registrations", async (req, res) => {
     try {
+      res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
       const registrations = await storage.getPendingRegistrations();
       return res.json(registrations);
     } catch (error) {
       console.error("Error fetching pending registrations:", error);
-      return res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Failed to load pending registrations" });
     }
   });
 
