@@ -1856,12 +1856,30 @@ export async function registerRoutes(
   // Speaker Applications - Razorpay integration
   const speakerApplications: any[] = [];
 
+  app.post("/api/validate-referral-code", async (req, res) => {
+    try {
+      const { code } = req.body;
+      if (!code) {
+        return res.json({ valid: false });
+      }
+      const referralCode = await storage.getReferralCodeByCode(code.toUpperCase());
+      if (referralCode && referralCode.isActive) {
+        return res.json({ valid: true, discount: referralCode.discountPercentage });
+      }
+      return res.json({ valid: false });
+    } catch (error) {
+      console.error("Error validating referral code:", error);
+      return res.json({ valid: false });
+    }
+  });
+
   app.post("/api/speaker-razorpay/create-order", async (req, res) => {
     try {
-      const { email, contactNumber, founderName, startupName } = req.body;
+      const { email, contactNumber, founderName, startupName, referralCode, amount } = req.body;
+      const finalAmount = amount || 3999;
       
       const result = await createRazorpayOrder({
-        amount: 3999,
+        amount: finalAmount,
         currency: "INR",
         receipt: `speaker_${Date.now()}`,
         notes: {
@@ -1869,6 +1887,7 @@ export async function registerRoutes(
           startupName,
           email,
           contactNumber,
+          referralCode: referralCode || "",
           type: "speaker_application"
         }
       });

@@ -26,6 +26,7 @@ const speakerSchema = z.object({
   website: z.string().url("Must be a valid URL"),
   contactNumber: z.string().min(10, "Valid contact number required"),
   email: z.string().email("Valid email required"),
+  referralCode: z.string().optional().or(z.literal("")),
   agreedToFee: z.boolean().refine(val => val === true, "You must agree to the application fee"),
 });
 
@@ -36,6 +37,8 @@ export default function SpeakerRegister() {
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
+  const [discount, setDiscount] = useState(0);
+  const [discountedAmount, setDiscountedAmount] = useState(3999);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -62,9 +65,34 @@ export default function SpeakerRegister() {
       website: "",
       contactNumber: "",
       email: "",
+      referralCode: "",
       agreedToFee: false,
     },
   });
+
+  const validateReferralCode = async (code: string) => {
+    if (!code) {
+      setDiscount(0);
+      setDiscountedAmount(3999);
+      return;
+    }
+    try {
+      const res = await apiRequest("POST", "/api/validate-referral-code", { code });
+      const data = await res.json();
+      if (data.discount) {
+        setDiscount(data.discount);
+        const discountAmount = 3999 - (3999 * data.discount / 100);
+        setDiscountedAmount(Math.ceil(discountAmount));
+      } else {
+        setDiscount(0);
+        setDiscountedAmount(3999);
+        toast({ title: "Invalid referral code", variant: "destructive" });
+      }
+    } catch (error) {
+      setDiscount(0);
+      setDiscountedAmount(3999);
+    }
+  };
 
   const mutation = useMutation({
     mutationFn: async (data: SpeakerFormData) => {
@@ -79,6 +107,8 @@ export default function SpeakerRegister() {
         contactNumber: data.contactNumber,
         founderName: data.founderName,
         startupName: data.startupName,
+        referralCode: data.referralCode || "",
+        amount: discountedAmount,
       });
 
       const orderResponse = await orderRes.json();
@@ -90,7 +120,7 @@ export default function SpeakerRegister() {
       return new Promise((resolve, reject) => {
         const options = {
           key: orderResponse.keyId,
-          amount: 399900,
+          amount: discountedAmount * 100,
           currency: "INR",
           name: "Made in Kerala Podcast",
           description: "Podcast Speaker Application Fee",
@@ -494,10 +524,50 @@ export default function SpeakerRegister() {
                     />
                   </div>
 
+                  {/* Referral Code Section */}
+                  <FormField
+                    control={form.control}
+                    name="referralCode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Referral Code (Optional)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Enter referral code for discount" 
+                            {...field}
+                            onChange={(e) => {
+                              field.onChange(e);
+                              validateReferralCode(e.target.value);
+                            }}
+                            data-testid="input-referral-code"
+                            className="uppercase"
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Have a referral code? Enter it to get a discount on your payment.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   {/* Fee Section */}
                   <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
                     <h3 className="font-semibold mb-4 text-lg">Payment Required</h3>
-                    <p className="text-2xl font-bold text-blue-600 mb-4">₹3,999</p>
+                    {discount > 0 ? (
+                      <>
+                        <div className="mb-3">
+                          <p className="text-sm text-gray-600">Original Price:</p>
+                          <p className="text-lg line-through text-gray-500">₹3,999</p>
+                        </div>
+                        <div className="mb-3 bg-green-100 border border-green-300 rounded p-2">
+                          <p className="text-sm text-green-700 font-semibold">{discount}% Discount Applied!</p>
+                        </div>
+                        <p className="text-2xl font-bold text-green-600 mb-4">₹{discountedAmount.toLocaleString()}</p>
+                      </>
+                    ) : (
+                      <p className="text-2xl font-bold text-blue-600 mb-4">₹3,999</p>
+                    )}
                     <p className="text-sm text-gray-700 mb-6">
                       Full refund will be provided to applicants who are not selected.
                     </p>
