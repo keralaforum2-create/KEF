@@ -28,7 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration, ReferralCode } from "@shared/schema";
+import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration, ReferralCode, SpeakerApplication } from "@shared/schema";
 import { ScrollFadeUp, StaggerContainer, StaggerItem, CardWave } from "@/lib/animations";
 
 export default function Admin() {
@@ -39,6 +39,7 @@ export default function Admin() {
   const [selectedInvestor, setSelectedInvestor] = useState<InvestorMentor | null>(null);
   const [selectedSponsorship, setSelectedSponsorship] = useState<Sponsorship | null>(null);
   const [selectedBulkReg, setSelectedBulkReg] = useState<BulkRegistration | null>(null);
+  const [selectedSpeakerApp, setSelectedSpeakerApp] = useState<SpeakerApplication | null>(null);
   const [expertCategoryFilter, setExpertCategoryFilter] = useState<"all" | "platinum" | "gold" | "silver">("all");
   const [contestTypeFilter, setContestTypeFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -132,6 +133,12 @@ export default function Admin() {
       }
       return response.json();
     }
+  });
+
+  const { data: speakerApplications, isLoading: loadingSpeakerApplications } = useQuery<SpeakerApplication[]>({
+    queryKey: ["/api/speakers"],
+    refetchInterval: 15000,
+    staleTime: 10000,
   });
 
   const queryClient = useQueryClient();
@@ -632,6 +639,9 @@ export default function Admin() {
                 </TabsTrigger>
                 <TabsTrigger value="referral-codes" data-testid="tab-referral-codes">
                   Gift Codes
+                </TabsTrigger>
+                <TabsTrigger value="speaker-applications" data-testid="tab-speaker-applications">
+                  Speaker Apps ({speakerApplications?.length || 0})
                 </TabsTrigger>
               </TabsList>
 
@@ -2152,6 +2162,72 @@ export default function Admin() {
                   </Card>
                 </motion.div>
               </TabsContent>
+
+              <TabsContent value="speaker-applications">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Briefcase className="w-5 h-5" />
+                        Podcast Speaker Applications
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingSpeakerApplications ? (
+                        <div className="text-center py-8 text-muted-foreground">Loading...</div>
+                      ) : speakerApplications && speakerApplications.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Founder Name</TableHead>
+                                <TableHead>Startup Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Phone</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {speakerApplications.map((app, index) => (
+                                <motion.tr
+                                  key={app.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.03 }}
+                                  className="border-b transition-colors hover:bg-muted/50"
+                                  data-testid={`row-speaker-app-${app.id}`}
+                                >
+                                  <TableCell className="font-medium">{app.founderName}</TableCell>
+                                  <TableCell>{app.startupName}</TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">{app.email}</TableCell>
+                                  <TableCell>{app.contactNumber}</TableCell>
+                                  <TableCell>
+                                    <Badge className={app.status === "pending" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300" : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"}>
+                                      {app.status === "pending" ? "Pending Review" : "Approved"}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button variant="outline" size="sm" onClick={() => setSelectedSpeakerApp(app)} data-testid={`button-view-speaker-app-${app.id}`}>
+                                      <Eye className="w-4 h-4 mr-1" />View
+                                    </Button>
+                                  </TableCell>
+                                </motion.tr>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">No speaker applications yet</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
             </Tabs>
           </ScrollFadeUp>
         </div>
@@ -2913,6 +2989,68 @@ export default function Admin() {
                   >
                     Close
                   </Button>
+                </div>
+              </motion.div>
+            </DialogContent>
+          </Dialog>
+        )}
+
+        {selectedSpeakerApp && (
+          <Dialog open={!!selectedSpeakerApp} onOpenChange={() => setSelectedSpeakerApp(null)}>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Speaker Application Details</DialogTitle>
+              </DialogHeader>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="space-y-4"
+              >
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Founder Name</label>
+                    <p className="font-semibold">{selectedSpeakerApp.founderName}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Designation</label>
+                    <p className="font-semibold">{selectedSpeakerApp.designation}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Startup Name</label>
+                    <p className="font-semibold">{selectedSpeakerApp.startupName}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Sector</label>
+                    <p className="font-semibold">{selectedSpeakerApp.sector}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Email</label>
+                    <p className="text-sm">{selectedSpeakerApp.email}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Phone</label>
+                    <p className="text-sm">{selectedSpeakerApp.contactNumber}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Website</label>
+                    <a href={selectedSpeakerApp.website} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline text-sm">{selectedSpeakerApp.website}</a>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-muted-foreground">Year Founded</label>
+                    <p className="font-semibold">{selectedSpeakerApp.yearFounded}</p>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Startup Brief</label>
+                  <p className="text-sm mt-1">{selectedSpeakerApp.startupBrief}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Startup Story</label>
+                  <p className="text-sm mt-1">{selectedSpeakerApp.startupStory}</p>
+                </div>
+                <div className="flex justify-end pt-4">
+                  <Button variant="outline" onClick={() => setSelectedSpeakerApp(null)}>Close</Button>
                 </div>
               </motion.div>
             </DialogContent>
