@@ -303,6 +303,20 @@ export default function Ticket() {
                 </div>
               </div>
             )}
+            
+            {ticket.institution && (
+              <div 
+                className="absolute text-white text-xs font-medium"
+                style={{ 
+                  bottom: '12%', 
+                  left: '8%',
+                  maxWidth: '150px',
+                  fontSize: '10px'
+                }}
+              >
+                {ticket.institution}
+              </div>
+            )}
           </div>
         </motion.div>
 

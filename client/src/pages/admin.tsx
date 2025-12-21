@@ -115,17 +115,21 @@ export default function Admin() {
     staleTime: 10000,
   });
 
-  const { data: referralCodes, isLoading: loadingReferralCodes } = useQuery<ReferralCode[]>({
+  const { data: referralCodes, isLoading: loadingReferralCodes, refetch: refetchReferralCodes } = useQuery<ReferralCode[]>({
     queryKey: ["/api/admin/referral-codes"],
-    refetchInterval: 30000,
-    staleTime: 20000,
-    retry: 1,
+    refetchInterval: 5000,
+    staleTime: 2000,
+    retry: 2,
     queryFn: async () => {
       const token = localStorage.getItem("admin_token");
+      if (!token) throw new Error("No authentication token");
       const response = await fetch("/api/admin/referral-codes", {
         headers: { "Authorization": `Bearer ${token}` }
       });
-      if (!response.ok) throw new Error("Failed to fetch referral codes");
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err.message || "Failed to fetch referral codes");
+      }
       return response.json();
     }
   });
@@ -190,6 +194,9 @@ export default function Admin() {
   const createReferralCodeMutation = useMutation({
     mutationFn: async (data: { code: string; discountPercentage: number }) => {
       const token = localStorage.getItem("admin_token");
+      if (!token) {
+        throw new Error("Not authenticated. Please log in to the admin panel.");
+      }
       const response = await fetch("/api/admin/referral-codes", {
         method: "POST",
         headers: { 
@@ -201,13 +208,14 @@ export default function Admin() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         const errorMessage = errorData.message || `Failed to create gift code (${response.status})`;
-        console.error("Gift code creation error:", { status: response.status, errorData });
+        console.error("Gift code creation error:", { status: response.status, errorData, token });
         throw new Error(errorMessage);
       }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/admin/referral-codes"] });
+      setTimeout(() => refetchReferralCodes(), 500);
       toast({ title: "Gift code created successfully" });
       setReferralCodeForm({ code: "", discountPercentage: 0 });
       setGiftCodeError("");
