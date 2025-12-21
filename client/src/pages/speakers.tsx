@@ -25,6 +25,9 @@ import shrikumarNewImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.11_AM_
 import ravhanImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(5)_1766294852330.jpeg";
 import jishnuNewImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(6)_1766294852329.jpeg";
 import umerNewImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(7)_1766294852329.jpeg";
+import azharImage from "@assets/WhatsApp_Image_2025-12-21_at_10.33.49_AM_1766295827281.jpeg";
+import rameesImage from "@assets/WhatsApp_Image_2025-12-21_at_10.33.49_AM_(1)_1766295827281.jpeg";
+import harisImage from "@assets/WhatsApp_Image_2025-12-21_at_10.33.49_AM_(2)_1766295827280.jpeg";
 
 const speakers = [
   {
@@ -53,15 +56,15 @@ const speakers = [
   },
   {
     id: 7,
-    image: rameezImage,
+    image: azharImage,
   },
   {
     id: 8,
-    image: rayhanImage,
+    image: rameesImage,
   },
   {
     id: 9,
-    image: shahadImage,
+    image: harisImage,
   },
   {
     id: 10,
