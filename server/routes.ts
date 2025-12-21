@@ -397,6 +397,16 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/speakers", async (req, res) => {
+    try {
+      const speakers = await storage.getSpeakers();
+      return res.json(speakers);
+    } catch (error) {
+      console.error("Error fetching speakers:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.get("/api/pending-registrations", async (req, res) => {
     try {
       res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");

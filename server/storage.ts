@@ -73,6 +73,8 @@ export interface IStorage {
   getReferralCodeByCode(code: string): Promise<ReferralCode | undefined>;
   updateReferralCode(id: string, data: Partial<InsertReferralCode>): Promise<ReferralCode | undefined>;
   deleteReferralCode(id: string): Promise<void>;
+  
+  getSpeakers(): Promise<Registration[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -378,6 +380,13 @@ export class DatabaseStorage implements IStorage {
 
   async deleteReferralCode(id: string): Promise<void> {
     await db.delete(referralCodes).where(eq(referralCodes.id, id));
+  }
+
+  async getSpeakers(): Promise<Registration[]> {
+    const result = await db.select().from(registrations)
+      .where(eq(registrations.registrationType, 'speaker'))
+      .orderBy(desc(registrations.createdAt));
+    return result;
   }
 }
 
