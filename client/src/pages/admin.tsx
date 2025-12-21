@@ -40,6 +40,8 @@ export default function Admin() {
   const [selectedSponsorship, setSelectedSponsorship] = useState<Sponsorship | null>(null);
   const [selectedBulkReg, setSelectedBulkReg] = useState<BulkRegistration | null>(null);
   const [expertCategoryFilter, setExpertCategoryFilter] = useState<"all" | "platinum" | "gold" | "silver">("all");
+  const [contestTypeFilter, setContestTypeFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   
   // Referral code form state
   const [referralCodeForm, setReferralCodeForm] = useState({
@@ -413,9 +415,34 @@ export default function Admin() {
   const contestRegistrations = allRegistrations.filter(r => r.registrationType === "contest");
   const expertSessionRegistrations = allRegistrations.filter(r => r.registrationType === "expert-session");
   const speakerRegistrations = allRegistrations.filter(r => r.registrationType === "speaker");
+  
+  // Filter by search query
+  const filterBySearch = (items: Registration[]) => {
+    if (!searchQuery.trim()) return items;
+    return items.filter(r => 
+      r.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      r.registrationId.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+  
+  // Get unique contest names
+  const uniqueContestNames = Array.from(new Set(contestRegistrations.map(r => r.contestName).filter(Boolean)));
+  
   const filteredExpertSessionRegistrations = expertCategoryFilter === "all" 
-    ? expertSessionRegistrations 
-    : expertSessionRegistrations.filter(r => r.ticketCategory === expertCategoryFilter);
+    ? filterBySearch(expertSessionRegistrations)
+    : filterBySearch(expertSessionRegistrations.filter(r => r.ticketCategory === expertCategoryFilter));
+  
+  const filteredContestRegistrations = contestTypeFilter === "all"
+    ? filterBySearch(contestRegistrations)
+    : filterBySearch(contestRegistrations.filter(r => r.contestName === contestTypeFilter));
+  
+  const filteredAllRegistrations = filterBySearch(allRegistrations);
+  const filteredPendingRegistrations = filterBySearch(pendingRegistrations || []);
+  const filteredSpeakerRegistrations = filterBySearch(speakerRegistrations);
+  const filteredContacts = filterBySearch(contacts || []);
+  const filteredInvestorMentors = filterBySearch(investorMentors || []);
+  const filteredSponsorships = filterBySearch(sponsorships || []);
 
   const escapeCSVField = (field: string | null | undefined): string => {
     if (field === null || field === undefined) return '""';
@@ -578,8 +605,8 @@ export default function Admin() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => exportToCSV(allRegistrations, "KSF2026-All-Registrations")}
-                            disabled={allRegistrations.length === 0}
+                            onClick={() => exportToCSV(filteredAllRegistrations, "KSF2026-All-Registrations")}
+                            disabled={filteredAllRegistrations.length === 0}
                             data-testid="button-export-csv-all"
                           >
                             <FileSpreadsheet className="w-4 h-4 mr-1" />
@@ -588,8 +615,8 @@ export default function Admin() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => exportToPDF(allRegistrations, "All Registrations", "KSF2026-All-Registrations")}
-                            disabled={allRegistrations.length === 0}
+                            onClick={() => exportToPDF(filteredAllRegistrations, "All Registrations", "KSF2026-All-Registrations")}
+                            disabled={filteredAllRegistrations.length === 0}
                             data-testid="button-export-pdf-all"
                           >
                             <FileText className="w-4 h-4 mr-1" />
@@ -605,16 +632,24 @@ export default function Admin() {
                         </div>
                       ) : allRegistrations.length > 0 ? (
                         <div className="overflow-x-auto">
-                          <div className="mb-4 flex flex-wrap items-center gap-2">
-                            <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                              Total: {allRegistrations.length}
-                            </Badge>
-                            <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                              Expert Sessions: {expertSessionRegistrations.length}
-                            </Badge>
-                            <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
-                              Contests: {contestRegistrations.length}
-                            </Badge>
+                          <div className="mb-4 flex flex-col gap-3">
+                            <Input
+                              placeholder="Search by name, email, or registration ID..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              data-testid="input-search-registrations"
+                            />
+                            <div className="flex flex-wrap items-center gap-2">
+                              <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                                Total: {filteredAllRegistrations.length}
+                              </Badge>
+                              <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                                Expert Sessions: {filteredAllRegistrations.filter(r => r.registrationType === "expert-session").length}
+                              </Badge>
+                              <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300">
+                                Contests: {filteredAllRegistrations.filter(r => r.registrationType === "contest").length}
+                              </Badge>
+                            </div>
                           </div>
                           <Table>
                             <TableHeader>
@@ -630,7 +665,7 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {allRegistrations.map((reg, index) => {
+                              {filteredAllRegistrations.map((reg, index) => {
                                 return (
                                 <motion.tr
                                   key={reg.id}
@@ -772,8 +807,8 @@ export default function Admin() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => exportToCSV(contestRegistrations, "KSF2026-Contest-Registrations")}
-                            disabled={contestRegistrations.length === 0}
+                            onClick={() => exportToCSV(filteredContestRegistrations, "KSF2026-Contest-Registrations")}
+                            disabled={filteredContestRegistrations.length === 0}
                             data-testid="button-export-csv-contest"
                           >
                             <FileSpreadsheet className="w-4 h-4 mr-1" />
@@ -782,8 +817,8 @@ export default function Admin() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => exportToPDF(contestRegistrations, "Contest Registrations", "KSF2026-Contest-Registrations")}
-                            disabled={contestRegistrations.length === 0}
+                            onClick={() => exportToPDF(filteredContestRegistrations, "Contest Registrations", "KSF2026-Contest-Registrations")}
+                            disabled={filteredContestRegistrations.length === 0}
                             data-testid="button-export-pdf-contest"
                           >
                             <FileText className="w-4 h-4 mr-1" />
@@ -797,6 +832,25 @@ export default function Admin() {
                         <div className="text-center py-8 text-muted-foreground">Loading...</div>
                       ) : contestRegistrations.length > 0 ? (
                         <div className="overflow-x-auto">
+                          <div className="mb-4 flex flex-col gap-3">
+                            <Input
+                              placeholder="Search by name, email, or contest..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              data-testid="input-search-contests"
+                            />
+                            <Select value={contestTypeFilter} onValueChange={setContestTypeFilter}>
+                              <SelectTrigger data-testid="select-contest-filter">
+                                <SelectValue placeholder="Filter by contest type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="all">All Contests</SelectItem>
+                                {uniqueContestNames.map(name => (
+                                  <SelectItem key={name} value={name || ""}>{name || "Unknown"}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -811,7 +865,7 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {contestRegistrations.map((reg, index) => (
+                              {filteredContestRegistrations.map((reg, index) => (
                                 <motion.tr
                                   key={reg.id}
                                   initial={{ opacity: 0, x: -10 }}
