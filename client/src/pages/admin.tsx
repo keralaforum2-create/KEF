@@ -1273,6 +1273,7 @@ export default function Admin() {
                                 <TableHead>Registration ID</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
+                                <TableHead>Ticket Category</TableHead>
                                 <TableHead>Type</TableHead>
                                 <TableHead>Action</TableHead>
                               </TableRow>
@@ -1303,6 +1304,11 @@ export default function Admin() {
                                   <TableCell className="font-mono text-xs text-primary">{reg.registrationId}</TableCell>
                                   <TableCell className="font-medium">{reg.fullName}</TableCell>
                                   <TableCell className="text-sm">{reg.email}</TableCell>
+                                  <TableCell>
+                                    <Badge className={getTicketCategoryBadge(reg.ticketCategory)}>
+                                      {formatTicketCategory(reg.ticketCategory)}
+                                    </Badge>
+                                  </TableCell>
                                   <TableCell>
                                     <Badge className={getRegistrationTypeBadge(reg.registrationType)}>
                                       {reg.registrationType === "expert-session" ? "Expert Session" : "Contest"}
