@@ -2056,13 +2056,7 @@ export default function Participate() {
                               size="lg" 
                               variant="outline"
                               className="w-full font-semibold text-base"
-                              onClick={() => {
-                                form.setValue("registrationType", "speaker");
-                                setShowForm(true);
-                                setTimeout(() => {
-                                  document.getElementById("register")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                                }, 100);
-                              }}
+                              onClick={() => setLocation("/speaker-register")}
                               data-testid="button-register-podcast-speaker"
                             >
                               <Presentation className="w-5 h-5 mr-2" />
