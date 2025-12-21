@@ -106,8 +106,11 @@ export async function registerRoutes(
   // Get all referral codes (admin)
   app.get("/api/admin/referral-codes", async (req, res) => {
     try {
-      const token = req.headers.authorization?.replace("Bearer ", "");
-      if (token !== "admin-authenticated" && token !== ADMIN_PASSWORD) {
+      const authHeader = req.headers.authorization || "";
+      const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+      const isAuthorized = token === "admin-authenticated" || token === ADMIN_PASSWORD;
+      
+      if (!isAuthorized) {
         return res.status(401).json({ message: "Unauthorized" });
       }
       const codes = await storage.getReferralCodes();
@@ -121,8 +124,19 @@ export async function registerRoutes(
   // Create referral code (admin)
   app.post("/api/admin/referral-codes", async (req, res) => {
     try {
-      const token = req.headers.authorization?.replace("Bearer ", "");
-      if (token !== "admin-authenticated" && token !== ADMIN_PASSWORD) {
+      const authHeader = req.headers.authorization || "";
+      const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+      
+      // Check if token matches admin token or password
+      const isAuthorized = token === "admin-authenticated" || token === ADMIN_PASSWORD;
+      
+      if (!isAuthorized) {
+        console.error("Referral code creation - Authorization failed", {
+          authHeader: authHeader ? "present" : "missing",
+          tokenLength: token.length,
+          expectedToken: "admin-authenticated",
+          adminPasswordSet: !!ADMIN_PASSWORD
+        });
         return res.status(401).json({ message: "Unauthorized" });
       }
       const result = insertReferralCodeSchema.safeParse(req.body);
@@ -151,8 +165,11 @@ export async function registerRoutes(
   // Update referral code (admin)
   app.patch("/api/admin/referral-codes/:id", async (req, res) => {
     try {
-      const token = req.headers.authorization?.replace("Bearer ", "");
-      if (token !== "admin-authenticated" && token !== ADMIN_PASSWORD) {
+      const authHeader = req.headers.authorization || "";
+      const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+      const isAuthorized = token === "admin-authenticated" || token === ADMIN_PASSWORD;
+      
+      if (!isAuthorized) {
         return res.status(401).json({ message: "Unauthorized" });
       }
       const updated = await storage.updateReferralCode(req.params.id, req.body);
@@ -169,8 +186,11 @@ export async function registerRoutes(
   // Delete referral code (admin)
   app.delete("/api/admin/referral-codes/:id", async (req, res) => {
     try {
-      const token = req.headers.authorization?.replace("Bearer ", "");
-      if (token !== "admin-authenticated" && token !== ADMIN_PASSWORD) {
+      const authHeader = req.headers.authorization || "";
+      const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+      const isAuthorized = token === "admin-authenticated" || token === ADMIN_PASSWORD;
+      
+      if (!isAuthorized) {
         return res.status(401).json({ message: "Unauthorized" });
       }
       await storage.deleteReferralCode(req.params.id);
