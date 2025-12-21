@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import { ArrowLeft, Loader2, Presentation, BookOpen, Network, CheckCircle, CreditCard } from "lucide-react";
+import { ArrowLeft, Loader2, Presentation, BookOpen, Network, CheckCircle, CreditCard, CreditCardIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -495,17 +495,17 @@ export default function SpeakerRegister() {
                   </div>
 
                   {/* Fee Section */}
-                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                    <h3 className="font-semibold mb-2">Payment Required</h3>
-                    <p className="text-lg font-bold text-blue-600 mb-3">₹3,999</p>
-                    <p className="text-sm text-gray-700 mb-3">
+                  <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                    <h3 className="font-semibold mb-4 text-lg">Payment Required</h3>
+                    <p className="text-2xl font-bold text-blue-600 mb-4">₹3,999</p>
+                    <p className="text-sm text-gray-700 mb-6">
                       Full refund will be provided to applicants who are not selected.
                     </p>
                     <FormField
                       control={form.control}
                       name="agreedToFee"
                       render={({ field }) => (
-                        <FormItem className="flex items-center space-x-2">
+                        <FormItem className="flex items-center space-x-2 mb-6">
                           <FormControl>
                             <input 
                               type="checkbox" 
@@ -536,13 +536,13 @@ export default function SpeakerRegister() {
                   </div>
 
                   {/* Submit Button */}
-                  <div className="flex gap-3">
+                  <div className="space-y-3">
                     <Button 
                       type="submit" 
                       size="lg" 
-                      className="flex-1 bg-red-600 hover:bg-red-700"
+                      className="w-full bg-red-600 hover:bg-red-700 text-white"
                       disabled={mutation.isPending || !razorpayLoaded}
-                      data-testid="button-submit-speaker"
+                      data-testid="button-pay-online"
                     >
                       {mutation.isPending ? (
                         <>
@@ -550,13 +550,17 @@ export default function SpeakerRegister() {
                           Processing Payment...
                         </>
                       ) : (
-                        "Submit & Pay ₹3,999"
+                        <>
+                          <CreditCardIcon className="w-4 h-4 mr-2" />
+                          Pay Online - ₹3,999
+                        </>
                       )}
                     </Button>
                     <Button 
                       type="button" 
                       variant="outline" 
                       size="lg"
+                      className="w-full"
                       onClick={() => navigate("/speakers")}
                       data-testid="button-cancel-speaker"
                     >
