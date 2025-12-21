@@ -440,9 +440,35 @@ export default function Admin() {
   const filteredAllRegistrations = filterBySearch(allRegistrations);
   const filteredPendingRegistrations = filterBySearch(pendingRegistrations || []);
   const filteredSpeakerRegistrations = filterBySearch(speakerRegistrations);
-  const filteredContacts = filterBySearch(contacts || []);
-  const filteredInvestorMentors = filterBySearch(investorMentors || []);
-  const filteredSponsorships = filterBySearch(sponsorships || []);
+  
+  // Filter functions for non-Registration types
+  const filterContactsBySearch = (items: Contact[]) => {
+    if (!searchQuery.trim()) return items;
+    return items.filter(c => 
+      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+  
+  const filterInvestorsBySearch = (items: InvestorMentor[]) => {
+    if (!searchQuery.trim()) return items;
+    return items.filter(i => 
+      i.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (i.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) || false)
+    );
+  };
+  
+  const filterSponsorshipsBySearch = (items: Sponsorship[]) => {
+    if (!searchQuery.trim()) return items;
+    return items.filter(s => 
+      s.companyName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.contactPersonName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+  
+  const filteredContacts = filterContactsBySearch(contacts || []);
+  const filteredInvestorMentors = filterInvestorsBySearch(investorMentors || []);
+  const filteredSponsorships = filterSponsorshipsBySearch(sponsorships || []);
 
   const escapeCSVField = (field: string | null | undefined): string => {
     if (field === null || field === undefined) return '""';
@@ -1022,6 +1048,14 @@ export default function Admin() {
                           Silver ({expertSessionRegistrations.filter(r => r.ticketCategory === "silver").length})
                         </Button>
                       </div>
+                      <div className="mb-4 flex flex-col gap-3">
+                        <Input
+                          placeholder="Search by name, email, or session..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          data-testid="input-search-expert"
+                        />
+                      </div>
                       {loadingRegistrations ? (
                         <div className="text-center py-8 text-muted-foreground">Loading...</div>
                       ) : filteredExpertSessionRegistrations.length > 0 ? (
@@ -1126,8 +1160,16 @@ export default function Admin() {
                     <CardContent>
                       {loadingRegistrations ? (
                         <div className="text-center py-8 text-muted-foreground">Loading...</div>
-                      ) : speakerRegistrations.length > 0 ? (
+                      ) : filteredSpeakerRegistrations.length > 0 ? (
                         <div className="overflow-x-auto">
+                          <div className="mb-4 flex flex-col gap-3">
+                            <Input
+                              placeholder="Search by name, email, or phone..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              data-testid="input-search-speakers"
+                            />
+                          </div>
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -1140,7 +1182,7 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {speakerRegistrations.map((reg, index) => (
+                              {filteredSpeakerRegistrations.map((reg, index) => (
                                 <motion.tr
                                   key={reg.id}
                                   initial={{ opacity: 0, x: -10 }}
@@ -1203,8 +1245,16 @@ export default function Admin() {
                           <p className="text-sm text-red-800 dark:text-red-300 font-medium">Failed to load pending registrations</p>
                           <p className="text-xs text-red-700 dark:text-red-400 mt-1">Please check your database connection and try refreshing the page</p>
                         </div>
-                      ) : (pendingRegistrations || []).length > 0 ? (
+                      ) : filteredPendingRegistrations.length > 0 ? (
                         <div className="overflow-x-auto">
+                          <div className="mb-4 flex flex-col gap-3">
+                            <Input
+                              placeholder="Search by name, email, or registration ID..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              data-testid="input-search-pending"
+                            />
+                          </div>
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -1217,7 +1267,7 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {(pendingRegistrations || []).map((reg, index) => (
+                              {filteredPendingRegistrations.map((reg, index) => (
                                 <motion.tr
                                   key={reg.id}
                                   initial={{ opacity: 0, x: -10 }}
@@ -1319,8 +1369,16 @@ export default function Admin() {
                         <div className="text-center py-8 text-muted-foreground">
                           Loading messages...
                         </div>
-                      ) : contacts && contacts.length > 0 ? (
+                      ) : filteredContacts.length > 0 ? (
                         <div className="overflow-x-auto">
+                          <div className="mb-4 flex flex-col gap-3">
+                            <Input
+                              placeholder="Search by name or email..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              data-testid="input-search-contacts"
+                            />
+                          </div>
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -1330,7 +1388,7 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {contacts.map((contact, index) => (
+                              {filteredContacts.map((contact, index) => (
                                 <motion.tr
                                   key={contact.id}
                                   initial={{ opacity: 0, x: -10 }}
@@ -1408,8 +1466,16 @@ export default function Admin() {
                         <div className="text-center py-8 text-muted-foreground">
                           Loading applications...
                         </div>
-                      ) : investorMentors && investorMentors.length > 0 ? (
+                      ) : filteredInvestorMentors.length > 0 ? (
                         <div className="overflow-x-auto">
+                          <div className="mb-4 flex flex-col gap-3">
+                            <Input
+                              placeholder="Search by name or company..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              data-testid="input-search-investors"
+                            />
+                          </div>
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -1420,7 +1486,7 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {investorMentors.map((investor, index) => (
+                              {filteredInvestorMentors.map((investor, index) => (
                                 <motion.tr
                                   key={investor.id}
                                   initial={{ opacity: 0, x: -10 }}
@@ -1496,8 +1562,16 @@ export default function Admin() {
                         <div className="text-center py-8 text-muted-foreground">
                           Loading inquiries...
                         </div>
-                      ) : sponsorships && sponsorships.length > 0 ? (
+                      ) : filteredSponsorships.length > 0 ? (
                         <div className="overflow-x-auto">
+                          <div className="mb-4 flex flex-col gap-3">
+                            <Input
+                              placeholder="Search by company name..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              data-testid="input-search-sponsorships"
+                            />
+                          </div>
                           <Table>
                             <TableHeader>
                               <TableRow>
@@ -1508,7 +1582,7 @@ export default function Admin() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {sponsorships.map((sponsorship, index) => (
+                              {filteredSponsorships.map((sponsorship, index) => (
                                 <motion.tr
                                   key={sponsorship.id}
                                   initial={{ opacity: 0, x: -10 }}
