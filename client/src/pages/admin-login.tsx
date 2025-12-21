@@ -30,9 +30,10 @@ export default function AdminLogin() {
 
   const loginMutation = useMutation({
     mutationFn: async (pwd: string) => {
-      return apiRequest("POST", "/api/admin/login", { password: pwd });
+      const response = await apiRequest("POST", "/api/admin/login", { password: pwd });
+      return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       localStorage.setItem("admin_token", data.token);
       toast({
         title: "Login successful!",
