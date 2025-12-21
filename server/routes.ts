@@ -6,7 +6,7 @@ import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { sendRegistrationEmails, sendContactNotification, sendTicketEmail } from "./email";
+import { sendRegistrationEmails, sendContactNotification, sendTicketEmail, sendSpeakerConfirmationEmail } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { createRazorpayOrder, verifyRazorpayPayment } from "./razorpay";
 import { randomUUID as uuid } from "crypto";
@@ -878,9 +878,15 @@ export async function registerRoutes(
       if (paymentStatus === 'paid') {
         const baseUrl = resolveBaseUrl(req);
         
-        sendRegistrationEmails(registration, baseUrl).catch((err) => {
-          console.error('Failed to send registration emails:', err);
-        });
+        if (registration.registrationType === 'speaker') {
+          sendSpeakerConfirmationEmail(registration).catch((err) => {
+            console.error('Failed to send speaker confirmation email:', err);
+          });
+        } else {
+          sendRegistrationEmails(registration, baseUrl).catch((err) => {
+            console.error('Failed to send registration emails:', err);
+          });
+        }
       }
 
       console.log("Callback processed successfully, payment status:", paymentStatus);
@@ -919,9 +925,15 @@ export async function registerRoutes(
 
         const baseUrl = resolveBaseUrl(req);
         
-        sendRegistrationEmails(registration, baseUrl).catch((err) => {
-          console.error('Failed to send registration emails:', err);
-        });
+        if (registration.registrationType === 'speaker') {
+          sendSpeakerConfirmationEmail(registration).catch((err) => {
+            console.error('Failed to send speaker confirmation email:', err);
+          });
+        } else {
+          sendRegistrationEmails(registration, baseUrl).catch((err) => {
+            console.error('Failed to send registration emails:', err);
+          });
+        }
 
         return res.json({
           success: true,
@@ -1667,9 +1679,15 @@ export async function registerRoutes(
       if (paymentStatus === 'paid') {
         const baseUrl = resolveBaseUrl(req);
         
-        sendRegistrationEmails(registration, baseUrl).catch((err) => {
-          console.error('Failed to send registration emails:', err);
-        });
+        if (registration.registrationType === 'speaker') {
+          sendSpeakerConfirmationEmail(registration).catch((err) => {
+            console.error('Failed to send speaker confirmation email:', err);
+          });
+        } else {
+          sendRegistrationEmails(registration, baseUrl).catch((err) => {
+            console.error('Failed to send registration emails:', err);
+          });
+        }
       }
 
       console.log("Callback processed successfully, payment status:", paymentStatus);
@@ -1708,9 +1726,15 @@ export async function registerRoutes(
 
         const baseUrl = resolveBaseUrl(req);
         
-        sendRegistrationEmails(registration, baseUrl).catch((err) => {
-          console.error('Failed to send registration emails:', err);
-        });
+        if (registration.registrationType === 'speaker') {
+          sendSpeakerConfirmationEmail(registration).catch((err) => {
+            console.error('Failed to send speaker confirmation email:', err);
+          });
+        } else {
+          sendRegistrationEmails(registration, baseUrl).catch((err) => {
+            console.error('Failed to send registration emails:', err);
+          });
+        }
 
         return res.json({
           success: true,

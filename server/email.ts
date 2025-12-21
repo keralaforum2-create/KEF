@@ -534,3 +534,99 @@ export async function sendTicketEmail(data: RegistrationData, baseUrl: string): 
     };
   }
 }
+
+function generateSpeakerConfirmationEmailHtml(data: RegistrationData): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Podcast Speaker Registration Confirmation</title>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
+      <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-radius: 16px; padding: 40px; text-align: center; color: white;">
+          <h1 style="margin: 0 0 10px 0; font-size: 32px; font-weight: bold;">Kerala Startup Fest</h1>
+          <p style="margin: 0; font-size: 48px; font-weight: bold; color: #d1fae5;">2026</p>
+          <p style="margin: 20px 0 0 0; font-size: 14px; opacity: 0.9;">Podcast Speaker Application</p>
+        </div>
+        
+        <div style="background: white; border-radius: 16px; padding: 30px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Dear ${data.fullName},</p>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+            Thank you for your podcast speaker registration at Kerala Startup Fest 2026!
+          </p>
+          
+          <div style="background: #f0fdf4; border: 2px solid #86efac; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0;">
+            <p style="margin: 0; font-size: 16px; color: #166534; font-weight: bold;">
+              Your podcast speaker registration has been sent to Kerala Economic Forum
+            </p>
+          </div>
+          
+          <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+            <tr>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                <span style="color: #666; font-size: 12px; text-transform: uppercase;">Name</span><br>
+                <strong style="color: #333; font-size: 16px;">${data.fullName}</strong>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 0; border-bottom: 1px solid #eee;">
+                <span style="color: #666; font-size: 12px; text-transform: uppercase;">Email</span><br>
+                <strong style="color: #333; font-size: 16px;">${data.email}</strong>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 0;">
+                <span style="color: #666; font-size: 12px; text-transform: uppercase;">Phone</span><br>
+                <strong style="color: #333; font-size: 16px;">${data.phone}</strong>
+              </td>
+            </tr>
+          </table>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+            Our team will review your application and contact you within 3-5 business days with further details.
+          </p>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 20px 0 0 0;">
+            For any queries, please feel free to contact us.
+          </p>
+        </div>
+        
+        <div style="text-align: center; padding: 20px; color: #666;">
+          <p style="margin: 0; font-weight: bold; font-size: 16px;">Kerala Startup Fest Team</p>
+          <p style="margin: 5px 0 0 0; font-size: 14px;">Kerala Economic Forum</p>
+          <p style="margin: 10px 0 0 0; font-size: 12px;">January 7-8, 2026 | Aspin Courtyards, Calicut Beach</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+export async function sendSpeakerConfirmationEmail(data: RegistrationData): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { client: resend, fromEmail } = await getResendClient();
+    
+    console.log(`Sending speaker confirmation email to: ${data.email}`);
+    
+    const result = await resend.emails.send({
+      from: fromEmail,
+      to: data.email,
+      subject: `Podcast Speaker Registration Confirmed - Kerala Startup Fest 2026`,
+      html: generateSpeakerConfirmationEmailHtml(data),
+    });
+    
+    console.log('Speaker confirmation email result:', JSON.stringify(result, null, 2));
+    console.log(`Speaker confirmation email sent successfully to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('Error sending speaker confirmation email:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to send speaker confirmation email' 
+    };
+  }
+}
