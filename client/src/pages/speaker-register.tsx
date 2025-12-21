@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { ArrowLeft, Loader2, Presentation, BookOpen, Network, CheckCircle, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -74,15 +74,14 @@ export default function SpeakerRegister() {
       }
 
       // Create Razorpay order
-      const orderResponse = await apiRequest("/api/speaker-razorpay/create-order", {
-        method: "POST",
-        body: JSON.stringify({
-          email: data.email,
-          contactNumber: data.contactNumber,
-          founderName: data.founderName,
-          startupName: data.startupName,
-        }),
+      const orderRes = await apiRequest("POST", "/api/speaker-razorpay/create-order", {
+        email: data.email,
+        contactNumber: data.contactNumber,
+        founderName: data.founderName,
+        startupName: data.startupName,
       });
+
+      const orderResponse = await orderRes.json();
 
       if (!orderResponse.orderId) {
         throw new Error("Failed to create payment order");
@@ -99,15 +98,14 @@ export default function SpeakerRegister() {
           handler: async function (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) {
             try {
               // Verify payment
-              const verifyResponse = await apiRequest("/api/speaker-razorpay/verify", {
-                method: "POST",
-                body: JSON.stringify({
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_payment_id: response.razorpay_payment_id,
-                  razorpay_signature: response.razorpay_signature,
-                  applicationData: data,
-                }),
+              const verifyRes = await apiRequest("POST", "/api/speaker-razorpay/verify", {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                applicationData: data,
               });
+
+              const verifyResponse = await verifyRes.json();
 
               if (verifyResponse.success) {
                 resolve(verifyResponse);
@@ -130,7 +128,7 @@ export default function SpeakerRegister() {
 
         const razorpay = new RazorpayClass(options);
         razorpay.on("payment.failed", function (response: { error?: { description: string } }) {
-          reject(new Error("Payment failed: " + response.error.description));
+          reject(new Error("Payment failed: " + (response.error?.description || "Unknown error")));
         });
         razorpay.open();
       });
@@ -142,7 +140,7 @@ export default function SpeakerRegister() {
         description: "Thank you for your application! We'll review it and contact you soon.",
       });
       setTimeout(() => {
-        navigate("/");
+        navigate("/", { replace: true });
       }, 3000);
     },
     onError: (error) => {
@@ -173,7 +171,7 @@ export default function SpeakerRegister() {
                 <p className="text-sm text-gray-500 mb-6">
                   Our team will review your application and contact you within 3-5 business days.
                 </p>
-                <Button onClick={() => navigate("/")} variant="default">
+                <Button onClick={() => navigate("/", { replace: true })} variant="default">
                   Return to Home
                 </Button>
               </CardContent>
@@ -191,7 +189,7 @@ export default function SpeakerRegister() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate("/speakers")}
+            onClick={() => navigate("/speakers", { replace: true })}
             className="mb-6"
             data-testid="button-back-to-speakers"
           >
