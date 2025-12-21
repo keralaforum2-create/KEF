@@ -399,7 +399,7 @@ export async function registerRoutes(
 
   app.get("/api/speakers", async (req, res) => {
     try {
-      const speakers = await storage.getSpeakers();
+      const speakers = await storage.getSpeakerApplications();
       return res.json(speakers);
     } catch (error) {
       console.error("Error fetching speakers:", error);
@@ -1888,8 +1888,6 @@ export async function registerRoutes(
   });
 
   // Speaker Applications - Razorpay integration
-  const speakerApplications: any[] = [];
-
   app.post("/api/validate-referral-code", async (req, res) => {
     try {
       const { code } = req.body;
@@ -1965,36 +1963,51 @@ export async function registerRoutes(
         });
       }
 
-      // Store the application after successful payment
-      const application = {
-        id: uuid(),
-        ...applicationData,
-        paymentId: razorpay_payment_id,
-        orderId: razorpay_order_id,
-        submittedAt: new Date().toISOString(),
-        status: "pending",
-        paymentStatus: "completed"
-      };
-      
-      speakerApplications.push(application);
-
-      // Send email notification
+      // Store the application in database after successful payment
       try {
-        await sendContactNotification({
-          name: applicationData.founderName,
+        const application = await storage.createSpeakerApplication({
+          founderName: applicationData.founderName,
+          startupName: applicationData.startupName,
+          designation: applicationData.designation,
+          sector: applicationData.sector,
+          yearFounded: applicationData.yearFounded,
+          startupBrief: applicationData.startupBrief,
+          startupStory: applicationData.startupStory,
+          whyFeature: applicationData.whyFeature || "",
+          website: applicationData.website,
+          contactNumber: applicationData.contactNumber,
           email: applicationData.email,
-          subject: `Speaker Application Received - Made in Kerala Podcast`,
-          message: `Thank you for your application to be a podcast speaker at Kerala Startup Fest 2026. Your payment of ₹3,999 has been received successfully. Our team will review your application and contact you within 3-5 business days.`
+          referralCode: applicationData.referralCode,
+          razorpayPaymentId: razorpay_payment_id,
+          razorpayOrderId: razorpay_order_id,
+          paymentStatus: "completed",
+          status: "pending"
         });
-      } catch (emailError) {
-        console.error("Error sending speaker application confirmation email:", emailError);
+
+        // Send email notification
+        try {
+          await sendContactNotification({
+            name: applicationData.founderName,
+            email: applicationData.email,
+            subject: `Speaker Application Received - Made in Kerala Podcast`,
+            message: `Thank you for your application to be a podcast speaker at Kerala Startup Fest 2026. Your payment of ₹3,999 has been received successfully. Our team will review your application and contact you within 3-5 business days.`
+          });
+        } catch (emailError) {
+          console.error("Error sending speaker application confirmation email:", emailError);
+        }
+
+        return res.json({
+          success: true,
+          applicationId: application.id,
+          message: "Application submitted successfully"
+        });
+      } catch (dbError) {
+        console.error("Error saving speaker application to database:", dbError);
+        return res.status(500).json({
+          success: false,
+          error: "Failed to save application"
+        });
       }
-      
-      return res.json({
-        success: true,
-        applicationId: application.id,
-        message: "Application submitted successfully"
-      });
     } catch (error) {
       console.error("Error verifying speaker payment:", error);
       return res.status(500).json({ 

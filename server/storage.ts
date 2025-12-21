@@ -15,6 +15,8 @@ import {
   type InsertBulkStudent,
   type ReferralCode,
   type InsertReferralCode,
+  type SpeakerApplication,
+  type InsertSpeakerApplication,
   users,
   contactSubmissions,
   registrations,
@@ -23,6 +25,7 @@ import {
   bulkRegistrations,
   bulkRegistrationStudents,
   referralCodes,
+  speakerApplications,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql } from "drizzle-orm";
@@ -74,6 +77,8 @@ export interface IStorage {
   updateReferralCode(id: string, data: Partial<InsertReferralCode>): Promise<ReferralCode | undefined>;
   deleteReferralCode(id: string): Promise<void>;
   
+  createSpeakerApplication(application: InsertSpeakerApplication): Promise<SpeakerApplication>;
+  getSpeakerApplications(): Promise<SpeakerApplication[]>;
   getSpeakers(): Promise<Registration[]>;
 }
 
@@ -380,6 +385,19 @@ export class DatabaseStorage implements IStorage {
 
   async deleteReferralCode(id: string): Promise<void> {
     await db.delete(referralCodes).where(eq(referralCodes.id, id));
+  }
+
+  async createSpeakerApplication(insertData: InsertSpeakerApplication): Promise<SpeakerApplication> {
+    const id = randomUUID();
+    const result = await db.insert(speakerApplications).values({ 
+      ...insertData, 
+      id 
+    }).returning();
+    return result[0];
+  }
+
+  async getSpeakerApplications(): Promise<SpeakerApplication[]> {
+    return await db.select().from(speakerApplications).orderBy(desc(speakerApplications.createdAt));
   }
 
   async getSpeakers(): Promise<Registration[]> {

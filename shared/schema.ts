@@ -307,3 +307,49 @@ export const insertBulkStudentSchema = createInsertSchema(bulkRegistrationStuden
 
 export type InsertBulkStudent = z.infer<typeof insertBulkStudentSchema>;
 export type BulkStudent = typeof bulkRegistrationStudents.$inferSelect;
+
+export const speakerApplications = pgTable("speaker_applications", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  founderName: text("founder_name").notNull(),
+  startupName: text("startup_name").notNull(),
+  designation: text("designation").notNull(),
+  sector: text("sector").notNull(),
+  yearFounded: text("year_founded").notNull(),
+  startupBrief: text("startup_brief").notNull(),
+  startupStory: text("startup_story").notNull(),
+  whyFeature: text("why_feature"),
+  website: text("website").notNull(),
+  contactNumber: text("contact_number").notNull(),
+  email: text("email").notNull(),
+  referralCode: text("referral_code"),
+  razorpayPaymentId: text("razorpay_payment_id").notNull(),
+  razorpayOrderId: text("razorpay_order_id").notNull(),
+  paymentStatus: text("payment_status").notNull().default("completed"),
+  status: text("status").notNull().default("pending"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertSpeakerApplicationSchema = createInsertSchema(speakerApplications).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  founderName: z.string().min(2, "Name is required"),
+  startupName: z.string().min(2, "Startup name is required"),
+  designation: z.string().min(2, "Designation is required"),
+  sector: z.string().min(2, "Sector is required"),
+  yearFounded: z.string().min(4, "Year founded is required"),
+  startupBrief: z.string().min(10, "Brief must be at least 10 characters").max(1000, "Brief is too long"),
+  startupStory: z.string().min(10, "Story must be at least 10 characters").max(1500, "Story is too long"),
+  whyFeature: z.string().optional(),
+  website: z.string().url("Must be a valid URL"),
+  contactNumber: z.string().min(10, "Valid contact number required"),
+  email: z.string().email("Valid email required"),
+  referralCode: z.string().optional(),
+  razorpayPaymentId: z.string().min(1, "Payment ID required"),
+  razorpayOrderId: z.string().min(1, "Order ID required"),
+  paymentStatus: z.string().optional(),
+  status: z.string().optional(),
+});
+
+export type InsertSpeakerApplication = z.infer<typeof insertSpeakerApplicationSchema>;
+export type SpeakerApplication = typeof speakerApplications.$inferSelect;
