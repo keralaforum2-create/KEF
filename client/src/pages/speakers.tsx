@@ -22,6 +22,9 @@ import josephImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_176629
 import shahaderrorImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(4)_1766294481981.jpeg";
 import ajilNewImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(3)_1766294481981.jpeg";
 import shrikumarNewImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.11_AM_1766294481981.jpeg";
+import ravhanImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(5)_1766294852330.jpeg";
+import jishnuNewImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(6)_1766294852329.jpeg";
+import umerNewImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(7)_1766294852329.jpeg";
 
 const speakers = [
   {
@@ -38,15 +41,15 @@ const speakers = [
   },
   {
     id: 4,
-    image: jishnuImage,
+    image: ravhanImage,
   },
   {
     id: 5,
-    image: naseefImage,
+    image: jishnuNewImage,
   },
   {
     id: 6,
-    image: noureenImage,
+    image: umerNewImage,
   },
   {
     id: 7,
