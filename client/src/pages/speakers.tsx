@@ -141,9 +141,6 @@ export default function Speakers() {
 
         {/* Featured Speakers Grid */}
         <div className="mt-16 pt-16 border-t border-gray-200">
-          <ScrollFadeUp>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-gray-900">Featured Speakers</h2>
-          </ScrollFadeUp>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Teal Speaker */}
             <ScrollFadeUp delay={0.1}>
