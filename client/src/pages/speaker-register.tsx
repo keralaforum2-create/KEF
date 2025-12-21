@@ -536,37 +536,25 @@ export default function SpeakerRegister() {
                   </div>
 
                   {/* Submit Button */}
-                  <div className="space-y-3">
-                    <Button 
-                      type="submit" 
-                      size="lg" 
-                      className="w-full bg-red-600 hover:bg-red-700 text-white"
-                      disabled={mutation.isPending || !razorpayLoaded}
-                      data-testid="button-pay-online"
-                    >
-                      {mutation.isPending ? (
-                        <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                          Processing Payment...
-                        </>
-                      ) : (
-                        <>
-                          <CreditCardIcon className="w-4 h-4 mr-2" />
-                          Pay Online - ₹3,999
-                        </>
-                      )}
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      size="lg"
-                      className="w-full"
-                      onClick={() => navigate("/speakers")}
-                      data-testid="button-cancel-speaker"
-                    >
-                      Cancel
-                    </Button>
-                  </div>
+                  <Button 
+                    type="submit" 
+                    size="lg" 
+                    className="w-full bg-red-600 hover:bg-red-700 text-white"
+                    disabled={mutation.isPending || !razorpayLoaded}
+                    data-testid="button-pay-online"
+                  >
+                    {mutation.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Processing Payment...
+                      </>
+                    ) : (
+                      <>
+                        <CreditCardIcon className="w-4 h-4 mr-2" />
+                        Pay Online - ₹3,999
+                      </>
+                    )}
+                  </Button>
                 </form>
               </Form>
             </CardContent>
