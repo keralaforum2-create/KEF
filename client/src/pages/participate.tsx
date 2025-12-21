@@ -2375,12 +2375,11 @@ export default function Participate() {
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}
                             transition={{ duration: 0.3 }}
-                            className="space-y-6 border rounded-lg p-6 bg-muted/20"
+                            className="space-y-6"
                           >
-                            <div className="text-center mb-6">
-                              <h2 className="text-2xl font-bold text-primary mb-2">Made in Kerala - Podcast Speaker Application</h2>
-                              <p className="text-sm text-muted-foreground mb-4">Share your startup story in a 10-minute podcast episode</p>
-                              <p className="text-sm font-semibold text-primary">Registration Fee: ₹3,999</p>
+                            <div className="rounded-lg p-6 bg-red-500 text-white text-center">
+                              <h2 className="text-2xl font-bold mb-2">Made in Kerala - Podcast Speaker Application</h2>
+                              <p className="text-sm">Share your startup story in a 10-minute podcast episode</p>
                             </div>
 
                             <div className="space-y-6">
@@ -2588,7 +2587,6 @@ export default function Participate() {
                                           />
                                         </FormControl>
                                         <p className="text-xs text-muted-foreground">Maximum 75 words</p>
-                                        <FormMessage />
                                       </FormItem>
                                     )}
                                   />
@@ -2608,7 +2606,6 @@ export default function Participate() {
                                           />
                                         </FormControl>
                                         <p className="text-xs text-muted-foreground">Maximum 75 words</p>
-                                        <FormMessage />
                                       </FormItem>
                                     )}
                                   />
@@ -2628,7 +2625,6 @@ export default function Participate() {
                                           />
                                         </FormControl>
                                         <p className="text-xs text-muted-foreground">Optional - Maximum 50 words</p>
-                                        <FormMessage />
                                       </FormItem>
                                     )}
                                   />
@@ -2666,47 +2662,6 @@ export default function Participate() {
                                 </div>
                               </div>
 
-                              <FormField
-                                control={form.control}
-                                name="speakerPortfolio"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Upload Portfolio (Optional)</FormLabel>
-                                    <FormControl>
-                                      <div className="border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition">
-                                        <Input
-                                          type="file"
-                                          onChange={(e) => {
-                                            const file = e.target.files?.[0];
-                                            if (file) {
-                                              field.onChange(file);
-                                            }
-                                          }}
-                                          accept=".pdf,.doc,.docx,.zip"
-                                          className="cursor-pointer"
-                                          data-testid="input-speaker-portfolio"
-                                        />
-                                        <p className="text-sm text-muted-foreground mt-2">
-                                          Upload portfolio, resume, or presentation (PDF, DOC, DOCX, ZIP)
-                                        </p>
-                                      </div>
-                                    </FormControl>
-                                    {form.watch("speakerPortfolio") && (
-                                      <motion.div 
-                                        className="flex items-center gap-2 p-3 rounded-lg bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800"
-                                        initial={{ opacity: 0, y: -10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                      >
-                                        <CheckCircle className="w-4 h-4 text-green-600" />
-                                        <span className="text-sm text-green-700 dark:text-green-400">
-                                          File uploaded: {(form.watch("speakerPortfolio") as File)?.name}
-                                        </span>
-                                      </motion.div>
-                                    )}
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
                             </div>
                           </motion.div>
                         )}
