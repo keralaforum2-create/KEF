@@ -215,7 +215,9 @@ export default function Participate() {
     mentorPhone: "",
     numberOfStudents: "5",
     ticketCategory: "silver" as "silver" | "gold" | "platinum",
+    paymentScreenshot: null as File | null,
   });
+  const [bulkPaymentMethod, setBulkPaymentMethod] = useState<"qr" | "online">("online");
   const [bulkRegistrationId, setBulkRegistrationId] = useState<string | null>(null);
   const [bulkStudentTickets, setBulkStudentTickets] = useState<Array<{studentRegistrationId: string; studentNumber: string}>>([]);
   const [isBulkSubmitting, setIsBulkSubmitting] = useState(false);
@@ -351,7 +353,8 @@ export default function Participate() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      form.setValue("paymentScreenshot", file);
+      // Handle file upload as needed
+      return file;
     }
   };
 
