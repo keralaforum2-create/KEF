@@ -538,7 +538,10 @@ export default function Admin() {
       const typeText = r.registrationType === "expert-session" ? "Expert Session" : "Contest";
       const programText = r.contestName || r.sessionName || "-";
       const categoryText = r.ticketCategory ? r.ticketCategory.toUpperCase() : "-";
+      const institutionText = r.institution || "-";
       doc.text(`   Type: ${typeText} | Program: ${programText} | Category: ${categoryText}`, 15, y);
+      y += 5;
+      doc.text(`   Institution: ${institutionText}`, 15, y);
       y += 8;
     });
     
