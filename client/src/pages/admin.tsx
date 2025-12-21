@@ -195,8 +195,13 @@ export default function Admin() {
     mutationFn: async (data: { code: string; discountPercentage: number }) => {
       const token = localStorage.getItem("admin_token");
       if (!token) {
-        throw new Error("Not authenticated. Please log in to the admin panel.");
+        console.error("Gift code creation - No token found in localStorage");
+        throw new Error("Not authenticated. Please refresh the page and log in again to the admin panel.");
       }
+      console.log("Gift code creation - Sending request with token:", { 
+        tokenPresent: !!token, 
+        tokenValue: token 
+      });
       const response = await fetch("/api/admin/referral-codes", {
         method: "POST",
         headers: { 
@@ -208,7 +213,12 @@ export default function Admin() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         const errorMessage = errorData.message || `Failed to create gift code (${response.status})`;
-        console.error("Gift code creation error:", { status: response.status, errorData, token });
+        console.error("Gift code creation error:", { 
+          status: response.status, 
+          errorData, 
+          tokenSent: `Bearer ${token}`,
+          fullError: errorData 
+        });
         throw new Error(errorMessage);
       }
       return response.json();
