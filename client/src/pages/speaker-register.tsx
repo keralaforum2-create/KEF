@@ -20,9 +20,9 @@ const speakerSchema = z.object({
   designation: z.string().min(2, "Designation is required"),
   sector: z.string().min(2, "Sector is required"),
   yearFounded: z.string().min(4, "Year founded is required"),
-  startupBrief: z.string().min(10, "Brief must be at least 10 characters").max(250, "Brief must be max 50 words"),
-  startupStory: z.string().min(10, "Story must be at least 10 characters").max(375, "Story must be max 75 words"),
-  whyFeature: z.string().max(250, "Max 50 words"),
+  startupBrief: z.string().min(10, "Brief must be at least 10 characters").max(1000, "Brief is too long"),
+  startupStory: z.string().min(10, "Story must be at least 10 characters").max(1500, "Story is too long"),
+  whyFeature: z.string().max(1000, "This field is too long").optional().or(z.literal("")),
   website: z.string().url("Must be a valid URL"),
   contactNumber: z.string().min(10, "Valid contact number required"),
   email: z.string().email("Valid email required"),
@@ -435,14 +435,14 @@ export default function SpeakerRegister() {
                           <FormLabel>Brief About Your Startup *</FormLabel>
                           <FormControl>
                             <Textarea 
-                              placeholder="Describe your startup in max 50 words" 
+                              placeholder="Describe your startup briefly" 
                               className="resize-none h-24"
                               {...field}
                               data-testid="textarea-startup-brief"
                             />
                           </FormControl>
                           <FormDescription>
-                            Maximum 50 words
+                            Share a concise overview of what your startup does
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -457,14 +457,14 @@ export default function SpeakerRegister() {
                           <FormLabel>Your Startup Story / Key Insight *</FormLabel>
                           <FormControl>
                             <Textarea 
-                              placeholder="Share your startup journey or key insights in max 75 words" 
+                              placeholder="Share your startup journey, challenges you faced, and what you learned" 
                               className="resize-none h-24"
                               {...field}
                               data-testid="textarea-startup-story"
                             />
                           </FormControl>
                           <FormDescription>
-                            What would you like to share in the 10-minute podcast? Maximum 75 words
+                            What would you like to share in the 10-minute podcast?
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -479,14 +479,14 @@ export default function SpeakerRegister() {
                           <FormLabel>Why Should We Feature Your Story?</FormLabel>
                           <FormControl>
                             <Textarea 
-                              placeholder="Tell us why your story would be interesting (optional, max 50 words)" 
+                              placeholder="Tell us why your story would be interesting to our audience (optional)" 
                               className="resize-none h-20"
                               {...field}
                               data-testid="textarea-why-feature"
                             />
                           </FormControl>
                           <FormDescription>
-                            Optional - Maximum 50 words
+                            Optional - Tell us what makes your story unique and compelling
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
