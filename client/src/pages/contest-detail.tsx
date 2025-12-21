@@ -19,6 +19,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { ScrollFadeUp, StaggerContainer, StaggerItem } from "@/lib/animations";
+import { DeadlineCountdown } from "@/components/DeadlineCountdown";
 
 import jamPoster from "@assets/IMG_3895_1765875326518.jpeg";
 import cameraCraftPoster from "@assets/IMG_3897_1765875367534.jpeg";
@@ -546,9 +547,12 @@ export default function ContestDetail() {
                           <p className="text-muted-foreground mb-4">{stage.description}</p>
                           
                           {stage.deadline && (
-                            <div className="flex items-center gap-2 mb-4 text-destructive">
-                              <Clock className="w-4 h-4" />
-                              <span className="font-medium">Deadline: {stage.deadline}</span>
+                            <div className="mb-4 space-y-3">
+                              <div className="flex items-center gap-2 text-destructive">
+                                <Clock className="w-4 h-4" />
+                                <span className="font-medium">Deadline: {stage.deadline}</span>
+                              </div>
+                              <DeadlineCountdown deadlineDate={new Date(2025, 11, 28, 23, 59, 0)} />
                             </div>
                           )}
 
