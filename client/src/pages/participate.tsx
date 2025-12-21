@@ -442,9 +442,9 @@ export default function Participate() {
 
   // Get payment amount based on ticket type and contest
   const getPaymentAmount = () => {
-    // Speaker registration has a fixed ₹399/- fee
+    // Speaker registration has a fixed ₹3,999/- fee
     if (registrationType === "speaker") {
-      return 399;
+      return 3999;
     }
     
     let baseAmount = 199;
@@ -2374,35 +2374,294 @@ export default function Participate() {
                             transition={{ duration: 0.3 }}
                             className="space-y-6 border rounded-lg p-6 bg-muted/20"
                           >
-                            <div className="text-center mb-4">
-                              <h3 className="font-semibold text-lg flex items-center justify-center gap-2">
-                                <Presentation className="w-5 h-5 text-primary" />
-                                Speaker Registration Form
-                              </h3>
-                              <p className="text-sm text-muted-foreground">Share your expertise with the startup community</p>
-                              <p className="text-sm font-semibold text-primary mt-2">Registration Fee: ₹399/-</p>
+                            <div className="text-center mb-6">
+                              <h2 className="text-2xl font-bold text-primary mb-2">Made in Kerala - Podcast Speaker Application</h2>
+                              <p className="text-sm text-muted-foreground mb-4">Share your startup story in a 10-minute podcast episode</p>
+                              <p className="text-sm font-semibold text-primary">Registration Fee: ₹3,999</p>
                             </div>
 
-                            <div className="space-y-4">
-                              <FormField
-                                control={form.control}
-                                name="speakerLinkedIn"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>LinkedIn Profile Link</FormLabel>
-                                    <FormControl>
-                                      <Input 
-                                        placeholder="https://linkedin.com/in/yourprofile" 
-                                        {...field}
-                                        value={field.value || ""}
-                                        data-testid="input-speaker-linkedin"
-                                      />
-                                    </FormControl>
-                                    <p className="text-xs text-muted-foreground">Share your professional LinkedIn profile</p>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
+                            <div className="space-y-6">
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                  <User className="w-5 h-5 text-primary" />
+                                  Founder Information
+                                </h4>
+                                <div className="space-y-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="fullName"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Founder Name *</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="Enter your full name" 
+                                            {...field}
+                                            data-testid="input-speaker-name"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <FormField
+                                    control={form.control}
+                                    name="institution"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Designation *</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="e.g., Founder, CEO, Co-founder" 
+                                            {...field}
+                                            data-testid="input-speaker-designation"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Email ID *</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            type="email"
+                                            placeholder="your@email.com" 
+                                            {...field}
+                                            data-testid="input-speaker-email"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <FormField
+                                    control={form.control}
+                                    name="phone"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Contact Number *</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="+91 XXXXX XXXXX" 
+                                            {...field}
+                                            data-testid="input-speaker-phone"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                  <Rocket className="w-5 h-5 text-primary" />
+                                  Startup Information
+                                </h4>
+                                <div className="space-y-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchStartupName"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Startup Name *</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="Enter your startup name" 
+                                            {...field}
+                                            data-testid="input-speaker-startup-name"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchRevenueModel"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Startup Sector / Industry *</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="e.g., EdTech, FoodTech, HealthTech, Media, D2C, Services" 
+                                            {...field}
+                                            data-testid="input-speaker-sector"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <FormField
+                                    control={form.control}
+                                    name="age"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Year Founded *</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="e.g., 2020" 
+                                            {...field}
+                                            data-testid="input-speaker-year-founded"
+                                          />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <FormField
+                                    control={form.control}
+                                    name="speakerLinkedIn"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Website / Instagram / LinkedIn *</FormLabel>
+                                        <FormControl>
+                                          <Input 
+                                            placeholder="https://..." 
+                                            {...field}
+                                            value={field.value || ""}
+                                            data-testid="input-speaker-website"
+                                          />
+                                        </FormControl>
+                                        <p className="text-xs text-muted-foreground">Provide any one of the above links</p>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="border-b pb-4">
+                                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                                  <BookOpen className="w-5 h-5 text-primary" />
+                                  Your Story
+                                </h4>
+                                <div className="space-y-4">
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchElevatorPitch"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Brief About Your Startup *</FormLabel>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="Describe your startup in max 50 words" 
+                                            {...field}
+                                            value={field.value || ""}
+                                            data-testid="textarea-speaker-brief"
+                                          />
+                                        </FormControl>
+                                        <p className="text-xs text-muted-foreground">Maximum 50 words</p>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchProblemStatement"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Your Startup Story / Key Insight *</FormLabel>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="Share your startup journey or key insights in max 75 words" 
+                                            {...field}
+                                            value={field.value || ""}
+                                            data-testid="textarea-speaker-story"
+                                          />
+                                        </FormControl>
+                                        <p className="text-xs text-muted-foreground">Maximum 75 words</p>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchProposedSolution"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>What would you like to share in the 10-minute podcast? *</FormLabel>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="Share what you'd like to discuss in the podcast" 
+                                            {...field}
+                                            value={field.value || ""}
+                                            data-testid="textarea-speaker-podcast-content"
+                                          />
+                                        </FormControl>
+                                        <p className="text-xs text-muted-foreground">Maximum 75 words</p>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+
+                                  <FormField
+                                    control={form.control}
+                                    name="pitchCurrentStage"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel>Why Should We Feature Your Story? (Optional)</FormLabel>
+                                        <FormControl>
+                                          <Textarea 
+                                            placeholder="Tell us why your story would be interesting (optional, max 50 words)" 
+                                            {...field}
+                                            value={field.value || ""}
+                                            data-testid="textarea-speaker-why-feature"
+                                          />
+                                        </FormControl>
+                                        <p className="text-xs text-muted-foreground">Optional - Maximum 50 words</p>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800">
+                                <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
+                                  <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                                  Important Notes
+                                </h4>
+                                <ul className="text-xs text-yellow-800 dark:text-yellow-300 space-y-1 list-disc pl-5">
+                                  <li>Podcast duration: Maximum 10 minutes</li>
+                                  <li>Selection is application-based</li>
+                                  <li>Selected candidates will be contacted by the KSF team</li>
+                                  <li>Final edited video will be delivered and branded with Kerala Economic Forum &amp; KSF watermark</li>
+                                </ul>
+                              </div>
+
+                              <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800">
+                                <div className="flex items-start gap-3">
+                                  <Checkbox 
+                                    checked={form.watch("pitchDeclarationConfirmed")}
+                                    onCheckedChange={(checked) => form.setValue("pitchDeclarationConfirmed", checked as boolean)}
+                                    data-testid="checkbox-speaker-agreement"
+                                  />
+                                  <div>
+                                    <p className="text-sm text-blue-900 dark:text-blue-200">
+                                      I agree to the <span className="font-semibold">₹3,999 application fee</span>
+                                    </p>
+                                    <p className="text-xs text-blue-800 dark:text-blue-300 mt-1">
+                                      Full refund will be provided to applicants who are not selected.
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
 
                               <FormField
                                 control={form.control}
