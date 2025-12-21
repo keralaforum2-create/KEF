@@ -71,15 +71,15 @@ const speakers = [
   },
   {
     id: 10,
-    image: mohammedImage,
+    image: hudaifImage,
   },
   {
     id: 11,
-    image: sahalImage,
+    image: mohammedImage,
   },
   {
     id: 12,
-    image: hudaifImage,
+    image: sahalImage,
   },
 ];
 
