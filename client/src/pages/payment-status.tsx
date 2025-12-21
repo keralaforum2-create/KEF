@@ -53,10 +53,8 @@ export default function PaymentStatus() {
     };
   }, [merchantTransactionId]);
 
-  const viewTicket = () => {
-    if (registrationId) {
-      setLocation(`/ticket/${registrationId}`);
-    }
+  const goHome = () => {
+    setLocation("/");
   };
 
   const tryAgain = () => {
@@ -89,16 +87,13 @@ export default function PaymentStatus() {
             <>
               <CheckCircle className="h-16 w-16 text-green-500" />
               <div className="text-center">
-                <h3 className="text-xl font-semibold text-green-600">Registration Confirmed!</h3>
+                <h3 className="text-xl font-semibold text-green-600">Thank you for registering!</h3>
                 <p className="text-muted-foreground mt-2">
-                  Your registration is complete. A confirmation email has been sent.
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Click below to view and download your ticket.
+                  A confirmation email will be sent to your registered email address within 24 hours.
                 </p>
               </div>
-              <Button onClick={viewTicket} className="w-full" data-testid="button-view-ticket">
-                View Your Ticket
+              <Button onClick={goHome} className="w-full" data-testid="button-go-home">
+                Go to Home
               </Button>
             </>
           )}

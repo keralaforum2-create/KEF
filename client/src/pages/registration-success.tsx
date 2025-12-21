@@ -1,21 +1,10 @@
-import { useEffect } from "react";
-import { useParams, useLocation } from "wouter";
+import { useParams } from "wouter";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 export default function RegistrationSuccess() {
   const { id } = useParams<{ id: string }>();
-  const [, setLocation] = useLocation();
-
-  useEffect(() => {
-    if (id) {
-      const timer = setTimeout(() => {
-        setLocation(`/ticket/${id}`);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [id, setLocation]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-card flex items-center justify-center p-4">
@@ -69,12 +58,11 @@ export default function RegistrationSuccess() {
               </div>
 
               <div className="flex flex-col items-center gap-4">
-                <Loader2 className="w-6 h-6 animate-spin text-primary" />
-                <p className="text-muted-foreground">
-                  Redirecting to your ticket...
+                <p className="text-lg font-medium text-center">
+                  Thank you for registering!
                 </p>
-                <p className="text-sm text-muted-foreground">
-                  A confirmation email has been sent to your registered email address.
+                <p className="text-sm text-muted-foreground text-center">
+                  A confirmation email will be sent to your registered email address within 24 hours.
                 </p>
               </div>
             </motion.div>
