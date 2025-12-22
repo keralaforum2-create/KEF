@@ -1,25 +1,21 @@
-import SibApiV3Sdk from 'sib-api-v3-sdk';
+import { Resend } from 'resend';
 
 const ADMIN_EMAIL = 'keralastartupfest@gmail.com';
 const FROM_NAME = 'Kerala Startup Fest';
 const FROM_EMAIL = 'no-reply@keralastartupfest.com';
 
-// Initialize Brevo API client
-function getBrevoClient() {
-  const apiKey = process.env.BREVO_API_KEY;
+// Initialize Resend API client
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
   
   if (!apiKey) {
-    console.error('❌ BREVO_API_KEY is NOT configured in environment variables');
-    throw new Error('BREVO_API_KEY not configured');
+    console.error('❌ RESEND_API_KEY is NOT configured in environment variables');
+    throw new Error('RESEND_API_KEY not configured');
   }
   
-  console.log('✅ BREVO_API_KEY loaded successfully');
+  console.log('✅ RESEND_API_KEY loaded successfully');
   
-  const defaultClient = SibApiV3Sdk.ApiClient.instance;
-  const apiKeyAuth = defaultClient.authentications['api-key'];
-  apiKeyAuth.apiKey = apiKey;
-  
-  return new SibApiV3Sdk.TransactionalEmailsApi();
+  return new Resend(apiKey);
 }
 
 interface RegistrationData {
@@ -522,18 +518,17 @@ function generateSpeakerConfirmationEmailHtml(data: RegistrationData): string {
 
 export async function sendBasicRegistrationEmail(data: RegistrationData): Promise<{ success: boolean; error?: string }> {
   try {
-    const api = getBrevoClient();
+    const resend = getResendClient();
     
     console.log(`📧 Sending basic registration confirmation to: ${data.email}`);
     
-    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-    sendSmtpEmail.sender = { name: FROM_NAME, email: FROM_EMAIL };
-    sendSmtpEmail.to = [{ email: data.email, name: data.fullName }];
-    sendSmtpEmail.cc = [{ email: ADMIN_EMAIL }];
-    sendSmtpEmail.subject = `Your Kerala Startup Fest 2026 Registration Confirmed`;
-    sendSmtpEmail.htmlContent = generateBasicRegistrationEmailHtml(data);
-    
-    await api.sendTransacEmail(sendSmtpEmail);
+    await resend.emails.send({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: data.email,
+      cc: [ADMIN_EMAIL],
+      subject: `Your Kerala Startup Fest 2026 Registration Confirmed`,
+      html: generateBasicRegistrationEmailHtml(data),
+    });
     
     console.log(`✅ Basic registration email sent successfully to ${data.email}`);
     return { success: true };
@@ -548,18 +543,17 @@ export async function sendBasicRegistrationEmail(data: RegistrationData): Promis
 
 export async function sendRegistrationEmail(data: RegistrationData, ticketUrl: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const api = getBrevoClient();
+    const resend = getResendClient();
     
     console.log(`📧 Sending ticket email to: ${data.email}`);
     
-    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-    sendSmtpEmail.sender = { name: FROM_NAME, email: FROM_EMAIL };
-    sendSmtpEmail.to = [{ email: data.email, name: data.fullName }];
-    sendSmtpEmail.cc = [{ email: ADMIN_EMAIL }];
-    sendSmtpEmail.subject = `Your Kerala Startup Fest 2026 Ticket - Payment Confirmed`;
-    sendSmtpEmail.htmlContent = generateTicketEmailHtml(data, ticketUrl);
-    
-    await api.sendTransacEmail(sendSmtpEmail);
+    await resend.emails.send({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: data.email,
+      cc: [ADMIN_EMAIL],
+      subject: `Your Kerala Startup Fest 2026 Ticket - Payment Confirmed`,
+      html: generateTicketEmailHtml(data, ticketUrl),
+    });
     
     console.log(`✅ Ticket email sent successfully to ${data.email}`);
     return { success: true };
@@ -574,26 +568,24 @@ export async function sendRegistrationEmail(data: RegistrationData, ticketUrl: s
 
 export async function sendAdminNotificationEmail(data: RegistrationData, ticketUrl?: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const api = getBrevoClient();
+    const resend = getResendClient();
     
     console.log(`📧 Sending admin notification email for registration: ${data.registrationId}`);
     
-    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-    sendSmtpEmail.sender = { name: FROM_NAME, email: FROM_EMAIL };
-    sendSmtpEmail.to = [{ email: ADMIN_EMAIL }];
-    sendSmtpEmail.subject = `New Registration: ${data.fullName} - ${data.registrationId}`;
-    sendSmtpEmail.htmlContent = generateAdminNotificationHtml(data, ticketUrl);
-    
-    await api.sendTransacEmail(sendSmtpEmail);
+    await resend.emails.send({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: ADMIN_EMAIL,
+      subject: `New Registration: ${data.fullName} - ${data.registrationId}`,
+      html: generateAdminNotificationHtml(data, ticketUrl),
+    });
     
     if (data.contestName === 'The Pitch Room') {
-      const pitchSendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-      pitchSendSmtpEmail.sender = { name: FROM_NAME, email: FROM_EMAIL };
-      pitchSendSmtpEmail.to = [{ email: ADMIN_EMAIL }];
-      pitchSendSmtpEmail.subject = `Pitch Room Submission: ${data.pitchStartupName || data.fullName}`;
-      pitchSendSmtpEmail.htmlContent = generatePitchIdeaEmailHtml(data);
-      
-      await api.sendTransacEmail(pitchSendSmtpEmail);
+      await resend.emails.send({
+        from: `${FROM_NAME} <${FROM_EMAIL}>`,
+        to: ADMIN_EMAIL,
+        subject: `Pitch Room Submission: ${data.pitchStartupName || data.fullName}`,
+        html: generatePitchIdeaEmailHtml(data),
+      });
     }
     
     console.log(`✅ Admin notification email sent successfully`);
@@ -609,17 +601,16 @@ export async function sendAdminNotificationEmail(data: RegistrationData, ticketU
 
 export async function sendSpeakerConfirmationEmail(data: RegistrationData): Promise<{ success: boolean; error?: string }> {
   try {
-    const api = getBrevoClient();
+    const resend = getResendClient();
     
     console.log(`📧 Sending speaker confirmation email to: ${data.email}`);
     
-    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-    sendSmtpEmail.sender = { name: FROM_NAME, email: FROM_EMAIL };
-    sendSmtpEmail.to = [{ email: data.email, name: data.fullName }];
-    sendSmtpEmail.subject = `Podcast Speaker Registration Confirmed - Kerala Startup Fest 2026`;
-    sendSmtpEmail.htmlContent = generateSpeakerConfirmationEmailHtml(data);
-    
-    await api.sendTransacEmail(sendSmtpEmail);
+    await resend.emails.send({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: data.email,
+      subject: `Podcast Speaker Registration Confirmed - Kerala Startup Fest 2026`,
+      html: generateSpeakerConfirmationEmailHtml(data),
+    });
     
     console.log(`✅ Speaker confirmation email sent successfully to ${data.email}`);
     return { success: true };
@@ -634,7 +625,7 @@ export async function sendSpeakerConfirmationEmail(data: RegistrationData): Prom
 
 export async function sendSpeakerApprovalEmail(founderName: string, email: string, startupName: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const api = getBrevoClient();
+    const resend = getResendClient();
     
     console.log(`📧 Sending speaker approval email to: ${email}`);
     
@@ -685,13 +676,12 @@ export async function sendSpeakerApprovalEmail(founderName: string, email: strin
       </html>
     `;
     
-    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-    sendSmtpEmail.sender = { name: FROM_NAME, email: FROM_EMAIL };
-    sendSmtpEmail.to = [{ email: email, name: founderName }];
-    sendSmtpEmail.subject = `Your Podcast Speaker Application is Approved - Kerala Startup Fest 2026`;
-    sendSmtpEmail.htmlContent = htmlContent;
-    
-    await api.sendTransacEmail(sendSmtpEmail);
+    await resend.emails.send({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: email,
+      subject: `Your Podcast Speaker Application is Approved - Kerala Startup Fest 2026`,
+      html: htmlContent,
+    });
     
     console.log(`✅ Speaker approval email sent successfully to ${email}`);
     return { success: true };
