@@ -72,10 +72,12 @@ export default function Ticket() {
 
   const downloadTicketAsPDF = async () => {
     const ticketCard = document.getElementById("ticket-card");
-    if (!ticketCard) return;
+    if (!ticketCard || !ticket) return;
     
     try {
       setDownloading(true);
+      
+      // Capture the ticket card image
       const canvas = await html2canvas(ticketCard, {
         backgroundColor: "#ffffff",
         scale: 3,
@@ -85,14 +87,101 @@ export default function Ticket() {
       });
       
       const imgData = canvas.toDataURL("image/png");
+      
+      // Create a comprehensive PDF with all details
       const pdf = new jsPDF({
-        orientation: "landscape",
+        orientation: "portrait",
         unit: "mm",
-        format: [210, 80],
+        format: "a4",
       });
       
-      pdf.addImage(imgData, "PNG", 0, 0, 210, 80);
-      pdf.save(`KSF-2026-Ticket-${ticket?.registrationId}.pdf`);
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 15;
+      let yPosition = margin;
+      
+      // Add header
+      pdf.setFontSize(24);
+      pdf.setFont(undefined, "bold");
+      pdf.text("Kerala Startup Fest 2026", margin, yPosition);
+      yPosition += 10;
+      
+      pdf.setFontSize(12);
+      pdf.setFont(undefined, "normal");
+      pdf.text("Event Ticket", margin, yPosition);
+      yPosition += 12;
+      
+      // Add ticket card image
+      const imgWidth = pageWidth - (margin * 2);
+      const imgHeight = (imgWidth / 1024) * 361; // Maintain aspect ratio
+      pdf.addImage(imgData, "PNG", margin, yPosition, imgWidth, imgHeight);
+      yPosition += imgHeight + 10;
+      
+      // Add divider
+      pdf.setDrawColor(200);
+      pdf.line(margin, yPosition, pageWidth - margin, yPosition);
+      yPosition += 8;
+      
+      // Add ticket details header
+      pdf.setFontSize(14);
+      pdf.setFont(undefined, "bold");
+      pdf.text("Ticket Information", margin, yPosition);
+      yPosition += 8;
+      
+      // Add details in structured format
+      pdf.setFontSize(10);
+      pdf.setFont(undefined, "normal");
+      
+      const details = [
+        { label: "Ticket ID:", value: ticket.registrationId },
+        { label: "Name:", value: ticket.fullName },
+        { label: "Email:", value: ticket.email },
+        { label: "Phone:", value: ticket.phone },
+        { label: "Age:", value: ticket.age },
+        { label: "Event Date:", value: "January 7 & 8, 2026" },
+        { label: "Venue:", value: "Aspin Courtyards, Calicut" },
+        { label: "Registration Type:", value: ticket.registrationType.replace("-", " ").toUpperCase() },
+        { label: "Ticket Category:", value: (ticket.ticketCategory || "Normal").toUpperCase() },
+        ...(ticket.institution ? [{ label: "Institution:", value: ticket.institution }] : []),
+        ...(ticket.contestName ? [{ label: "Contest:", value: ticket.contestName }] : []),
+        ...(ticket.teamMember1Name || ticket.teamMember2Name ? [
+          { label: "Team Members:", value: [ticket.teamMember1Name, ticket.teamMember2Name].filter(Boolean).join(", ") }
+        ] : []),
+      ];
+      
+      details.forEach(detail => {
+        // Check if we need a new page
+        if (yPosition > pageHeight - margin - 20) {
+          pdf.addPage();
+          yPosition = margin;
+        }
+        
+        pdf.setFont(undefined, "bold");
+        pdf.text(detail.label, margin, yPosition);
+        
+        pdf.setFont(undefined, "normal");
+        const value = detail.value || "N/A";
+        const splitValue = pdf.splitTextToSize(value, pageWidth - margin - 50);
+        pdf.text(splitValue, margin + 50, yPosition);
+        
+        yPosition += 6;
+      });
+      
+      // Add footer
+      yPosition += 5;
+      if (yPosition > pageHeight - margin - 20) {
+        pdf.addPage();
+        yPosition = margin;
+      }
+      
+      pdf.setFontSize(9);
+      pdf.setFont(undefined, "normal");
+      pdf.setTextColor(128);
+      pdf.text("Please bring this ticket (printed or digital) to the event for entry.", margin, yPosition);
+      yPosition += 5;
+      pdf.text("Thank you for registering for Kerala Startup Fest 2026!", margin, yPosition);
+      
+      pdf.save(`KSF-2026-Ticket-${ticket.registrationId}.pdf`);
     } catch (err) {
       console.error("Failed to download ticket:", err);
     } finally {
