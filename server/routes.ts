@@ -1974,9 +1974,10 @@ export async function registerRoutes(
           status: "pending"
         });
 
-        // Send email notification
+        // Send speaker confirmation email
+        console.log(`📧 Sending speaker confirmation email to: ${applicationData.email}`);
         try {
-          await sendSpeakerConfirmationEmail({
+          const speakerEmailResult = await sendSpeakerConfirmationEmail({
             id: application.id.toString(),
             registrationId: application.id.toString(),
             fullName: applicationData.founderName,
@@ -1985,14 +1986,44 @@ export async function registerRoutes(
             age: "",
             registrationType: "speaker",
           } as any);
+          
+          if (speakerEmailResult.success) {
+            console.log(`✅ Speaker confirmation email sent successfully to ${applicationData.email}`);
+          } else {
+            console.error(`❌ Failed to send speaker confirmation email: ${speakerEmailResult.error}`);
+          }
         } catch (emailError) {
-          console.error("Error sending speaker application confirmation email:", emailError);
+          console.error(`❌ Error sending speaker confirmation email to ${applicationData.email}:`, emailError);
+        }
+
+        // Send admin notification about new speaker application
+        console.log(`📧 Sending admin notification about new speaker application`);
+        try {
+          const adminEmailResult = await sendAdminNotificationEmail({
+            id: application.id.toString(),
+            registrationId: application.id.toString(),
+            fullName: applicationData.founderName,
+            email: applicationData.email,
+            phone: applicationData.contactNumber,
+            age: "",
+            institution: applicationData.startupName,
+            registrationType: "speaker",
+            sessionName: `Speaker: ${applicationData.founderName} - ${applicationData.startupName}`,
+          } as any);
+          
+          if (adminEmailResult.success) {
+            console.log(`✅ Admin notification sent successfully for speaker application`);
+          } else {
+            console.error(`❌ Failed to send admin notification: ${adminEmailResult.error}`);
+          }
+        } catch (emailError) {
+          console.error(`❌ Error sending admin notification email:`, emailError);
         }
 
         return res.json({
           success: true,
           applicationId: application.id,
-          message: "Application submitted successfully"
+          message: "Application submitted successfully - Confirmation email sent"
         });
       } catch (dbError) {
         console.error("Error saving speaker application to database:", dbError);
