@@ -2542,25 +2542,29 @@ export default function Admin() {
                         {selectedReg.paymentStatus === "paid" ? "Paid" : "Pending"}
                       </Badge>
                     </div>
-                    {selectedReg.referralCode && (() => {
-                      const referralCodeObj = referralCodes?.find(rc => rc.code === selectedReg.referralCode);
-                      return (
-                        <div>
-                          <label className="text-sm font-medium text-muted-foreground">Referral Code Used</label>
-                          <div className="flex items-center gap-2">
-                            <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 font-mono font-bold text-sm">
-                              {selectedReg.referralCode}
-                            </Badge>
-                            {referralCodeObj && (
-                              <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300 text-xs">
-                                {referralCodeObj.discountPercentage}% OFF
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })()}
                   </div>
+                  
+                  {/* Referral Code - Always visible if used */}
+                  {selectedReg.referralCode && (() => {
+                    const referralCodeObj = referralCodes?.find(rc => rc.code === selectedReg.referralCode);
+                    return (
+                      <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                        <label className="text-sm font-medium text-muted-foreground block mb-2">Referral Code Used</label>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 font-mono font-bold text-base px-3 py-1" data-testid="badge-referral-code">
+                            {selectedReg.referralCode}
+                          </Badge>
+                          {referralCodeObj && (
+                            <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300 text-sm px-2 py-1" data-testid="badge-discount-percent">
+                              {referralCodeObj.discountPercentage}% OFF
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                  
+                  {/* Amount Details */}
                   {selectedReg.discountedAmount && (
                     <div className="grid grid-cols-2 gap-4">
                       <div>
