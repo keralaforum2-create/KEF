@@ -452,8 +452,8 @@ export default function Participate() {
     
     let baseAmount = 199;
     if (isBusinessQuiz) baseAmount = 199;
-    else if (ticketCategory === "platinum") baseAmount = 999;
-    else if (ticketCategory === "gold") baseAmount = 499;
+    else if (ticketCategory === "platinum") baseAmount = 1299;
+    else if (ticketCategory === "gold") baseAmount = 599;
     else baseAmount = 199; // silver
     
     // For Pitch Room, multiply amount by number of team members
@@ -481,8 +481,8 @@ export default function Participate() {
 
   // Get bulk registration price per student
   const getBulkPricePerStudent = () => {
-    if (bulkFormData.ticketCategory === "platinum") return 999;
-    if (bulkFormData.ticketCategory === "gold") return 499;
+    if (bulkFormData.ticketCategory === "platinum") return 1299;
+    if (bulkFormData.ticketCategory === "gold") return 599;
     return 199; // silver
   };
 

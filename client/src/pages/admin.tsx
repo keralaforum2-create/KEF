@@ -82,13 +82,24 @@ export default function Admin() {
     queryKey: ["/api/pending-registrations"],
     refetchInterval: 30000,
     staleTime: 20000,
-    retry: 1,
-    retryDelay: 2000,
+    retry: 3,
+    retryDelay: 1000,
     gcTime: 60000,
     queryFn: async () => {
-      const response = await fetch("/api/pending-registrations");
-      if (!response.ok) throw new Error("Failed to fetch pending registrations");
-      return response.json();
+      try {
+        const response = await fetch("/api/pending-registrations", {
+          credentials: "include"
+        });
+        if (!response.ok) {
+          console.error("Failed to fetch pending registrations:", response.status, response.statusText);
+          throw new Error(`Failed to fetch pending registrations (${response.status})`);
+        }
+        const data = await response.json();
+        return data || [];
+      } catch (error) {
+        console.error("Error fetching pending registrations:", error);
+        throw error;
+      }
     }
   });
 

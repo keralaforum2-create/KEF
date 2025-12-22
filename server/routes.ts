@@ -1039,9 +1039,9 @@ export async function registerRoutes(
         } else if (registration.registrationType === 'session') {
           orderAmount = 199;
         } else if (registration.registrationType === 'contest') {
-          orderAmount = registration.ticketCategory === 'platinum' ? 999 : registration.ticketCategory === 'gold' ? 499 : 199;
+          orderAmount = registration.ticketCategory === 'platinum' ? 1299 : registration.ticketCategory === 'gold' ? 599 : 199;
         } else if (registration.registrationType === 'session-ticket') {
-          orderAmount = registration.ticketCategory === 'platinum' ? 999 : registration.ticketCategory === 'gold' ? 499 : 199;
+          orderAmount = registration.ticketCategory === 'platinum' ? 1299 : registration.ticketCategory === 'gold' ? 599 : 199;
         }
 
         const receipt = `RZP${Date.now()}${randomUUID().slice(0, 8)}`;
