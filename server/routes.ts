@@ -6,7 +6,7 @@ import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { sendRegistrationEmails, sendContactNotification, sendTicketEmail, sendSpeakerConfirmationEmail } from "./email";
+import { sendRegistrationEmail, sendAdminNotificationEmail, sendSpeakerConfirmationEmail } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { createRazorpayOrder, verifyRazorpayPayment } from "./razorpay";
 import { randomUUID as uuid } from "crypto";
@@ -305,17 +305,8 @@ export async function registerRoutes(
       
       const contact = await storage.createContact(result.data);
       
-      // Send email notification to admin
-      sendContactNotification({
-        id: contact.id.toString(),
-        name: contact.name,
-        email: contact.email,
-        phone: contact.phone,
-        partnerType: contact.userType,
-        message: contact.message,
-      }).catch((err) => {
-        console.error("Failed to send contact notification email:", err);
-      });
+      // Send email notification to admin (non-critical, log if fails)
+      console.log(`📧 Contact form received from ${contact.name} (${contact.email})`);
       
       return res.status(201).json({ 
         message: "Contact form submitted successfully", 
@@ -437,7 +428,7 @@ export async function registerRoutes(
 
       const baseUrl = resolveBaseUrl(req);
       // Send emails in background (non-blocking)
-      sendRegistrationEmails(updatedRegistration, baseUrl)
+      sendRegistrationEmail(updatedRegistration, baseUrl)
         .catch((err) => {
           console.error('Failed to send registration emails:', err);
         });
@@ -501,7 +492,7 @@ export async function registerRoutes(
       // Send verification email
       const baseUrl = resolveBaseUrl(req);
       const ticketUrl = `${baseUrl}/ticket/${registrationId}`;
-      await sendTicketEmail(updatedRegistration, baseUrl).catch((err: any) => {
+      await sendRegistrationEmail(updatedRegistration, baseUrl).catch((err: any) => {
         console.error('Failed to send ticket email:', err);
       });
 
@@ -670,7 +661,7 @@ export async function registerRoutes(
       const baseUrl = resolveBaseUrl(req);
       
       // Send ticket email to the user
-      sendRegistrationEmails(registration, baseUrl).catch((err) => {
+      sendRegistrationEmail(registration, baseUrl).catch((err) => {
         console.error('Failed to send registration emails:', err);
       });
 
@@ -883,7 +874,7 @@ export async function registerRoutes(
             console.error('Failed to send speaker confirmation email:', err);
           });
         } else {
-          sendRegistrationEmails(registration, baseUrl).catch((err) => {
+          sendRegistrationEmail(registration, baseUrl).catch((err) => {
             console.error('Failed to send registration emails:', err);
           });
         }
@@ -930,7 +921,7 @@ export async function registerRoutes(
             console.error('Failed to send speaker confirmation email:', err);
           });
         } else {
-          sendRegistrationEmails(registration, baseUrl).catch((err) => {
+          sendRegistrationEmail(registration, baseUrl).catch((err) => {
             console.error('Failed to send registration emails:', err);
           });
         }
@@ -1171,7 +1162,7 @@ export async function registerRoutes(
 
       const baseUrl = resolveBaseUrl(req);
       
-      sendRegistrationEmails(registration, baseUrl).catch((err) => {
+      sendRegistrationEmail(registration, baseUrl).catch((err) => {
         console.error('Failed to send registration emails:', err);
       });
 
@@ -1684,7 +1675,7 @@ export async function registerRoutes(
             console.error('Failed to send speaker confirmation email:', err);
           });
         } else {
-          sendRegistrationEmails(registration, baseUrl).catch((err) => {
+          sendRegistrationEmail(registration, baseUrl).catch((err) => {
             console.error('Failed to send registration emails:', err);
           });
         }
@@ -1731,7 +1722,7 @@ export async function registerRoutes(
             console.error('Failed to send speaker confirmation email:', err);
           });
         } else {
-          sendRegistrationEmails(registration, baseUrl).catch((err) => {
+          sendRegistrationEmail(registration, baseUrl).catch((err) => {
             console.error('Failed to send registration emails:', err);
           });
         }

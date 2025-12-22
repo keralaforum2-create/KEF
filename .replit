@@ -57,3 +57,4 @@ SUPABASE_DATABASE_URL = "postgresql://postgres.imwnftzbdkolckyiywgd:keralastartu
 ADMIN_PASSWORD = "admin123"
 RAZORPAY_KEY_ID = "rzp_live_RrZD9mKqas5pUM"
 RAZORPAY_KEY_SECRET = "GgElCLDffAwMZo6cyBSpqmv1"
+BREVO_API_KEY = ""

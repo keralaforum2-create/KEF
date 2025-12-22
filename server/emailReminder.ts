@@ -1,18 +1,33 @@
-import { Resend } from "resend";
+import SibApiV3Sdk from 'sib-api-v3-sdk';
 import nodemailer from "nodemailer";
 
-// Event date - April 18, 2026
-const EVENT_DATE = new Date("2026-04-18T10:00:00Z");
+// Event date - January 7-8, 2026
+const EVENT_DATE = new Date("2026-01-07T10:00:00Z");
+const FROM_NAME = 'Kerala Startup Fest';
+const FROM_EMAIL = 'no-reply@keralastartupfest.com';
 
 // Singleton instances to prevent memory leaks
-let resendClient: any = null;
+let brevoApi: any = null;
 let nodemailerTransporter: any = null;
 
-function getResendClient(): any {
-  if (!resendClient) {
-    resendClient = new Resend(process.env.RESEND_API_KEY);
+function getBrevoApi(): any {
+  if (!brevoApi) {
+    const apiKey = process.env.BREVO_API_KEY;
+    
+    if (!apiKey) {
+      console.error('❌ BREVO_API_KEY is NOT configured for email reminders');
+      throw new Error('BREVO_API_KEY not configured');
+    }
+    
+    console.log('✅ Brevo API initialized for email reminders');
+    
+    const defaultClient = SibApiV3Sdk.ApiClient.instance;
+    const apiKeyAuth = defaultClient.authentications['api-key'];
+    apiKeyAuth.apiKey = apiKey;
+    
+    brevoApi = new SibApiV3Sdk.TransactionalEmailsApi();
   }
-  return resendClient;
+  return brevoApi;
 }
 
 function getNodemailerTransporter(): any {
@@ -34,10 +49,11 @@ function getNodemailerTransporter(): any {
 export function shouldSendReminders(): boolean {
   const now = new Date();
   
-  // Send reminder only in January (one time, between Jan 1 and Jan 31)
+  // Send reminder only in January (one time, between Jan 1 and Jan 6)
   const isJanuary = now.getMonth() === 0; // 0 = January
+  const dayOfMonth = now.getDate();
   
-  return isJanuary;
+  return isJanuary && dayOfMonth <= 6;
 }
 
 // Get email body template
@@ -48,7 +64,7 @@ export function getEmailTemplate(name: string, registrationId: string, eventType
   const daysUntilEvent = Math.ceil((EVENT_DATE.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
   
   return {
-    subject: `🚀 Kerala Startup Fest 2026 - Event Reminder (${daysUntilEvent} Days Away)`,
+    subject: `Kerala Startup Fest 2026 - Event Reminder (${daysUntilEvent} Days Away)`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -57,12 +73,12 @@ export function getEmailTemplate(name: string, registrationId: string, eventType
           <style>
             body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; background: #f9fafb; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 8px; text-align: center; }
+            .header { background: linear-gradient(135deg, #dc2626 0%, #f97316 100%); color: white; padding: 30px; border-radius: 8px; text-align: center; }
             .header h1 { margin: 0; font-size: 28px; }
             .content { background: white; padding: 30px; margin-top: 20px; border-radius: 8px; }
             .content p { margin: 15px 0; }
             .highlight { background: #fef3c7; padding: 15px; border-left: 4px solid #f59e0b; margin: 20px 0; border-radius: 4px; }
-            .button { display: inline-block; background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin-top: 20px; }
+            .button { display: inline-block; background: #dc2626; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin-top: 20px; }
             .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #6b7280; }
             .details { background: #f3f4f6; padding: 15px; border-radius: 6px; margin: 20px 0; }
             .details p { margin: 8px 0; }
@@ -76,14 +92,14 @@ export function getEmailTemplate(name: string, registrationId: string, eventType
             </div>
             
             <div class="content">
-              <h2>Hi ${name}! 👋</h2>
+              <h2>Hi ${name}!</h2>
               
               <p>Thank you for registering for <strong>Kerala Startup Fest 2026</strong>! Mark your calendars - the event is happening in approximately <strong>${daysUntilEvent} days</strong>.</p>
               
               <div class="highlight">
                 <strong>📅 Event Date & Time:</strong><br>
-                April 18, 2026 at 10:00 AM IST<br>
-                <strong>📍 Location:</strong> Kochi, Kerala
+                January 7-8, 2026<br>
+                <strong>📍 Location:</strong> Aspin Courtyards, Calicut Beach
               </div>
               
               <div class="details">
@@ -101,10 +117,10 @@ export function getEmailTemplate(name: string, registrationId: string, eventType
                 <li>⏰ Arrive 15 minutes early</li>
               </ul>
               
-              <p>If you have any questions or need to make changes, please contact us at <strong>support@keralastartupsest.com</strong></p>
+              <p>If you have any questions or need to make changes, please contact us at <strong>support@keralastartupfest.com</strong></p>
               
               <div style="text-align: center;">
-                <a href="https://keralastartupsest.com" class="button">Visit Our Website</a>
+                <a href="https://keralastartupfest.com" class="button">Visit Our Website</a>
               </div>
             </div>
             
@@ -119,34 +135,41 @@ export function getEmailTemplate(name: string, registrationId: string, eventType
   };
 }
 
-// Send email using Resend or Nodemailer
+// Send email using Brevo
 export async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
   try {
-    // Try Resend first if API key is available
-    const resendApiKey = process.env.RESEND_API_KEY;
-    if (resendApiKey) {
-      const resend = getResendClient();
-      await resend.emails.send({
-        from: "Kerala Startup Fest <noreply@keralastartupsest.com>",
-        to,
-        subject,
-        html
-      });
+    const brevoApiKey = process.env.BREVO_API_KEY;
+    
+    if (brevoApiKey) {
+      const api = getBrevoApi();
+      
+      const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+      sendSmtpEmail.sender = { name: FROM_NAME, email: FROM_EMAIL };
+      sendSmtpEmail.to = [{ email: to }];
+      sendSmtpEmail.subject = subject;
+      sendSmtpEmail.htmlContent = html;
+      
+      await api.sendTransacEmail(sendSmtpEmail);
+      
+      console.log(`✅ Email sent successfully via Brevo to ${to}`);
       return true;
     }
     
-    // Fallback to Nodemailer
+    // Fallback to Nodemailer if Brevo is not configured
+    console.log('⚠️ BREVO_API_KEY not configured, attempting fallback to Nodemailer');
     const transporter = getNodemailerTransporter();
     
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || "Kerala Startup Fest <noreply@keralastartupsest.com>",
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
       to,
       subject,
       html
     });
+    
+    console.log(`✅ Email sent successfully via Nodemailer to ${to}`);
     return true;
   } catch (error) {
-    console.error("Email sending failed:", error);
+    console.error("❌ Email sending failed:", error);
     return false;
   }
 }
