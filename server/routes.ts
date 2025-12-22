@@ -996,8 +996,7 @@ export async function registerRoutes(
         }
 
         await storage.updateRegistrationPayment(registration.id, {
-          razorpayOrderId: orderResult.order.id,
-          paymentAmount: String(orderAmount)
+          razorpayOrderId: orderResult.order.id
         });
 
         console.log("Razorpay order created for existing registration:", orderResult.order.id);
@@ -1977,12 +1976,15 @@ export async function registerRoutes(
 
         // Send email notification
         try {
-          await sendContactNotification({
-            name: applicationData.founderName,
+          await sendSpeakerConfirmationEmail({
+            id: application.id.toString(),
+            registrationId: application.id.toString(),
+            fullName: applicationData.founderName,
             email: applicationData.email,
-            subject: `Speaker Application Received - Made in Kerala Podcast`,
-            message: `Thank you for your application to be a podcast speaker at Kerala Startup Fest 2026. Your payment of ₹3,999 has been received successfully. Our team will review your application and contact you within 3-5 business days.`
-          });
+            phone: applicationData.contactNumber,
+            age: "",
+            registrationType: "speaker",
+          } as any);
         } catch (emailError) {
           console.error("Error sending speaker application confirmation email:", emailError);
         }
