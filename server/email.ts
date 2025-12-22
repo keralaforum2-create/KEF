@@ -525,7 +525,6 @@ export async function sendBasicRegistrationEmail(data: RegistrationData): Promis
     await resend.emails.send({
       from: `${FROM_NAME} <${FROM_EMAIL}>`,
       to: data.email,
-      cc: [ADMIN_EMAIL],
       subject: `Your Kerala Startup Fest 2026 Registration Confirmed`,
       html: generateBasicRegistrationEmailHtml(data),
     });
@@ -550,7 +549,6 @@ export async function sendRegistrationEmail(data: RegistrationData, ticketUrl: s
     await resend.emails.send({
       from: `${FROM_NAME} <${FROM_EMAIL}>`,
       to: data.email,
-      cc: [ADMIN_EMAIL],
       subject: `Your Kerala Startup Fest 2026 Ticket - Payment Confirmed`,
       html: generateTicketEmailHtml(data, ticketUrl),
     });
