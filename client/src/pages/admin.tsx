@@ -125,7 +125,8 @@ export default function Admin() {
       const token = localStorage.getItem("admin_token");
       if (!token) throw new Error("No authentication token");
       const response = await fetch("/api/admin/referral-codes", {
-        headers: { "Authorization": `Bearer ${token}` }
+        headers: { "Authorization": `Bearer ${token}` },
+        credentials: "include"
       });
       if (!response.ok) {
         const err = await response.json().catch(() => ({}));
@@ -215,7 +216,8 @@ export default function Admin() {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        credentials: "include"
       });
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -254,7 +256,8 @@ export default function Admin() {
       const token = localStorage.getItem("admin_token");
       const response = await fetch(`/api/admin/referral-codes/${id}`, {
         method: "DELETE",
-        headers: { "Authorization": `Bearer ${token}` }
+        headers: { "Authorization": `Bearer ${token}` },
+        credentials: "include"
       });
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));

@@ -107,15 +107,16 @@ export async function registerRoutes(
   app.get("/api/admin/referral-codes", async (req, res) => {
     try {
       const authHeader = req.headers.authorization || "";
-      const bearerMatch = authHeader.match(/^Bearer\s+(.+)$/i);
-      const token = bearerMatch ? bearerMatch[1].trim() : authHeader.trim();
-      const isAuthorized = token === "admin-authenticated" || token === ADMIN_PASSWORD;
+      let token = "";
+      if (authHeader.toLowerCase().startsWith("bearer ")) {
+        token = authHeader.substring(7).trim();
+      } else {
+        token = authHeader.trim();
+      }
+      const isAuthorized = (token === "admin-authenticated") || (token === ADMIN_PASSWORD && token);
       
       if (!isAuthorized) {
-        console.error("Get referral codes - Authorization failed", {
-          receivedToken: token,
-          authHeaderPresent: !!authHeader
-        });
+        console.error("Get referral codes - Authorization failed");
         return res.status(401).json({ message: "Unauthorized" });
       }
       const codes = await storage.getReferralCodes();
@@ -130,22 +131,22 @@ export async function registerRoutes(
   app.post("/api/admin/referral-codes", async (req, res) => {
     try {
       const authHeader = req.headers.authorization || "";
-      // More robust token parsing: handle various Bearer formats
-      const bearerMatch = authHeader.match(/^Bearer\s+(.+)$/i);
-      const token = bearerMatch ? bearerMatch[1].trim() : authHeader.trim();
+      // Extract token from "Bearer TOKEN" format
+      let token = "";
+      if (authHeader.toLowerCase().startsWith("bearer ")) {
+        token = authHeader.substring(7).trim();
+      } else {
+        token = authHeader.trim();
+      }
       
       // Check if token matches admin token or password
-      const isAuthorized = token === "admin-authenticated" || token === ADMIN_PASSWORD;
+      const isAuthorized = (token === "admin-authenticated") || (token === ADMIN_PASSWORD && token);
       
       if (!isAuthorized) {
         console.error("Referral code creation - Authorization failed", {
           receivedToken: token,
-          expectedToken1: "admin-authenticated",
-          expectedToken2: ADMIN_PASSWORD ? "(ADMIN_PASSWORD set)" : "not set",
-          authHeaderPresent: !!authHeader,
           tokenLength: token.length,
-          isAdminAuth: token === "admin-authenticated",
-          isAdminPassword: token === ADMIN_PASSWORD
+          authHeaderPresent: !!authHeader
         });
         return res.status(401).json({ message: "Unauthorized" });
       }
@@ -176,9 +177,13 @@ export async function registerRoutes(
   app.patch("/api/admin/referral-codes/:id", async (req, res) => {
     try {
       const authHeader = req.headers.authorization || "";
-      const bearerMatch = authHeader.match(/^Bearer\s+(.+)$/i);
-      const token = bearerMatch ? bearerMatch[1].trim() : authHeader.trim();
-      const isAuthorized = token === "admin-authenticated" || token === ADMIN_PASSWORD;
+      let token = "";
+      if (authHeader.toLowerCase().startsWith("bearer ")) {
+        token = authHeader.substring(7).trim();
+      } else {
+        token = authHeader.trim();
+      }
+      const isAuthorized = (token === "admin-authenticated") || (token === ADMIN_PASSWORD && token);
       
       if (!isAuthorized) {
         console.error("Update referral code - Authorization failed");
@@ -199,9 +204,13 @@ export async function registerRoutes(
   app.delete("/api/admin/referral-codes/:id", async (req, res) => {
     try {
       const authHeader = req.headers.authorization || "";
-      const bearerMatch = authHeader.match(/^Bearer\s+(.+)$/i);
-      const token = bearerMatch ? bearerMatch[1].trim() : authHeader.trim();
-      const isAuthorized = token === "admin-authenticated" || token === ADMIN_PASSWORD;
+      let token = "";
+      if (authHeader.toLowerCase().startsWith("bearer ")) {
+        token = authHeader.substring(7).trim();
+      } else {
+        token = authHeader.trim();
+      }
+      const isAuthorized = (token === "admin-authenticated") || (token === ADMIN_PASSWORD && token);
       
       if (!isAuthorized) {
         console.error("Delete referral code - Authorization failed");
