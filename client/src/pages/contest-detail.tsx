@@ -67,7 +67,7 @@ const contestsData: Record<string, ContestData> = {
     poster: pitchRoomPoster,
     introduction: "The Pitch Room is Kerala Startup Fest's flagship idea-submission platform created to discover realistic, buildable, and scalable ideas from students and young innovators. This competition is not for imaginary concepts — we invite ideas that can be turned into real startups with proper execution, mentoring, and funding. Participants submit their ideas online → shortlisted innovators proceed to an online screening → the Top 10 finalists pitch live at Kerala Startup Fest 2026, directly in front of real funders, investors, startup advisors, and venture capitalists. Winners receive cash prizes up to ₹50,000, along with incubation support and opportunities for real funding.",
     eligibility: [
-      "School students, college students and young adults up to age 29",
+      "School students, college students and young adults of all ages",
       "Individuals or teams (maximum 3 members)",
       "Participants must be serious about converting their idea into a startup",
       "Participants should be available for all three stages"

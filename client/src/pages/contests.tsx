@@ -31,7 +31,7 @@ const contests = [
     title: "The Pitch Room",
     description: "Where bold ideas meet real opportunities—pitch your concept and convince the evaluators in minutes.",
     icon: Mic,
-    badge: "Age 10 to 29",
+    badge: "No Age Limit",
   },
   {
     id: 3,
@@ -161,7 +161,7 @@ export default function Contests() {
                 </p>
                 <div className="flex items-center justify-center gap-2 text-muted-foreground mt-6">
                   <Users className="w-5 h-5" />
-                  <span>Open for ages 10-29</span>
+                  <span>Open to All Ages</span>
                 </div>
               </motion.div>
             </div>
