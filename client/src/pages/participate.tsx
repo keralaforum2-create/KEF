@@ -1033,6 +1033,17 @@ export default function Participate() {
   });
 
   const onSubmit = (data: RegistrationFormData) => {
+    // Validate referral code if entered
+    if (data.referralCode && data.referralCode.trim()) {
+      if (!validatedGiftCode) {
+        toast({
+          title: "Invalid gift code",
+          description: "Please use a valid gift code or leave it empty. Click 'Apply' to validate the code first.",
+          variant: "destructive"
+        });
+        return;
+      }
+    }
     setSubmittedData(data);
     mutation.mutate(data);
   };

@@ -373,9 +373,10 @@ export async function registerRoutes(
       
       // Skip admin notification for speaker registrations (they use speaker applications)
       if (registration.registrationType !== 'speaker') {
-        // Send admin notification about new registration
+        // Send admin notification about new registration with ticket viewing link
         const baseUrl = resolveBaseUrl(req);
-        sendAdminNotificationEmail(registration, baseUrl).catch((err) => {
+        const ticketUrl = `${baseUrl}/ticket/${registration.registrationId}`;
+        sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
           console.error('Failed to send admin notification:', err);
         });
       }
@@ -707,7 +708,7 @@ export async function registerRoutes(
         });
 
         // Send admin notification about new admin-added registration
-        sendAdminNotificationEmail(registration, baseUrl).catch((err) => {
+        sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
           console.error('Failed to send admin notification:', err);
         });
       }
@@ -2094,6 +2095,8 @@ export async function registerRoutes(
         // Send admin notification about new speaker application
         console.log(`📧 Sending admin notification about new speaker application`);
         try {
+          const baseUrl = resolveBaseUrl(req);
+          const speakerTicketUrl = `${baseUrl}/speaker-application/${application.id}`;
           const adminEmailResult = await sendAdminNotificationEmail({
             id: application.id.toString(),
             registrationId: application.id.toString(),
@@ -2104,7 +2107,7 @@ export async function registerRoutes(
             institution: applicationData.startupName,
             registrationType: "speaker",
             sessionName: `Speaker: ${applicationData.founderName} - ${applicationData.startupName}`,
-          } as any);
+          } as any, speakerTicketUrl);
           
           if (adminEmailResult.success) {
             console.log(`✅ Admin notification sent successfully for speaker application`);
