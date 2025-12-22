@@ -6,7 +6,7 @@ import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { sendRegistrationEmail, sendBasicRegistrationEmail, sendAdminNotificationEmail, sendSpeakerConfirmationEmail, sendSpeakerApprovalEmail } from "./email";
+import { sendRegistrationEmail, sendAdminNotificationEmail, sendSpeakerConfirmationEmail, sendSpeakerApprovalEmail } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { createRazorpayOrder, verifyRazorpayPayment } from "./razorpay";
 import { randomUUID as uuid } from "crypto";
@@ -373,11 +373,6 @@ export async function registerRoutes(
       
       // Skip admin notification for speaker registrations (they use speaker applications)
       if (registration.registrationType !== 'speaker') {
-        // Send basic registration confirmation to user (no ticket yet)
-        sendBasicRegistrationEmail(registration).catch((err) => {
-          console.error('Failed to send registration confirmation:', err);
-        });
-
         // Send admin notification about new registration
         const baseUrl = resolveBaseUrl(req);
         sendAdminNotificationEmail(registration, baseUrl).catch((err) => {
@@ -693,7 +688,7 @@ export async function registerRoutes(
         sessionName: sessionName || undefined,
         ticketCategory: ticketCategory || undefined,
         participantType: participantType || undefined,
-        paymentStatus: "admin_added",
+        paymentStatus: "paid",
         paymentScreenshot: "admin_registration",
       };
 
@@ -714,9 +709,10 @@ export async function registerRoutes(
       
       // Skip email notifications for speaker registrations
       if (registration.registrationType !== 'speaker') {
-        // Send basic registration confirmation to the user (no ticket yet)
-        sendBasicRegistrationEmail(registration).catch((err) => {
-          console.error('Failed to send registration emails:', err);
+        // Send full ticket email to the user (with ticket details and download link)
+        const ticketUrl = `${baseUrl}/ticket/${registration.registrationId}`;
+        sendRegistrationEmail(registration, ticketUrl).catch((err) => {
+          console.error('Failed to send registration email:', err);
         });
 
         // Send admin notification about new admin-added registration
