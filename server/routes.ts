@@ -1009,9 +1009,9 @@ export async function registerRoutes(
   // Create Razorpay order for existing registration (called from payment-success page)
   app.post("/api/razorpay/create-order", async (req: Request, res) => {
     try {
-      const { registrationId, registrationData, amount } = req.body;
+      const { registrationId, registrationData, amount, referralCode } = req.body;
 
-      console.log("Razorpay create-order request:", { registrationId, hasRegistrationData: !!registrationData, amount });
+      console.log("Razorpay create-order request:", { registrationId, hasRegistrationData: !!registrationData, amount, referralCode });
 
       // Handle two cases: 1) Existing registration (just registrationId), 2) New registration (registrationData + amount)
       if (registrationId) {
@@ -1042,14 +1042,30 @@ export async function registerRoutes(
           orderAmount = registration.ticketCategory === 'platinum' ? 1299 : registration.ticketCategory === 'gold' ? 599 : 199;
         }
 
+        // Apply referral code discount if provided
+        let discountPercentage = 0;
+        let discountedAmount = orderAmount;
+        if (referralCode) {
+          const referralCodeData = await storage.getReferralCodeByCode(referralCode);
+          if (referralCodeData && referralCodeData.isActive) {
+            discountPercentage = referralCodeData.discountPercentage;
+            discountedAmount = Math.round(orderAmount * (100 - discountPercentage) / 100);
+            console.log(`✓ Referral code applied: ${referralCode} - ${discountPercentage}% discount`);
+          } else {
+            console.warn(`⚠️ Invalid or inactive referral code: ${referralCode}`);
+          }
+        }
+
         const receipt = `RZP${Date.now()}${randomUUID().slice(0, 8)}`;
         const orderResult = await createRazorpayOrder({
-          amount: orderAmount,
+          amount: discountedAmount,
           receipt,
           notes: {
             registrationId: registration.registrationId,
             fullName: registration.fullName,
             email: registration.email,
+            discountCode: referralCode || "none",
+            discountPercentage: discountPercentage
           }
         });
 
@@ -1058,14 +1074,19 @@ export async function registerRoutes(
         }
 
         await storage.updateRegistrationPayment(registration.id, {
-          razorpayOrderId: orderResult.order.id
+          razorpayOrderId: orderResult.order.id,
+          discountedAmount: discountedAmount,
+          discountPercentage: discountPercentage
         });
 
-        console.log("Razorpay order created for existing registration:", orderResult.order.id);
+        console.log("Razorpay order created for existing registration:", orderResult.order.id, `Final amount: ${discountedAmount}`);
         return res.json({
           success: true,
           razorpayOrderId: orderResult.order.id,
-          amount: orderAmount,
+          amount: discountedAmount,
+          originalAmount: orderAmount,
+          discountPercentage: discountPercentage,
+          discountedAmount: discountedAmount,
           razorpayKeyId: orderResult.keyId,
           registrationId: registration.registrationId
         });
@@ -1095,12 +1116,26 @@ export async function registerRoutes(
   // Legacy Razorpay create-order endpoint (for new registrations)
   app.post("/api/razorpay/create-order-new", async (req: Request, res) => {
     try {
-      const { registrationData, amount } = req.body;
+      const { registrationData, amount, referralCode } = req.body;
 
       if (!registrationData || !amount) {
         return res.status(400).json({
           message: "Registration data and amount are required"
         });
+      }
+
+      // Apply referral code discount if provided
+      let discountPercentage = 0;
+      let discountedAmount = Number(amount);
+      if (referralCode) {
+        const referralCodeData = await storage.getReferralCodeByCode(referralCode);
+        if (referralCodeData && referralCodeData.isActive) {
+          discountPercentage = referralCodeData.discountPercentage;
+          discountedAmount = Math.round(Number(amount) * (100 - discountPercentage) / 100);
+          console.log(`✓ Referral code applied: ${referralCode} - ${discountPercentage}% discount`);
+        } else {
+          console.warn(`⚠️ Invalid or inactive referral code: ${referralCode}`);
+        }
       }
 
       const result = insertRegistrationSchema.safeParse({
@@ -1122,18 +1157,22 @@ export async function registerRoutes(
       const registrationWithPayment = {
         ...result.data,
         razorpayOrderId: receipt,
-        paymentAmount: String(amount)
+        paymentAmount: String(discountedAmount),
+        discountedAmount: discountedAmount,
+        discountPercentage: discountPercentage
       };
 
       const registration = await storage.createRegistration(registrationWithPayment as any);
 
       const orderResult = await createRazorpayOrder({
-        amount: Number(amount),
+        amount: discountedAmount,
         receipt,
         notes: {
           registrationId: String(registration.id),
           fullName: registrationData.fullName,
           email: registrationData.email,
+          discountCode: referralCode || "none",
+          discountPercentage: discountPercentage
         }
       });
 
@@ -1150,12 +1189,16 @@ export async function registerRoutes(
         razorpayOrderId: orderResult.order.id
       });
 
-      console.log("Razorpay order created:", orderResult.order.id);
+      console.log("Razorpay order created:", orderResult.order.id, `Final amount: ${discountedAmount}`);
       return res.json({
         success: true,
         order: orderResult.order,
         keyId: orderResult.keyId,
         registrationId: registration.registrationId,
+        amount: discountedAmount,
+        originalAmount: Number(amount),
+        discountPercentage: discountPercentage,
+        discountedAmount: discountedAmount,
         prefill: {
           name: registrationData.fullName,
           email: registrationData.email,
