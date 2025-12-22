@@ -6,7 +6,7 @@ import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { sendRegistrationEmail, sendAdminNotificationEmail, sendSpeakerConfirmationEmail, sendSpeakerApprovalEmail } from "./email";
+import { sendRegistrationEmail, sendBasicRegistrationEmail, sendAdminNotificationEmail, sendSpeakerConfirmationEmail, sendSpeakerApprovalEmail } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { createRazorpayOrder, verifyRazorpayPayment } from "./razorpay";
 import { randomUUID as uuid } from "crypto";
@@ -689,8 +689,8 @@ export async function registerRoutes(
 
       const baseUrl = resolveBaseUrl(req);
       
-      // Send ticket email to the user
-      sendRegistrationEmail(registration, baseUrl).catch((err) => {
+      // Send basic registration confirmation to the user (no ticket yet)
+      sendBasicRegistrationEmail(registration).catch((err) => {
         console.error('Failed to send registration emails:', err);
       });
 

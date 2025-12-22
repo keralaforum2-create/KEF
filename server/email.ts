@@ -73,6 +73,75 @@ interface RegistrationData {
   pitchDeclarationConfirmed?: string | null;
 }
 
+function generateBasicRegistrationEmailHtml(data: RegistrationData): string {
+  let registrationTypeText = '';
+  if (data.registrationType === 'contest') {
+    registrationTypeText = `Contest (${data.contestName || 'Contest'})`;
+  } else if (data.ticketCategory === 'platinum') {
+    registrationTypeText = 'Platinum Pass';
+  } else if (data.ticketCategory === 'gold') {
+    registrationTypeText = 'Gold Pass';
+  } else if (data.ticketCategory === 'silver') {
+    registrationTypeText = 'Silver Pass';
+  } else {
+    registrationTypeText = 'Event Pass';
+  }
+
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Kerala Startup Fest 2026 Registration Confirmation</title>
+    </head>
+    <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
+      <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="background: linear-gradient(135deg, #dc2626 0%, #f97316 100%); border-radius: 16px; padding: 40px; text-align: center; color: white;">
+          <h1 style="margin: 0 0 10px 0; font-size: 32px; font-weight: bold;">Kerala Startup Fest</h1>
+          <p style="margin: 0; font-size: 48px; font-weight: bold; color: #fbbf24;">2026</p>
+          <p style="margin: 20px 0 0 0; font-size: 14px; opacity: 0.9;">January 07 & 08, 2026 | Aspin Courtyards, Calicut Beach</p>
+        </div>
+        
+        <div style="background: white; border-radius: 16px; padding: 30px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Dear Startup Enthusiast,</p>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+            Thank you for registering for the <strong>${registrationTypeText}</strong> of Kerala Startup Fest 2026, to be held on January 07 & 08 at Aspin Courtyards, Calicut Beach.
+          </p>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+            Your registration has been submitted successfully.
+          </p>
+          
+          <div style="background: #fef2f2; border: 2px solid #fecaca; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0;">
+            <p style="margin: 0 0 5px 0; font-size: 12px; color: #666; text-transform: uppercase;">Your Registration ID</p>
+            <p style="margin: 0; font-size: 24px; font-weight: bold; color: #dc2626; font-family: monospace;">${data.registrationId}</p>
+          </div>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 20px 0; background: #f0f9ff; border-left: 4px solid #0284c7; padding: 15px;">
+            <strong>Next Step:</strong> Your ticket will be sent to you after payment confirmation. Please complete your payment to receive your event ticket.
+          </p>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+            We will share the detailed schedule and delegate instructions shortly.
+          </p>
+          
+          <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 20px 0 0 0;">
+            For any queries, feel free to contact us.
+          </p>
+        </div>
+        
+        <div style="text-align: center; padding: 20px; color: #333;">
+          <p style="margin: 0; font-weight: bold; font-size: 16px;">Kerala Startup Fest Team</p>
+          <p style="margin: 5px 0 0 0; color: #666; font-size: 14px;">Kerala Economic Forum</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
 function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): string {
   // Determine the registration type for the message
   let registrationTypeText = '';
@@ -112,7 +181,7 @@ function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): str
           </p>
           
           <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-            Your registration has been successfully confirmed.
+            Your registration has been successfully confirmed and your payment has been verified!
           </p>
           
           <div style="background: #fef2f2; border: 2px solid #fecaca; border-radius: 12px; padding: 20px; text-align: center; margin: 20px 0;">
@@ -451,28 +520,54 @@ function generateSpeakerConfirmationEmailHtml(data: RegistrationData): string {
   `;
 }
 
-export async function sendRegistrationEmail(data: RegistrationData, ticketUrl: string): Promise<{ success: boolean; error?: string }> {
+export async function sendBasicRegistrationEmail(data: RegistrationData): Promise<{ success: boolean; error?: string }> {
   try {
     const api = getBrevoClient();
     
-    console.log(`📧 Sending registration email to: ${data.email}`);
+    console.log(`📧 Sending basic registration confirmation to: ${data.email}`);
     
     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
     sendSmtpEmail.sender = { name: FROM_NAME, email: FROM_EMAIL };
     sendSmtpEmail.to = [{ email: data.email, name: data.fullName }];
     sendSmtpEmail.cc = [{ email: ADMIN_EMAIL }];
     sendSmtpEmail.subject = `Your Kerala Startup Fest 2026 Registration Confirmed`;
+    sendSmtpEmail.htmlContent = generateBasicRegistrationEmailHtml(data);
+    
+    await api.sendTransacEmail(sendSmtpEmail);
+    
+    console.log(`✅ Basic registration email sent successfully to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Error sending basic registration email:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to send registration email' 
+    };
+  }
+}
+
+export async function sendRegistrationEmail(data: RegistrationData, ticketUrl: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const api = getBrevoClient();
+    
+    console.log(`📧 Sending ticket email to: ${data.email}`);
+    
+    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+    sendSmtpEmail.sender = { name: FROM_NAME, email: FROM_EMAIL };
+    sendSmtpEmail.to = [{ email: data.email, name: data.fullName }];
+    sendSmtpEmail.cc = [{ email: ADMIN_EMAIL }];
+    sendSmtpEmail.subject = `Your Kerala Startup Fest 2026 Ticket - Payment Confirmed`;
     sendSmtpEmail.htmlContent = generateTicketEmailHtml(data, ticketUrl);
     
     await api.sendTransacEmail(sendSmtpEmail);
     
-    console.log(`✅ Registration email sent successfully to ${data.email}`);
+    console.log(`✅ Ticket email sent successfully to ${data.email}`);
     return { success: true };
   } catch (error) {
-    console.error('❌ Error sending registration email:', error);
+    console.error('❌ Error sending ticket email:', error);
     return { 
       success: false, 
-      error: error instanceof Error ? error.message : 'Failed to send registration email' 
+      error: error instanceof Error ? error.message : 'Failed to send ticket email' 
     };
   }
 }
