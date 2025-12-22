@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 import { 
   Lightbulb, 
   Scale, 
@@ -200,6 +202,19 @@ export default function Sessions() {
                   <Users className="w-5 h-5" />
                   <span>Open for ages 13-29</span>
                 </div>
+                
+                <motion.div 
+                  className="mt-8"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <Link href="/participate?type=expert-session">
+                    <Button size="lg" data-testid="button-register-expert-session">
+                      Register for Expert Sessions
+                    </Button>
+                  </Link>
+                </motion.div>
               </motion.div>
             </div>
           </ScrollFadeUp>
