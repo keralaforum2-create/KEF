@@ -469,25 +469,20 @@ export async function registerRoutes(
         return res.status(404).json({ message: "Registration not found" });
       }
 
+      // Update registration as approved, but only mark as paid after actual payment confirmation
       const updatedRegistration = await storage.updateRegistrationPayment(registration.id, {
-        paymentStatus: 'paid'
+        paymentStatus: 'approved'
       });
 
       if (!updatedRegistration) {
         return res.status(500).json({ message: "Failed to update registration" });
       }
 
-      const baseUrl = resolveBaseUrl(req);
-      // Send emails in background (non-blocking)
-      sendRegistrationEmail(updatedRegistration, baseUrl)
-        .catch((err) => {
-          console.error('Failed to send registration emails:', err);
-        });
-
-      console.log("Registration approved:", id);
+      // Do NOT send email here - email should only be sent after actual payment confirmation
+      console.log("Registration approved (awaiting payment confirmation):", id);
       return res.json({
         success: true,
-        message: "Registration approved successfully",
+        message: "Registration approved - awaiting payment confirmation",
         registrationId: id
       });
     } catch (error: any) {
@@ -536,17 +531,13 @@ export async function registerRoutes(
         return res.status(500).json({ message: "Failed to confirm registration" });
       }
 
-      // Send verification email
-      const baseUrl = resolveBaseUrl(req);
-      const ticketUrl = `${baseUrl}/ticket/${registrationId}`;
-      await sendRegistrationEmail(updatedRegistration, baseUrl).catch((err: any) => {
-        console.error('Failed to send ticket email:', err);
-      });
+      // Do NOT send email from this endpoint - emails should only be sent after actual payment confirmation
+      // This endpoint is deprecated in favor of payment gateway callbacks
 
-      console.log("Registration confirmed:", registrationId);
+      console.log("Registration confirmed (manual):", registrationId);
       return res.json({
         success: true,
-        message: "Registration confirmed successfully",
+        message: "Registration status updated - email will be sent after payment confirmation",
         registrationId
       });
     } catch (error) {
