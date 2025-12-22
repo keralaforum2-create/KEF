@@ -2391,6 +2391,7 @@ export default function Admin() {
                       addLine("Team Member 1", selectedReg.teamMember1Name);
                       addLine("Team Member 2", selectedReg.teamMember2Name);
                       addLine("Payment Status", selectedReg.paymentStatus);
+                      addLine("Referral Code", selectedReg.referralCode);
                       addLine("Created At", selectedReg.createdAt ? new Date(selectedReg.createdAt).toLocaleString() : null);
                       
                       if (selectedReg.contestName === "The Pitch Room") {
@@ -2520,6 +2521,37 @@ export default function Admin() {
                     {selectedReg.teamMember2Name && <p className="text-base">2. {selectedReg.teamMember2Name}</p>}
                   </div>
                 )}
+                
+                {/* Payment & Referral Section */}
+                <div className="border-t pt-4 space-y-4">
+                  <h4 className="font-semibold text-primary">Payment Information</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">Payment Status</label>
+                      <Badge className={selectedReg.paymentStatus === "paid" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"}>
+                        {selectedReg.paymentStatus === "paid" ? "Paid" : "Pending"}
+                      </Badge>
+                    </div>
+                    {selectedReg.referralCode && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Referral Code Used</label>
+                        <p className="text-base font-mono font-bold text-primary">{selectedReg.referralCode}</p>
+                      </div>
+                    )}
+                  </div>
+                  {selectedReg.discountedAmount && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Original Amount</label>
+                        <p className="text-base">₹{selectedReg.originalAmount}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Discounted Amount</label>
+                        <p className="text-base text-green-600 dark:text-green-400">₹{selectedReg.discountedAmount}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 
                 {/* Pitch Room Details Section */}
                 {selectedReg.contestName === "The Pitch Room" && (
