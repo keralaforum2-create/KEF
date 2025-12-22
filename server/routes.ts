@@ -516,10 +516,6 @@ export async function registerRoutes(
         return res.status(404).json({ message: "Ticket not found" });
       }
       
-      if (registration.paymentStatus !== 'paid') {
-        return res.status(403).json({ message: "Ticket not yet available. Payment must be confirmed first." });
-      }
-      
       return res.json(registration);
     } catch (error) {
       console.error("Error fetching ticket:", error);
@@ -938,7 +934,8 @@ export async function registerRoutes(
             console.error('Failed to send speaker confirmation email:', err);
           });
         } else {
-          sendRegistrationEmail(registration, baseUrl).catch((err) => {
+          const ticketUrl = `${baseUrl}/ticket/${registration.registrationId}`;
+          sendRegistrationEmail(registration, ticketUrl).catch((err) => {
             console.error('Failed to send registration emails:', err);
           });
         }
@@ -985,7 +982,8 @@ export async function registerRoutes(
             console.error('Failed to send speaker confirmation email:', err);
           });
         } else {
-          sendRegistrationEmail(registration, baseUrl).catch((err) => {
+          const ticketUrl = `${baseUrl}/ticket/${registration.registrationId}`;
+          sendRegistrationEmail(registration, ticketUrl).catch((err) => {
             console.error('Failed to send registration emails:', err);
           });
         }
@@ -1224,8 +1222,9 @@ export async function registerRoutes(
       }
 
       const baseUrl = resolveBaseUrl(req);
+      const ticketUrl = `${baseUrl}/ticket/${registration.registrationId}`;
       
-      sendRegistrationEmail(registration, baseUrl).catch((err) => {
+      sendRegistrationEmail(registration, ticketUrl).catch((err) => {
         console.error('Failed to send registration emails:', err);
       });
 
@@ -1738,7 +1737,8 @@ export async function registerRoutes(
             console.error('Failed to send speaker confirmation email:', err);
           });
         } else {
-          sendRegistrationEmail(registration, baseUrl).catch((err) => {
+          const ticketUrl = `${baseUrl}/ticket/${registration.registrationId}`;
+          sendRegistrationEmail(registration, ticketUrl).catch((err) => {
             console.error('Failed to send registration emails:', err);
           });
         }
@@ -1785,7 +1785,8 @@ export async function registerRoutes(
             console.error('Failed to send speaker confirmation email:', err);
           });
         } else {
-          sendRegistrationEmail(registration, baseUrl).catch((err) => {
+          const ticketUrl = `${baseUrl}/ticket/${registration.registrationId}`;
+          sendRegistrationEmail(registration, ticketUrl).catch((err) => {
             console.error('Failed to send registration emails:', err);
           });
         }
