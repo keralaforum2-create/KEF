@@ -2542,12 +2542,24 @@ export default function Admin() {
                         {selectedReg.paymentStatus === "paid" ? "Paid" : "Pending"}
                       </Badge>
                     </div>
-                    {selectedReg.referralCode && (
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">Referral Code Used</label>
-                        <p className="text-base font-mono font-bold text-primary">{selectedReg.referralCode}</p>
-                      </div>
-                    )}
+                    {selectedReg.referralCode && (() => {
+                      const referralCodeObj = referralCodes?.find(rc => rc.code === selectedReg.referralCode);
+                      return (
+                        <div>
+                          <label className="text-sm font-medium text-muted-foreground">Referral Code Used</label>
+                          <div className="flex items-center gap-2">
+                            <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 font-mono font-bold text-sm">
+                              {selectedReg.referralCode}
+                            </Badge>
+                            {referralCodeObj && (
+                              <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300 text-xs">
+                                {referralCodeObj.discountPercentage}% OFF
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })()}
                   </div>
                   {selectedReg.discountedAmount && (
                     <div className="grid grid-cols-2 gap-4">
@@ -2557,7 +2569,7 @@ export default function Admin() {
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">Discounted Amount</label>
-                        <p className="text-base text-green-600 dark:text-green-400">₹{selectedReg.discountedAmount}</p>
+                        <p className="text-base text-green-600 dark:text-green-400 font-semibold">₹{selectedReg.discountedAmount}</p>
                       </div>
                     </div>
                   )}
