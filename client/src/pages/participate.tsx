@@ -684,7 +684,7 @@ export default function Participate() {
 
     try {
       const formData = form.getValues();
-      const amount = getPaymentAmount();
+      const amount = getDiscountedAmount();
 
       const registrationData = {
         fullName: formData.fullName,
@@ -795,7 +795,7 @@ export default function Participate() {
 
     try {
       const formData = form.getValues();
-      const amount = getPaymentAmount();
+      const amount = getDiscountedAmount();
 
       const registrationData = {
         fullName: formData.fullName,
