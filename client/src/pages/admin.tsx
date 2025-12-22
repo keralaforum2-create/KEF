@@ -382,6 +382,32 @@ export default function Admin() {
     },
   });
 
+  const approveSpeakerMutation = useMutation({
+    mutationFn: async (speakerId: string) => {
+      const response = await fetch(`/api/speakers/${speakerId}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to approve speaker");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/speakers"] });
+      setSelectedSpeakerApp(null);
+      toast({ title: "Speaker approved successfully! Email sent." });
+    },
+    onError: (error: any) => {
+      toast({ title: "Approval Error", description: error?.message || "Failed to approve speaker", variant: "destructive" });
+    },
+  });
+
+  const handleApproveSpeaker = (speakerId: string) => {
+    approveSpeakerMutation.mutate(speakerId);
+  };
+
   const handleAdminRegSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!adminRegForm.fullName || !adminRegForm.email || !adminRegForm.phone) {
@@ -3049,7 +3075,22 @@ export default function Admin() {
                   <label className="text-sm font-medium text-muted-foreground">Startup Story</label>
                   <p className="text-sm mt-1">{selectedSpeakerApp.startupStory}</p>
                 </div>
-                <div className="flex justify-end pt-4">
+                <div className="flex justify-between pt-4 gap-2">
+                  {selectedSpeakerApp.status === "pending" && (
+                    <Button 
+                      onClick={() => handleApproveSpeaker(selectedSpeakerApp.id)}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      data-testid="button-approve-speaker"
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Approve Speaker
+                    </Button>
+                  )}
+                  {selectedSpeakerApp.status === "approved" && (
+                    <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                      Approved
+                    </Badge>
+                  )}
                   <Button variant="outline" onClick={() => setSelectedSpeakerApp(null)}>Close</Button>
                 </div>
               </motion.div>

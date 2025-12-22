@@ -536,3 +536,75 @@ export async function sendSpeakerConfirmationEmail(data: RegistrationData): Prom
     };
   }
 }
+
+export async function sendSpeakerApprovalEmail(founderName: string, email: string, startupName: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const api = getBrevoClient();
+    
+    console.log(`📧 Sending speaker approval email to: ${email}`);
+    
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Speaker Application Approved - Kerala Startup Fest 2026</title>
+      </head>
+      <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 16px; padding: 40px; text-align: center; color: white;">
+            <h1 style="margin: 0; font-size: 32px; font-weight: bold;">APPROVED</h1>
+            <p style="margin: 15px 0 0 0; font-size: 18px;">Your Speaker Application is Approved!</p>
+          </div>
+          
+          <div style="background: white; border-radius: 16px; padding: 30px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+              Dear <strong>${founderName}</strong>,
+            </p>
+            
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+              Congratulations! Your podcast speaker application for <strong>${startupName}</strong> has been <strong style="color: #10b981;">APPROVED</strong> by Kerala Startup Fest 2026.
+            </p>
+            
+            <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #059669; margin: 0 0 15px 0;">Next Steps</h3>
+              <ul style="color: #333; margin: 0; padding-left: 20px;">
+                <li style="margin: 8px 0;">We will contact you with podcast recording details</li>
+                <li style="margin: 8px 0;">Prepare your key insights and story to share</li>
+                <li style="margin: 8px 0;">Join us at Kerala Startup Fest 2026 on January 7-8</li>
+              </ul>
+            </div>
+            
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 20px 0 0 0;">
+              For any questions, reach out to us at <strong>podcast@keralastartupfest.com</strong>
+            </p>
+          </div>
+          
+          <div style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+            <p style="margin: 0;">This is an automated notification from Kerala Startup Fest 2026</p>
+            <p style="margin: 5px 0 0 0;">January 7-8, 2026 | Aspin Courtyards, Calicut Beach</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+    sendSmtpEmail.sender = { name: FROM_NAME, email: FROM_EMAIL };
+    sendSmtpEmail.to = [{ email: email, name: founderName }];
+    sendSmtpEmail.subject = `Your Podcast Speaker Application is Approved - Kerala Startup Fest 2026`;
+    sendSmtpEmail.htmlContent = htmlContent;
+    
+    await api.sendTransacEmail(sendSmtpEmail);
+    
+    console.log(`✅ Speaker approval email sent successfully to ${email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Error sending speaker approval email:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to send speaker approval email' 
+    };
+  }
+}

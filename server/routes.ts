@@ -6,7 +6,7 @@ import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { sendRegistrationEmail, sendAdminNotificationEmail, sendSpeakerConfirmationEmail } from "./email";
+import { sendRegistrationEmail, sendAdminNotificationEmail, sendSpeakerConfirmationEmail, sendSpeakerApprovalEmail } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { createRazorpayOrder, verifyRazorpayPayment } from "./razorpay";
 import { randomUUID as uuid } from "crypto";
@@ -395,6 +395,35 @@ export async function registerRoutes(
     } catch (error) {
       console.error("Error fetching speakers:", error);
       return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/speakers/:id/approve", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const speaker = await storage.getSpeakerApplicationById(id);
+      
+      if (!speaker) {
+        return res.status(404).json({ message: "Speaker not found" });
+      }
+
+      await storage.updateSpeakerApplicationStatus(id, "approved");
+
+      sendSpeakerApprovalEmail(speaker.founderName, speaker.email, speaker.startupName)
+        .catch((err) => {
+          console.error('Failed to send speaker approval email:', err);
+        });
+
+      console.log(`✅ Speaker approved: ${id}`);
+      return res.json({
+        success: true,
+        message: "Speaker approved successfully"
+      });
+    } catch (error: any) {
+      console.error("Error approving speaker:", error);
+      return res.status(500).json({ 
+        message: error?.message || "Failed to approve speaker" 
+      });
     }
   });
 
