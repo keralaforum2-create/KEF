@@ -159,65 +159,19 @@ export default function Sessions() {
       </section>
 
       <section className="py-16 bg-white dark:bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollFadeUp>
-            <div className="relative">
-              <div 
-                className="absolute right-0 top-0 bottom-0 w-1.5 rounded-r-lg"
-                style={{
-                  background: 'linear-gradient(180deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                }}
-              />
-              <div 
-                className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-lg"
-                style={{
-                  background: 'linear-gradient(180deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                }}
-              />
-              <motion.div 
-                className="bg-white dark:bg-card border border-border rounded-lg p-8 sm:p-12 text-center"
-                whileHover={{ scale: 1.01 }}
-                transition={{ duration: 0.3 }}
-              >
-                <motion.div 
-                  className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6"
-                  animate={{ 
-                    boxShadow: [
-                      "0 0 0 0 rgba(239, 68, 68, 0)",
-                      "0 0 20px 10px rgba(239, 68, 68, 0.1)",
-                      "0 0 0 0 rgba(239, 68, 68, 0)"
-                    ]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <Lightbulb className="w-8 h-8 text-primary" />
-                </motion.div>
-                <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-4 text-foreground">
-                  Ready to Learn?
-                </h2>
-                <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-2">
-                  Register now to participate in expert sessions at Kerala Startup Fest 2026.
-                </p>
-                <div className="flex items-center justify-center gap-2 text-muted-foreground mt-6">
-                  <Users className="w-5 h-5" />
-                  <span>Open for ages 13-29</span>
-                </div>
-                
-                <motion.div 
-                  className="mt-8"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <Link href="/participate?type=expert-session">
-                    <Button size="lg" data-testid="button-register-expert-session">
-                      Register for Expert Sessions
-                    </Button>
-                  </Link>
-                </motion.div>
-              </motion.div>
-            </div>
-          </ScrollFadeUp>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div 
+            className="mt-8"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Link href="/participate?type=expert-session">
+              <Button size="lg" data-testid="button-register-expert-session">
+                Register for Expert Sessions
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </section>
     </div>

@@ -127,7 +127,7 @@ export default function Speakers() {
         <div className="mb-12">
           <ScrollFadeUp>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-gray-900" data-testid="text-speakers-title">
-              Our <span className="text-red-600">Podcast Speakers</span>
+              Our <span className="text-red-600">Speakers</span>
             </h1>
           </ScrollFadeUp>
           <ScrollFadeUp delay={0.1}>
