@@ -362,6 +362,20 @@ export async function registerRoutes(
       
       const registration = await storage.createRegistration(result.data);
       
+      // Skip admin notification for speaker registrations (they use speaker applications)
+      if (registration.registrationType !== 'speaker') {
+        // Send basic registration confirmation to user (no ticket yet)
+        sendBasicRegistrationEmail(registration).catch((err) => {
+          console.error('Failed to send registration confirmation:', err);
+        });
+
+        // Send admin notification about new registration
+        const baseUrl = resolveBaseUrl(req);
+        sendAdminNotificationEmail(registration, baseUrl).catch((err) => {
+          console.error('Failed to send admin notification:', err);
+        });
+      }
+      
       return res.status(201).json({ 
         message: "Registration successful - Proceed to payment", 
         registration,
@@ -381,7 +395,9 @@ export async function registerRoutes(
   app.get("/api/registrations", async (req, res) => {
     try {
       const registrations = await storage.getPaidRegistrations();
-      return res.json(registrations);
+      // Filter out speaker registrations from this endpoint
+      const nonSpeakerRegistrations = registrations.filter(reg => reg.registrationType !== 'speaker');
+      return res.json(nonSpeakerRegistrations);
     } catch (error) {
       console.error("Error fetching registrations:", error);
       return res.status(500).json({ message: "Internal server error" });
@@ -431,7 +447,9 @@ export async function registerRoutes(
     try {
       res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
       const registrations = await storage.getPendingRegistrations();
-      return res.json(registrations);
+      // Filter out speaker registrations from this endpoint
+      const nonSpeakerRegistrations = registrations.filter(reg => reg.registrationType !== 'speaker');
+      return res.json(nonSpeakerRegistrations);
     } catch (error) {
       console.error("Error fetching pending registrations:", error);
       return res.status(500).json({ message: "Failed to load pending registrations" });
@@ -689,10 +707,18 @@ export async function registerRoutes(
 
       const baseUrl = resolveBaseUrl(req);
       
-      // Send basic registration confirmation to the user (no ticket yet)
-      sendBasicRegistrationEmail(registration).catch((err) => {
-        console.error('Failed to send registration emails:', err);
-      });
+      // Skip email notifications for speaker registrations
+      if (registration.registrationType !== 'speaker') {
+        // Send basic registration confirmation to the user (no ticket yet)
+        sendBasicRegistrationEmail(registration).catch((err) => {
+          console.error('Failed to send registration emails:', err);
+        });
+
+        // Send admin notification about new admin-added registration
+        sendAdminNotificationEmail(registration, baseUrl).catch((err) => {
+          console.error('Failed to send admin notification:', err);
+        });
+      }
 
       return res.status(201).json({ 
         message: "Registration added successfully", 
