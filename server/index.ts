@@ -10,6 +10,7 @@ import fs from "fs";
 import cors from "cors";
 import { registerPhonepeRoutes } from "../routes/index";
 import { startReminderScheduler } from "./reminderScheduler";
+import { DatabaseStorage } from "./storage";
 
 // SSL certificate workaround for external hosting platforms (Render, Railway, etc.)
 // This helps with "self-signed certificate in certificate chain" errors
@@ -207,6 +208,22 @@ app.use((req, res, next) => {
   } else {
     const { setupVite } = await import("./vite");
     await setupVite(httpServer, app);
+  }
+
+  // Initialize default referral codes
+  const storage = new DatabaseStorage();
+  try {
+    const existingCode = await storage.getReferralCodeByCode("RINSHAD10");
+    if (!existingCode) {
+      await storage.createReferralCode({
+        code: "RINSHAD10",
+        discountPercentage: 10,
+        isActive: true,
+      });
+      console.log("✅ Referral code RINSHAD10 (10% discount) initialized");
+    }
+  } catch (err) {
+    console.log("ℹ️ Referral code initialization skipped (may already exist)");
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
