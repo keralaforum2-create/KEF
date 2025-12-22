@@ -24,7 +24,7 @@ export default function PaymentSuccess() {
   const [registrationData, setRegistrationData] = useState<RegistrationData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
+  const [confirmed, setConfirmed] = useState(true);
   const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
@@ -346,39 +346,15 @@ export default function PaymentSuccess() {
                     <Mail className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
                     <div className="text-left">
                       <p className="text-sm text-blue-800 dark:text-blue-300 font-medium">
-                        Ticket will be sent to your email
+                        Your ticket will be sent to your email
                       </p>
                       <p className="text-xs text-blue-700 dark:text-blue-400 mt-1">
-                        After confirming your registration, your digital ticket will be emailed to you within a few minutes.
+                        Your digital ticket will be emailed to you within a few minutes.
                       </p>
                     </div>
                   </div>
-
-                  <p className="text-muted-foreground text-sm">
-                    Your payment has been processed successfully. Click the button below to confirm.
-                  </p>
                 </>
               )}
-
-              <Button 
-                onClick={handleConfirmRegistration} 
-                size="lg" 
-                className="w-full"
-                disabled={loading || confirming}
-                data-testid="button-confirm-registration"
-              >
-                {confirming ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Confirming...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4 h-4 mr-2" />
-                    Confirm Registration
-                  </>
-                )}
-              </Button>
             </motion.div>
           </CardContent>
         </Card>

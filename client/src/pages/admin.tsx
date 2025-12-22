@@ -756,6 +756,7 @@ export default function Admin() {
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
                                 <TableHead>Payment Status</TableHead>
+                                <TableHead>Referral Code</TableHead>
                                 <TableHead>Ticket Category</TableHead>
                                 <TableHead>Type</TableHead>
                                 <TableHead>Action</TableHead>
@@ -793,6 +794,15 @@ export default function Admin() {
                                     <Badge className={reg.paymentStatus === "paid" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"}>
                                       {reg.paymentStatus === "paid" ? "Paid" : "Pending"}
                                     </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    {reg.referralCode ? (
+                                      <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300 font-mono text-xs">
+                                        {reg.referralCode}
+                                      </Badge>
+                                    ) : (
+                                      <span className="text-muted-foreground text-sm">-</span>
+                                    )}
                                   </TableCell>
                                   <TableCell>
                                     {reg.ticketCategory ? (
