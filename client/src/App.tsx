@@ -127,16 +127,23 @@ function App() {
           </main>
           <Footer className="hidden lg:block" />
         </div>
-        <a 
-          href="https://agent-694821dcdde99eb716fe8--keralastartupfestin.netlify.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-testid="button-free-poster"
-          className="sticky-poster-btn"
+        <div
+          className="sticky-poster-btn-wrapper"
+          style={{
+            background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+          }}
         >
-          <Gift size={20} strokeWidth={2.5} />
-          GET A FREE POSTER
-        </a>
+          <a 
+            href="https://agent-694821dcdde99eb716fe8--keralastartupfestin.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="button-free-poster"
+            className="sticky-poster-btn"
+          >
+            <Gift size={20} strokeWidth={2.5} />
+            GET A FREE POSTER
+          </a>
+        </div>
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>
