@@ -701,7 +701,7 @@ export async function sendSpeakerApprovalEmail(founderName: string, email: strin
   }
 }
 
-export async function sendRegistrationApprovalEmail(fullName: string, email: string, registrationId: string): Promise<{ success: boolean; error?: string }> {
+export async function sendRegistrationApprovalEmail(fullName: string, email: string, registrationId: string, ticketUrl?: string): Promise<{ success: boolean; error?: string }> {
   try {
     const resend = getResendClient();
     
@@ -735,6 +735,13 @@ export async function sendRegistrationApprovalEmail(fullName: string, email: str
               <h3 style="color: #059669; margin: 0 0 15px 0;">Your Registration ID</h3>
               <p style="color: #333; font-size: 18px; font-weight: bold; margin: 0; font-family: monospace;">${registrationId}</p>
             </div>
+
+            ${ticketUrl ? `
+            <div style="text-align: center; margin: 25px 0;">
+              <a href="${ticketUrl}?download=true" style="display: inline-block; background: #16a34a; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-bottom: 10px;">Download Your Event Ticket</a>
+              <p style="color: #666; font-size: 12px; margin: 8px 0 0 0;">Click to download your ticket as PDF</p>
+            </div>
+            ` : ''}
             
             <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin: 20px 0;">
               <h3 style="color: #059669; margin: 0 0 15px 0;">Next Steps</h3>

@@ -517,8 +517,11 @@ export async function registerRoutes(
         return res.status(500).json({ message: "Failed to update registration" });
       }
 
+      const baseUrl = resolveBaseUrl(req);
+      const ticketUrl = `${baseUrl}/ticket/${id}`;
+
       // Send approval email immediately to registrant (asynchronously - no waiting)
-      sendRegistrationApprovalEmail(registration.fullName, registration.email, id)
+      sendRegistrationApprovalEmail(registration.fullName, registration.email, id, ticketUrl)
         .catch((err) => {
           console.error('Failed to send registration approval email:', err);
         });
@@ -548,6 +551,13 @@ export async function registerRoutes(
       if (!registration) {
         console.log("Available registrations count:", (await storage.getRegistrations()).length);
         return res.status(404).json({ message: "Ticket not found" });
+      }
+      
+      // Check if download is requested
+      const download = req.query.download === 'true';
+      if (download) {
+        res.setHeader('Content-Disposition', `attachment; filename="event-ticket-${registration.registrationId}.json"`);
+        res.setHeader('Content-Type', 'application/json');
       }
       
       return res.json(registration);
