@@ -74,14 +74,14 @@ export default function Admin() {
 
   const { data: registrations, isLoading: loadingRegistrations } = useQuery<Registration[]>({
     queryKey: ["/api/registrations"],
-    refetchInterval: 1000,
-    staleTime: 0,
+    refetchInterval: 30000,
+    staleTime: 20000,
   });
 
   const { data: pendingRegistrations, isLoading: loadingPendingRegistrations, isError: pendingError } = useQuery<Registration[]>({
     queryKey: ["/api/pending-registrations"],
-    refetchInterval: 1000,
-    staleTime: 0,
+    refetchInterval: 30000,
+    staleTime: 20000,
     retry: 3,
     retryDelay: 1000,
     gcTime: 60000,
@@ -105,32 +105,32 @@ export default function Admin() {
 
   const { data: contacts, isLoading: loadingContacts } = useQuery<Contact[]>({
     queryKey: ["/api/contacts"],
-    refetchInterval: 1000,
-    staleTime: 0,
+    refetchInterval: 30000,
+    staleTime: 20000,
   });
 
   const { data: investorMentors, isLoading: loadingInvestors } = useQuery<InvestorMentor[]>({
     queryKey: ["/api/investor-mentors"],
-    refetchInterval: 1000,
-    staleTime: 0,
+    refetchInterval: 30000,
+    staleTime: 20000,
   });
 
   const { data: sponsorships, isLoading: loadingSponsorships } = useQuery<Sponsorship[]>({
     queryKey: ["/api/sponsorships"],
-    refetchInterval: 1000,
-    staleTime: 0,
+    refetchInterval: 30000,
+    staleTime: 20000,
   });
 
   const { data: bulkRegistrations, isLoading: loadingBulk } = useQuery<BulkRegistration[]>({
     queryKey: ["/api/bulk-registrations"],
-    refetchInterval: 1000,
-    staleTime: 0,
+    refetchInterval: 30000,
+    staleTime: 20000,
   });
 
   const { data: referralCodes, isLoading: loadingReferralCodes, refetch: refetchReferralCodes } = useQuery<ReferralCode[]>({
     queryKey: ["/api/admin/referral-codes"],
-    refetchInterval: 5000,
-    staleTime: 2000,
+    refetchInterval: 30000,
+    staleTime: 20000,
     retry: 2,
     queryFn: async () => {
       const token = localStorage.getItem("admin_token");
@@ -149,14 +149,14 @@ export default function Admin() {
 
   const { data: speakerApplications, isLoading: loadingSpeakerApplications } = useQuery<SpeakerApplication[]>({
     queryKey: ["/api/speakers"],
-    refetchInterval: 1000,
-    staleTime: 0,
+    refetchInterval: 30000,
+    staleTime: 20000,
   });
 
   const { data: referralCodeUsage, isLoading: loadingReferralCodeUsage } = useQuery<Array<{ code: string; discountPercentage: number; timesUsed: number; lastUsed?: string }>>({
     queryKey: ["/api/admin/referral-code-usage"],
-    refetchInterval: 1000,
-    staleTime: 0,
+    refetchInterval: 30000,
+    staleTime: 20000,
     queryFn: async () => {
       const token = localStorage.getItem("admin_token");
       if (!token) throw new Error("No authentication token");
