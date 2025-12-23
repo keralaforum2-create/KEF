@@ -223,6 +223,16 @@ app.use((req, res, next) => {
       console.log("✅ Referral code RINSHAD10 (10% discount) initialized");
     }
     
+    const existingEarlybird = await storage.getReferralCodeByCode("EARLYBIRD10");
+    if (!existingEarlybird) {
+      await storage.createReferralCode({
+        code: "EARLYBIRD10",
+        discountPercentage: 10,
+        isActive: true,
+      });
+      console.log("✅ Referral code EARLYBIRD10 (10% discount) initialized");
+    }
+    
     // Initialize the 10 new referral codes
     await storage.initializeReferralCodes();
     console.log("✅ All referral codes initialized");
