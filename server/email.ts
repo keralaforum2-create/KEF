@@ -67,6 +67,7 @@ interface RegistrationData {
   pitchSupportingFiles?: string | null;
   pitchDemoVideoLink?: string | null;
   pitchDeclarationConfirmed?: string | null;
+  referralCode?: string | null;
 }
 
 function generateBasicRegistrationEmailHtml(data: RegistrationData): string {
@@ -351,6 +352,7 @@ function generateAdminNotificationHtml(data: RegistrationData, ticketUrl?: strin
             ${data.collegeCourse ? `<tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>College Course:</strong> ${data.collegeCourse}</td></tr>` : ''}
             ${data.teamMember1Name ? `<tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Team Member 1:</strong> ${data.teamMember1Name}</td></tr>` : ''}
             ${data.teamMember2Name ? `<tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Team Member 2:</strong> ${data.teamMember2Name}</td></tr>` : ''}
+            ${data.referralCode ? `<tr><td style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Referral Code Used:</strong> <span style="background: #dbeafe; color: #1e40af; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-family: monospace;">${data.referralCode}</span></td></tr>` : ''}
           </table>
           
           ${ticketUrl ? `
