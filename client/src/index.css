@@ -123,6 +123,61 @@
   animation: slide-in-left 0.6s ease-out forwards;
 }
 
+/* Sticky Free Poster Button */
+.sticky-poster-btn {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(90deg, #1e40af 0%, #1e40af 100%);
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sticky-poster-btn:hover {
+  transform: translateX(-50%) translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.sticky-poster-btn:active {
+  transform: translateX(-50%) translateY(0);
+}
+
+.sticky-poster-btn::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ef4444 0%, #f59e0b 25%, #eab308 50%, #22c55e 75%, #06b6d4 100%);
+  border-radius: 9999px;
+}
+
+.sticky-poster-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ef4444 0%, #f59e0b 25%, #eab308 50%, #22c55e 75%, #06b6d4 100%);
+  border-radius: 9999px;
+}
+
 /* Card Stagger Animations */
 .card-stagger-1 {
   animation: fade-in-up 0.6s ease-out 0.1s forwards;

@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { Gift } from "lucide-react";
 import Home from "@/pages/home";
 import About from "@/pages/about";
 import Sessions from "@/pages/sessions";
@@ -126,6 +127,16 @@ function App() {
           </main>
           <Footer className="hidden lg:block" />
         </div>
+        <a 
+          href="https://agent-694821dcdde99eb716fe8--keralastartupfestin.netlify.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-testid="button-free-poster"
+          className="sticky-poster-btn"
+        >
+          <Gift size={20} strokeWidth={2.5} />
+          GET A FREE POSTER
+        </a>
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>
