@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, X, Rocket, Home, Presentation, Trophy, Users, Briefcase, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import logoImage from "@assets/LOGO_00-removebg-preview_1764561853084.png";
+import logoImage from "@assets/LOGO_00-removebg-preview_1766480296446.png";
 
 const navItems = [
   { href: "/", label: "Home" },

@@ -155,8 +155,8 @@ export default function Admin() {
 
   const { data: referralCodeUsage, isLoading: loadingReferralCodeUsage } = useQuery<Array<{ code: string; discountPercentage: number; timesUsed: number; lastUsed?: string }>>({
     queryKey: ["/api/admin/referral-code-usage"],
-    refetchInterval: 30000,
-    staleTime: 20000,
+    refetchInterval: 3000,
+    staleTime: 1000,
     queryFn: async () => {
       const token = localStorage.getItem("admin_token");
       if (!token) throw new Error("No authentication token");
