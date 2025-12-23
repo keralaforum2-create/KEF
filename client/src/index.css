@@ -127,8 +127,7 @@
 .sticky-poster-btn {
   position: fixed;
   left: 1rem;
-  bottom: 50%;
-  transform: translateY(50%);
+  bottom: 28%;
   z-index: 40;
   padding: 0.6rem 1.2rem;
   background: linear-gradient(90deg, #1e40af 0%, #1e40af 100%);
@@ -148,12 +147,12 @@
 }
 
 .sticky-poster-btn:hover {
-  transform: translateY(50%) translateX(2px);
+  transform: translateX(2px);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
 
 .sticky-poster-btn:active {
-  transform: translateY(50%);
+  transform: translateX(0);
 }
 
 .sticky-poster-btn::before {
