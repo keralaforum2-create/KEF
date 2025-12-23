@@ -153,6 +153,22 @@ export default function Admin() {
     staleTime: 10000,
   });
 
+  const { data: referralCodeUsage, isLoading: loadingReferralCodeUsage } = useQuery<Array<{ code: string; discountPercentage: number; timesUsed: number; lastUsed?: string }>>({
+    queryKey: ["/api/admin/referral-code-usage"],
+    refetchInterval: 30000,
+    staleTime: 20000,
+    queryFn: async () => {
+      const token = localStorage.getItem("admin_token");
+      if (!token) throw new Error("No authentication token");
+      const response = await fetch("/api/admin/referral-code-usage", {
+        headers: { "Authorization": `Bearer ${token}` },
+        credentials: "include"
+      });
+      if (!response.ok) throw new Error("Failed to fetch referral code usage");
+      return response.json();
+    }
+  });
+
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -682,6 +698,9 @@ export default function Admin() {
                 </TabsTrigger>
                 <TabsTrigger value="speaker-applications" data-testid="tab-speaker-applications">
                   Speaker Apps ({speakerApplications?.length || 0})
+                </TabsTrigger>
+                <TabsTrigger value="referral-usage" data-testid="tab-referral-usage">
+                  Code Usage
                 </TabsTrigger>
               </TabsList>
 
@@ -2277,6 +2296,44 @@ export default function Admin() {
                     </CardContent>
                   </Card>
                 </motion.div>
+              </TabsContent>
+
+              <TabsContent value="referral-usage">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Referral Code Usage Analytics</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {loadingReferralCodeUsage ? (
+                      <div>Loading...</div>
+                    ) : !referralCodeUsage || referralCodeUsage.length === 0 ? (
+                      <div className="text-muted-foreground">No referral codes have been used yet</div>
+                    ) : (
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Code</TableHead>
+                              <TableHead>Discount %</TableHead>
+                              <TableHead>Times Used</TableHead>
+                              <TableHead>Last Used</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {referralCodeUsage.map((item) => (
+                              <TableRow key={item.code}>
+                                <TableCell><span className="font-mono font-bold text-blue-600 dark:text-blue-400">{item.code}</span></TableCell>
+                                <TableCell><Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300">{item.discountPercentage}% OFF</Badge></TableCell>
+                                <TableCell><span className="font-semibold text-lg">{item.timesUsed}</span></TableCell>
+                                <TableCell>{item.lastUsed ? new Date(item.lastUsed).toLocaleDateString() : '-'}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
               </TabsContent>
             </Tabs>
           </ScrollFadeUp>

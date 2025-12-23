@@ -224,6 +224,29 @@ export async function registerRoutes(
     }
   });
 
+  // Get referral code usage statistics (admin)
+  app.get("/api/admin/referral-code-usage", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization || "";
+      let token = "";
+      if (authHeader.toLowerCase().startsWith("bearer ")) {
+        token = authHeader.substring(7).trim();
+      } else {
+        token = authHeader.trim();
+      }
+      const isAuthorized = (token === "admin-authenticated") || (token === ADMIN_PASSWORD && token);
+      
+      if (!isAuthorized) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const usage = await storage.getReferralCodeUsage();
+      return res.json(usage);
+    } catch (error) {
+      console.error("Error fetching referral code usage:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // API info endpoint for testing
   app.get("/api/info", (_req, res) => {
     return res.json({

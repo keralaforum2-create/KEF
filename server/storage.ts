@@ -74,6 +74,7 @@ export interface IStorage {
   createReferralCode(code: InsertReferralCode): Promise<ReferralCode>;
   getReferralCodes(): Promise<ReferralCode[]>;
   getReferralCodeByCode(code: string): Promise<ReferralCode | undefined>;
+  getReferralCodeUsage(): Promise<Array<{ code: string; discountPercentage: number; timesUsed: number; lastUsed?: string }>>;
   updateReferralCode(id: string, data: Partial<InsertReferralCode>): Promise<ReferralCode | undefined>;
   deleteReferralCode(id: string): Promise<void>;
   
@@ -385,6 +386,25 @@ export class DatabaseStorage implements IStorage {
 
   async deleteReferralCode(id: string): Promise<void> {
     await db.delete(referralCodes).where(eq(referralCodes.id, id));
+  }
+
+  async getReferralCodeUsage(): Promise<Array<{ code: string; discountPercentage: number; timesUsed: number; lastUsed?: string }>> {
+    const codes = await this.getReferralCodes();
+    const allRegs = await db.select().from(registrations);
+    
+    return codes.map(code => {
+      const usages = allRegs.filter(reg => reg.referralCode === code.code);
+      const lastUsed = usages.length > 0 
+        ? new Date(Math.max(...usages.map(u => new Date(u.createdAt || new Date()).getTime()))).toISOString()
+        : undefined;
+      
+      return {
+        code: code.code,
+        discountPercentage: code.discountPercentage,
+        timesUsed: usages.length,
+        lastUsed
+      };
+    }).sort((a, b) => b.timesUsed - a.timesUsed);
   }
 
   async createSpeakerApplication(insertData: InsertSpeakerApplication): Promise<SpeakerApplication> {
