@@ -210,7 +210,7 @@ app.use((req, res, next) => {
     await setupVite(httpServer, app);
   }
 
-  // Initialize default referral codes
+  // Initialize default and promo referral codes
   const storage = new DatabaseStorage();
   try {
     const existingCode = await storage.getReferralCodeByCode("RINSHAD10");
@@ -222,6 +222,10 @@ app.use((req, res, next) => {
       });
       console.log("✅ Referral code RINSHAD10 (10% discount) initialized");
     }
+    
+    // Initialize the 10 new referral codes
+    await storage.initializeReferralCodes();
+    console.log("✅ All referral codes initialized");
   } catch (err) {
     console.log("ℹ️ Referral code initialization skipped (may already exist)");
   }

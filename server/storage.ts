@@ -407,6 +407,29 @@ export class DatabaseStorage implements IStorage {
     }).sort((a, b) => b.timesUsed - a.timesUsed);
   }
 
+  async initializeReferralCodes(): Promise<void> {
+    const codesToCreate = [
+      { code: "XCALIPH", discountPercentage: 10 },
+      { code: "S1BCALIPH", discountPercentage: 10 },
+      { code: "C1BCALIPH", discountPercentage: 10 },
+      { code: "C1CCALIPH", discountPercentage: 10 },
+      { code: "C1ACALIPH", discountPercentage: 10 },
+      { code: "S1ACALIPH", discountPercentage: 10 },
+      { code: "C2ACALIPH", discountPercentage: 10 },
+      { code: "S2ACALIPH", discountPercentage: 10 },
+      { code: "S2BCALIPH", discountPercentage: 10 },
+      { code: "C2BCALIPH", discountPercentage: 10 }
+    ];
+
+    for (const codeData of codesToCreate) {
+      const existing = await this.getReferralCodeByCode(codeData.code);
+      if (!existing) {
+        await this.createReferralCode(codeData);
+        console.log(`Created referral code: ${codeData.code}`);
+      }
+    }
+  }
+
   async createSpeakerApplication(insertData: InsertSpeakerApplication): Promise<SpeakerApplication> {
     const id = randomUUID();
     const result = await db.insert(speakerApplications).values({ 
