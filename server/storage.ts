@@ -419,7 +419,8 @@ export class DatabaseStorage implements IStorage {
       { code: "S2ACALIPH", discountPercentage: 10 },
       { code: "S2BCALIPH", discountPercentage: 10 },
       { code: "C2BCALIPH", discountPercentage: 10 },
-      { code: "EMEA@KSF", discountPercentage: 10 }
+      { code: "EMEA@KSF", discountPercentage: 10 },
+      { code: "JAMIAHAMDARD@KSF", discountPercentage: 10 }
     ];
 
     for (const codeData of codesToCreate) {
