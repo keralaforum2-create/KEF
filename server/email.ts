@@ -623,7 +623,7 @@ export async function sendSpeakerConfirmationEmail(data: RegistrationData): Prom
   }
 }
 
-export async function sendSpeakerApprovalEmail(founderName: string, email: string, startupName: string): Promise<{ success: boolean; error?: string }> {
+export async function sendSpeakerApprovalEmail(founderName: string, email: string, startupName: string, ticketUrl?: string): Promise<{ success: boolean; error?: string }> {
   try {
     const resend = getResendClient();
     
@@ -652,6 +652,13 @@ export async function sendSpeakerApprovalEmail(founderName: string, email: strin
             <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
               Congratulations! Your podcast speaker application for <strong>${startupName}</strong> has been <strong style="color: #10b981;">APPROVED</strong> by Kerala Startup Fest 2026.
             </p>
+            
+            ${ticketUrl ? `
+            <div style="text-align: center; margin: 25px 0;">
+              <a href="${ticketUrl}?download=true" style="display: inline-block; background: #16a34a; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin-bottom: 10px;">Download Your Speaker Ticket</a>
+              <p style="color: #666; font-size: 12px; margin: 8px 0 0 0;">Click to download your ticket as PDF</p>
+            </div>
+            ` : ''}
             
             <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin: 20px 0;">
               <h3 style="color: #059669; margin: 0 0 15px 0;">Next Steps</h3>

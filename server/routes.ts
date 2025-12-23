@@ -465,7 +465,10 @@ export async function registerRoutes(
 
       await storage.updateSpeakerApplicationStatus(id, "approved");
 
-      sendSpeakerApprovalEmail(speaker.founderName, speaker.email, speaker.startupName)
+      const baseUrl = resolveBaseUrl(req);
+      const ticketUrl = `${baseUrl}/speaker-ticket/${id}`;
+
+      sendSpeakerApprovalEmail(speaker.founderName, speaker.email, speaker.startupName, ticketUrl)
         .catch((err) => {
           console.error('Failed to send speaker approval email:', err);
         });
@@ -550,6 +553,42 @@ export async function registerRoutes(
       return res.json(registration);
     } catch (error) {
       console.error("Error fetching ticket:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/speaker-ticket/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      console.log("Fetching speaker ticket for ID:", id);
+      
+      const speaker = await storage.getSpeakerApplicationById(id);
+      console.log("Speaker found:", speaker ? "Yes" : "No");
+      
+      if (!speaker) {
+        return res.status(404).json({ message: "Speaker ticket not found" });
+      }
+
+      // Check if download is requested
+      const download = req.query.download === 'true';
+      if (download) {
+        res.setHeader('Content-Disposition', `attachment; filename="speaker-ticket-${speaker.id}.json"`);
+        res.setHeader('Content-Type', 'application/json');
+      }
+      
+      return res.json({
+        id: speaker.id,
+        founderName: speaker.founderName,
+        startupName: speaker.startupName,
+        email: speaker.email,
+        contactNumber: speaker.contactNumber,
+        designation: speaker.designation,
+        sector: speaker.sector,
+        status: speaker.status,
+        createdAt: speaker.createdAt
+      });
+    } catch (error) {
+      console.error("Error fetching speaker ticket:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });
