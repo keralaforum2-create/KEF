@@ -126,7 +126,7 @@
 /* Sticky Free Poster Button Wrapper */
 .sticky-poster-btn-wrapper {
   position: fixed;
-  left: 1rem;
+  right: 1rem;
   bottom: 2%;
   z-index: 9999;
   padding: 3px;
@@ -159,8 +159,7 @@
 
 @media (max-width: 640px) {
   .sticky-poster-btn-wrapper {
-    left: 50%;
-    transform: translateX(-50%);
+    right: 0.5rem;
     bottom: 1rem;
     padding: 2px;
     width: auto;
@@ -174,7 +173,7 @@
 
 @media (min-width: 641px) and (max-width: 768px) {
   .sticky-poster-btn-wrapper {
-    left: 0.75rem;
+    right: 0.75rem;
     bottom: 2rem;
     padding: 2px;
   }
