@@ -74,14 +74,14 @@ export default function Admin() {
 
   const { data: registrations, isLoading: loadingRegistrations } = useQuery<Registration[]>({
     queryKey: ["/api/registrations"],
-    refetchInterval: 3000,
-    staleTime: 1000,
+    refetchInterval: 1000,
+    staleTime: 0,
   });
 
   const { data: pendingRegistrations, isLoading: loadingPendingRegistrations, isError: pendingError } = useQuery<Registration[]>({
     queryKey: ["/api/pending-registrations"],
-    refetchInterval: 3000,
-    staleTime: 1000,
+    refetchInterval: 1000,
+    staleTime: 0,
     retry: 3,
     retryDelay: 1000,
     gcTime: 60000,
@@ -105,26 +105,26 @@ export default function Admin() {
 
   const { data: contacts, isLoading: loadingContacts } = useQuery<Contact[]>({
     queryKey: ["/api/contacts"],
-    refetchInterval: 3000,
-    staleTime: 1000,
+    refetchInterval: 1000,
+    staleTime: 0,
   });
 
   const { data: investorMentors, isLoading: loadingInvestors } = useQuery<InvestorMentor[]>({
     queryKey: ["/api/investor-mentors"],
-    refetchInterval: 3000,
-    staleTime: 1000,
+    refetchInterval: 1000,
+    staleTime: 0,
   });
 
   const { data: sponsorships, isLoading: loadingSponsorships } = useQuery<Sponsorship[]>({
     queryKey: ["/api/sponsorships"],
-    refetchInterval: 3000,
-    staleTime: 1000,
+    refetchInterval: 1000,
+    staleTime: 0,
   });
 
   const { data: bulkRegistrations, isLoading: loadingBulk } = useQuery<BulkRegistration[]>({
     queryKey: ["/api/bulk-registrations"],
-    refetchInterval: 3000,
-    staleTime: 1000,
+    refetchInterval: 1000,
+    staleTime: 0,
   });
 
   const { data: referralCodes, isLoading: loadingReferralCodes, refetch: refetchReferralCodes } = useQuery<ReferralCode[]>({
@@ -149,14 +149,14 @@ export default function Admin() {
 
   const { data: speakerApplications, isLoading: loadingSpeakerApplications } = useQuery<SpeakerApplication[]>({
     queryKey: ["/api/speakers"],
-    refetchInterval: 3000,
-    staleTime: 1000,
+    refetchInterval: 1000,
+    staleTime: 0,
   });
 
   const { data: referralCodeUsage, isLoading: loadingReferralCodeUsage } = useQuery<Array<{ code: string; discountPercentage: number; timesUsed: number; lastUsed?: string }>>({
     queryKey: ["/api/admin/referral-code-usage"],
-    refetchInterval: 3000,
-    staleTime: 1000,
+    refetchInterval: 1000,
+    staleTime: 0,
     queryFn: async () => {
       const token = localStorage.getItem("admin_token");
       if (!token) throw new Error("No authentication token");
@@ -176,12 +176,23 @@ export default function Admin() {
     mutationFn: async (id: string) => {
       await apiRequest("DELETE", `/api/registrations/${id}`);
     },
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey: ["/api/registrations"] });
+      await queryClient.cancelQueries({ queryKey: ["/api/pending-registrations"] });
+      const prev = queryClient.getQueryData<Registration[]>(["/api/registrations"]);
+      const prevPending = queryClient.getQueryData<Registration[]>(["/api/pending-registrations"]);
+      queryClient.setQueryData(["/api/registrations"], (old: Registration[] | undefined) => old?.filter(r => r.registrationId !== id));
+      queryClient.setQueryData(["/api/pending-registrations"], (old: Registration[] | undefined) => old?.filter(r => r.registrationId !== id));
+      return { prev, prevPending };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
       queryClient.invalidateQueries({ queryKey: ["/api/pending-registrations"] });
       toast({ title: "Registration deleted successfully" });
     },
-    onError: (error) => {
+    onError: (error, id, context: any) => {
+      if (context?.prev) queryClient.setQueryData(["/api/registrations"], context.prev);
+      if (context?.prevPending) queryClient.setQueryData(["/api/pending-registrations"], context.prevPending);
       console.error("Delete error:", error);
       toast({ title: "Failed to delete registration", variant: "destructive" });
     },
@@ -373,13 +384,20 @@ export default function Admin() {
         throw new Error(err.message || "Failed to approve registration");
       }
     },
+    onMutate: async (registrationId: string) => {
+      await queryClient.cancelQueries({ queryKey: ["/api/pending-registrations"] });
+      const prevPending = queryClient.getQueryData<Registration[]>(["/api/pending-registrations"]);
+      queryClient.setQueryData(["/api/pending-registrations"], (old: Registration[] | undefined) => old?.filter(r => r.registrationId !== registrationId));
+      return { prevPending };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/pending-registrations"] });
       queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
       setActiveTab("registrations");
       toast({ title: "Registration approved successfully!" });
     },
-    onError: (error: any) => {
+    onError: (error: any, registrationId, context: any) => {
+      if (context?.prevPending) queryClient.setQueryData(["/api/pending-registrations"], context.prevPending);
       const errorMessage = error?.message || "Failed to approve registration";
       toast({ title: "Approval Error", description: errorMessage, variant: "destructive" });
     },
@@ -401,12 +419,23 @@ export default function Admin() {
         throw new Error(err.message || "Failed to delete registration");
       }
     },
+    onMutate: async (registrationId: string) => {
+      await queryClient.cancelQueries({ queryKey: ["/api/pending-registrations"] });
+      await queryClient.cancelQueries({ queryKey: ["/api/registrations"] });
+      const prevPending = queryClient.getQueryData<Registration[]>(["/api/pending-registrations"]);
+      const prev = queryClient.getQueryData<Registration[]>(["/api/registrations"]);
+      queryClient.setQueryData(["/api/pending-registrations"], (old: Registration[] | undefined) => old?.filter(r => r.registrationId !== registrationId));
+      queryClient.setQueryData(["/api/registrations"], (old: Registration[] | undefined) => old?.filter(r => r.registrationId !== registrationId));
+      return { prevPending, prev };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/pending-registrations"] });
       queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
       toast({ title: "Registration deleted successfully!" });
     },
-    onError: (error: any) => {
+    onError: (error: any, registrationId, context: any) => {
+      if (context?.prevPending) queryClient.setQueryData(["/api/pending-registrations"], context.prevPending);
+      if (context?.prev) queryClient.setQueryData(["/api/registrations"], context.prev);
       const errorMessage = error?.message || "Failed to delete registration";
       toast({ title: "Delete Error", description: errorMessage, variant: "destructive" });
     },
@@ -424,12 +453,19 @@ export default function Admin() {
       }
       return response.json();
     },
+    onMutate: async (speakerId: string) => {
+      await queryClient.cancelQueries({ queryKey: ["/api/speakers"] });
+      const prev = queryClient.getQueryData<SpeakerApplication[]>(["/api/speakers"]);
+      queryClient.setQueryData(["/api/speakers"], (old: SpeakerApplication[] | undefined) => old?.map(s => s.id === speakerId ? { ...s, status: 'approved' } : s));
+      return { prev };
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/speakers"] });
       setSelectedSpeakerApp(null);
       toast({ title: "Speaker approved successfully! Email sent." });
     },
-    onError: (error: any) => {
+    onError: (error: any, speakerId, context: any) => {
+      if (context?.prev) queryClient.setQueryData(["/api/speakers"], context.prev);
       toast({ title: "Approval Error", description: error?.message || "Failed to approve speaker", variant: "destructive" });
     },
   });
