@@ -4087,7 +4087,7 @@ export default function Participate() {
                                         </li>
                                         <li className="flex items-center gap-2 text-muted-foreground">
                                           <X className="w-4 h-4 text-red-400 flex-shrink-0" />
-                                          <span>Front-row seating</span>
+                                          <span>Front section seating</span>
                                         </li>
                                         <li className="flex items-center gap-2 text-muted-foreground">
                                           <X className="w-4 h-4 text-red-400 flex-shrink-0" />
@@ -4148,7 +4148,7 @@ export default function Participate() {
                                         </li>
                                         <li className="flex items-center gap-2 text-muted-foreground">
                                           <X className="w-4 h-4 text-red-400 flex-shrink-0" />
-                                          <span>Front-row seating</span>
+                                          <span>Front section seating</span>
                                         </li>
                                         <li className="flex items-center gap-2 text-muted-foreground">
                                           <X className="w-4 h-4 text-red-400 flex-shrink-0" />
@@ -4205,7 +4205,7 @@ export default function Participate() {
                                         </li>
                                         <li className="flex items-center gap-2">
                                           <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
-                                          <span>Front-row seating</span>
+                                          <span>Front section seating</span>
                                         </li>
                                         <li className="flex items-center gap-2">
                                           <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
