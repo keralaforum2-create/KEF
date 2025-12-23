@@ -1014,6 +1014,11 @@ export async function registerRoutes(
           sendRegistrationEmail(registration, ticketUrl).catch((err) => {
             console.error('Failed to send registration emails:', err);
           });
+
+          // Send admin notification with referral code info
+          sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
+            console.error('Failed to send admin notification:', err);
+          });
         }
 
         return res.json({
@@ -1297,6 +1302,11 @@ export async function registerRoutes(
       
       sendRegistrationEmail(registration, ticketUrl).catch((err) => {
         console.error('Failed to send registration emails:', err);
+      });
+
+      // Send admin notification with referral code info
+      sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
+        console.error('Failed to send admin notification:', err);
       });
 
       console.log(`✓ Payment verified for ${registration.fullName} (ID: ${registration.registrationId}) - Payment ID: ${razorpay_payment_id}`);
@@ -1859,6 +1869,11 @@ export async function registerRoutes(
           const ticketUrl = `${baseUrl}/ticket/${registration.registrationId}`;
           sendRegistrationEmail(registration, ticketUrl).catch((err) => {
             console.error('Failed to send registration emails:', err);
+          });
+
+          // Send admin notification with referral code info
+          sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
+            console.error('Failed to send admin notification:', err);
           });
         }
 
