@@ -1222,6 +1222,7 @@ export async function registerRoutes(
 
       const result = insertRegistrationSchema.safeParse({
         ...registrationData,
+        referralCode: referralCode || undefined,
         paymentStatus: "pending",
         paymentScreenshot: "razorpay_payment"
       });
@@ -1357,6 +1358,18 @@ export async function registerRoutes(
       sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
         console.error('Failed to send admin notification:', err);
       });
+
+      // Send referral code usage notification if code was used
+      if (registration.referralCode) {
+        sendReferralCodeUsedNotificationEmail(
+          registration.fullName,
+          registration.email,
+          registration.referralCode,
+          registration.registrationId
+        ).catch((err) => {
+          console.error('Failed to send referral code usage notification:', err);
+        });
+      }
 
       console.log(`✓ Payment verified for ${registration.fullName} (ID: ${registration.registrationId}) - Payment ID: ${razorpay_payment_id}`);
       console.log(`✓ Registration now shows in Admin Panel under 'Registrations' tab with status: PAID`);
