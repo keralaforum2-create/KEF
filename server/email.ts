@@ -769,3 +769,82 @@ export async function sendRegistrationApprovalEmail(fullName: string, email: str
     };
   }
 }
+
+export async function sendReferralCodeUsedNotificationEmail(fullName: string, email: string, referralCode: string, registrationId: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const resend = getResendClient();
+    
+    console.log(`📧 Sending referral code usage notification to admin for: ${referralCode}`);
+    
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Referral Code Used - Kerala Startup Fest 2026</title>
+      </head>
+      <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); border-radius: 16px; padding: 40px; text-align: center; color: white;">
+            <h1 style="margin: 0 0 10px 0; font-size: 32px; font-weight: bold;">Kerala Startup Fest</h1>
+            <p style="margin: 0; font-size: 18px;">Referral Code Used</p>
+          </div>
+          
+          <div style="background: white; border-radius: 16px; padding: 30px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+              <strong>New registration using referral/gift code:</strong>
+            </p>
+            
+            <div style="background: #f0f9ff; border: 2px solid #0284c7; border-radius: 12px; padding: 20px; margin: 20px 0;">
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e0e7ff; font-weight: bold; color: #0369a1; width: 40%;">Registration ID:</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e0e7ff; font-family: monospace;">${registrationId}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e0e7ff; font-weight: bold; color: #0369a1;">User Name:</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e0e7ff;">${fullName}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e0e7ff; font-weight: bold; color: #0369a1;">User Email:</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #e0e7ff;">${email}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; font-weight: bold; color: #0369a1;">Referral Code:</td>
+                  <td style="padding: 10px 0; font-family: monospace; font-size: 16px; font-weight: bold; color: #dc2626;">${referralCode}</td>
+                </tr>
+              </table>
+            </div>
+            
+            <p style="color: #666; font-size: 14px; line-height: 1.6; margin: 20px 0 0 0;">
+              <em>This is an automated notification from Kerala Startup Fest 2026 admin system.</em>
+            </p>
+          </div>
+          
+          <div style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+            <p style="margin: 0;">Kerala Startup Fest 2026</p>
+            <p style="margin: 5px 0 0 0;">January 7-8, 2026 | Aspin Courtyards, Calicut Beach</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    await resend.emails.send({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: ADMIN_EMAIL,
+      subject: `Referral Code Used: ${referralCode} - New Registration`,
+      html: htmlContent,
+    });
+    
+    console.log(`✅ Referral code usage notification sent to admin`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Error sending referral code usage notification:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to send referral code usage notification' 
+    };
+  }
+}

@@ -6,7 +6,7 @@ import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { sendRegistrationEmail, sendAdminNotificationEmail, sendSpeakerConfirmationEmail, sendSpeakerApprovalEmail, sendRegistrationApprovalEmail } from "./email";
+import { sendRegistrationEmail, sendAdminNotificationEmail, sendSpeakerConfirmationEmail, sendSpeakerApprovalEmail, sendRegistrationApprovalEmail, sendReferralCodeUsedNotificationEmail } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { createRazorpayOrder, verifyRazorpayPayment } from "./razorpay";
 import { randomUUID as uuid } from "crypto";
@@ -401,6 +401,18 @@ export async function registerRoutes(
         const ticketUrl = `${baseUrl}/ticket/${registration.registrationId}`;
         sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
           console.error('Failed to send admin notification:', err);
+        });
+      }
+      
+      // Send admin notification if referral code was used
+      if (result.data.referralCode) {
+        sendReferralCodeUsedNotificationEmail(
+          registration.fullName,
+          registration.email,
+          result.data.referralCode,
+          registration.registrationId
+        ).catch((err) => {
+          console.error('Failed to send referral code usage notification:', err);
         });
       }
       
