@@ -30,7 +30,15 @@ export default function AdminLogin() {
 
   const loginMutation = useMutation({
     mutationFn: async (pwd: string) => {
-      const response = await apiRequest("POST", "/api/admin/login", { password: pwd });
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: pwd }),
+        credentials: "include"
+      });
+      if (!response.ok) {
+        throw new Error("Invalid password");
+      }
       return response.json();
     },
     onSuccess: (data: any) => {
