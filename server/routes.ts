@@ -6,7 +6,7 @@ import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { sendRegistrationEmail, sendAdminNotificationEmail, sendSpeakerConfirmationEmail, sendSpeakerApprovalEmail } from "./email";
+import { sendRegistrationEmail, sendAdminNotificationEmail, sendSpeakerConfirmationEmail, sendSpeakerApprovalEmail, sendRegistrationApprovalEmail } from "./email";
 import { initiatePayment, checkPaymentStatus } from "./phonepe";
 import { createRazorpayOrder, verifyRazorpayPayment } from "./razorpay";
 import { randomUUID as uuid } from "crypto";
@@ -502,11 +502,16 @@ export async function registerRoutes(
         return res.status(500).json({ message: "Failed to update registration" });
       }
 
-      // Do NOT send email here - email should only be sent after actual payment confirmation
-      console.log("Registration approved (awaiting payment confirmation):", id);
+      // Send approval email immediately to registrant (asynchronously - no waiting)
+      sendRegistrationApprovalEmail(registration.fullName, registration.email, id)
+        .catch((err) => {
+          console.error('Failed to send registration approval email:', err);
+        });
+
+      console.log("Registration approved:", id);
       return res.json({
         success: true,
-        message: "Registration approved - awaiting payment confirmation",
+        message: "Registration approved and confirmation email sent",
         registrationId: id
       });
     } catch (error: any) {

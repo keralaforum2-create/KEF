@@ -693,3 +693,79 @@ export async function sendSpeakerApprovalEmail(founderName: string, email: strin
     };
   }
 }
+
+export async function sendRegistrationApprovalEmail(fullName: string, email: string, registrationId: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const resend = getResendClient();
+    
+    console.log(`📧 Sending registration approval email to: ${email}`);
+    
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Registration Approved - Kerala Startup Fest 2026</title>
+      </head>
+      <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 16px; padding: 40px; text-align: center; color: white;">
+            <h1 style="margin: 0; font-size: 32px; font-weight: bold;">APPROVED</h1>
+            <p style="margin: 15px 0 0 0; font-size: 18px;">Your Registration is Approved!</p>
+          </div>
+          
+          <div style="background: white; border-radius: 16px; padding: 30px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+              Dear <strong>${fullName}</strong>,
+            </p>
+            
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+              Congratulations! Your registration for Kerala Startup Fest 2026 has been <strong style="color: #10b981;">APPROVED</strong>.
+            </p>
+            
+            <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #059669; margin: 0 0 15px 0;">Your Registration ID</h3>
+              <p style="color: #333; font-size: 18px; font-weight: bold; margin: 0; font-family: monospace;">${registrationId}</p>
+            </div>
+            
+            <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #059669; margin: 0 0 15px 0;">Next Steps</h3>
+              <ul style="color: #333; margin: 0; padding-left: 20px;">
+                <li style="margin: 8px 0;">Check your email for more details about the event</li>
+                <li style="margin: 8px 0;">Mark your calendar for January 7-8, 2026</li>
+                <li style="margin: 8px 0;">Visit us at Aspin Courtyards, Calicut Beach</li>
+              </ul>
+            </div>
+            
+            <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 20px 0 0 0;">
+              For any questions, reach out to us at <strong>keralastartupfest@gmail.com</strong>
+            </p>
+          </div>
+          
+          <div style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+            <p style="margin: 0;">This is an automated notification from Kerala Startup Fest 2026</p>
+            <p style="margin: 5px 0 0 0;">January 7-8, 2026 | Aspin Courtyards, Calicut Beach</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    await resend.emails.send({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: email,
+      subject: `Your Registration is Approved - Kerala Startup Fest 2026`,
+      html: htmlContent,
+    });
+    
+    console.log(`✅ Registration approval email sent successfully to ${email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Error sending registration approval email:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to send registration approval email' 
+    };
+  }
+}
