@@ -272,7 +272,8 @@ export default function Home() {
                   </div>
                   <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Young Kerala Expo</h3>
                   <p className="text-gray-600 text-sm sm:text-base">
-                    <span className="font-medium text-primary">Brand exhibition</span> for young entrepreneurs
+                    <span className="font-medium text-primary">Showcase. Sell. Launch. Grow.</span><br />
+                    Variety of Stalls at Kerala's Most Practical Startup Fest
                   </p>
                 </div>
               </div>

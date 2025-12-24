@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { 
@@ -156,10 +157,19 @@ export default function Contests() {
                 <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-4 text-foreground">
                   Ready to Compete?
                 </h2>
-                <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-2">
+                <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-6">
                   Register now to participate in contests at Kerala Startup Fest 2026.
                 </p>
-                <div className="flex items-center justify-center gap-2 text-muted-foreground mt-6">
+                <Link href="/participate#register">
+                  <Button 
+                    size="lg" 
+                    className="mb-6"
+                    data-testid="button-register-contests"
+                  >
+                    Register Now
+                  </Button>
+                </Link>
+                <div className="flex items-center justify-center gap-2 text-muted-foreground">
                   <Users className="w-5 h-5" />
                   <span>Open to All Ages</span>
                 </div>
