@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion, useInView } from "framer-motion";
 import { LiveCountdown } from "@/components/LiveCountdown";
 import { useRef, useState } from "react";
@@ -37,8 +38,10 @@ import waveElement from "@assets/keral_startup_element_1764698110061.png";
 import cubeLogo from "@assets/cube_1764739470058.png";
 import caliphLifeSchoolLogo from "@assets/PhotoshopExtension_Image-removebg-preview_1764739146810.png";
 import keralaEconomicForumLogo from "@assets/Screenshot_2025-11-29_222342-removebg-preview-removebg-preview_1764759226182.png";
+import youngKeralaExpo from "@assets/WhatsApp_Image_2025-12-24_at_11.08.16_AM_1766555334460.jpeg";
 
 export default function Home() {
+  const [showExpoModal, setShowExpoModal] = useState(false);
   const partnersRef = useRef<HTMLDivElement>(null);
   const partnersInView = useInView(partnersRef, { once: true, margin: "-50px" });
 
@@ -228,30 +231,6 @@ export default function Home() {
             </StaggerItem>
             
             <StaggerItem>
-              <Link href="/participate" data-testid="link-idea-pitching">
-                <div 
-                  className="relative p-[3px] rounded-2xl shadow-lg hover-elevate cursor-pointer h-full"
-                  style={{
-                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                  }}
-                >
-                  <div className="bg-white rounded-[13px] p-6 sm:p-8 text-center h-full">
-                    <div 
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                      style={{ backgroundColor: "hsl(174 100% 29%)" }}
-                    >
-                      <Lightbulb className="w-8 h-8 text-white" />
-                    </div>
-                    <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Idea Pitching</h3>
-                    <p className="text-gray-600 text-sm sm:text-base">
-                      Pitch your ideas to <span className="font-medium text-primary">investors & VCs</span>
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            </StaggerItem>
-            
-            <StaggerItem>
               <Link href="/contests" data-testid="link-competitions">
                 <div 
                   className="relative p-[3px] rounded-2xl shadow-lg hover-elevate cursor-pointer h-full"
@@ -273,6 +252,30 @@ export default function Home() {
                   </div>
                 </div>
               </Link>
+            </StaggerItem>
+            
+            <StaggerItem>
+              <div 
+                onClick={() => setShowExpoModal(true)}
+                className="relative p-[3px] rounded-2xl shadow-lg hover-elevate cursor-pointer h-full"
+                style={{
+                  background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                }}
+                data-testid="link-young-kerala-expo"
+              >
+                <div className="bg-white rounded-[13px] p-6 sm:p-8 text-center h-full">
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    style={{ backgroundColor: "hsl(174 100% 29%)" }}
+                  >
+                    <Rocket className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Young Kerala Expo</h3>
+                  <p className="text-gray-600 text-sm sm:text-base">
+                    <span className="font-medium text-primary">Brand exhibition</span> for young entrepreneurs
+                  </p>
+                </div>
+              </div>
             </StaggerItem>
             
             <StaggerItem>
@@ -299,6 +302,18 @@ export default function Home() {
               </Link>
             </StaggerItem>
           </StaggerContainer>
+          
+          {/* Young Kerala Expo Modal */}
+          <Dialog open={showExpoModal} onOpenChange={setShowExpoModal}>
+            <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+              <img 
+                src={youngKeralaExpo} 
+                alt="Young Kerala Expo - Kerala Startup Fest 2026" 
+                className="w-full h-auto rounded-lg"
+                data-testid="img-young-kerala-expo-poster"
+              />
+            </DialogContent>
+          </Dialog>
         </div>
         
         <div className="wave-divider">
