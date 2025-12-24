@@ -33,6 +33,9 @@ import harisImage from "@assets/WhatsApp_Image_2025-12-21_at_10.33.49_AM_(2)_176
 import mohammedImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(8)_1766297240912.jpeg";
 import sahalImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(9)_1766297240911.jpeg";
 import hudaifImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(10)_1766297240911.jpeg";
+import noureenImage2 from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(11)_1766601619600.jpeg";
+import mohammedAlfanImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(12)_1766601619599.jpeg";
+import naseefNewImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(13)_1766601619599.jpeg";
 
 const speakers = [
   {
@@ -289,6 +292,68 @@ export default function Speakers() {
                   alt="Joseph Sunny"
                   className="w-full h-auto object-cover"
                   data-testid="img-featured-speaker-joseph"
+                />
+              </div>
+            </ScrollFadeUp>
+          </div>
+        </div>
+
+        {/* Additional Featured Speakers Grid */}
+        <div className="mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Teal Speaker - Noureen */}
+            <ScrollFadeUp delay={0.1}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-teal-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 16, image: noureenImage2 };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-noureen"
+              >
+                <img 
+                  src={noureenImage2} 
+                  alt="Noureen Aysha"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-noureen"
+                />
+              </div>
+            </ScrollFadeUp>
+
+            {/* Red Speaker - Mohammed Alfan */}
+            <ScrollFadeUp delay={0.15}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-red-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 17, image: mohammedAlfanImage };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-alfan"
+              >
+                <img 
+                  src={mohammedAlfanImage} 
+                  alt="Mohammed Alfan"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-alfan"
+                />
+              </div>
+            </ScrollFadeUp>
+
+            {/* Violet Speaker - Naseef */}
+            <ScrollFadeUp delay={0.2}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-violet-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 18, image: naseefNewImage };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-naseef"
+              >
+                <img 
+                  src={naseefNewImage} 
+                  alt="Naseef Neeruttichali"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-naseef"
                 />
               </div>
             </ScrollFadeUp>
