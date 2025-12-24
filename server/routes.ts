@@ -570,7 +570,9 @@ export async function registerRoutes(
         // Send admin notification about new registration with ticket viewing link
         const baseUrl = resolveBaseUrl(req);
         const ticketUrl = `${baseUrl}/ticket/${registration.registrationId}`;
-        sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
+        const allRegistrations = await storage.getAllRegistrations();
+        const registrationNumber = allRegistrations.length;
+        sendAdminNotificationEmail(registration, ticketUrl, registrationNumber).catch((err) => {
           console.error('Failed to send admin notification:', err);
         });
       }
@@ -958,6 +960,8 @@ export async function registerRoutes(
       const registration = await storage.createRegistration(result.data);
 
       const baseUrl = resolveBaseUrl(req);
+      const allRegistrations = await storage.getAllRegistrations();
+      const registrationNumber = allRegistrations.length;
       
       // Skip email notifications for speaker registrations
       if (registration.registrationType !== 'speaker') {
@@ -968,7 +972,7 @@ export async function registerRoutes(
         });
 
         // Send admin notification about new admin-added registration
-        sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
+        sendAdminNotificationEmail(registration, ticketUrl, registrationNumber).catch((err) => {
           console.error('Failed to send admin notification:', err);
         });
       }
@@ -1189,7 +1193,9 @@ export async function registerRoutes(
         }
 
         // Send admin notification with referral code info
-        sendAdminNotificationEmail(registration, `${baseUrl}/ticket/${registration.registrationId}`).catch((err) => {
+        const phonepeAllRegs = await storage.getAllRegistrations();
+        const phonepeRegNumber = phonepeAllRegs.length;
+        sendAdminNotificationEmail(registration, `${baseUrl}/ticket/${registration.registrationId}`, phonepeRegNumber).catch((err) => {
           console.error('Failed to send admin notification:', err);
         });
 
@@ -1253,7 +1259,9 @@ export async function registerRoutes(
           });
 
           // Send admin notification with referral code info
-          sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
+          const razorpayAllRegs = await storage.getAllRegistrations();
+          const razorpayRegNumber = razorpayAllRegs.length;
+          sendAdminNotificationEmail(registration, ticketUrl, razorpayRegNumber).catch((err) => {
             console.error('Failed to send admin notification:', err);
           });
 
@@ -1555,7 +1563,9 @@ export async function registerRoutes(
       });
 
       // Send admin notification with referral code info
-      sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
+      const razorpayVerifyAllRegs = await storage.getAllRegistrations();
+      const razorpayVerifyRegNumber = razorpayVerifyAllRegs.length;
+      sendAdminNotificationEmail(registration, ticketUrl, razorpayVerifyRegNumber).catch((err) => {
         console.error('Failed to send admin notification:', err);
       });
 
@@ -2087,7 +2097,9 @@ export async function registerRoutes(
         }
 
         // Send admin notification with referral code info
-        sendAdminNotificationEmail(registration, `${baseUrl}/ticket/${registration.registrationId}`).catch((err) => {
+        const phonepeAllRegs = await storage.getAllRegistrations();
+        const phonepeRegNumber = phonepeAllRegs.length;
+        sendAdminNotificationEmail(registration, `${baseUrl}/ticket/${registration.registrationId}`, phonepeRegNumber).catch((err) => {
           console.error('Failed to send admin notification:', err);
         });
 
@@ -2151,7 +2163,9 @@ export async function registerRoutes(
           });
 
           // Send admin notification with referral code info
-          sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
+          const razorpayAllRegs = await storage.getAllRegistrations();
+          const razorpayRegNumber = razorpayAllRegs.length;
+          sendAdminNotificationEmail(registration, ticketUrl, razorpayRegNumber).catch((err) => {
             console.error('Failed to send admin notification:', err);
           });
 
@@ -2443,6 +2457,8 @@ export async function registerRoutes(
         try {
           const baseUrl = resolveBaseUrl(req);
           const speakerTicketUrl = `${baseUrl}/speaker-application/${application.id}`;
+          const speakerAllRegs = await storage.getAllRegistrations();
+          const speakerRegNumber = speakerAllRegs.length;
           const adminEmailResult = await sendAdminNotificationEmail({
             id: application.id.toString(),
             registrationId: application.id.toString(),
@@ -2453,7 +2469,7 @@ export async function registerRoutes(
             institution: applicationData.startupName,
             registrationType: "speaker",
             sessionName: `Speaker: ${applicationData.founderName} - ${applicationData.startupName}`,
-          } as any, speakerTicketUrl);
+          } as any, speakerTicketUrl, speakerRegNumber);
           
           if (adminEmailResult.success) {
             console.log(`✅ Admin notification sent successfully for speaker application`);

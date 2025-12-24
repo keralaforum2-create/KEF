@@ -274,7 +274,7 @@ function generateTicketEmailHtml(data: RegistrationData, ticketUrl: string): str
   `;
 }
 
-function generateAdminNotificationHtml(data: RegistrationData, ticketUrl?: string): string {
+function generateAdminNotificationHtml(data: RegistrationData, ticketUrl?: string, registrationNumber?: number): string {
   const isPitchRoom = data.contestName === 'The Pitch Room';
   
   let pitchDetails = '';
@@ -330,9 +330,14 @@ function generateAdminNotificationHtml(data: RegistrationData, ticketUrl?: strin
         
         <div style="background: white; border-radius: 16px; padding: 30px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
           <div style="background: #f0fdf4; border: 2px solid #86efac; border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 20px;">
-            <p style="margin: 0; font-size: 14px; color: #166534;">
+            <p style="margin: 0 0 8px 0; font-size: 14px; color: #166534;">
               <strong>Registration ID:</strong> ${data.registrationId}
             </p>
+            ${registrationNumber ? `
+            <p style="margin: 8px 0 0 0; font-size: 12px; color: #15803d; background: #dcfce7; padding: 6px 12px; border-radius: 6px; display: inline-block;">
+              <strong>Registration #${registrationNumber}</strong> on Website
+            </p>
+            ` : ''}
           </div>
           
           <h3 style="color: #333; margin: 0 0 15px 0; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Registrant Information</h3>
@@ -566,7 +571,7 @@ export async function sendRegistrationEmail(data: RegistrationData, ticketUrl: s
   }
 }
 
-export async function sendAdminNotificationEmail(data: RegistrationData, ticketUrl?: string): Promise<{ success: boolean; error?: string }> {
+export async function sendAdminNotificationEmail(data: RegistrationData, ticketUrl?: string, registrationCount?: number): Promise<{ success: boolean; error?: string }> {
   try {
     const resend = getResendClient();
     
@@ -575,8 +580,8 @@ export async function sendAdminNotificationEmail(data: RegistrationData, ticketU
     await resend.emails.send({
       from: `${FROM_NAME} <${FROM_EMAIL}>`,
       to: ADMIN_EMAIL,
-      subject: `New Registration: ${data.fullName} - ${data.registrationId}`,
-      html: generateAdminNotificationHtml(data, ticketUrl),
+      subject: `New Registration #${registrationCount || '?'}: ${data.fullName} - ${data.registrationId}`,
+      html: generateAdminNotificationHtml(data, ticketUrl, registrationCount),
     });
     
     if (data.contestName === 'The Pitch Room') {
