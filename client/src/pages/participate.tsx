@@ -108,9 +108,6 @@ const registrationSchema = z.object({
   teamMember3Phone: z.string().optional(),
   teamMember3Grade: z.string().optional(),
   teamMember3Age: z.string().optional(),
-  profilePhoto: z.any().refine((file) => file instanceof File, {
-    message: "Profile photo is required",
-  }),
   pitchStartupName: z.string().optional(),
   pitchElevatorPitch: z.string().max(300, "Elevator pitch must be under 50 words").optional(),
   pitchProblemStatement: z.string().optional(),
@@ -223,7 +220,6 @@ export default function Participate() {
   const [isBulkSubmitting, setIsBulkSubmitting] = useState(false);
   const [studentsPdfFile, setStudentsPdfFile] = useState<File | null>(null);
   const [uploadedPdfPath, setUploadedPdfPath] = useState<string | null>(null);
-  const [profilePhotoDataUrl, setProfilePhotoDataUrl] = useState<string | null>(null);
   const [showPosterModal, setShowPosterModal] = useState(false);
   const [generatedPoster, setGeneratedPoster] = useState<string | null>(null);
   const [isGeneratingPoster, setIsGeneratingPoster] = useState(false);
@@ -258,7 +254,6 @@ export default function Participate() {
       teamMember3Phone: "",
       teamMember3Grade: "",
       teamMember3Age: "",
-      profilePhoto: undefined,
       pitchStartupName: "",
       pitchElevatorPitch: "",
       pitchProblemStatement: "",
@@ -961,12 +956,6 @@ export default function Participate() {
       formData.append("teamMember3Phone", data.teamMember3Phone || "");
       formData.append("teamMember3Grade", data.teamMember3Grade || "");
       formData.append("teamMember3Age", data.teamMember3Age || "");
-      
-
-      // Handle profile photo (required field)
-      if (data.profilePhoto instanceof File) {
-        formData.append("profilePhoto", data.profilePhoto);
-      }
 
       formData.append("pitchStartupName", data.pitchStartupName || "");
       formData.append("pitchElevatorPitch", data.pitchElevatorPitch || "");
@@ -3920,59 +3909,6 @@ export default function Participate() {
                         />
                       </motion.div>
 
-                      {/* Profile Photo Upload - placed after Institution */}
-                      <motion.div
-                        custom={4.2}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        variants={formFieldVariants}
-                      >
-                        <FormField
-                          control={form.control}
-                          name="profilePhoto"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="flex items-center gap-2">
-                                <User className="w-4 h-4" />
-                                Upload Your Photo <span className="text-destructive">*</span>
-                              </FormLabel>
-                              <FormControl>
-                                <div className="space-y-3">
-                                  <Input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={(e) => {
-                                      const file = e.target.files?.[0];
-                                      if (file) {
-                                        form.setValue("profilePhoto", file);
-                                      }
-                                    }}
-                                    className="cursor-pointer"
-                                    data-testid="input-profile-photo"
-                                  />
-                                  {form.watch("profilePhoto") && (
-                                    <motion.div 
-                                      className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800"
-                                      initial={{ opacity: 0, y: -10 }}
-                                      animate={{ opacity: 1, y: 0 }}
-                                    >
-                                      <CheckCircle className="w-4 h-4 text-blue-600" />
-                                      <span className="text-sm text-blue-700 dark:text-blue-400">
-                                        Photo uploaded: {(form.watch("profilePhoto") as File)?.name}
-                                      </span>
-                                    </motion.div>
-                                  )}
-                                </div>
-                              </FormControl>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Upload a clear photo of yourself for your event badge (Required)
-                              </p>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </motion.div>
 
                       {/* Gift Code Input - placed after profile photo - hidden for speaker registration */}
                       {registrationType !== "speaker" && (
