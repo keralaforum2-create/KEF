@@ -244,6 +244,19 @@ export default function Admin() {
     },
   });
 
+  const deleteExpoRegistrationMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/expo-registrations/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/expo-registrations"] });
+      toast({ title: "Expo registration deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete expo registration", variant: "destructive" });
+    },
+  });
+
   const createReferralCodeMutation = useMutation({
     mutationFn: async (data: { code: string; discountPercentage: number }) => {
       const token = localStorage.getItem("admin_token");
@@ -744,6 +757,9 @@ export default function Admin() {
                 </TabsTrigger>
                 <TabsTrigger value="referral-usage" data-testid="tab-referral-usage">
                   Code Usage
+                </TabsTrigger>
+                <TabsTrigger value="expo-registrations" data-testid="tab-expo-registrations">
+                  Expo Registrations ({expoRegistrations?.length || 0})
                 </TabsTrigger>
               </TabsList>
 
@@ -2377,6 +2393,91 @@ export default function Admin() {
                     )}
                   </CardContent>
                 </Card>
+              </TabsContent>
+
+              <TabsContent value="expo-registrations">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <Users className="w-5 h-5" />
+                          Expo Registrations
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingExpoRegistrations ? (
+                        <div className="text-center py-8 text-muted-foreground">
+                          Loading expo registrations...
+                        </div>
+                      ) : expoRegistrations && expoRegistrations.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <div className="mb-4">
+                            <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                              Total: {expoRegistrations.length}
+                            </Badge>
+                          </div>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Phone</TableHead>
+                                <TableHead>Business Name</TableHead>
+                                <TableHead>Expo Name</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {expoRegistrations.map((reg, index) => (
+                                <motion.tr
+                                  key={reg.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.03 }}
+                                  className="border-b transition-colors hover:bg-muted/50"
+                                  data-testid={`row-expo-registration-${reg.id}`}
+                                >
+                                  <TableCell className="font-medium">{reg.fullName}</TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
+                                  <TableCell className="text-sm">{reg.phone}</TableCell>
+                                  <TableCell className="font-medium">{reg.businessName}</TableCell>
+                                  <TableCell>
+                                    <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                                      {reg.expoName}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">
+                                    {new Date(reg.createdAt).toLocaleDateString()}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => deleteExpoRegistrationMutation.mutate(reg.id)}
+                                      disabled={deleteExpoRegistrationMutation.isPending}
+                                      data-testid={`button-delete-expo-registration-${reg.id}`}
+                                    >
+                                      <Trash2 className="w-4 h-4 text-red-500" />
+                                    </Button>
+                                  </TableCell>
+                                </motion.tr>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">No expo registrations yet</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </TabsContent>
             </Tabs>
           </ScrollFadeUp>
