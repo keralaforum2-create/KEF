@@ -188,8 +188,8 @@ export default function Home() {
                 className="section-heading text-4xl sm:text-5xl md:text-6xl font-bold mb-8 tracking-tight text-gray-900" 
                 data-testid="text-what-is-ksf"
               >
-                What is{" "}
-                <span className="text-red-600">Kerala Startup Fest</span>?
+                WHATS HAPPENING AT{" "}
+                <span className="text-red-600">KSF</span>
               </h2>
             </ScrollFadeUp>
             <ScrollFadeUp delay={0.1}>
