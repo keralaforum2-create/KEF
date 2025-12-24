@@ -1187,6 +1187,23 @@ export async function registerRoutes(
             console.error('Failed to send registration emails:', err);
           });
         }
+
+        // Send admin notification with referral code info
+        sendAdminNotificationEmail(registration, `${baseUrl}/ticket/${registration.registrationId}`).catch((err) => {
+          console.error('Failed to send admin notification:', err);
+        });
+
+        // Send referral code usage notification if code was used
+        if (registration.referralCode) {
+          sendReferralCodeUsedNotificationEmail(
+            registration.fullName,
+            registration.email,
+            registration.referralCode,
+            registration.registrationId
+          ).catch((err) => {
+            console.error('Failed to send referral code usage notification:', err);
+          });
+        }
       }
 
       console.log("Callback processed successfully, payment status:", paymentStatus);
@@ -1239,6 +1256,18 @@ export async function registerRoutes(
           sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
             console.error('Failed to send admin notification:', err);
           });
+
+          // Send referral code usage notification if code was used
+          if (registration.referralCode) {
+            sendReferralCodeUsedNotificationEmail(
+              registration.fullName,
+              registration.email,
+              registration.referralCode,
+              registration.registrationId
+            ).catch((err) => {
+              console.error('Failed to send referral code usage notification:', err);
+            });
+          }
         }
 
         return res.json({
@@ -2056,6 +2085,23 @@ export async function registerRoutes(
             console.error('Failed to send registration emails:', err);
           });
         }
+
+        // Send admin notification with referral code info
+        sendAdminNotificationEmail(registration, `${baseUrl}/ticket/${registration.registrationId}`).catch((err) => {
+          console.error('Failed to send admin notification:', err);
+        });
+
+        // Send referral code usage notification if code was used
+        if (registration.referralCode) {
+          sendReferralCodeUsedNotificationEmail(
+            registration.fullName,
+            registration.email,
+            registration.referralCode,
+            registration.registrationId
+          ).catch((err) => {
+            console.error('Failed to send referral code usage notification:', err);
+          });
+        }
       }
 
       console.log("Callback processed successfully, payment status:", paymentStatus);
@@ -2108,6 +2154,18 @@ export async function registerRoutes(
           sendAdminNotificationEmail(registration, ticketUrl).catch((err) => {
             console.error('Failed to send admin notification:', err);
           });
+
+          // Send referral code usage notification if code was used
+          if (registration.referralCode) {
+            sendReferralCodeUsedNotificationEmail(
+              registration.fullName,
+              registration.email,
+              registration.referralCode,
+              registration.registrationId
+            ).catch((err) => {
+              console.error('Failed to send referral code usage notification:', err);
+            });
+          }
         }
 
         return res.json({
