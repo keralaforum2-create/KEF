@@ -296,7 +296,7 @@ export default function Home() {
                     </div>
                     <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Startup Clinic</h3>
                     <p className="text-gray-600 text-sm sm:text-base">
-                      Get <span className="font-medium text-primary">expert guidance</span> and mentorship for your startup journey
+                      <span className="font-medium text-primary">One-to-One consultation</span> with startup experts and professionals. Gain clarity, direction, and <span className="font-medium text-primary">practical solutions</span> for your startup journey
                     </p>
                   </div>
                 </div>
