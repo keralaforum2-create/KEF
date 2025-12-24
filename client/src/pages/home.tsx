@@ -191,7 +191,7 @@ export default function Home() {
                 className="section-heading text-4xl sm:text-5xl md:text-6xl font-bold mb-8 tracking-tight text-gray-900" 
                 data-testid="text-what-is-ksf"
               >
-                WHATS HAPPENING AT{" "}
+                WHAT'S HAPPENING AT{" "}
                 <span className="text-red-600">KSF</span>
               </h2>
             </ScrollFadeUp>
@@ -205,7 +205,7 @@ export default function Home() {
             </ScrollFadeUp>
           </div>
           
-          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" staggerDelay={0.1}>
+          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8" staggerDelay={0.1}>
             <StaggerItem>
               <Link href="/sessions" data-testid="link-expert-sessions">
                 <div 
@@ -297,6 +297,54 @@ export default function Home() {
                     <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Startup Clinic</h3>
                     <p className="text-gray-600 text-sm sm:text-base">
                       <span className="font-medium text-primary">One-to-One consultation</span> with startup experts and professionals. Gain clarity, direction, and <span className="font-medium text-primary">practical solutions</span> for your startup journey
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </StaggerItem>
+            
+            <StaggerItem>
+              <Link href="/participate#register" data-testid="link-idea-pitching">
+                <div 
+                  className="relative p-[3px] rounded-2xl shadow-lg hover-elevate cursor-pointer h-full"
+                  style={{
+                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                  }}
+                >
+                  <div className="bg-white rounded-[13px] p-6 sm:p-8 text-center h-full">
+                    <div 
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                      style={{ backgroundColor: "hsl(174 100% 29%)" }}
+                    >
+                      <Lightbulb className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Idea Pitching</h3>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      <span className="font-medium text-primary">Pitch your innovative ideas</span> to investors, mentors, and industry experts. Get feedback and opportunities
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </StaggerItem>
+            
+            <StaggerItem>
+              <Link href="/participate#register" data-testid="link-networking">
+                <div 
+                  className="relative p-[3px] rounded-2xl shadow-lg hover-elevate cursor-pointer h-full"
+                  style={{
+                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                  }}
+                >
+                  <div className="bg-white rounded-[13px] p-6 sm:p-8 text-center h-full">
+                    <div 
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                      style={{ backgroundColor: "hsl(174 100% 29%)" }}
+                    >
+                      <HandshakeIcon className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Networking</h3>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      <span className="font-medium text-primary">Connect with founders, investors, and mentors</span>. Build meaningful relationships and collaborations for your journey
                     </p>
                   </div>
                 </div>
