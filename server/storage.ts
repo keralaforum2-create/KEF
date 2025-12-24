@@ -392,19 +392,59 @@ export class DatabaseStorage implements IStorage {
     const codes = await this.getReferralCodes();
     const allRegs = await db.select().from(registrations);
     
-    return codes.map(code => {
-      const usages = allRegs.filter(reg => reg.referralCode === code.code);
-      const lastUsed = usages.length > 0 
-        ? new Date(Math.max(...usages.map(u => new Date(u.createdAt || new Date()).getTime()))).toISOString()
-        : undefined;
-      
-      return {
+    // Create a map of all used codes from registrations (case-insensitive)
+    const usageMap = new Map<string, { usages: Registration[]; lastUsed?: string }>();
+    
+    allRegs.forEach(reg => {
+      if (reg.referralCode) {
+        const codeUpper = reg.referralCode.toUpperCase();
+        if (!usageMap.has(codeUpper)) {
+          usageMap.set(codeUpper, { usages: [] });
+        }
+        usageMap.get(codeUpper)!.usages.push(reg);
+      }
+    });
+    
+    // Update lastUsed for each code
+    usageMap.forEach((value) => {
+      if (value.usages.length > 0) {
+        const timestamps = value.usages
+          .map(u => new Date(u.createdAt || new Date()).getTime())
+          .filter(t => !isNaN(t));
+        if (timestamps.length > 0) {
+          value.lastUsed = new Date(Math.max(...timestamps)).toISOString();
+        }
+      }
+    });
+    
+    // Combine with created codes table and all used codes
+    const result: Array<{ code: string; discountPercentage: number; timesUsed: number; lastUsed?: string }> = [];
+    
+    // Add all codes from the codes table
+    codes.forEach(code => {
+      const codeUpper = code.code.toUpperCase();
+      const usage = usageMap.get(codeUpper);
+      result.push({
         code: code.code,
         discountPercentage: code.discountPercentage,
-        timesUsed: usages.length,
-        lastUsed
-      };
-    }).sort((a, b) => b.timesUsed - a.timesUsed);
+        timesUsed: usage?.usages.length || 0,
+        lastUsed: usage?.lastUsed
+      });
+    });
+    
+    // Add any codes that were used but not in the codes table
+    usageMap.forEach((value, codeUpper) => {
+      if (!codes.some(c => c.code.toUpperCase() === codeUpper)) {
+        result.push({
+          code: codeUpper,
+          discountPercentage: 0, // Unknown discount
+          timesUsed: value.usages.length,
+          lastUsed: value.lastUsed
+        });
+      }
+    });
+    
+    return result.sort((a, b) => b.timesUsed - a.timesUsed);
   }
 
   async initializeReferralCodes(): Promise<void> {
