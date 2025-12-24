@@ -1,7 +1,7 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema, insertBulkRegistrationSchema, insertReferralCodeSchema } from "@shared/schema";
+import { insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema, insertBulkRegistrationSchema, insertReferralCodeSchema, insertExpoRegistrationSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
@@ -366,6 +366,71 @@ export async function registerRoutes(
       return res.json(contacts);
     } catch (error) {
       console.error("Error fetching contacts:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Expo registrations endpoints
+  app.post("/api/expo-registrations", async (req, res) => {
+    try {
+      const result = insertExpoRegistrationSchema.safeParse(req.body);
+      
+      if (!result.success) {
+        const validationError = fromError(result.error);
+        return res.status(400).json({ 
+          message: "Validation failed", 
+          error: validationError.toString() 
+        });
+      }
+      
+      const registration = await storage.createExpoRegistration(result.data);
+      
+      console.log(`📋 Expo registration submitted for ${registration.expoName} by ${registration.fullName}`);
+      
+      return res.status(201).json({ 
+        message: "Expo registration submitted successfully", 
+        registration 
+      });
+    } catch (error) {
+      console.error("Error creating expo registration:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/expo-registrations", async (req, res) => {
+    try {
+      const registrations = await storage.getExpoRegistrations();
+      return res.json(registrations);
+    } catch (error) {
+      console.error("Error fetching expo registrations:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/expo-registrations/:expoName", async (req, res) => {
+    try {
+      const { expoName } = req.params;
+      const registrations = await storage.getExpoRegistrationsByExpo(expoName);
+      return res.json(registrations);
+    } catch (error) {
+      console.error("Error fetching expo registrations:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/expo-registrations/:id", async (req, res) => {
+    try {
+      const token = req.headers.authorization || "";
+      const isAuthorized = (token === "Bearer admin-authenticated") || (token === ADMIN_PASSWORD && token);
+      
+      if (!isAuthorized) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
+      await storage.deleteExpoRegistration(req.params.id);
+      return res.json({ message: "Expo registration deleted" });
+    } catch (error) {
+      console.error("Error deleting expo registration:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });

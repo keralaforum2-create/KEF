@@ -17,6 +17,8 @@ import {
   type InsertReferralCode,
   type SpeakerApplication,
   type InsertSpeakerApplication,
+  type ExpoRegistration,
+  type InsertExpoRegistration,
   users,
   contactSubmissions,
   registrations,
@@ -26,6 +28,7 @@ import {
   bulkRegistrationStudents,
   referralCodes,
   speakerApplications,
+  expoRegistrations,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql } from "drizzle-orm";
@@ -81,6 +84,11 @@ export interface IStorage {
   createSpeakerApplication(application: InsertSpeakerApplication): Promise<SpeakerApplication>;
   getSpeakerApplications(): Promise<SpeakerApplication[]>;
   getSpeakers(): Promise<Registration[]>;
+
+  createExpoRegistration(registration: InsertExpoRegistration): Promise<ExpoRegistration>;
+  getExpoRegistrations(): Promise<ExpoRegistration[]>;
+  getExpoRegistrationsByExpo(expoName: string): Promise<ExpoRegistration[]>;
+  deleteExpoRegistration(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -491,6 +499,29 @@ export class DatabaseStorage implements IStorage {
       .where(eq(registrations.registrationType, 'speaker'))
       .orderBy(desc(registrations.createdAt));
     return result;
+  }
+
+  async createExpoRegistration(insertData: InsertExpoRegistration): Promise<ExpoRegistration> {
+    const id = randomUUID();
+    const result = await db.insert(expoRegistrations).values({ 
+      ...insertData, 
+      id 
+    }).returning();
+    return result[0];
+  }
+
+  async getExpoRegistrations(): Promise<ExpoRegistration[]> {
+    return await db.select().from(expoRegistrations).orderBy(desc(expoRegistrations.createdAt));
+  }
+
+  async getExpoRegistrationsByExpo(expoName: string): Promise<ExpoRegistration[]> {
+    return await db.select().from(expoRegistrations)
+      .where(eq(expoRegistrations.expoName, expoName))
+      .orderBy(desc(expoRegistrations.createdAt));
+  }
+
+  async deleteExpoRegistration(id: string): Promise<void> {
+    await db.delete(expoRegistrations).where(eq(expoRegistrations.id, id));
   }
 }
 

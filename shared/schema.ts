@@ -353,3 +353,27 @@ export const insertSpeakerApplicationSchema = createInsertSchema(speakerApplicat
 
 export type InsertSpeakerApplication = z.infer<typeof insertSpeakerApplicationSchema>;
 export type SpeakerApplication = typeof speakerApplications.$inferSelect;
+
+export const expoRegistrations = pgTable("expo_registrations", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  fullName: text("full_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  businessName: text("business_name").notNull(),
+  expoName: text("expo_name").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertExpoRegistrationSchema = createInsertSchema(expoRegistrations).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  fullName: z.string().min(2, "Full name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
+  businessName: z.string().min(2, "Business name must be at least 2 characters"),
+  expoName: z.string().min(1, "Expo name is required"),
+});
+
+export type InsertExpoRegistration = z.infer<typeof insertExpoRegistrationSchema>;
+export type ExpoRegistration = typeof expoRegistrations.$inferSelect;
