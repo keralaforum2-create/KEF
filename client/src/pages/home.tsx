@@ -280,7 +280,7 @@ export default function Home() {
             </StaggerItem>
             
             <StaggerItem>
-              <Link href="/partners" data-testid="link-vc-networking">
+              <Link href="/contact" data-testid="link-startup-clinic">
                 <div 
                   className="relative p-[3px] rounded-2xl shadow-lg hover-elevate cursor-pointer h-full"
                   style={{
@@ -292,11 +292,11 @@ export default function Home() {
                       className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
                       style={{ backgroundColor: "hsl(174 100% 29%)" }}
                     >
-                      <Briefcase className="w-8 h-8 text-white" />
+                      <Building2 className="w-8 h-8 text-white" />
                     </div>
-                    <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Networking</h3>
+                    <h3 className="font-bold text-lg sm:text-xl mb-3 text-gray-900">Startup Clinic</h3>
                     <p className="text-gray-600 text-sm sm:text-base">
-                      Connect with <span className="font-medium text-primary">entrepreneurs</span> and business leaders
+                      Get <span className="font-medium text-primary">expert guidance</span> and mentorship for your startup journey
                     </p>
                   </div>
                 </div>
