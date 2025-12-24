@@ -16,6 +16,7 @@ export default function StartupClinic() {
   const [step, setStep] = useState(1);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [businessName, setBusinessName] = useState("");
   const [bookedTicket, setBookedTicket] = useState<"yes" | "no" | "">("");
   const [ticketNumber, setTicketNumber] = useState("");
@@ -59,6 +60,7 @@ export default function StartupClinic() {
       const data: any = {
         fullName,
         email,
+        phone,
         businessName,
         bookedTicket,
       };
@@ -77,6 +79,7 @@ export default function StartupClinic() {
       toast({ title: "Registration submitted successfully!" });
       setFullName("");
       setEmail("");
+      setPhone("");
       setBusinessName("");
       setBookedTicket("");
       setTicketNumber("");
@@ -148,6 +151,21 @@ export default function StartupClinic() {
                   </div>
 
                   <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-base font-medium">
+                      Phone Number <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="+91 98765 43210"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="h-10"
+                      data-testid="input-phone"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
                     <Label htmlFor="businessName" className="text-base font-medium">
                       Business Name / Organisation <span className="text-red-500">*</span>
                     </Label>
@@ -163,7 +181,7 @@ export default function StartupClinic() {
 
                   <Button 
                     onClick={() => {
-                      if (fullName && email && businessName) {
+                      if (fullName && email && phone && businessName) {
                         setStep(2);
                       } else {
                         toast({ 

@@ -458,6 +458,15 @@ export async function registerRoutes(
       
       console.log(`📋 Startup Clinic registration submitted by ${registration.fullName}`);
       
+      // Send approval email
+      sendRegistrationApprovalEmail(
+        registration.fullName,
+        registration.email,
+        `STARTUP-CLINIC-${registration.id.substring(0, 8).toUpperCase()}`
+      ).catch(err => {
+        console.error("Failed to send startup clinic approval email:", err);
+      });
+      
       return res.status(201).json({ 
         message: "Startup Clinic registration submitted successfully", 
         registration 

@@ -382,6 +382,7 @@ export const startupClinicRegistrations = pgTable("startup_clinic_registrations"
   id: varchar("id", { length: 36 }).primaryKey(),
   fullName: text("full_name").notNull(),
   email: text("email").notNull(),
+  phone: text("phone").notNull(),
   businessName: text("business_name").notNull(),
   bookedTicket: text("booked_ticket").notNull(),
   ticketNumber: text("ticket_number"),
@@ -395,6 +396,7 @@ export const insertStartupClinicSchema = createInsertSchema(startupClinicRegistr
 }).extend({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
   businessName: z.string().min(2, "Business/Organisation name must be at least 2 characters"),
   bookedTicket: z.enum(["yes", "no"]),
   ticketNumber: z.string().optional(),
