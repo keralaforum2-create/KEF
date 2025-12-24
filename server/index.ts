@@ -233,6 +233,16 @@ app.use((req, res, next) => {
       console.log("✅ Referral code EARLYBIRD10 (10% discount) initialized");
     }
     
+    const existingKefmember = await storage.getReferralCodeByCode("KEFMEMBER25");
+    if (!existingKefmember) {
+      await storage.createReferralCode({
+        code: "KEFMEMBER25",
+        discountPercentage: 25,
+        isActive: true,
+      });
+      console.log("✅ Referral code KEFMEMBER25 (25% discount) initialized");
+    }
+    
     // Initialize the 10 new referral codes
     await storage.initializeReferralCodes();
     console.log("✅ All referral codes initialized");
