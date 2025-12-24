@@ -272,6 +272,25 @@ export default function StartupClinic() {
                     </motion.div>
                   )}
 
+                  {bookedTicket === "no" && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      transition={{ duration: 0.3 }}
+                      className="flex items-center gap-3 p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-lg"
+                    >
+                      <AlertCircle className="w-6 h-6 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                      <div>
+                        <p className="font-semibold text-amber-900 dark:text-amber-100">
+                          Registration Required
+                        </p>
+                        <p className="text-sm text-amber-800 dark:text-amber-200 mt-1">
+                          After buying your ticket then only you can register for startup clinic consultation.
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+
                   <div className="flex gap-3">
                     <Button 
                       onClick={() => setStep(1)}
@@ -288,6 +307,12 @@ export default function StartupClinic() {
                             title: "Please select an option",
                             variant: "destructive"
                           });
+                        } else if (bookedTicket === "no") {
+                          toast({ 
+                            title: "Ticket Required",
+                            description: "Please buy your ticket first to register for startup clinic consultation",
+                            variant: "destructive"
+                          });
                         } else if (bookedTicket === "yes" && !verifiedTicket) {
                           toast({ 
                             title: "Please verify your ticket first",
@@ -298,6 +323,7 @@ export default function StartupClinic() {
                         }
                       }}
                       className="flex-1 bg-teal-600 hover:bg-teal-700"
+                      disabled={bookedTicket === "no"}
                       data-testid="button-next-step2"
                     >
                       Next
