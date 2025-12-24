@@ -19,6 +19,8 @@ import {
   type InsertSpeakerApplication,
   type ExpoRegistration,
   type InsertExpoRegistration,
+  type StartupClinic,
+  type InsertStartupClinic,
   users,
   contactSubmissions,
   registrations,
@@ -29,6 +31,7 @@ import {
   referralCodes,
   speakerApplications,
   expoRegistrations,
+  startupClinicRegistrations,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql } from "drizzle-orm";
@@ -89,6 +92,10 @@ export interface IStorage {
   getExpoRegistrations(): Promise<ExpoRegistration[]>;
   getExpoRegistrationsByExpo(expoName: string): Promise<ExpoRegistration[]>;
   deleteExpoRegistration(id: string): Promise<void>;
+
+  createStartupClinicRegistration(registration: InsertStartupClinic): Promise<StartupClinic>;
+  getStartupClinicRegistrations(): Promise<StartupClinic[]>;
+  deleteStartupClinicRegistration(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -522,6 +529,23 @@ export class DatabaseStorage implements IStorage {
 
   async deleteExpoRegistration(id: string): Promise<void> {
     await db.delete(expoRegistrations).where(eq(expoRegistrations.id, id));
+  }
+
+  async createStartupClinicRegistration(insertData: InsertStartupClinic): Promise<StartupClinic> {
+    const id = randomUUID();
+    const result = await db.insert(startupClinicRegistrations).values({ 
+      ...insertData, 
+      id 
+    }).returning();
+    return result[0];
+  }
+
+  async getStartupClinicRegistrations(): Promise<StartupClinic[]> {
+    return await db.select().from(startupClinicRegistrations).orderBy(desc(startupClinicRegistrations.createdAt));
+  }
+
+  async deleteStartupClinicRegistration(id: string): Promise<void> {
+    await db.delete(startupClinicRegistrations).where(eq(startupClinicRegistrations.id, id));
   }
 }
 

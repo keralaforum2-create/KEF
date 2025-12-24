@@ -280,7 +280,7 @@ export default function Home() {
             </StaggerItem>
             
             <StaggerItem>
-              <Link href="/contact" data-testid="link-startup-clinic">
+              <Link href="/startup-clinic" data-testid="link-startup-clinic">
                 <div 
                   className="relative p-[3px] rounded-2xl shadow-lg hover-elevate cursor-pointer h-full"
                   style={{

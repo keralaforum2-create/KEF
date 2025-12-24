@@ -377,3 +377,29 @@ export const insertExpoRegistrationSchema = createInsertSchema(expoRegistrations
 
 export type InsertExpoRegistration = z.infer<typeof insertExpoRegistrationSchema>;
 export type ExpoRegistration = typeof expoRegistrations.$inferSelect;
+
+export const startupClinicRegistrations = pgTable("startup_clinic_registrations", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  fullName: text("full_name").notNull(),
+  email: text("email").notNull(),
+  businessName: text("business_name").notNull(),
+  bookedTicket: text("booked_ticket").notNull(),
+  ticketNumber: text("ticket_number"),
+  consultationTopic: text("consultation_topic"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertStartupClinicSchema = createInsertSchema(startupClinicRegistrations).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  fullName: z.string().min(2, "Full name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  businessName: z.string().min(2, "Business/Organisation name must be at least 2 characters"),
+  bookedTicket: z.enum(["yes", "no"]),
+  ticketNumber: z.string().optional(),
+  consultationTopic: z.string().optional(),
+});
+
+export type InsertStartupClinic = z.infer<typeof insertStartupClinicSchema>;
+export type StartupClinic = typeof startupClinicRegistrations.$inferSelect;

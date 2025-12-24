@@ -160,6 +160,12 @@ export default function Admin() {
     staleTime: 20000,
   });
 
+  const { data: startupClinicRegistrations, isLoading: loadingStartupClinicRegistrations } = useQuery<any[]>({
+    queryKey: ["/api/startup-clinic"],
+    refetchInterval: 30000,
+    staleTime: 20000,
+  });
+
   const { data: referralCodeUsage, isLoading: loadingReferralCodeUsage } = useQuery<Array<{ code: string; discountPercentage: number; timesUsed: number; lastUsed?: string }>>({
     queryKey: ["/api/admin/referral-code-usage"],
     refetchInterval: 30000,
@@ -254,6 +260,19 @@ export default function Admin() {
     },
     onError: () => {
       toast({ title: "Failed to delete expo registration", variant: "destructive" });
+    },
+  });
+
+  const deleteStartupClinicMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/startup-clinic/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/startup-clinic"] });
+      toast({ title: "Startup clinic registration deleted successfully" });
+    },
+    onError: () => {
+      toast({ title: "Failed to delete startup clinic registration", variant: "destructive" });
     },
   });
 
@@ -760,6 +779,9 @@ export default function Admin() {
                 </TabsTrigger>
                 <TabsTrigger value="expo-registrations" data-testid="tab-expo-registrations">
                   Expo Registrations ({expoRegistrations?.length || 0})
+                </TabsTrigger>
+                <TabsTrigger value="startup-clinic" data-testid="tab-startup-clinic">
+                  Startup Clinic ({startupClinicRegistrations?.length || 0})
                 </TabsTrigger>
               </TabsList>
 
@@ -2393,6 +2415,93 @@ export default function Admin() {
                     )}
                   </CardContent>
                 </Card>
+              </TabsContent>
+
+              <TabsContent value="startup-clinic">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <Users className="w-5 h-5" />
+                          Startup Clinic Consultations
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingStartupClinicRegistrations ? (
+                        <div className="text-center py-8 text-muted-foreground">
+                          Loading startup clinic registrations...
+                        </div>
+                      ) : startupClinicRegistrations && startupClinicRegistrations.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <div className="mb-4">
+                            <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                              Total: {startupClinicRegistrations.length}
+                            </Badge>
+                          </div>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Business Name</TableHead>
+                                <TableHead>Booked Ticket</TableHead>
+                                <TableHead>Ticket No.</TableHead>
+                                <TableHead>Consultation Topic</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {startupClinicRegistrations.map((reg, index) => (
+                                <motion.tr
+                                  key={reg.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.03 }}
+                                  className="border-b transition-colors hover:bg-muted/50"
+                                  data-testid={`row-startup-clinic-${reg.id}`}
+                                >
+                                  <TableCell className="font-medium">{reg.fullName}</TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">{reg.email}</TableCell>
+                                  <TableCell className="font-medium">{reg.businessName}</TableCell>
+                                  <TableCell>
+                                    <Badge className={reg.bookedTicket === "yes" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300" : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"}>
+                                      {reg.bookedTicket === "yes" ? "Yes" : "No"}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="text-sm font-mono">{reg.ticketNumber || "-"}</TableCell>
+                                  <TableCell className="text-sm text-muted-foreground max-w-xs truncate">{reg.consultationTopic || "-"}</TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">
+                                    {new Date(reg.createdAt).toLocaleDateString()}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => deleteStartupClinicMutation.mutate(reg.id)}
+                                      disabled={deleteStartupClinicMutation.isPending}
+                                      data-testid={`button-delete-startup-clinic-${reg.id}`}
+                                    >
+                                      <Trash2 className="w-4 h-4 text-red-500" />
+                                    </Button>
+                                  </TableCell>
+                                </motion.tr>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">No startup clinic registrations yet</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </TabsContent>
 
               <TabsContent value="expo-registrations">
