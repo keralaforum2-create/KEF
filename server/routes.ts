@@ -420,8 +420,14 @@ export async function registerRoutes(
 
   app.delete("/api/expo-registrations/:id", async (req, res) => {
     try {
-      const token = req.headers.authorization || "";
-      const isAuthorized = (token === "Bearer admin-authenticated") || (token === ADMIN_PASSWORD && token);
+      const authHeader = req.headers.authorization || "";
+      let token = "";
+      if (authHeader.toLowerCase().startsWith("bearer ")) {
+        token = authHeader.substring(7).trim();
+      } else {
+        token = authHeader.trim();
+      }
+      const isAuthorized = (token === "admin-authenticated") || (token === ADMIN_PASSWORD && token);
       
       if (!isAuthorized) {
         return res.status(401).json({ message: "Unauthorized" });
@@ -474,8 +480,14 @@ export async function registerRoutes(
 
   app.delete("/api/startup-clinic/:id", async (req, res) => {
     try {
-      const token = req.headers.authorization || "";
-      const isAuthorized = (token === "Bearer admin-authenticated") || (token === ADMIN_PASSWORD && token);
+      const authHeader = req.headers.authorization || "";
+      let token = "";
+      if (authHeader.toLowerCase().startsWith("bearer ")) {
+        token = authHeader.substring(7).trim();
+      } else {
+        token = authHeader.trim();
+      }
+      const isAuthorized = (token === "admin-authenticated") || (token === ADMIN_PASSWORD && token);
       
       if (!isAuthorized) {
         return res.status(401).json({ message: "Unauthorized" });
