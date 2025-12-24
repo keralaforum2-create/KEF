@@ -313,6 +313,17 @@ export default function Home() {
                 className="w-full h-auto rounded-lg"
                 data-testid="img-young-kerala-expo-poster"
               />
+              <div className="flex justify-center mt-6">
+                <Link href="/expo-register">
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white font-semibold"
+                    data-testid="button-expo-register-now"
+                  >
+                    Register Now
+                  </Button>
+                </Link>
+              </div>
             </DialogContent>
           </Dialog>
         </div>
