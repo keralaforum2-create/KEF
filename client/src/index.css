@@ -164,9 +164,10 @@
 @media (max-width: 640px) {
   .sticky-poster-btn-wrapper {
     right: 0.5rem;
-    bottom: 1rem;
+    bottom: 4.5rem;
     padding: 2px;
     width: auto;
+    z-index: 40;
   }
   
   .sticky-poster-btn {
