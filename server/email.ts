@@ -862,3 +862,84 @@ export async function sendReferralCodeUsedNotificationEmail(fullName: string, em
     };
   }
 }
+
+export async function sendContactNotificationEmail(name: string, email: string, phone: string | undefined, userType: string, message: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    const resend = getResendClient();
+    
+    console.log(`📧 Sending contact form notification to admin from: ${email}`);
+    
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New Contact Form Submission - Kerala Startup Fest 2026</title>
+      </head>
+      <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-radius: 16px; padding: 40px; text-align: center; color: white;">
+            <h1 style="margin: 0; font-size: 28px; font-weight: bold;">New Contact Form Submission</h1>
+            <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">Kerala Startup Fest 2026</p>
+          </div>
+          
+          <div style="background: white; border-radius: 16px; padding: 30px; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h3 style="color: #333; margin: 0 0 20px 0; border-bottom: 2px solid #d1fae5; padding-bottom: 10px;">Contact Information</h3>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #059669; width: 30%;">Name:</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">${name}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #059669;">Email:</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;"><a href="mailto:${email}" style="color: #0891b2;">${email}</a></td>
+              </tr>
+              ${phone ? `<tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb; font-weight: bold; color: #059669;">Phone:</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #e5e7eb;">${phone}</td>
+              </tr>` : ''}
+              <tr>
+                <td style="padding: 10px 0; font-weight: bold; color: #059669;">User Type:</td>
+                <td style="padding: 10px 0; text-transform: capitalize;">${userType}</td>
+              </tr>
+            </table>
+            
+            <h3 style="color: #333; margin: 20px 0 15px 0; border-bottom: 2px solid #d1fae5; padding-bottom: 10px;">Message</h3>
+            
+            <div style="background: #f0fdf4; border-left: 4px solid #059669; padding: 15px; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word; color: #333; font-size: 14px; line-height: 1.6;">
+${message}
+            </div>
+            
+            <p style="color: #666; font-size: 12px; margin: 20px 0 0 0;">
+              <em>This is an automated notification. Please respond to the sender directly using their email address.</em>
+            </p>
+          </div>
+          
+          <div style="text-align: center; padding: 20px; color: #666; font-size: 12px;">
+            <p style="margin: 0;">Kerala Startup Fest 2026</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    await resend.emails.send({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: ADMIN_EMAIL,
+      subject: `New Contact Form: ${name} (${userType})`,
+      replyTo: email,
+      html: htmlContent,
+    });
+    
+    console.log(`✅ Contact form notification sent to admin`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Error sending contact notification email:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to send contact notification email' 
+    };
+  }
+}
