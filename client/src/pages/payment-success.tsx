@@ -255,11 +255,32 @@ export default function PaymentSuccess() {
             Your registration has been confirmed. Check your email for your ticket.
           </motion.p>
 
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mb-6"
+          >
+            <a 
+              href="https://agent-694821dcdde99eb716fe8--keralastartupfestin.netlify.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button 
+                size="lg"
+                className="w-full bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-semibold"
+                data-testid="button-make-poster"
+              >
+                Make Your Poster
+              </Button>
+            </a>
+          </motion.div>
+
           <motion.p 
             className="text-center text-muted-foreground text-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.6 }}
           >
             See you at Kerala Startup Fest 2026!
           </motion.p>
