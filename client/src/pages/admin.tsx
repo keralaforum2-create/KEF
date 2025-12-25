@@ -383,6 +383,7 @@ export default function Admin() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
+      queryClient.refetchQueries({ queryKey: ["/api/registrations"] });
       toast({ title: "Registration added successfully! Email sent to the user." });
       setAdminRegForm({
         fullName: "",
