@@ -430,11 +430,13 @@ export default function Admin() {
       queryClient.setQueryData(["/api/pending-registrations"], (old: Registration[] | undefined) => old?.filter(r => r.registrationId !== registrationId));
       return { prevPending };
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["/api/pending-registrations"] });
       queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
-      queryClient.refetchQueries({ queryKey: ["/api/pending-registrations"] });
-      queryClient.refetchQueries({ queryKey: ["/api/registrations"] });
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["/api/pending-registrations"] }),
+        queryClient.refetchQueries({ queryKey: ["/api/registrations"] })
+      ]);
       setActiveTab("registrations");
       toast({ title: "Registration approved successfully!" });
     },
