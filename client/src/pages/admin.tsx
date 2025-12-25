@@ -75,14 +75,14 @@ export default function Admin() {
 
   const { data: registrations, isLoading: loadingRegistrations } = useQuery<Registration[]>({
     queryKey: ["/api/registrations"],
-    refetchInterval: 30000,
-    staleTime: 20000,
+    refetchInterval: 5000,
+    staleTime: 2000,
   });
 
   const { data: pendingRegistrations, isLoading: loadingPendingRegistrations, isError: pendingError } = useQuery<Registration[]>({
     queryKey: ["/api/pending-registrations"],
-    refetchInterval: 30000,
-    staleTime: 20000,
+    refetchInterval: 5000,
+    staleTime: 2000,
     retry: 3,
     retryDelay: 1000,
     gcTime: 60000,
@@ -432,6 +432,8 @@ export default function Admin() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/pending-registrations"] });
       queryClient.invalidateQueries({ queryKey: ["/api/registrations"] });
+      queryClient.refetchQueries({ queryKey: ["/api/pending-registrations"] });
+      queryClient.refetchQueries({ queryKey: ["/api/registrations"] });
       setActiveTab("registrations");
       toast({ title: "Registration approved successfully!" });
     },
