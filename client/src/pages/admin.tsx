@@ -426,9 +426,28 @@ export default function Admin() {
     },
     onMutate: async (registrationId: string) => {
       await queryClient.cancelQueries({ queryKey: ["/api/pending-registrations"] });
+      await queryClient.cancelQueries({ queryKey: ["/api/registrations"] });
+      
       const prevPending = queryClient.getQueryData<Registration[]>(["/api/pending-registrations"]);
-      queryClient.setQueryData(["/api/pending-registrations"], (old: Registration[] | undefined) => old?.filter(r => r.registrationId !== registrationId));
-      return { prevPending };
+      const prevRegistrations = queryClient.getQueryData<Registration[]>(["/api/registrations"]);
+      
+      // Find the registration being approved
+      const registrationToApprove = prevPending?.find(r => r.registrationId === registrationId);
+      
+      // Optimistically update pending - remove it
+      queryClient.setQueryData(["/api/pending-registrations"], (old: Registration[] | undefined) => 
+        old?.filter(r => r.registrationId !== registrationId)
+      );
+      
+      // Optimistically update all registrations - add it if found
+      if (registrationToApprove) {
+        queryClient.setQueryData(["/api/registrations"], (old: Registration[] | undefined) => [
+          ...(old || []),
+          registrationToApprove
+        ]);
+      }
+      
+      return { prevPending, prevRegistrations };
     },
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ["/api/pending-registrations"] });
@@ -442,6 +461,7 @@ export default function Admin() {
     },
     onError: (error: any, registrationId, context: any) => {
       if (context?.prevPending) queryClient.setQueryData(["/api/pending-registrations"], context.prevPending);
+      if (context?.prevRegistrations) queryClient.setQueryData(["/api/registrations"], context.prevRegistrations);
       const errorMessage = error?.message || "Failed to approve registration";
       toast({ title: "Approval Error", description: errorMessage, variant: "destructive" });
     },
