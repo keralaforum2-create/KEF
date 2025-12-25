@@ -245,7 +245,7 @@ export class DatabaseStorage implements IStorage {
   }> {
     const allRegs = await db.select().from(registrations);
     const totalRegistrations = allRegs.length;
-    const totalPaid = allRegs.filter(r => r.paymentStatus === 'paid').length;
+    const totalPaid = allRegs.filter(r => r.paymentStatus === 'paid' || r.paymentStatus === 'approved').length;
     const totalPending = allRegs.filter(r => r.paymentStatus !== 'paid' && r.paymentStatus !== 'approved').length;
     const contestRegistrations = allRegs.filter(r => r.registrationType === 'contest').length;
     const expertSessionRegistrations = allRegs.filter(r => r.registrationType === 'expert-session').length;
@@ -261,7 +261,7 @@ export class DatabaseStorage implements IStorage {
   
   async getPaidRegistrations(): Promise<Registration[]> {
     const result = await db.select().from(registrations)
-      .where(eq(registrations.paymentStatus, 'paid'))
+      .where(sql`${registrations.paymentStatus} IN ('paid', 'approved')`)
       .orderBy(desc(registrations.createdAt))
       .limit(1000);
     return result;
