@@ -42,6 +42,9 @@ import rameezPoster from "@assets/rameez-poster-violet.jpeg";
 import faisalPoster from "@assets/faisal-poster-teal.jpeg";
 import abdussaamedPoster from "@assets/abdussamed-poster-red.jpeg";
 import hashimPoster from "@assets/hashim-poster-violet.jpeg";
+import ramshina from "@assets/ramshina-poster-teal.jpeg";
+import ajmalPoster from "@assets/ajmal-poster-red.jpeg";
+import shanPoster from "@assets/shan-poster-violet.jpeg";
 
 const speakers = [
   {
@@ -484,6 +487,68 @@ export default function Speakers() {
                   alt="Adv Hashim Wafa"
                   className="w-full h-auto object-cover"
                   data-testid="img-featured-speaker-hashim"
+                />
+              </div>
+            </ScrollFadeUp>
+          </div>
+        </div>
+
+        {/* Fifth Featured Speakers Grid */}
+        <div className="mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Teal Speaker - Ramshina */}
+            <ScrollFadeUp delay={0.1}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-teal-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 25, image: ramshina };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-ramshina"
+              >
+                <img 
+                  src={ramshina} 
+                  alt="Ramshina Mahamood"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-ramshina"
+                />
+              </div>
+            </ScrollFadeUp>
+
+            {/* Red Speaker - Ajmal */}
+            <ScrollFadeUp delay={0.15}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-red-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 26, image: ajmalPoster };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-ajmal"
+              >
+                <img 
+                  src={ajmalPoster} 
+                  alt="CA Ajmal Muhajir"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-ajmal"
+                />
+              </div>
+            </ScrollFadeUp>
+
+            {/* Violet Speaker - Shan */}
+            <ScrollFadeUp delay={0.2}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-violet-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 27, image: shanPoster };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-shan"
+              >
+                <img 
+                  src={shanPoster} 
+                  alt="Shan Abdul Salam"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-shan"
                 />
               </div>
             </ScrollFadeUp>
