@@ -48,6 +48,9 @@ import shanPoster from "@assets/shan-poster-violet.jpeg";
 import aslamPoster from "@assets/aslam-poster-teal.jpeg";
 import minhajPoster from "@assets/minhaj-poster-red.jpeg";
 import faizalPoster from "@assets/faizal-poster-violet.jpeg";
+import mathewPoster from "@assets/mathew-poster-teal.jpeg";
+import orwellPoster from "@assets/orwell-poster-red.jpeg";
+import amjadPoster from "@assets/amjad-poster-violet.jpeg";
 
 const speakers = [
   {
@@ -614,6 +617,68 @@ export default function Speakers() {
                   alt="Faizal CP"
                   className="w-full h-auto object-cover"
                   data-testid="img-featured-speaker-faizal-cp"
+                />
+              </div>
+            </ScrollFadeUp>
+          </div>
+        </div>
+
+        {/* Seventh Featured Speakers Grid */}
+        <div className="mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Teal Speaker - Mathew Joseph */}
+            <ScrollFadeUp delay={0.1}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-teal-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 31, image: mathewPoster };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-mathew"
+              >
+                <img 
+                  src={mathewPoster} 
+                  alt="Mathew Joseph"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-mathew"
+                />
+              </div>
+            </ScrollFadeUp>
+
+            {/* Red Speaker - Orwell Lionel */}
+            <ScrollFadeUp delay={0.15}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-red-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 32, image: orwellPoster };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-orwell"
+              >
+                <img 
+                  src={orwellPoster} 
+                  alt="Orwell Lionel"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-orwell"
+                />
+              </div>
+            </ScrollFadeUp>
+
+            {/* Violet Speaker - Dr Amjad Wafaa */}
+            <ScrollFadeUp delay={0.2}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-violet-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 33, image: amjadPoster };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-amjad"
+              >
+                <img 
+                  src={amjadPoster} 
+                  alt="Dr Amjad Wafaa"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-amjad"
                 />
               </div>
             </ScrollFadeUp>
