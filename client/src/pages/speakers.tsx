@@ -36,6 +36,9 @@ import hudaifImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(10)_1
 import noureenImage2 from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(11)_1766601619600.jpeg";
 import mohammedAlfanImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(12)_1766601619599.jpeg";
 import naseefNewImage from "@assets/WhatsApp_Image_2025-12-21_at_10.30.12_AM_(13)_1766601619599.jpeg";
+import thajudeenPoster from "@assets/thajudeen-poster-teal.jpeg";
+import jaizalPoster from "@assets/jaizal-poster-red.jpeg";
+import rameezPoster from "@assets/rameez-poster-violet.jpeg";
 
 const speakers = [
   {
@@ -354,6 +357,68 @@ export default function Speakers() {
                   alt="Naseef Neeruttichali"
                   className="w-full h-auto object-cover"
                   data-testid="img-featured-speaker-naseef"
+                />
+              </div>
+            </ScrollFadeUp>
+          </div>
+        </div>
+
+        {/* Third Featured Speakers Grid */}
+        <div className="mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Teal Speaker - Thajudeen */}
+            <ScrollFadeUp delay={0.1}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-teal-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 19, image: thajudeenPoster };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-thajudeen"
+              >
+                <img 
+                  src={thajudeenPoster} 
+                  alt="Thajudeen Aboobaker"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-thajudeen"
+                />
+              </div>
+            </ScrollFadeUp>
+
+            {/* Red Speaker - Jaizal */}
+            <ScrollFadeUp delay={0.15}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-red-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 20, image: jaizalPoster };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-jaizal"
+              >
+                <img 
+                  src={jaizalPoster} 
+                  alt="Jaizal Ali"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-jaizal"
+                />
+              </div>
+            </ScrollFadeUp>
+
+            {/* Violet Speaker - Rameez */}
+            <ScrollFadeUp delay={0.2}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-violet-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 21, image: rameezPoster };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-rameez"
+              >
+                <img 
+                  src={rameezPoster} 
+                  alt="Rameez Moidu"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-rameez"
                 />
               </div>
             </ScrollFadeUp>
