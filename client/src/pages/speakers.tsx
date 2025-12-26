@@ -45,6 +45,9 @@ import hashimPoster from "@assets/hashim-poster-violet.jpeg";
 import ramshina from "@assets/ramshina-poster-teal.jpeg";
 import ajmalPoster from "@assets/ajmal-poster-red.jpeg";
 import shanPoster from "@assets/shan-poster-violet.jpeg";
+import aslamPoster from "@assets/aslam-poster-teal.jpeg";
+import minhajPoster from "@assets/minhaj-poster-red.jpeg";
+import faizalPoster from "@assets/faizal-poster-violet.jpeg";
 
 const speakers = [
   {
@@ -549,6 +552,68 @@ export default function Speakers() {
                   alt="Shan Abdul Salam"
                   className="w-full h-auto object-cover"
                   data-testid="img-featured-speaker-shan"
+                />
+              </div>
+            </ScrollFadeUp>
+          </div>
+        </div>
+
+        {/* Sixth Featured Speakers Grid */}
+        <div className="mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Teal Speaker - Aslam Abbas */}
+            <ScrollFadeUp delay={0.1}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-teal-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 28, image: aslamPoster };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-aslam"
+              >
+                <img 
+                  src={aslamPoster} 
+                  alt="Aslam Abbas"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-aslam"
+                />
+              </div>
+            </ScrollFadeUp>
+
+            {/* Red Speaker - Minhaj Muhammed */}
+            <ScrollFadeUp delay={0.15}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-red-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 29, image: minhajPoster };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-minhaj"
+              >
+                <img 
+                  src={minhajPoster} 
+                  alt="Minhaj Muhammed"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-minhaj"
+                />
+              </div>
+            </ScrollFadeUp>
+
+            {/* Violet Speaker - Faizal CP */}
+            <ScrollFadeUp delay={0.2}>
+              <div 
+                className="cursor-pointer hover-elevate transition-all overflow-hidden rounded-md bg-violet-500"
+                onClick={() => {
+                  const featuredSpeaker = { id: 30, image: faizalPoster };
+                  setSelectedSpeaker(featuredSpeaker as any);
+                }}
+                data-testid="card-featured-speaker-faizal-cp"
+              >
+                <img 
+                  src={faizalPoster} 
+                  alt="Faizal CP"
+                  className="w-full h-auto object-cover"
+                  data-testid="img-featured-speaker-faizal-cp"
                 />
               </div>
             </ScrollFadeUp>
