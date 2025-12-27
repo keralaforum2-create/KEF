@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollFadeUp } from "@/lib/animations";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { pixelEvents } from "@/lib/pixel";
 
 const speakerSchema = z.object({
   founderName: z.string().min(2, "Name is required"),
@@ -164,6 +165,7 @@ export default function SpeakerRegister() {
       });
     },
     onSuccess: () => {
+      pixelEvents.registration({ value: discountedAmount });
       setSubmitted(true);
       toast({
         title: "Application Submitted",

@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { insertExpoRegistrationSchema, type InsertExpoRegistration } from "@shared/schema";
 import { useLocation } from "wouter";
+import { pixelEvents } from "@/lib/pixel";
 
 export default function ExpoRegister() {
   const [, setLocation] = useLocation();
@@ -32,6 +33,7 @@ export default function ExpoRegister() {
       return await apiRequest<any>("POST", "/api/expo-registrations", data);
     },
     onSuccess: () => {
+      pixelEvents.registration({ value: 0 });
       toast({
         title: "Success",
         description: "Registration submitted successfully!",

@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, Loader2, Mail, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { pixelEvents } from "@/lib/pixel";
 
 interface RegistrationData {
   fullName: string;
@@ -114,6 +115,7 @@ export default function PaymentSuccess() {
             }
 
             console.log("✓ Step 4: Payment verified successfully");
+            pixelEvents.purchase({ value: data.amount, currency: 'INR' });
             setConfirmed(true);
             toast({
               title: "Payment Successful!",
