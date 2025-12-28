@@ -30,6 +30,8 @@ import sessionPartner2Image from "@assets/session-partner-2.png";
 import contestPartner1Image from "@assets/contest-partner-1.png";
 import contestPartner2Image from "@assets/contest-partner-2.png";
 
+import partnersPosterImage from "@assets/Untitled_design_(1)_1766957354383.png";
+
 export default function Partners() {
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-br from-purple-50 via-violet-100/50 to-indigo-50 dark:from-purple-950/30 dark:via-violet-900/20 dark:to-indigo-950/30">
@@ -40,127 +42,19 @@ export default function Partners() {
               <h1 className="text-5xl sm:text-7xl font-bold mb-6" style={{ fontFamily: "'Big Shoulders Display', sans-serif" }} data-testid="text-partners-title">
                 OUR PARTNERS
               </h1>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-lg text-muted-foreground mb-12">
                 Partner with Kerala Startup Fest and be part of Kerala's biggest startup movement.
               </p>
+
+              <div className="mt-8">
+                <img 
+                  src={partnersPosterImage} 
+                  alt="Our Partners Poster" 
+                  className="w-full h-auto rounded-2xl shadow-xl"
+                  data-testid="img-partners-poster"
+                />
+              </div>
             </div>
-          </ScrollFadeUp>
-        </div>
-      </section>
-
-      <section className="py-8 flex justify-center">
-        <ScrollFadeUp>
-          <motion.div 
-            className="w-72"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
-            <img 
-              src={alimsImage} 
-              alt="ALIMS School of Business Partner" 
-              className="w-full h-auto object-contain"
-              data-testid="img-alims-partner"
-            />
-          </motion.div>
-        </ScrollFadeUp>
-      </section>
-
-      <section className="py-8 flex justify-center">
-        <ScrollFadeUp>
-          <motion.div 
-            className="w-72"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
-            <img 
-              src={cosponsorImage} 
-              alt="Co-Sponsor Partners" 
-              className="w-full h-auto object-contain"
-              data-testid="img-cosponsor-partners"
-            />
-          </motion.div>
-        </ScrollFadeUp>
-      </section>
-
-      <section className="py-8 flex justify-center">
-        <ScrollFadeUp>
-          <motion.div 
-            className="w-80"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
-            <img 
-              src={racImage} 
-              alt="Strategic Partner" 
-              className="w-full h-auto object-contain"
-              data-testid="img-strategic-partner"
-            />
-          </motion.div>
-        </ScrollFadeUp>
-      </section>
-
-      <section className="py-8 flex justify-center">
-        <div className="flex gap-8">
-          <ScrollFadeUp>
-            <motion.div 
-              className="w-72"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            >
-              <img 
-                src={sessionPartner1Image} 
-                alt="Session Partner" 
-                className="w-full h-auto object-contain"
-                data-testid="img-session-partner-1"
-              />
-            </motion.div>
-          </ScrollFadeUp>
-          <ScrollFadeUp>
-            <motion.div 
-              className="w-72"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            >
-              <img 
-                src={sessionPartner2Image} 
-                alt="Session Partner" 
-                className="w-full h-auto object-contain"
-                data-testid="img-session-partner-2"
-              />
-            </motion.div>
-          </ScrollFadeUp>
-        </div>
-      </section>
-
-      <section className="py-8 flex justify-center">
-        <div className="flex gap-8">
-          <ScrollFadeUp>
-            <motion.div 
-              className="w-72"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            >
-              <img 
-                src={contestPartner1Image} 
-                alt="Contest Partner" 
-                className="w-full h-auto object-contain"
-                data-testid="img-contest-partner-1"
-              />
-            </motion.div>
-          </ScrollFadeUp>
-          <ScrollFadeUp>
-            <motion.div 
-              className="w-72"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            >
-              <img 
-                src={contestPartner2Image} 
-                alt="Contest Partner" 
-                className="w-full h-auto object-contain"
-                data-testid="img-contest-partner-2"
-              />
-            </motion.div>
           </ScrollFadeUp>
         </div>
       </section>
