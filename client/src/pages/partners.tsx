@@ -24,7 +24,7 @@ import {
 import partnershipImage from "@assets/stock_images/business_partnership_7f868df6.jpg";
 import alimsImage from "@assets/alims-partner.png";
 import cosponsorImage from "@assets/sm-cosponsor.png";
-import racImage from "@assets/rac-partner.png";
+import racImage from "@assets/rac-strategic-partner.png";
 
 export default function Partners() {
   return (
