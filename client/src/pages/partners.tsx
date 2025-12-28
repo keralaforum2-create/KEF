@@ -25,8 +25,8 @@ import partnershipImage from "@assets/stock_images/business_partnership_7f868df6
 import alimsImage from "@assets/alims-partner.png";
 import cosponsorImage from "@assets/sm-cosponsor.png";
 import racImage from "@assets/rac-strategic-partner.png";
-import contestPartner1Image from "@assets/contest-partner-1.png";
-import contestPartner2Image from "@assets/contest-partner-2.png";
+import sessionPartner1Image from "@assets/session-partner-1.png";
+import sessionPartner2Image from "@assets/session-partner-2.png";
 
 export default function Partners() {
   return (
@@ -106,10 +106,10 @@ export default function Partners() {
               transition={{ duration: 0.3 }}
             >
               <img 
-                src={contestPartner1Image} 
-                alt="Contest Partner" 
+                src={sessionPartner1Image} 
+                alt="Session Partner" 
                 className="w-full h-auto object-contain"
-                data-testid="img-contest-partner-1"
+                data-testid="img-session-partner-1"
               />
             </motion.div>
           </ScrollFadeUp>
@@ -120,10 +120,10 @@ export default function Partners() {
               transition={{ duration: 0.3 }}
             >
               <img 
-                src={contestPartner2Image} 
-                alt="Contest Partner" 
+                src={sessionPartner2Image} 
+                alt="Session Partner" 
                 className="w-full h-auto object-contain"
-                data-testid="img-contest-partner-2"
+                data-testid="img-session-partner-2"
               />
             </motion.div>
           </ScrollFadeUp>
