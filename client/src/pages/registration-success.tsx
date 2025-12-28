@@ -62,7 +62,7 @@ export default function RegistrationSuccess() {
                   Thank you for registering!
                 </p>
                 <p className="text-sm text-muted-foreground text-center">
-                  A confirmation email will be sent to your registered email address within 24 hours.
+                  Your ticket has been confirmed and will be sent to your registered email address shortly.
                 </p>
               </div>
             </motion.div>
