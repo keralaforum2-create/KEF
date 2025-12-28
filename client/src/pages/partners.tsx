@@ -30,7 +30,7 @@ import sessionPartner2Image from "@assets/session-partner-2.png";
 import contestPartner1Image from "@assets/contest-partner-1.png";
 import contestPartner2Image from "@assets/contest-partner-2.png";
 
-import partnersPosterImage from "@assets/Untitled_design_(1)_1766957354383.png";
+import partnersPosterImage from "@assets/Untitled_design_(2)_1766957927605.png";
 
 export default function Partners() {
   return (
