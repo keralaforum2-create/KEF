@@ -25,6 +25,8 @@ import partnershipImage from "@assets/stock_images/business_partnership_7f868df6
 import alimsImage from "@assets/alims-partner.png";
 import cosponsorImage from "@assets/sm-cosponsor.png";
 import racImage from "@assets/rac-strategic-partner.png";
+import contestPartner1Image from "@assets/contest-partner-1.png";
+import contestPartner2Image from "@assets/contest-partner-2.png";
 
 export default function Partners() {
   return (
@@ -93,6 +95,39 @@ export default function Partners() {
             />
           </motion.div>
         </ScrollFadeUp>
+      </section>
+
+      <section className="py-8 flex justify-center">
+        <div className="flex flex-wrap justify-center gap-8">
+          <ScrollFadeUp>
+            <motion.div 
+              className="w-72"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+            >
+              <img 
+                src={contestPartner1Image} 
+                alt="Contest Partner" 
+                className="w-full h-auto object-contain"
+                data-testid="img-contest-partner-1"
+              />
+            </motion.div>
+          </ScrollFadeUp>
+          <ScrollFadeUp>
+            <motion.div 
+              className="w-72"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+            >
+              <img 
+                src={contestPartner2Image} 
+                alt="Contest Partner" 
+                className="w-full h-auto object-contain"
+                data-testid="img-contest-partner-2"
+              />
+            </motion.div>
+          </ScrollFadeUp>
+        </div>
       </section>
 
       <section className="py-16 bg-card">
