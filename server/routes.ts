@@ -279,7 +279,11 @@ export async function registerRoutes(
       const paymentScreenshotPath = `/uploads/${file.filename}`;
       const expectedAmount = parseInt(req.body.expectedAmount) || 199;
       
-      console.log(`Verifying payment screenshot with AI, expected amount: ${expectedAmount}`);
+      // Allow for updated platinum price
+      const validAmounts = [99, 199, 599, 1299, 1499, 3999];
+      if (!validAmounts.includes(expectedAmount)) {
+        console.warn(`Unusual expected amount for verification: ${expectedAmount}`);
+      }
       const verificationResult = await verifyPaymentScreenshot(paymentScreenshotPath, expectedAmount);
       
       // Clean up uploaded file after verification
