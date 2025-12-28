@@ -44,67 +44,55 @@ export default function Partners() {
         </div>
       </section>
 
-      <section className="py-8">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollFadeUp>
-            <div className="flex justify-center">
-              <motion.div 
-                className="w-full max-w-xs"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-              >
-                <img 
-                  src={alimsImage} 
-                  alt="ALIMS School of Business Partner" 
-                  className="w-full h-auto object-contain"
-                  data-testid="img-alims-partner"
-                />
-              </motion.div>
-            </div>
-          </ScrollFadeUp>
-        </div>
+      <section className="py-8 flex justify-center">
+        <ScrollFadeUp>
+          <motion.div 
+            className="w-72"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          >
+            <img 
+              src={alimsImage} 
+              alt="ALIMS School of Business Partner" 
+              className="w-full h-auto object-contain"
+              data-testid="img-alims-partner"
+            />
+          </motion.div>
+        </ScrollFadeUp>
       </section>
 
-      <section className="py-8">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollFadeUp>
-            <div className="flex justify-center">
-              <motion.div 
-                className="w-full max-w-xs"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-              >
-                <img 
-                  src={cosponsorImage} 
-                  alt="Co-Sponsor Partners" 
-                  className="w-full h-auto object-contain"
-                  data-testid="img-cosponsor-partners"
-                />
-              </motion.div>
-            </div>
-          </ScrollFadeUp>
-        </div>
+      <section className="py-8 flex justify-center">
+        <ScrollFadeUp>
+          <motion.div 
+            className="w-72"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          >
+            <img 
+              src={cosponsorImage} 
+              alt="Co-Sponsor Partners" 
+              className="w-full h-auto object-contain"
+              data-testid="img-cosponsor-partners"
+            />
+          </motion.div>
+        </ScrollFadeUp>
       </section>
 
-      <section className="py-8">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollFadeUp>
-            <div className="flex justify-center">
-              <motion.div 
-                className="w-full max-w-xs"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-              >
-                <img 
-                  src={racImage} 
-                  alt="Strategic Partner" 
-                  className="w-full h-auto object-contain"
-                  data-testid="img-strategic-partner"
-                />
-              </motion.div>
-            </div>
-          </ScrollFadeUp>
-        </div>
+      <section className="py-8 flex justify-center">
+        <ScrollFadeUp>
+          <motion.div 
+            className="w-72"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          >
+            <img 
+              src={racImage} 
+              alt="Strategic Partner" 
+              className="w-full h-auto object-contain"
+              data-testid="img-strategic-partner"
+            />
+          </motion.div>
+        </ScrollFadeUp>
       </section>
 
       <section className="py-16 bg-card">
