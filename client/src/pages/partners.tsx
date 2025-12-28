@@ -22,6 +22,7 @@ import {
   StaggerItem
 } from "@/lib/animations";
 import partnershipImage from "@assets/stock_images/business_partnership_7f868df6.jpg";
+import alimsImage from "@assets/alims-partner.png";
 
 export default function Partners() {
   return (
@@ -104,6 +105,27 @@ export default function Partners() {
               </motion.div>
             </ScrollFadeRight>
           </div>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollFadeUp>
+            <div className="flex justify-center">
+              <motion.div 
+                className="w-full max-w-md"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img 
+                  src={alimsImage} 
+                  alt="ALIMS School of Business Partner" 
+                  className="w-full h-auto object-contain"
+                  data-testid="img-alims-partner"
+                />
+              </motion.div>
+            </div>
+          </ScrollFadeUp>
         </div>
       </section>
 
