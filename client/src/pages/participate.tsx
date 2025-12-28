@@ -4159,7 +4159,7 @@ export default function Participate() {
                                       
                                       <div className="border-t pt-4 flex items-center justify-between">
                                         <span className="text-sm text-muted-foreground">Price:</span>
-                                        <span className="font-bold text-xl text-teal-600">Rs 1299/-</span>
+                                        <span className="font-bold text-xl text-teal-600">Rs 1499/-</span>
                                       </div>
                                     </div>
                                   </div>
