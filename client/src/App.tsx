@@ -13,6 +13,7 @@ import Sessions from "@/pages/sessions";
 import Contests from "@/pages/contests";
 import Participate from "@/pages/participate";
 import Partners from "@/pages/partners";
+import Investors from "@/pages/investors";
 import Contact from "@/pages/contact";
 import Speakers from "@/pages/speakers";
 import SpeakerRegister from "@/pages/speaker-register";
@@ -62,6 +63,7 @@ function Router() {
       <Route path="/contests/:contestId" component={ContestDetail} />
       <Route path="/participate" component={Participate} />
       <Route path="/partners" component={Partners} />
+      <Route path="/investors" component={Investors} />
       <Route path="/contact" component={Contact} />
       <Route path="/speakers" component={Speakers} />
       <Route path="/speaker-register" component={SpeakerRegister} />

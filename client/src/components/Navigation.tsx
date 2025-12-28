@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X, Rocket, Home, Presentation, Trophy, Users, Briefcase, Phone } from "lucide-react";
+import { Menu, X, Rocket, Home, Presentation, Trophy, Users, Briefcase, Phone, TrendingUp } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import logoImage from "@assets/LOGO_00-removebg-preview_1766480296446.png";
@@ -12,6 +12,7 @@ const navItems = [
   { href: "/contests", label: "Contests" },
   { href: "/participate", label: "Participate" },
   { href: "/partners", label: "Partners" },
+  { href: "/investors", label: "Investors" },
   { href: "/contact", label: "Contact" },
   { href: "/about", label: "About" },
 ];
@@ -22,6 +23,7 @@ const mobileNavItems = [
   { href: "/contests", label: "Contests", icon: Trophy },
   { href: "/participate", label: "Participate", icon: Users },
   { href: "/partners", label: "Partners", icon: Briefcase },
+  { href: "/investors", label: "Investors", icon: TrendingUp },
   { href: "/contact", label: "Contact", icon: Phone },
 ];
 
