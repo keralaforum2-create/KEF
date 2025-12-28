@@ -1033,8 +1033,15 @@ export default function Participate() {
         return;
       }
     }
-    setSubmittedData(data);
-    mutation.mutate(data);
+    
+    // Check if payment is required
+    const amount = getDiscountedAmount();
+    if (amount > 0) {
+      handleRazorpayPayment();
+    } else {
+      setSubmittedData(data);
+      mutation.mutate(data);
+    }
   };
 
   const viewTicket = () => {
@@ -4230,7 +4237,7 @@ export default function Participate() {
 
                         <div className="flex flex-col items-center gap-6">
                           <div className="w-full max-w-md p-6 rounded-xl bg-muted/30 border">
-                            <div className="text-center mb-4 space-y-2">
+                            <div className="text-center space-y-2">
                               {discountPercentage > 0 ? (
                                 <>
                                   <p className="text-sm text-muted-foreground mb-1">Original Price:</p>
@@ -4255,34 +4262,6 @@ export default function Participate() {
                                   </p>
                                 </>
                               )}
-                            </div>
-
-                            {/* Online Payment Section */}
-                            <div className="flex flex-col items-center gap-4">
-                              <Button
-                                type="button"
-                                variant="default"
-                                size="lg"
-                                onClick={handleRazorpayPayment}
-                                disabled={isProcessingOnlinePayment}
-                                className="w-full gap-2"
-                                data-testid="button-pay-online"
-                              >
-                                {isProcessingOnlinePayment ? (
-                                  <>
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                    Processing...
-                                  </>
-                                ) : (
-                                  <>
-                                    <CreditCard className="w-4 h-4" />
-                                    Pay Online - Rs {getDiscountedAmount()}
-                                  </>
-                                )}
-                              </Button>
-                              <p className="text-xs text-center text-muted-foreground">
-                                Secure payment via Razorpay (Cards, UPI, NetBanking)
-                              </p>
                             </div>
                           </div>
                         </div>
