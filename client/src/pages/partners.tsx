@@ -23,6 +23,7 @@ import {
 } from "@/lib/animations";
 import partnershipImage from "@assets/stock_images/business_partnership_7f868df6.jpg";
 import alimsImage from "@assets/alims-partner.png";
+import cosponsorImage from "@assets/sm-cosponsor.png";
 
 export default function Partners() {
   return (
@@ -56,6 +57,27 @@ export default function Partners() {
                   alt="ALIMS School of Business Partner" 
                   className="w-full h-auto object-contain"
                   data-testid="img-alims-partner"
+                />
+              </motion.div>
+            </div>
+          </ScrollFadeUp>
+        </div>
+      </section>
+
+      <section className="py-8">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollFadeUp>
+            <div className="flex justify-center">
+              <motion.div 
+                className="w-full max-w-xs"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img 
+                  src={cosponsorImage} 
+                  alt="Co-Sponsor Partners" 
+                  className="w-full h-auto object-contain"
+                  data-testid="img-cosponsor-partners"
                 />
               </motion.div>
             </div>
