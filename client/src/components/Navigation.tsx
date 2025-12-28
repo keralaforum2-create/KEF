@@ -237,9 +237,9 @@ export function Navigation() {
                   size="icon"
                   className={`flex flex-col items-center justify-center ${location === item.href ? "bg-white border border-gray-200 shadow-sm" : ""}`}
                   data-testid={`mobile-bottom-nav-${item.label.toLowerCase()}`}
+                  title={item.label}
                 >
                   <item.icon className="w-5 h-5" />
-                  <span className="text-xs mt-0.5">{item.label}</span>
                 </Button>
               </Link>
             </motion.div>
