@@ -81,7 +81,7 @@ export default function Partners() {
       <section className="py-8 flex justify-center">
         <ScrollFadeUp>
           <motion.div 
-            className="w-72"
+            className="w-80"
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
