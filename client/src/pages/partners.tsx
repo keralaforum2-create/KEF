@@ -33,8 +33,8 @@ export default function Partners() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
             <div className="max-w-3xl mx-auto text-center">
-              <h1 className="font-serif text-4xl sm:text-5xl font-bold mb-6" data-testid="text-partners-title">
-                Investors, Mentors & Sponsors
+              <h1 className="text-5xl sm:text-7xl font-bold mb-6" style={{ fontFamily: "'Big Shoulders Display', sans-serif" }} data-testid="text-partners-title">
+                OUR PARTNERS
               </h1>
               <p className="text-lg text-muted-foreground">
                 Partner with Kerala Startup Fest and be part of Kerala's biggest startup movement.
