@@ -572,18 +572,6 @@ export async function registerRoutes(
       // Skip admin notification for pending registrations - wait until payment is confirmed
       // Admin will be notified only when payment is verified
       
-      // Send admin notification if referral code was used
-      if (result.data.referralCode) {
-        sendReferralCodeUsedNotificationEmail(
-          registration.fullName,
-          registration.email,
-          result.data.referralCode,
-          registration.registrationId
-        ).catch((err) => {
-          console.error('Failed to send referral code usage notification:', err);
-        });
-      }
-      
       return res.status(201).json({ 
         message: "Registration successful - Proceed to payment", 
         registration,
