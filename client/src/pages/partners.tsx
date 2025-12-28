@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { 
-  Users, 
   TrendingUp,
   Lightbulb, 
   Heart, 
@@ -23,7 +22,6 @@ import {
   StaggerItem
 } from "@/lib/animations";
 import partnershipImage from "@assets/stock_images/business_partnership_7f868df6.jpg";
-import mentorImage from "@assets/stock_images/mentor_guiding_young_1b72b370.jpg";
 
 export default function Partners() {
   return (
@@ -40,71 +38,6 @@ export default function Partners() {
               </p>
             </div>
           </ScrollFadeUp>
-        </div>
-      </section>
-
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <ScrollFadeLeft className="order-2 lg:order-1">
-              <motion.div 
-                className="relative"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.3 }}
-              >
-                <img 
-                  src={mentorImage} 
-                  alt="Mentorship" 
-                  className="w-full h-full rounded-3xl object-cover shadow-lg"
-                />
-              </motion.div>
-            </ScrollFadeLeft>
-            <ScrollFadeRight className="order-1 lg:order-2">
-              <div>
-                <motion.div 
-                  className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6"
-                  whileHover={{ rotate: 10, scale: 1.1 }}
-                >
-                  <Users className="w-7 h-7 text-primary" />
-                </motion.div>
-                <h2 className="font-serif text-3xl sm:text-4xl font-bold mb-6" data-testid="text-mentor">
-                  Join as Mentor
-                </h2>
-                <p className="text-muted-foreground mb-6">
-                  Share your expertise and guide the next generation of entrepreneurs at Kerala Startup Fest.
-                </p>
-                <p className="text-muted-foreground mb-6">As a mentor, you can:</p>
-                <ul className="space-y-4 mb-8">
-                  {[
-                    "Guide young entrepreneurs with your experience",
-                    "Help startups refine their ideas and strategies",
-                    "Build meaningful connections with future founders",
-                    "Be part of a long-term startup movement in Kerala"
-                  ].map((item, index) => (
-                    <motion.li 
-                      key={index}
-                      className="flex items-start gap-3"
-                      initial={{ opacity: 0, x: 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <span>{item}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-                <Link href="/contact">
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                    <Button className="font-semibold" data-testid="button-apply-mentor">
-                      Apply as Mentor
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </motion.div>
-                </Link>
-              </div>
-            </ScrollFadeRight>
-          </div>
         </div>
       </section>
 
