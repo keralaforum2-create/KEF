@@ -1435,9 +1435,33 @@ export default function Admin() {
                 >
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <AlertTriangle className="w-5 h-5" />
-                        Pending Registrations (Awaiting Approval)
+                      <CardTitle className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <AlertTriangle className="w-5 h-5" />
+                          Pending Registrations (Awaiting Approval)
+                        </div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => exportToCSV(filteredPendingRegistrations, "KSF2026-Pending-Registrations")}
+                            disabled={filteredPendingRegistrations.length === 0}
+                            data-testid="button-export-csv-pending"
+                          >
+                            <FileSpreadsheet className="w-4 h-4 mr-1" />
+                            Export CSV
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => exportToPDF(filteredPendingRegistrations, "Pending Registrations", "KSF2026-Pending-Registrations")}
+                            disabled={filteredPendingRegistrations.length === 0}
+                            data-testid="button-export-pdf-pending"
+                          >
+                            <FileText className="w-4 h-4 mr-1" />
+                            Export PDF
+                          </Button>
+                        </div>
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
