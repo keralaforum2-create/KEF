@@ -98,7 +98,7 @@ export default function Partners() {
       </section>
 
       <section className="py-8 flex justify-center">
-        <div className="flex flex-wrap justify-center gap-8">
+        <div className="flex gap-8">
           <ScrollFadeUp>
             <motion.div 
               className="w-72"
