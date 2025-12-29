@@ -769,12 +769,16 @@ export default function Participate() {
 
   // Handle Razorpay online payment
   const handleRazorpayPayment = async () => {
+    // Show loading state immediately
+    setIsProcessingOnlinePayment(true);
+
     if (!razorpayLoaded || !(window as any).Razorpay) {
       toast({
         title: "Payment not available",
         description: "Payment gateway is loading. Please try again in a moment or use QR code payment.",
         variant: "destructive",
       });
+      setIsProcessingOnlinePayment(false);
       return;
     }
 
@@ -785,10 +789,9 @@ export default function Participate() {
         description: "Fill in all required fields before proceeding to payment.",
         variant: "destructive",
       });
+      setIsProcessingOnlinePayment(false);
       return;
     }
-
-    setIsProcessingOnlinePayment(true);
 
     try {
       const formData = form.getValues();
@@ -1039,10 +1042,8 @@ export default function Participate() {
     // Check if payment is required
     const amount = getDiscountedAmount();
     if (amount > 0) {
-      // Small delay to ensure form state is synced and UI is responsive
-      setTimeout(() => {
-        handleRazorpayPayment();
-      }, 0);
+      // Trigger payment immediately without delay for faster experience
+      handleRazorpayPayment();
     } else {
       setSubmittedData(data);
       mutation.mutate(data);
