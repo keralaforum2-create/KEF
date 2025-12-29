@@ -1037,7 +1037,10 @@ export default function Participate() {
     // Check if payment is required
     const amount = getDiscountedAmount();
     if (amount > 0) {
-      handleRazorpayPayment();
+      // Small delay to ensure form state is synced and UI is responsive
+      setTimeout(() => {
+        handleRazorpayPayment();
+      }, 0);
     } else {
       setSubmittedData(data);
       mutation.mutate(data);
