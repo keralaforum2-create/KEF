@@ -4229,7 +4229,7 @@ export default function Participate() {
                               {isBusinessQuiz 
                                 ? "Pay ₹199/-"
                                 : ticketCategory === "platinum" 
-                                  ? "Pay ₹1299/-"
+                                  ? "Pay ₹1499/-"
                                   : ticketCategory === "gold"
                                     ? "Pay ₹599/-"
                                     : "Pay ₹199/-"
