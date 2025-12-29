@@ -2106,13 +2106,15 @@ export default function Participate() {
                     </div>
                     <Card>
                       <CardContent className="p-6 sm:p-8">
-                        <div className="mb-6 p-4 rounded-lg bg-primary/10 border border-primary/20">
-                          <p className="text-sm font-medium text-center">
-                            Registering for: <span className="text-primary font-semibold">
-                              {registrationType === "expert-session" ? "Expert Session" : registrationType === "speaker" ? "Be a Podcast Speaker" : "Contest"}
-                            </span>
-                          </p>
-                        </div>
+                        {!(registrationType === "contest" && isPitchRoom) && (
+                          <div className="mb-6 p-4 rounded-lg bg-primary/10 border border-primary/20">
+                            <p className="text-sm font-medium text-center">
+                              Registering for: <span className="text-primary font-semibold">
+                                {registrationType === "expert-session" ? "Expert Session" : registrationType === "speaker" ? "Be a Podcast Speaker" : "Contest"}
+                              </span>
+                            </p>
+                          </div>
+                        )}
                         
                         {registrationType === "expert-session" && (
                           <div className="mb-6">
