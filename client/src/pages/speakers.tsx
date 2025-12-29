@@ -1,11 +1,9 @@
-import { ArrowLeft, X, Presentation, Loader2 } from "lucide-react";
+import { ArrowLeft, X, Presentation } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { ScrollFadeUp } from "@/lib/animations";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import type { Registration } from "@shared/schema";
 import ajilImage from "@assets/AJIL_HILITE_1766212685898.jpg";
 import alfanImage from "@assets/ALFAN_1766212690930.jpg";
 import jaizalImage from "@assets/JAIZAL_ALI_1766212695708.jpg";
@@ -131,9 +129,6 @@ function SpeakerModal({ speaker, onClose }: { speaker: typeof speakers[0]; onClo
 
 export default function Speakers() {
   const [selectedSpeaker, setSelectedSpeaker] = useState<typeof speakers[0] | null>(null);
-  const { data: registeredSpeakers = [], isLoading } = useQuery<Registration[]>({
-    queryKey: ["/api/speakers"],
-  });
 
   return (
     <div className="min-h-screen bg-white pt-20">
@@ -158,77 +153,6 @@ export default function Speakers() {
           </ScrollFadeUp>
         </div>
 
-        {/* Registered Speakers Section */}
-        {isLoading ? (
-          <div className="flex justify-center items-center py-12">
-            <Loader2 className="w-6 h-6 animate-spin text-red-600" data-testid="loader-speakers" />
-          </div>
-        ) : registeredSpeakers.length > 0 ? (
-          <>
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4 text-gray-900">Recently Registered Speakers</h2>
-              <p className="text-gray-600">Meet our latest podcast speakers</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-              {registeredSpeakers.map((speaker, index) => (
-                <ScrollFadeUp key={speaker.id} delay={index * 0.05}>
-                  <Card className="overflow-hidden hover-elevate transition-all">
-                    {speaker.profilePhoto && (
-                      <img 
-                        src={speaker.profilePhoto} 
-                        alt={speaker.fullName}
-                        className="w-full h-64 object-cover"
-                        data-testid={`img-registered-speaker-${speaker.id}`}
-                      />
-                    )}
-                    <CardContent className="p-4">
-                      <h3 className="font-semibold text-lg mb-1" data-testid={`text-speaker-name-${speaker.id}`}>
-                        {speaker.fullName}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-2" data-testid={`text-speaker-designation-${speaker.id}`}>
-                        {speaker.institution}
-                      </p>
-                      {speaker.pitchStartupName && (
-                        <p className="text-sm font-medium text-primary mb-2" data-testid={`text-speaker-startup-${speaker.id}`}>
-                          {speaker.pitchStartupName}
-                        </p>
-                      )}
-                      <div className="flex gap-2 mt-3">
-                        {speaker.speakerLinkedIn && (
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            asChild
-                            data-testid={`button-speaker-linkedin-${speaker.id}`}
-                          >
-                            <a 
-                              href={speaker.speakerLinkedIn} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:text-blue-800"
-                            >
-                              LinkedIn
-                            </a>
-                          </Button>
-                        )}
-                        {speaker.email && (
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            asChild
-                            data-testid={`button-speaker-email-${speaker.id}`}
-                          >
-                            <a href={`mailto:${speaker.email}`}>Contact</a>
-                          </Button>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </ScrollFadeUp>
-              ))}
-            </div>
-          </>
-        ) : null}
 
         <div className="mb-8 mt-8">
           <h2 className="text-2xl font-bold mb-4 text-gray-900">Featured Speakers</h2>
