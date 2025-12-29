@@ -3780,7 +3780,7 @@ export default function Participate() {
                         />
                       </motion.div>
                       
-                      {!isBusinessQuiz && (
+                      {!isBusinessQuiz && !isPitchRoom && (
                       <motion.div
                         custom={2}
                         initial="hidden"
