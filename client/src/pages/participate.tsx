@@ -2373,9 +2373,64 @@ export default function Participate() {
                         {((registrationType === "expert-session" && registrationMode === "individual") || registrationType === "contest" || registrationType === "speaker") && (
                         <Form {...form}>
                           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            <AnimatePresence mode="wait">
+                              {registrationType === "contest" && isRegistrationClosed ? (
+                                <motion.div 
+                                  key="closed-message"
+                                  className="border rounded-lg p-8 sm:p-12 bg-muted/20 text-center space-y-6"
+                                  initial={{ opacity: 0, scale: 0.95 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  exit={{ opacity: 0, scale: 0.95 }}
+                                  transition={{ duration: 0.3 }}
+                                >
+                                  <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto" />
+                                  <div>
+                                    <h3 className="font-serif text-2xl font-bold text-primary mb-2">Registrations Closed</h3>
+                                    <p className="text-muted-foreground">The "{contestName}" registrations are currently closed.</p>
+                                  </div>
+                                </motion.div>
+                              ) : (
+                                <>
+                                  <AnimatePresence>
+                                    {registrationType === "contest" && (
+                                      <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: "auto" }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="space-y-6"
+                                      >
+                                        <FormField
+                                          control={form.control}
+                                          name="contestName"
+                                          render={({ field }) => (
+                                            <FormItem>
+                                              <FormLabel className="text-lg font-semibold">Select Contest</FormLabel>
+                                              <Select onValueChange={field.onChange} value={field.value}>
+                                                <FormControl>
+                                                  <SelectTrigger className="h-12 text-base" data-testid="select-contest">
+                                                    <SelectValue placeholder="Choose a contest" />
+                                                  </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                  {contests.map((contest) => (
+                                                    <SelectItem key={contest} value={contest}>
+                                                      {contest}
+                                                    </SelectItem>
+                                                  ))}
+                                                </SelectContent>
+                                              </Select>
+                                              <FormMessage />
+                                            </FormItem>
+                                          )}
+                                        />
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
 
-                      <AnimatePresence>
-                        {registrationType === "speaker" && (
+                                  {!isRegistrationClosed && (
+                                    <>
+                                      <AnimatePresence>
+                                        {registrationType === "speaker" && (
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
@@ -3655,25 +3710,31 @@ export default function Participate() {
                         )}
                       </AnimatePresence>
 
-                      <AnimatePresence>
-                        {registrationType === "contest" && isRegistrationClosed && (
-                          <motion.div 
-                            className="border rounded-lg p-8 sm:p-12 bg-muted/20 text-center space-y-6"
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto" />
-                            <div>
-                              <h3 className="font-serif text-2xl font-bold text-primary mb-2">Registrations Closed</h3>
-                              <p className="text-muted-foreground">The "{contestName}" registrations are currently closed.</p>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-
-                      {!isRegistrationClosed && (
+                                      <AnimatePresence>
+                                        {registrationType === "contest" && isRegistrationClosed && (
+                                          <motion.div 
+                                            className="border rounded-lg p-8 sm:p-12 bg-muted/20 text-center space-y-6"
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: "auto" }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            transition={{ duration: 0.3 }}
+                                          >
+                                            <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto" />
+                                            <div>
+                                              <h3 className="font-serif text-2xl font-bold text-primary mb-2">Registrations Closed</h3>
+                                              <p className="text-muted-foreground">The "{contestName}" registrations are currently closed.</p>
+                                            </div>
+                                          </motion.div>
+                                        )}
+                                      </AnimatePresence>
+                                    </>
+                                  )}
+                                </>
+                              )}
+                            </AnimatePresence>
+                          </form>
+                        </Form>
+                      )}
                       <motion.div
                         custom={1}
                         initial="hidden"
