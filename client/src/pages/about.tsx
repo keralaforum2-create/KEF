@@ -252,52 +252,36 @@ export default function About() {
       <section className="py-16 bg-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-center mb-12" data-testid="text-who-behind">
-              Who is Behind KSF?
+            <h2 className="text-4xl sm:text-6xl font-bold text-center mb-12" style={{ fontFamily: "'Big Shoulders Display', sans-serif" }}>
+              ORGANISED BY
             </h2>
           </ScrollFadeUp>
           
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto" staggerDelay={0.15}>
-            <StaggerItem>
-              <motion.div whileHover={{ scale: 1.05, y: -5 }} transition={{ duration: 0.2 }}>
-                <Card className="h-full">
-                  <CardContent className="p-8">
-                    <motion.div 
-                      className="mb-6 flex items-center justify-center"
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      <img src={califphLifeSchoolLogo} alt="Caliph Life School" className="h-24 w-auto object-contain" />
-                    </motion.div>
-                    <h3 className="font-semibold text-xl mb-4">Caliph Life School</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      A residential life school that focuses on purpose, happiness, skills and real-world learning. 
-                      Caliph strongly promotes student entrepreneurship and innovation.
-                    </p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </StaggerItem>
-            
-            <StaggerItem>
-              <motion.div whileHover={{ scale: 1.05, y: -5 }} transition={{ duration: 0.2 }}>
-                <Card className="h-full">
-                  <CardContent className="p-8">
-                    <motion.div 
-                      className="mb-6 flex items-center justify-center"
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      <img src={keralaEconomicForumLogo} alt="Kerala Economic Forum" className="h-24 w-auto object-contain" />
-                    </motion.div>
-                    <h3 className="font-semibold text-xl mb-4">Kerala Economic Forum</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      A group that aims to support business, startups and entrepreneurs in Kerala through 
-                      networks, events, mentoring and collaborations.
-                    </p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </StaggerItem>
-          </StaggerContainer>
+          <div className="flex flex-col items-center justify-center gap-12 max-w-4xl mx-auto">
+            <motion.div 
+              className="flex flex-col items-center text-center"
+              whileHover={{ scale: 1.05 }}
+            >
+              <div className="mb-6 flex items-center justify-center h-32">
+                <img src={keralaEconomicForumLogo} alt="Kerala Economic Forum" className="h-full w-auto object-contain" />
+              </div>
+              <h3 className="font-semibold text-xl">Kerala Economic Forum</h3>
+            </motion.div>
+
+            <div className="text-muted-foreground font-medium uppercase tracking-widest text-sm">
+              in association with
+            </div>
+
+            <motion.div 
+              className="flex flex-col items-center text-center"
+              whileHover={{ scale: 1.05 }}
+            >
+              <div className="mb-6 flex items-center justify-center h-32">
+                <img src={califphLifeSchoolLogo} alt="Caliph Life School" className="h-full w-auto object-contain" />
+              </div>
+              <h3 className="font-semibold text-xl">Caliph Life School</h3>
+            </motion.div>
+          </div>
         </div>
       </section>
     </div>
