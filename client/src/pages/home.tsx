@@ -712,74 +712,61 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Organised by Section */}
-      <section className="py-20 bg-background">
+      {/* Organisers Section */}
+      <section className="py-20 bg-background" ref={partnersRef}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
-            <h2 className="section-heading text-3xl sm:text-4xl font-bold text-center mb-12" data-testid="text-organised-by">
-              Organised by
+            <h2 className="text-4xl sm:text-6xl font-bold text-center mb-16 text-gray-900" style={{ fontFamily: "'Big Shoulders Display', sans-serif" }} data-testid="text-organised-by">
+              ORGANISED BY
             </h2>
           </ScrollFadeUp>
           
-          <motion.div 
-            ref={partnersRef}
-            className="flex flex-row flex-wrap items-center justify-center gap-8 md:gap-16"
-            initial="hidden"
-            animate={partnersInView ? "visible" : "hidden"}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: { staggerChildren: 0.2 }
-              }
-            }}
-          >
+          <div className="flex flex-col items-center justify-center gap-12 max-w-4xl mx-auto">
             <motion.div 
-              className="flex flex-col items-center text-center"
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-              }}
+              className="flex flex-col items-center text-center w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={partnersInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6 }}
+              whileHover={{ scale: 1.05 }}
             >
-              <div className="h-24 flex items-center justify-center mb-4">
+              <div className="mb-6 flex items-center justify-center h-24 sm:h-32">
                 <img 
                   src={keralaEconomicForumLogo} 
-                  alt="Kerala Economic Forum"
-                  className="h-20 w-auto object-contain"
-                  data-testid="img-kerala-economic-forum"
+                  alt="Kerala Economic Forum" 
+                  className="h-full w-auto object-contain"
+                  data-testid="img-kef-logo"
                 />
               </div>
-              <h3 className="font-semibold text-lg">Kerala Economic Forum</h3>
+              <h3 className="font-bold text-xl sm:text-2xl text-gray-800">Kerala Economic Forum</h3>
             </motion.div>
-            
-            <motion.p 
-              className="text-muted-foreground text-lg font-medium"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: { opacity: 1, transition: { duration: 0.5 } }
-              }}
+
+            <motion.div 
+              className="text-gray-400 font-bold uppercase tracking-[0.3em] text-xs sm:text-sm"
+              initial={{ opacity: 0 }}
+              animate={partnersInView ? { opacity: 1 } : {}}
+              transition={{ delay: 0.3, duration: 0.6 }}
             >
               in association with
-            </motion.p>
-            
+            </motion.div>
+
             <motion.div 
-              className="flex flex-col items-center text-center"
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-              }}
+              className="flex flex-col items-center text-center w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={partnersInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              whileHover={{ scale: 1.05 }}
             >
-              <div className="h-24 flex items-center justify-center mb-4">
+              <div className="mb-6 flex items-center justify-center h-24 sm:h-32">
                 <img 
                   src={caliphLifeSchoolLogo} 
-                  alt="Caliph Life School"
-                  className="h-20 w-auto object-contain"
-                  data-testid="img-caliph-life-school"
+                  alt="Caliph Life School" 
+                  className="h-full w-auto object-contain"
+                  data-testid="img-caliph-logo"
                 />
               </div>
-              <h3 className="font-semibold text-lg">Caliph Life School</h3>
+              <h3 className="font-bold text-xl sm:text-2xl text-gray-800">Caliph Life School</h3>
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
