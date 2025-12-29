@@ -3732,9 +3732,7 @@ export default function Participate() {
                                 </>
                               )}
                             </AnimatePresence>
-                          </form>
-                        </Form>
-                      )}
+
                       <motion.div
                         custom={1}
                         initial="hidden"
@@ -3779,7 +3777,6 @@ export default function Participate() {
                           )}
                         />
                       </motion.div>
-                      )}
                       
                       {!isBusinessQuiz && (
                       <motion.div
