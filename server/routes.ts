@@ -1,7 +1,9 @@
 import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema, insertBulkRegistrationSchema, insertReferralCodeSchema, insertExpoRegistrationSchema, insertStartupClinicSchema } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+import { registrations, insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema, insertBulkRegistrationSchema, insertReferralCodeSchema, insertExpoRegistrationSchema, insertStartupClinicSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
@@ -555,6 +557,7 @@ export async function registerRoutes(
         profilePhoto: profilePhotoBase64,
         pitchSupportingFiles: files?.pitchSupportingFiles?.[0] ? `/uploads/${files.pitchSupportingFiles[0].filename}` : undefined,
         paymentStatus: "pending",
+        registrationId: `KSF-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
       };
       
       const result = insertRegistrationSchema.safeParse(data);
@@ -1338,7 +1341,7 @@ export async function registerRoutes(
             fullName: registration.fullName,
             email: registration.email,
             discountCode: referralCode || "none",
-            discountPercentage: discountPercentage
+            discountPercentage: String(discountPercentage)
           }
         });
 
@@ -1348,10 +1351,9 @@ export async function registerRoutes(
 
         await storage.updateRegistrationPayment(registration.id, {
           razorpayOrderId: orderResult.order.id,
-          discountedAmount: discountedAmount,
-          discountPercentage: discountPercentage
+          discountedAmount: String(discountedAmount),
         });
-
+        
         console.log("Razorpay order created for existing registration:", orderResult.order.id, `Final amount: ${discountedAmount}`);
         return res.json({
           success: true,
@@ -1432,7 +1434,7 @@ export async function registerRoutes(
         ...result.data,
         razorpayOrderId: receipt,
         paymentAmount: String(discountedAmount),
-        discountedAmount: discountedAmount,
+        discountedAmount: String(discountedAmount),
         discountPercentage: discountPercentage
       };
 
@@ -1446,7 +1448,7 @@ export async function registerRoutes(
           fullName: registrationData.fullName,
           email: registrationData.email,
           discountCode: referralCode || "none",
-          discountPercentage: discountPercentage
+          discountPercentage: String(discountPercentage)
         }
       });
 

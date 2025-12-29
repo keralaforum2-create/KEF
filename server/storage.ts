@@ -204,7 +204,7 @@ export class DatabaseStorage implements IStorage {
     return result[0];
   }
 
-  async updateRegistrationPayment(id: string, paymentData: { phonepeTransactionId?: string; razorpayOrderId?: string; razorpayPaymentId?: string; paymentStatus?: string }): Promise<Registration | undefined> {
+  async updateRegistrationPayment(id: string, paymentData: { phonepeTransactionId?: string; razorpayOrderId?: string; razorpayPaymentId?: string; paymentStatus?: string; discountedAmount?: string }): Promise<Registration | undefined> {
     const updateData: any = {};
     if (paymentData.phonepeTransactionId !== undefined) {
       updateData.phonepeTransactionId = paymentData.phonepeTransactionId;
@@ -217,6 +217,9 @@ export class DatabaseStorage implements IStorage {
     }
     if (paymentData.paymentStatus !== undefined) {
       updateData.paymentStatus = paymentData.paymentStatus;
+    }
+    if (paymentData.discountedAmount !== undefined) {
+      updateData.discountedAmount = paymentData.discountedAmount;
     }
     
     const result = await db.update(registrations)
@@ -495,6 +498,15 @@ export class DatabaseStorage implements IStorage {
       id 
     }).returning();
     return result[0];
+  }
+
+  async getSpeakerApplicationById(id: string): Promise<SpeakerApplication | undefined> {
+    const [speaker] = await db.select().from(speakerApplications).where(eq(speakerApplications.id, id));
+    return speaker;
+  }
+
+  async updateSpeakerApplicationStatus(id: string, status: string): Promise<void> {
+    await db.update(speakerApplications).set({ status }).where(eq(speakerApplications.id, id));
   }
 
   async getSpeakerApplications(): Promise<SpeakerApplication[]> {

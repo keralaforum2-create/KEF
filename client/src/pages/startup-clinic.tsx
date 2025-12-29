@@ -88,9 +88,11 @@ export default function StartupClinic() {
       setStep(1);
       queryClient.invalidateQueries({ queryKey: ["/api/startup-clinic"] });
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error("Submission error:", error);
+      const message = error.message || "Error submitting registration";
       toast({ 
-        title: "Error submitting registration",
+        title: message,
         variant: "destructive" 
       });
     },

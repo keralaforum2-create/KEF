@@ -767,15 +767,15 @@ export default function Admin() {
 
           <ScrollFadeUp delay={0.3}>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="mb-6 flex flex-wrap gap-1">
+              <TabsList className="mb-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-1 h-auto">
                 <TabsTrigger value="registrations" data-testid="tab-registrations">
                   All ({allRegistrations.length})
                 </TabsTrigger>
                 <TabsTrigger value="contest-registrations" data-testid="tab-contest-registrations">
-                  Contest ({contestRegistrations.length})
+                  Contests ({contestRegistrations.length})
                 </TabsTrigger>
                 <TabsTrigger value="expert-registrations" data-testid="tab-expert-registrations">
-                  Expert Session ({expertSessionRegistrations.length})
+                  Expert ({expertSessionRegistrations.length})
                 </TabsTrigger>
                 <TabsTrigger value="speaker-registrations" data-testid="tab-speaker-registrations">
                   Speakers ({speakerRegistrations.length})
@@ -789,24 +789,24 @@ export default function Admin() {
                 <TabsTrigger value="bulk" data-testid="tab-bulk">
                   Bulk ({bulkRegistrations?.length || 0})
                 </TabsTrigger>
+                <TabsTrigger value="speaker-applications" data-testid="tab-speaker-applications">
+                  Appls ({speakerApplications?.length || 0})
+                </TabsTrigger>
+                <TabsTrigger value="referral-usage" data-testid="tab-referral-usage">
+                  Usage
+                </TabsTrigger>
+                <TabsTrigger value="expo-registrations" data-testid="tab-expo-registrations">
+                  Expo ({expoRegistrations?.length || 0})
+                </TabsTrigger>
+                <TabsTrigger value="startup-clinic" data-testid="tab-startup-clinic">
+                  Clinic ({startupClinicRegistrations?.length || 0})
+                </TabsTrigger>
+                <TabsTrigger value="referral-codes" data-testid="tab-referral-codes">
+                  Gift
+                </TabsTrigger>
                 <TabsTrigger value="add-registration" data-testid="tab-add-registration">
                   <Plus className="w-4 h-4 mr-1" />
                   Add
-                </TabsTrigger>
-                <TabsTrigger value="referral-codes" data-testid="tab-referral-codes">
-                  Gift Codes
-                </TabsTrigger>
-                <TabsTrigger value="speaker-applications" data-testid="tab-speaker-applications">
-                  Speaker Apps ({speakerApplications?.length || 0})
-                </TabsTrigger>
-                <TabsTrigger value="referral-usage" data-testid="tab-referral-usage">
-                  Code Usage
-                </TabsTrigger>
-                <TabsTrigger value="expo-registrations" data-testid="tab-expo-registrations">
-                  Expo Registrations ({expoRegistrations?.length || 0})
-                </TabsTrigger>
-                <TabsTrigger value="startup-clinic" data-testid="tab-startup-clinic">
-                  Startup Clinic ({startupClinicRegistrations?.length || 0})
                 </TabsTrigger>
               </TabsList>
 
