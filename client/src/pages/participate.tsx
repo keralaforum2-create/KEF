@@ -342,8 +342,10 @@ export default function Participate() {
   const contestName = form.watch("contestName");
   const participantType = form.watch("participantType");
   const ticketCategory = form.watch("ticketCategory");
-  const isPitchRoom = contestName === "The Pitch Room";
   const isBusinessQuiz = contestName === "Business Quiz – School Edition";
+  const isPitchRoom = contestName === "The Pitch Room";
+
+  const isRegistrationClosed = isBusinessQuiz || isPitchRoom;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -3654,7 +3656,7 @@ export default function Participate() {
                       </AnimatePresence>
 
                       <AnimatePresence>
-                        {registrationType === "contest" && isBusinessQuiz && (
+                        {registrationType === "contest" && isRegistrationClosed && (
                           <motion.div 
                             className="border rounded-lg p-8 sm:p-12 bg-muted/20 text-center space-y-6"
                             initial={{ opacity: 0, height: 0 }}
@@ -3665,13 +3667,13 @@ export default function Participate() {
                             <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto" />
                             <div>
                               <h3 className="font-serif text-2xl font-bold text-primary mb-2">Registrations Closed</h3>
-                              <p className="text-muted-foreground">The "Business Quiz – School Edition" registrations are currently closed.</p>
+                              <p className="text-muted-foreground">The "{contestName}" registrations are currently closed.</p>
                             </div>
                           </motion.div>
                         )}
                       </AnimatePresence>
 
-                      {!isBusinessQuiz && (
+                      {!isRegistrationClosed && (
                       <motion.div
                         custom={1}
                         initial="hidden"
@@ -3745,7 +3747,7 @@ export default function Participate() {
                             </FormItem>
                           )}
                         />
-                        {!isPitchRoom && !isBusinessQuiz && (
+                        {!isRegistrationClosed && (
                           <FormField
                             control={form.control}
                             name="age"
@@ -3768,7 +3770,7 @@ export default function Participate() {
                       </motion.div>
                       )}
 
-                      {!isPitchRoom && !isBusinessQuiz && registrationType !== "speaker" && (
+                      {!isRegistrationClosed && registrationType !== "speaker" && (
                         <motion.div
                           custom={3}
                           initial="hidden"
