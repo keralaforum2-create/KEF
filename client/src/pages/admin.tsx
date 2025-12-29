@@ -252,27 +252,53 @@ export default function Admin() {
 
   const deleteExpoRegistrationMutation = useMutation({
     mutationFn: async (id: string) => {
-      await apiRequest("DELETE", `/api/expo-registrations/${id}`);
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch(`/api/expo-registrations/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to delete expo registration");
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/expo-registrations"] });
       toast({ title: "Expo registration deleted successfully" });
     },
-    onError: () => {
-      toast({ title: "Failed to delete expo registration", variant: "destructive" });
+    onError: (error: any) => {
+      console.error("Delete error:", error);
+      toast({ 
+        title: "Failed to delete expo registration", 
+        description: error.message,
+        variant: "destructive" 
+      });
     },
   });
 
   const deleteStartupClinicMutation = useMutation({
     mutationFn: async (id: string) => {
-      await apiRequest("DELETE", `/api/startup-clinic/${id}`);
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch(`/api/startup-clinic/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to delete startup clinic registration");
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/startup-clinic"] });
       toast({ title: "Startup clinic registration deleted successfully" });
     },
-    onError: () => {
-      toast({ title: "Failed to delete startup clinic registration", variant: "destructive" });
+    onError: (error: any) => {
+      console.error("Delete error:", error);
+      toast({ 
+        title: "Failed to delete startup clinic registration", 
+        description: error.message,
+        variant: "destructive" 
+      });
     },
   });
 
