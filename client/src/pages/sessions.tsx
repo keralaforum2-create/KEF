@@ -14,7 +14,12 @@ import {
   Cpu,
   GraduationCap,
   Video,
-  Users
+  Users,
+  Brain,
+  Globe,
+  BookOpen,
+  Map,
+  Target
 } from "lucide-react";
 import {
   ScrollFadeUp,
@@ -92,6 +97,41 @@ const sessions = [
     description: "Crafting effective digital content, producing high impact video ads, building strong brand visibility and applying smart media strategies to reach, engage and convert the right audience.",
     icon: Video,
   },
+  {
+    id: 11,
+    title: "The Founder's Mindset: From Problem to Product",
+    tagline: "Transform ideas into solutions.",
+    description: "How founders identify real problems, think differently, and transform simple ideas into scalable startup solutions.",
+    icon: Brain,
+  },
+  {
+    id: 12,
+    title: "Kerala to the World: Building Million-Dollar Tech Businesses",
+    tagline: "Scale globally from Kerala.",
+    description: "How startups from Kerala scale technology products and services for global markets.",
+    icon: Globe,
+  },
+  {
+    id: 13,
+    title: "Education to EdTech: Building Scalable Learning Businesses",
+    tagline: "Disrupt the learning space.",
+    description: "Transforming education models into technology-driven, growth-oriented ventures.",
+    icon: BookOpen,
+  },
+  {
+    id: 14,
+    title: "Entering the Middle East: Building Businesses Beyond Borders",
+    tagline: "Expand to new markets.",
+    description: "Opportunities, regulations, and strategies for launching and growing businesses in GCC countries.",
+    icon: Map,
+  },
+  {
+    id: 15,
+    title: "Niche Markets to Profit: Turning Overlooked Industries into Opportunities",
+    tagline: "Find gold in niches.",
+    description: "Identifying less talked about, overlooked industries and unconventional markets, turning niche opportunities into profitable and sustainable businesses.",
+    icon: Target,
+  },
 ];
 
 export default function Sessions() {
@@ -107,13 +147,13 @@ export default function Sessions() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4 }}
               >
-                <Badge variant="secondary" className="mb-4 text-base px-4 py-2">10 Expert Sessions</Badge>
+                <Badge variant="secondary" className="mb-4 text-base px-4 py-2">15 Expert Sessions</Badge>
               </motion.div>
               <h2 className="font-serif text-5xl sm:text-6xl font-bold mb-6" data-testid="text-expert-sessions">
                 Expert Sessions
               </h2>
               <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                Kerala Startup Fest features 10 expert sessions covering everything from startup mindset to digital media mastery. These sessions are 
+                Kerala Startup Fest features 15 expert sessions covering everything from startup mindset to global expansion strategies. These sessions are 
                 handled by people who are actually in business — founders, professionals, investors and creators.
               </p>
             </div>
