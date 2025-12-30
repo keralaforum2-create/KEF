@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { MapPin, Mail, Phone, Calendar, Users } from "lucide-react";
+import { MapPin, Mail, Phone, Calendar, Users, Instagram, Facebook, Youtube } from "lucide-react";
 import { motion } from "framer-motion";
 import { ScrollFadeUp, StaggerContainer, StaggerItem } from "@/lib/animations";
 import logoPath from "@assets/LOGO_00-removebg-preview_1764577293415.png";
@@ -43,7 +43,7 @@ export function Footer({ className }: FooterProps) {
               <StaggerItem>
                 <div>
                   <h4 className="font-semibold mb-4">Contact</h4>
-                  <ul className="space-y-3">
+                  <ul className="space-y-3 mb-6">
                     <li className="flex items-start gap-2">
                       <Mail className="w-4 h-4 text-primary mt-0.5" />
                       <a href="mailto:keralastartupfest@gmail.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="footer-email">
@@ -64,6 +64,39 @@ export function Footer({ className }: FooterProps) {
                       </span>
                     </li>
                   </ul>
+                  
+                  <div className="flex gap-3">
+                    <a 
+                      href="https://www.instagram.com/keralastartupfest/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-muted hover:bg-primary/10 transition-colors" 
+                      data-testid="footer-link-instagram"
+                      aria-label="Instagram"
+                    >
+                      <Instagram className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                    </a>
+                    <a 
+                      href="https://www.facebook.com/share/1AohFaocTo/?mibextid=wwXIfr" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-muted hover:bg-primary/10 transition-colors" 
+                      data-testid="footer-link-facebook"
+                      aria-label="Facebook"
+                    >
+                      <Facebook className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                    </a>
+                    <a 
+                      href="https://www.youtube.com/@KeralaStartupFest" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg bg-muted hover:bg-primary/10 transition-colors" 
+                      data-testid="footer-link-youtube"
+                      aria-label="YouTube"
+                    >
+                      <Youtube className="w-5 h-5 text-muted-foreground hover:text-primary" />
+                    </a>
+                  </div>
                 </div>
               </StaggerItem>
 
