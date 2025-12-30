@@ -2277,15 +2277,17 @@ export default function Participate() {
                                       </div>
                                     </div>
                                     <div
-                                      className="rounded-lg border-2 p-4 transition-all relative opacity-50 cursor-not-allowed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30"
+                                      onClick={() => setBulkFormData({...bulkFormData, ticketCategory: "platinum"})}
+                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                                        bulkFormData.ticketCategory === "platinum"
+                                          ? "border-teal-500 bg-teal-50 dark:bg-teal-950/30"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-teal-300"
+                                      }`}
                                       data-testid="card-bulk-ticket-platinum"
                                     >
                                       <div className="flex justify-between items-center">
                                         <span className="font-medium">Platinum Ticket</span>
-                                        <span className="font-bold text-gray-400">Rs 1299/student</span>
-                                      </div>
-                                      <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className="bg-red-500 text-white px-3 py-1 rounded text-sm font-bold">Registration Closed</span>
+                                        <span className="font-bold text-teal-600">Rs 1299/student</span>
                                       </div>
                                     </div>
                                   </div>
@@ -4175,55 +4177,62 @@ export default function Participate() {
 
                                     {/* Platinum Ticket Card */}
                                     <div
-                                      className="relative rounded-xl border-2 p-5 transition-all opacity-50 cursor-not-allowed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30"
+                                      onClick={() => field.onChange("platinum")}
+                                      className={`relative cursor-pointer rounded-xl border-2 p-5 transition-all ${
+                                        field.value === "platinum"
+                                          ? "border-teal-500 bg-teal-50 dark:bg-teal-950/30 shadow-lg"
+                                          : "border-gray-200 dark:border-gray-700 hover:border-teal-300"
+                                      }`}
                                       data-testid="card-ticket-platinum"
                                     >
-                                      <div className="absolute inset-0 rounded-xl flex items-center justify-center">
-                                        <span className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-bold">Registration Closed</span>
-                                      </div>
+                                      {field.value === "platinum" && (
+                                        <div className="absolute top-3 right-3">
+                                          <CheckCircle className="w-6 h-6 text-teal-500" />
+                                        </div>
+                                      )}
                                       <div className="flex items-center gap-2 mb-4">
-                                        <div className="w-3 h-3 rounded-full bg-gray-400" />
+                                        <div className="w-3 h-3 rounded-full bg-teal-500" />
                                         <h4 className="font-bold text-lg">Platinum Ticket</h4>
                                       </div>
                                       
-                                      <ul className="space-y-2 mb-5 text-sm opacity-60">
+                                      <ul className="space-y-2 mb-5 text-sm">
                                         <li className="flex items-center gap-2">
-                                          <Check className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
                                           <span>Access to all stalls</span>
                                         </li>
                                         <li className="flex items-center gap-2">
-                                          <Check className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
                                           <span>Access to all expert sessions</span>
                                         </li>
                                         <li className="flex items-center gap-2">
-                                          <Check className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
                                           <span>ID card, notepad & pen</span>
                                         </li>
                                         <li className="flex items-center gap-2">
-                                          <Check className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
                                           <span>Startup Fest Kit (Exclusive)</span>
                                         </li>
                                         <li className="flex items-center gap-2">
-                                          <Check className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
                                           <span>Front section seating</span>
                                         </li>
                                         <li className="flex items-center gap-2">
-                                          <Check className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
                                           <span>Priority in Q&A with guests</span>
                                         </li>
                                         <li className="flex items-center gap-2">
-                                          <Check className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
                                           <span>Higher networking opportunities</span>
                                         </li>
                                         <li className="flex items-center gap-2">
-                                          <Check className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                          <Check className="w-4 h-4 text-teal-600 flex-shrink-0" />
                                           <span>Lunch & Tea included</span>
                                         </li>
                                       </ul>
                                       
-                                      <div className="border-t pt-4 flex items-center justify-between opacity-60">
+                                      <div className="border-t pt-4 flex items-center justify-between">
                                         <span className="text-sm text-muted-foreground">Price:</span>
-                                        <span className="font-bold text-xl text-gray-400">Rs 1499/-</span>
+                                        <span className="font-bold text-xl text-teal-600">Rs 1499/-</span>
                                       </div>
                                     </div>
                                   </div>
