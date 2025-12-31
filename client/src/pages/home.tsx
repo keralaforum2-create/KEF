@@ -159,7 +159,7 @@ export default function Home() {
                         </Button>
                       </div>
                     </Link>
-                    <button 
+                    <div 
                       onClick={() => setShowQuickLinksModal(true)}
                       className="relative p-[3px] rounded-md min-w-[200px] shadow-xl bg-transparent border-0 cursor-pointer"
                       style={{
@@ -171,10 +171,11 @@ export default function Home() {
                         size="lg" 
                         className="font-bold text-base px-10 py-6 bg-white text-gray-800 w-full text-lg border-0 rounded-[4px]" 
                         data-testid="button-quicklinks"
+                        onClick={() => setShowQuickLinksModal(true)}
                       >
                         Quick Links
                       </Button>
-                    </button>
+                    </div>
                     <Link href="/faq">
                       <div 
                         className="relative p-[3px] rounded-md shadow-xl w-fit"
