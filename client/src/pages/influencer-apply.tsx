@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -13,7 +14,10 @@ const influencerSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   instagramLink: z.string().url().optional().or(z.literal("")),
   facebookLink: z.string().url().optional().or(z.literal("")),
-  youtubeLink: z.string().url().optional().or(z.literal(""))
+  youtubeLink: z.string().url().optional().or(z.literal("")),
+  termsAccepted: z.boolean().refine(val => val === true, {
+    message: "You must accept the terms and conditions to apply"
+  })
 }).refine(
   (data) => data.instagramLink || data.facebookLink || data.youtubeLink,
   {
@@ -34,17 +38,19 @@ export default function InfluencerApply() {
       fullName: "",
       instagramLink: "",
       facebookLink: "",
-      youtubeLink: ""
+      youtubeLink: "",
+      termsAccepted: false
     }
   });
 
   const onSubmit = async (data: InfluencerForm) => {
     setIsSubmitting(true);
     try {
+      const { termsAccepted, ...submitData } = data;
       const response = await fetch("/api/influencer-applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        body: JSON.stringify(submitData)
       });
 
       if (!response.ok) {
@@ -79,28 +85,6 @@ export default function InfluencerApply() {
             <p className="text-lg text-gray-600">
               Join India's most practical startup festival as an influencer and get exclusive benefits
             </p>
-          </div>
-
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
-            <h2 className="font-bold text-lg mb-3 text-gray-900">Eligibility & Requirements</h2>
-            <ul className="space-y-2 text-sm text-gray-700">
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1">•</span>
-                <span>Must be actively creating content on at least one platform: Facebook, Instagram, or YouTube</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1">•</span>
-                <span>Selected influencers will receive an Influencer Pass (includes all benefits of Platinum Pass)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1">•</span>
-                <span>Deliverables: 1 promotional video before the event, 1 experience video after</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1">•</span>
-                <span>Must collaborate/tag Kerala Startup Fest official pages on all related posts</span>
-              </li>
-            </ul>
           </div>
 
           <Form {...form}>
@@ -198,20 +182,110 @@ export default function InfluencerApply() {
                 />
               </div>
 
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 my-8">
+                <h2 className="font-bold text-lg mb-4 text-gray-900">Terms and Conditions</h2>
+                <div className="space-y-4 text-sm text-gray-700">
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Influencer Invitation | Kerala Startup Fest</h3>
+                    <p>Kerala Startup Fest invites passionate content creators and influencers to be part of India's most practical startup festival.</p>
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-gray-900 mb-1">Selected influencers will receive an Influencer Pass, which includes all benefits of the Platinum Pass.</p>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Eligibility</h3>
+                    <ul className="space-y-1 ml-4">
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-600 mt-0.5">•</span>
+                        <span>Must be actively creating content on at least one platform: Facebook, Instagram, or YouTube</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Deliverables</h3>
+                    <ul className="space-y-1 ml-4">
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-600 mt-0.5">•</span>
+                        <span>1 promotional video before the event</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-600 mt-0.5">•</span>
+                        <span>1 experience video after the event</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">Collaboration Terms</h3>
+                    <p>By applying, you agree to collaborate/tag Kerala Startup Fest official pages on all posts shared on any platform related to the event.</p>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-2">How it works</h3>
+                    <ul className="space-y-1 ml-4">
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-600 mt-0.5">•</span>
+                        <span>Apply through the official KSF website</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-600 mt-0.5">•</span>
+                        <span>Applications will be reviewed by the KSF team</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-600 mt-0.5">•</span>
+                        <span>Once accepted, the Influencer Pass will be generated and emailed</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-blue-600 mt-0.5">•</span>
+                        <span>The pass will be issued after the pre-event video is published</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p className="italic">If you create content that inspires, this is your chance to collaborate with Kerala Startup Fest and amplify impact.</p>
+                  </div>
+                </div>
+              </div>
+
+              <FormField
+                control={form.control}
+                name="termsAccepted"
+                render={({ field }) => (
+                  <FormItem className="flex items-start space-x-3 space-y-0 rounded-md border border-gray-200 p-4 bg-gray-50">
+                    <FormControl>
+                      <Checkbox 
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        data-testid="checkbox-influencer-terms"
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="text-base font-semibold cursor-pointer">
+                        I agree to the terms and conditions
+                      </FormLabel>
+                      <FormDescription>
+                        By checking this box, you confirm that you understand and accept all the terms, eligibility requirements, deliverables, and collaboration terms mentioned above.
+                      </FormDescription>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <Button 
                 type="submit" 
                 className="w-full h-12 text-base font-bold"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !form.watch("termsAccepted")}
                 data-testid="button-influencer-submit"
               >
                 {isSubmitting ? "Submitting..." : "Submit Application"}
               </Button>
             </form>
           </Form>
-
-          <p className="text-xs text-gray-500 text-center mt-6">
-            By applying, you agree to collaborate with Kerala Startup Fest and tag our official pages on all posts related to the event.
-          </p>
         </Card>
       </div>
     </div>
