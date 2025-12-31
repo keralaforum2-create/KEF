@@ -167,6 +167,22 @@ export default function Admin() {
     staleTime: 20000,
   });
 
+  const { data: influencerApplications, isLoading: loadingInfluencerApplications } = useQuery<InfluencerApplication[]>({
+    queryKey: ["/api/influencer-applications"],
+    refetchInterval: 30000,
+    staleTime: 20000,
+    queryFn: async () => {
+      const token = localStorage.getItem("admin_token");
+      if (!token) throw new Error("No authentication token");
+      const response = await fetch("/api/influencer-applications", {
+        headers: { "Authorization": `Bearer ${token}` },
+        credentials: "include"
+      });
+      if (!response.ok) throw new Error("Failed to fetch influencer applications");
+      return response.json();
+    }
+  });
+
   const { data: referralCodeUsage, isLoading: loadingReferralCodeUsage } = useQuery<Array<{ code: string; discountPercentage: number; timesUsed: number; lastUsed?: string }>>({
     queryKey: ["/api/admin/referral-code-usage"],
     refetchInterval: 30000,
@@ -297,6 +313,32 @@ export default function Admin() {
       console.error("Delete error:", error);
       toast({ 
         title: "Failed to delete startup clinic registration", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    },
+  });
+
+  const deleteInfluencerApplicationMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch(`/api/influencer-applications/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to delete influencer application");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/influencer-applications"] });
+      toast({ title: "Influencer application deleted successfully" });
+    },
+    onError: (error: any) => {
+      console.error("Delete error:", error);
+      toast({ 
+        title: "Failed to delete influencer application", 
         description: error.message,
         variant: "destructive" 
       });
@@ -827,6 +869,9 @@ export default function Admin() {
                 </TabsTrigger>
                 <TabsTrigger value="startup-clinic" data-testid="tab-startup-clinic">
                   Clinic ({startupClinicRegistrations?.length || 0})
+                </TabsTrigger>
+                <TabsTrigger value="influencers" data-testid="tab-influencers">
+                  Influencers ({influencerApplications?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger value="referral-codes" data-testid="tab-referral-codes">
                   Gift
@@ -2670,6 +2715,120 @@ export default function Admin() {
                         </div>
                       ) : (
                         <p className="text-muted-foreground">No expo registrations yet</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="influencers">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Users className="w-5 h-5" />
+                        Influencer Applications
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingInfluencerApplications ? (
+                        <div className="text-center py-8 text-muted-foreground">
+                          Loading influencer applications...
+                        </div>
+                      ) : influencerApplications && influencerApplications.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Full Name</TableHead>
+                                <TableHead>Instagram</TableHead>
+                                <TableHead>Facebook</TableHead>
+                                <TableHead>YouTube</TableHead>
+                                <TableHead>Date Applied</TableHead>
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {influencerApplications.map((app, index) => (
+                                <motion.tr
+                                  key={app.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.03 }}
+                                  className="border-b transition-colors hover:bg-muted/50"
+                                  data-testid={`row-influencer-application-${app.id}`}
+                                >
+                                  <TableCell className="font-medium">{app.fullName}</TableCell>
+                                  <TableCell>
+                                    {app.instagramLink ? (
+                                      <a 
+                                        href={app.instagramLink} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:underline text-sm"
+                                        data-testid={`link-instagram-${app.id}`}
+                                      >
+                                        View Profile
+                                      </a>
+                                    ) : (
+                                      <span className="text-muted-foreground text-sm">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    {app.facebookLink ? (
+                                      <a 
+                                        href={app.facebookLink} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:underline text-sm"
+                                        data-testid={`link-facebook-${app.id}`}
+                                      >
+                                        View Profile
+                                      </a>
+                                    ) : (
+                                      <span className="text-muted-foreground text-sm">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    {app.youtubeLink ? (
+                                      <a 
+                                        href={app.youtubeLink} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-blue-600 hover:underline text-sm"
+                                        data-testid={`link-youtube-${app.id}`}
+                                      >
+                                        View Channel
+                                      </a>
+                                    ) : (
+                                      <span className="text-muted-foreground text-sm">-</span>
+                                    )}
+                                  </TableCell>
+                                  <TableCell className="text-sm text-muted-foreground">
+                                    {new Date(app.createdAt).toLocaleDateString()}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      onClick={() => deleteInfluencerApplicationMutation.mutate(app.id)}
+                                      disabled={deleteInfluencerApplicationMutation.isPending}
+                                      data-testid={`button-delete-influencer-application-${app.id}`}
+                                    >
+                                      <Trash2 className="w-4 h-4 text-red-500" />
+                                    </Button>
+                                  </TableCell>
+                                </motion.tr>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">No influencer applications yet</p>
                       )}
                     </CardContent>
                   </Card>
