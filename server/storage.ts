@@ -21,6 +21,8 @@ import {
   type InsertExpoRegistration,
   type StartupClinic,
   type InsertStartupClinic,
+  type InfluencerApplication,
+  type InsertInfluencerApplication,
   users,
   contactSubmissions,
   registrations,
@@ -32,6 +34,7 @@ import {
   speakerApplications,
   expoRegistrations,
   startupClinicRegistrations,
+  influencerApplications,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql } from "drizzle-orm";
@@ -96,6 +99,10 @@ export interface IStorage {
   createStartupClinicRegistration(registration: InsertStartupClinic): Promise<StartupClinic>;
   getStartupClinicRegistrations(): Promise<StartupClinic[]>;
   deleteStartupClinicRegistration(id: string): Promise<void>;
+
+  createInfluencerApplication(application: InsertInfluencerApplication): Promise<InfluencerApplication>;
+  getInfluencerApplications(): Promise<InfluencerApplication[]>;
+  deleteInfluencerApplication(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -558,6 +565,23 @@ export class DatabaseStorage implements IStorage {
 
   async deleteStartupClinicRegistration(id: string): Promise<void> {
     await db.delete(startupClinicRegistrations).where(eq(startupClinicRegistrations.id, id));
+  }
+
+  async createInfluencerApplication(insertData: InsertInfluencerApplication): Promise<InfluencerApplication> {
+    const id = randomUUID();
+    const result = await db.insert(influencerApplications).values({ 
+      ...insertData, 
+      id 
+    }).returning();
+    return result[0];
+  }
+
+  async getInfluencerApplications(): Promise<InfluencerApplication[]> {
+    return await db.select().from(influencerApplications).orderBy(desc(influencerApplications.createdAt));
+  }
+
+  async deleteInfluencerApplication(id: string): Promise<void> {
+    await db.delete(influencerApplications).where(eq(influencerApplications.id, id));
   }
 }
 

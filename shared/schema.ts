@@ -405,3 +405,31 @@ export const insertStartupClinicSchema = createInsertSchema(startupClinicRegistr
 
 export type InsertStartupClinic = z.infer<typeof insertStartupClinicSchema>;
 export type StartupClinic = typeof startupClinicRegistrations.$inferSelect;
+
+export const influencerApplications = pgTable("influencer_applications", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  fullName: text("full_name").notNull(),
+  instagramLink: text("instagram_link"),
+  facebookLink: text("facebook_link"),
+  youtubeLink: text("youtube_link"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertInfluencerApplicationSchema = createInsertSchema(influencerApplications).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  fullName: z.string().min(2, "Full name must be at least 2 characters"),
+  instagramLink: z.string().url().optional().or(z.literal("")),
+  facebookLink: z.string().url().optional().or(z.literal("")),
+  youtubeLink: z.string().url().optional().or(z.literal("")),
+}).refine(
+  (data) => data.instagramLink || data.facebookLink || data.youtubeLink,
+  {
+    message: "At least one social media profile link is required",
+    path: ["instagramLink"]
+  }
+);
+
+export type InsertInfluencerApplication = z.infer<typeof insertInfluencerApplicationSchema>;
+export type InfluencerApplication = typeof influencerApplications.$inferSelect;

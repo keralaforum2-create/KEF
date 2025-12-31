@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
-import { registrations, insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema, insertBulkRegistrationSchema, insertReferralCodeSchema, insertExpoRegistrationSchema, insertStartupClinicSchema } from "@shared/schema";
+import { registrations, insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema, insertBulkRegistrationSchema, insertReferralCodeSchema, insertExpoRegistrationSchema, insertStartupClinicSchema, insertInfluencerApplicationSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
@@ -2483,6 +2483,65 @@ export async function registerRoutes(
         success: false,
         error: "Failed to verify payment"
       });
+    }
+  });
+
+  // Influencer applications
+  app.post("/api/influencer-applications", async (req, res) => {
+    try {
+      const validatedData = insertInfluencerApplicationSchema.parse(req.body);
+      const application = await storage.createInfluencerApplication(validatedData);
+      return res.json({ success: true, applicationId: application.id });
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("At least one")) {
+        return res.status(400).json({ message: error.message });
+      }
+      console.error("Error creating influencer application:", error);
+      return res.status(500).json({ message: "Failed to submit application" });
+    }
+  });
+
+  app.get("/api/influencer-applications", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization || "";
+      let token = "";
+      if (authHeader.toLowerCase().startsWith("bearer ")) {
+        token = authHeader.substring(7).trim();
+      } else {
+        token = authHeader.trim();
+      }
+      const isAuthorized = (token === "admin-authenticated") || (token === ADMIN_PASSWORD && token);
+      
+      if (!isAuthorized) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const applications = await storage.getInfluencerApplications();
+      return res.json(applications);
+    } catch (error) {
+      console.error("Error fetching influencer applications:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/influencer-applications/:id", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization || "";
+      let token = "";
+      if (authHeader.toLowerCase().startsWith("bearer ")) {
+        token = authHeader.substring(7).trim();
+      } else {
+        token = authHeader.trim();
+      }
+      const isAuthorized = (token === "admin-authenticated") || (token === ADMIN_PASSWORD && token);
+      
+      if (!isAuthorized) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      await storage.deleteInfluencerApplication(req.params.id);
+      return res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting influencer application:", error);
+      return res.status(500).json({ message: "Internal server error" });
     }
   });
 

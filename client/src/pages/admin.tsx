@@ -28,7 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration, ReferralCode, SpeakerApplication, ExpoRegistration } from "@shared/schema";
+import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration, ReferralCode, SpeakerApplication, ExpoRegistration, InfluencerApplication } from "@shared/schema";
 import { ScrollFadeUp, StaggerContainer, StaggerItem, CardWave } from "@/lib/animations";
 
 export default function Admin() {
@@ -41,6 +41,7 @@ export default function Admin() {
   const [selectedBulkReg, setSelectedBulkReg] = useState<BulkRegistration | null>(null);
   const [selectedSpeakerApp, setSelectedSpeakerApp] = useState<SpeakerApplication | null>(null);
   const [selectedExpoReg, setSelectedExpoReg] = useState<ExpoRegistration | null>(null);
+  const [selectedInfluencer, setSelectedInfluencer] = useState<InfluencerApplication | null>(null);
   const [expertCategoryFilter, setExpertCategoryFilter] = useState<"all" | "platinum" | "gold" | "silver">("all");
   const [contestTypeFilter, setContestTypeFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
