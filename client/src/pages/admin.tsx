@@ -169,13 +169,13 @@ export default function Admin() {
 
   const { data: influencerApplications, isLoading: loadingInfluencerApplications } = useQuery<InfluencerApplication[]>({
     queryKey: ["/api/influencer-applications"],
-    refetchInterval: 30000,
-    staleTime: 20000,
+    refetchInterval: 5000,
+    staleTime: 2000,
     queryFn: async () => {
       const token = localStorage.getItem("admin_token");
       if (!token) throw new Error("No authentication token");
       const response = await fetch("/api/influencer-applications", {
-        headers: { "Authorization": `Bearer ${token}` },
+        headers: { "Authorization": token },
         credentials: "include"
       });
       if (!response.ok) throw new Error("Failed to fetch influencer applications");
@@ -1146,12 +1146,12 @@ export default function Admin() {
                             >
                               All ({contestRegistrations.length})
                             </Button>
-                            {uniqueContestNames.map(name => (
+                            {uniqueContestNames.map((name: any) => (
                               <Button
                                 key={name}
                                 variant={contestTypeFilter === name ? "default" : "outline"}
                                 size="sm"
-                                onClick={() => setContestTypeFilter(name)}
+                                onClick={() => setContestTypeFilter(name || "")}
                                 data-testid={`button-filter-contest-${name?.toLowerCase().replace(/\s+/g, '-')}`}
                               >
                                 {name} ({contestRegistrations.filter(r => r.contestName === name).length})
