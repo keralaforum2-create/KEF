@@ -155,6 +155,25 @@ export default function Home() {
                         </Button>
                       </div>
                     </Link>
+                    <button 
+                      onClick={() => {
+                        const element = document.getElementById('quick-links');
+                        element?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className="relative p-[3px] rounded-md min-w-[200px] shadow-xl bg-transparent border-0 cursor-pointer"
+                      style={{
+                        background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                      }}
+                      data-testid="button-quicklinks-border"
+                    >
+                      <Button 
+                        size="lg" 
+                        className="font-bold text-base px-10 py-6 bg-white text-gray-800 w-full text-lg border-0 rounded-[4px]" 
+                        data-testid="button-quicklinks"
+                      >
+                        Quick Links
+                      </Button>
+                    </button>
                     <Link href="/faq">
                       <div 
                         className="relative p-[3px] rounded-md shadow-xl w-fit"
