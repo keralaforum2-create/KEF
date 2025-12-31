@@ -22,6 +22,7 @@ import AdminLogin from "@/pages/admin-login";
 import Admin from "@/pages/admin";
 import ExpoRegister from "@/pages/expo-register";
 import StartupClinic from "@/pages/startup-clinic";
+import InfluencerApply from "@/pages/influencer-apply";
 import Ticket from "@/pages/ticket";
 import Checkin from "@/pages/checkin";
 import RegistrationSuccess from "@/pages/registration-success";
@@ -72,6 +73,7 @@ function Router() {
       <Route path="/admin" component={Admin} />
       <Route path="/expo-register" component={ExpoRegister} />
       <Route path="/startup-clinic" component={StartupClinic} />
+      <Route path="/influencer-apply" component={InfluencerApply} />
       <Route path="/ticket/:id" component={Ticket} />
       <Route path="/registration-success/:id" component={RegistrationSuccess} />
       <Route path="/checkin/:id" component={Checkin} />
