@@ -1090,6 +1090,28 @@ export default function Admin() {
                         <div className="text-center py-8 text-muted-foreground">Loading...</div>
                       ) : contestRegistrations.length > 0 ? (
                         <div className="overflow-x-auto">
+                          <div className="mb-4 flex flex-wrap items-center gap-2">
+                            <span className="text-sm text-muted-foreground mr-2">Filter by Category:</span>
+                            <Button
+                              variant={contestTypeFilter === "all" ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => setContestTypeFilter("all")}
+                              data-testid="button-filter-all-contests"
+                            >
+                              All ({contestRegistrations.length})
+                            </Button>
+                            {uniqueContestNames.map(name => (
+                              <Button
+                                key={name}
+                                variant={contestTypeFilter === name ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => setContestTypeFilter(name)}
+                                data-testid={`button-filter-contest-${name?.toLowerCase().replace(/\s+/g, '-')}`}
+                              >
+                                {name} ({contestRegistrations.filter(r => r.contestName === name).length})
+                              </Button>
+                            ))}
+                          </div>
                           <div className="mb-4 flex flex-col gap-3">
                             <Input
                               placeholder="Search by name, email, or contest..."
@@ -1097,17 +1119,6 @@ export default function Admin() {
                               onChange={(e) => setSearchQuery(e.target.value)}
                               data-testid="input-search-contests"
                             />
-                            <Select value={contestTypeFilter} onValueChange={setContestTypeFilter}>
-                              <SelectTrigger data-testid="select-contest-filter">
-                                <SelectValue placeholder="Filter by contest type" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="all">All Contests</SelectItem>
-                                {uniqueContestNames.map(name => (
-                                  <SelectItem key={name} value={name || ""}>{name || "Unknown"}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
                           </div>
                           <Table>
                             <TableHeader>
