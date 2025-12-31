@@ -45,6 +45,7 @@ import youngKeralaExpo from "@assets/WhatsApp_Image_2025-12-24_at_11.08.16_AM_17
 
 export default function Home() {
   const [showExpoModal, setShowExpoModal] = useState(false);
+  const [showQuickLinksModal, setShowQuickLinksModal] = useState(false);
   const partnersRef = useRef<HTMLDivElement>(null);
   const partnersInView = useInView(partnersRef, { once: true, margin: "-50px" });
 
@@ -159,10 +160,7 @@ export default function Home() {
                       </div>
                     </Link>
                     <button 
-                      onClick={() => {
-                        const element = document.getElementById('quick-links');
-                        element?.scrollIntoView({ behavior: 'smooth' });
-                      }}
+                      onClick={() => setShowQuickLinksModal(true)}
                       className="relative p-[3px] rounded-md min-w-[200px] shadow-xl bg-transparent border-0 cursor-pointer"
                       style={{
                         background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
@@ -734,199 +732,179 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Quick Links Section */}
-      <section id="quick-links" className="py-24 sm:py-32 bg-gradient-to-br from-blue-50 via-white to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollFadeUp>
-            <h2 className="section-heading text-4xl sm:text-5xl font-bold text-center mb-4 text-gray-900">
-              Quick Links
-            </h2>
-          </ScrollFadeUp>
-          <ScrollFadeUp delay={0.1}>
-            <p className="text-center text-lg text-gray-600 mb-16 max-w-2xl mx-auto">
+      {/* Quick Links Modal */}
+      <Dialog open={showQuickLinksModal} onOpenChange={setShowQuickLinksModal}>
+        <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-y-auto p-8 sm:p-12">
+          <div className="text-center mb-8">
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">QUICK LINKS</h2>
+            <p className="text-lg text-gray-600">
               Get involved in Kerala Startup Fest in multiple ways. Choose your opportunity below.
             </p>
-          </ScrollFadeUp>
+          </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Podcast Speaker */}
-            <StaggerItem>
-              <div className="h-full flex flex-col">
-                <div 
-                  className="relative p-[3px] rounded-2xl shadow-lg flex-grow"
-                  style={{
-                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                  }}
-                  data-testid="card-podcast-speaker-border"
-                >
-                  <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
-                    <div>
-                      <div 
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                        style={{ backgroundColor: "hsl(0 100% 50%)" }}
-                      >
-                        <Radio className="w-7 h-7 text-white" />
-                      </div>
-                      <h3 className="font-bold text-lg sm:text-xl text-center mb-3 text-gray-900">Apply as Podcast Speaker</h3>
-                      <p className="text-gray-600 text-sm sm:text-base text-center">
-                        Share your expertise with our audience. Connect with startup enthusiasts and industry leaders.
-                      </p>
-                    </div>
-                    <Link href="/participate#register" className="mt-6">
-                      <div 
-                        className="relative p-[2px] rounded-md w-full"
-                        style={{
-                          background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                        }}
-                      >
-                        <Button 
-                          size="sm" 
-                          className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
-                          data-testid="button-podcast-register"
-                        >
-                          Register Now
-                        </Button>
-                      </div>
-                    </Link>
+            <div 
+              className="relative p-[3px] rounded-2xl shadow-lg"
+              style={{
+                background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+              }}
+              data-testid="modal-card-podcast-speaker"
+            >
+              <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
+                <div>
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    style={{ backgroundColor: "hsl(0 100% 50%)" }}
+                  >
+                    <Radio className="w-8 h-8 text-white" />
                   </div>
+                  <h3 className="font-bold text-lg text-center mb-3 text-gray-900">Apply as Podcast Speaker</h3>
+                  <p className="text-gray-600 text-sm text-center">
+                    Share your expertise with our audience. Connect with startup enthusiasts and industry leaders.
+                  </p>
                 </div>
+                <Link href="/participate#register" className="mt-6">
+                  <div 
+                    className="relative p-[2px] rounded-md w-full"
+                    style={{
+                      background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                    }}
+                  >
+                    <Button 
+                      size="sm" 
+                      className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
+                      data-testid="modal-button-podcast-register"
+                    >
+                      Register Now
+                    </Button>
+                  </div>
+                </Link>
               </div>
-            </StaggerItem>
+            </div>
 
             {/* Startup Clinic */}
-            <StaggerItem>
-              <div className="h-full flex flex-col">
-                <div 
-                  className="relative p-[3px] rounded-2xl shadow-lg flex-grow"
-                  style={{
-                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                  }}
-                  data-testid="card-startup-clinic-border"
-                >
-                  <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
-                    <div>
-                      <div 
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                        style={{ backgroundColor: "hsl(220 70% 50%)" }}
-                      >
-                        <Briefcase className="w-7 h-7 text-white" />
-                      </div>
-                      <h3 className="font-bold text-lg sm:text-xl text-center mb-3 text-gray-900">Apply for Startup Clinic</h3>
-                      <p className="text-gray-600 text-sm sm:text-base text-center">
-                        Get one-to-one consultation with startup experts. Gain clarity and direction for your journey.
-                      </p>
-                    </div>
-                    <Link href="/startup-clinic" className="mt-6">
-                      <div 
-                        className="relative p-[2px] rounded-md w-full"
-                        style={{
-                          background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                        }}
-                      >
-                        <Button 
-                          size="sm" 
-                          className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
-                          data-testid="button-clinic-register"
-                        >
-                          Register Now
-                        </Button>
-                      </div>
-                    </Link>
+            <div 
+              className="relative p-[3px] rounded-2xl shadow-lg"
+              style={{
+                background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+              }}
+              data-testid="modal-card-startup-clinic"
+            >
+              <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
+                <div>
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    style={{ backgroundColor: "hsl(220 70% 50%)" }}
+                  >
+                    <Briefcase className="w-8 h-8 text-white" />
                   </div>
+                  <h3 className="font-bold text-lg text-center mb-3 text-gray-900">Apply for Startup Clinic</h3>
+                  <p className="text-gray-600 text-sm text-center">
+                    Get one-to-one consultation with startup experts. Gain clarity and direction for your journey.
+                  </p>
                 </div>
+                <Link href="/startup-clinic" className="mt-6">
+                  <div 
+                    className="relative p-[2px] rounded-md w-full"
+                    style={{
+                      background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                    }}
+                  >
+                    <Button 
+                      size="sm" 
+                      className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
+                      data-testid="modal-button-clinic-register"
+                    >
+                      Register Now
+                    </Button>
+                  </div>
+                </Link>
               </div>
-            </StaggerItem>
+            </div>
 
             {/* Expo */}
-            <StaggerItem>
-              <div className="h-full flex flex-col">
-                <div 
-                  className="relative p-[3px] rounded-2xl shadow-lg flex-grow"
-                  style={{
-                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                  }}
-                  data-testid="card-expo-border"
-                >
-                  <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
-                    <div>
-                      <div 
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                        style={{ backgroundColor: "hsl(174 100% 29%)" }}
-                      >
-                        <Store className="w-7 h-7 text-white" />
-                      </div>
-                      <h3 className="font-bold text-lg sm:text-xl text-center mb-3 text-gray-900">Apply for Expo</h3>
-                      <p className="text-gray-600 text-sm sm:text-base text-center">
-                        Showcase and sell your products at Young Kerala Expo. Launch and grow your business.
-                      </p>
-                    </div>
-                    <Link href="/expo-register" className="mt-6">
-                      <div 
-                        className="relative p-[2px] rounded-md w-full"
-                        style={{
-                          background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                        }}
-                      >
-                        <Button 
-                          size="sm" 
-                          className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
-                          data-testid="button-expo-register"
-                        >
-                          Register Now
-                        </Button>
-                      </div>
-                    </Link>
+            <div 
+              className="relative p-[3px] rounded-2xl shadow-lg"
+              style={{
+                background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+              }}
+              data-testid="modal-card-expo"
+            >
+              <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
+                <div>
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    style={{ backgroundColor: "hsl(174 100% 29%)" }}
+                  >
+                    <Store className="w-8 h-8 text-white" />
                   </div>
+                  <h3 className="font-bold text-lg text-center mb-3 text-gray-900">Apply for Expo</h3>
+                  <p className="text-gray-600 text-sm text-center">
+                    Showcase and sell your products at Young Kerala Expo. Launch and grow your business.
+                  </p>
                 </div>
+                <Link href="/expo-register" className="mt-6">
+                  <div 
+                    className="relative p-[2px] rounded-md w-full"
+                    style={{
+                      background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                    }}
+                  >
+                    <Button 
+                      size="sm" 
+                      className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
+                      data-testid="modal-button-expo-register"
+                    >
+                      Register Now
+                    </Button>
+                  </div>
+                </Link>
               </div>
-            </StaggerItem>
+            </div>
 
             {/* Influencer */}
-            <StaggerItem>
-              <div className="h-full flex flex-col">
-                <div 
-                  className="relative p-[3px] rounded-2xl shadow-lg flex-grow"
-                  style={{
-                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                  }}
-                  data-testid="card-influencer-border"
-                >
-                  <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
-                    <div>
-                      <div 
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                        style={{ backgroundColor: "hsl(45 100% 50%)" }}
-                      >
-                        <Star className="w-7 h-7 text-white" />
-                      </div>
-                      <h3 className="font-bold text-lg sm:text-xl text-center mb-3 text-gray-900">Be an Influencer at KSF</h3>
-                      <p className="text-gray-600 text-sm sm:text-base text-center">
-                        Create content and collaborate with Kerala Startup Fest. Get an Influencer Pass with exclusive benefits.
-                      </p>
-                    </div>
-                    <Link href="/influencer-apply" className="mt-6">
-                      <div 
-                        className="relative p-[2px] rounded-md w-full"
-                        style={{
-                          background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                        }}
-                      >
-                        <Button 
-                          size="sm" 
-                          className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
-                          data-testid="button-influencer-register"
-                        >
-                          Register Now
-                        </Button>
-                      </div>
-                    </Link>
+            <div 
+              className="relative p-[3px] rounded-2xl shadow-lg"
+              style={{
+                background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+              }}
+              data-testid="modal-card-influencer"
+            >
+              <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
+                <div>
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    style={{ backgroundColor: "hsl(45 100% 50%)" }}
+                  >
+                    <Star className="w-8 h-8 text-white" />
                   </div>
+                  <h3 className="font-bold text-lg text-center mb-3 text-gray-900">Be an Influencer at KSF</h3>
+                  <p className="text-gray-600 text-sm text-center">
+                    Create content and collaborate with Kerala Startup Fest. Get an Influencer Pass with exclusive benefits.
+                  </p>
                 </div>
+                <Link href="/influencer-apply" className="mt-6">
+                  <div 
+                    className="relative p-[2px] rounded-md w-full"
+                    style={{
+                      background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                    }}
+                  >
+                    <Button 
+                      size="sm" 
+                      className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
+                      data-testid="modal-button-influencer-register"
+                    >
+                      Register Now
+                    </Button>
+                  </div>
+                </Link>
               </div>
-            </StaggerItem>
+            </div>
           </div>
-        </div>
-      </section>
+        </DialogContent>
+      </Dialog>
 
       {/* Organisers Section */}
       <section className="py-20 bg-background" ref={partnersRef}>
