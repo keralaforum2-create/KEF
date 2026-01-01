@@ -2259,7 +2259,7 @@ export default function Participate() {
                                     >
                                       <div className="flex justify-between items-center">
                                         <span className="font-medium">Silver Ticket</span>
-                                        <span className="font-bold text-gray-600">Rs 199/student</span>
+                                        <span className="font-bold text-gray-600">Rs 249/student</span>
                                       </div>
                                     </div>
                                     <div
@@ -2277,17 +2277,22 @@ export default function Participate() {
                                       </div>
                                     </div>
                                     <div
-                                      onClick={() => setBulkFormData({...bulkFormData, ticketCategory: "platinum"})}
-                                      className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
-                                        bulkFormData.ticketCategory === "platinum"
-                                          ? "border-teal-500 bg-teal-50 dark:bg-teal-950/30"
-                                          : "border-gray-200 dark:border-gray-700 hover:border-teal-300"
-                                      }`}
+                                      onClick={() => {
+                                        toast({
+                                          title: "Registration Closed",
+                                          description: "Platinum ticket registrations are currently closed.",
+                                          variant: "destructive"
+                                        });
+                                      }}
+                                      className={`relative rounded-lg border-2 p-4 transition-all opacity-75 grayscale-[0.5] border-gray-200 dark:border-gray-700`}
                                       data-testid="card-bulk-ticket-platinum"
                                     >
+                                      <div className="absolute top-0 right-0 bg-destructive text-destructive-foreground px-2 py-0.5 text-[8px] font-bold rounded-bl-lg rounded-tr-lg z-10">
+                                        CLOSED
+                                      </div>
                                       <div className="flex justify-between items-center">
                                         <span className="font-medium">Platinum Ticket</span>
-                                        <span className="font-bold text-teal-600">Rs 1299/student</span>
+                                        <span className="font-bold text-teal-600">Rs 1999/student</span>
                                       </div>
                                     </div>
                                   </div>
@@ -4278,7 +4283,7 @@ export default function Participate() {
                                     return count === 0 ? 1 : count;
                                   })()}
                                 </span></span>
-                                <span className="text-muted-foreground">× ₹199 = <span className="text-teal-600 font-bold text-lg">₹{getPaymentAmount()}/-</span></span>
+                                <span className="text-muted-foreground">× ₹249 = <span className="text-teal-600 font-bold text-lg">₹{getPaymentAmount()}/-</span></span>
                               </div>
                               <p className="text-xs text-muted-foreground">
                                 {(() => {
@@ -4295,10 +4300,10 @@ export default function Participate() {
                               {isBusinessQuiz 
                                 ? "Pay ₹199/-"
                                 : ticketCategory === "platinum" 
-                                  ? "Pay ₹1499/-"
+                                  ? "Pay ₹1999/-"
                                   : ticketCategory === "gold"
                                     ? "Pay ₹599/-"
-                                    : "Pay ₹199/-"
+                                    : "Pay ₹249/-"
                               }
                             </p>
                           )}
