@@ -144,15 +144,15 @@ export default function Home() {
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-4">
                     <Link href="/speakers">
                       <div 
-                        className="relative p-[3px] rounded-md min-w-[200px] shadow-xl"
+                        className="relative p-[2px] rounded-md min-w-[140px] shadow-lg"
                         style={{
                           background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
                         }}
                         data-testid="button-speakers-border"
                       >
                         <Button 
-                          size="lg" 
-                          className="font-bold text-base px-10 py-6 bg-white text-gray-800 w-full text-lg border-0 rounded-[4px]" 
+                          size="sm" 
+                          className="font-bold text-sm px-6 py-2 bg-white text-gray-800 w-full border-0 rounded-[3px]" 
                           data-testid="button-speakers"
                         >
                           Our Speakers
@@ -161,15 +161,15 @@ export default function Home() {
                     </Link>
                     <div 
                       onClick={() => setShowQuickLinksModal(true)}
-                      className="relative p-[3px] rounded-md min-w-[200px] shadow-xl bg-transparent border-0 cursor-pointer"
+                      className="relative p-[2px] rounded-md min-w-[140px] shadow-lg bg-transparent border-0 cursor-pointer"
                       style={{
                         background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
                       }}
                       data-testid="button-quicklinks-border"
                     >
                       <Button 
-                        size="lg" 
-                        className="font-bold text-base px-10 py-6 bg-white text-gray-800 w-full text-lg border-0 rounded-[4px]" 
+                        size="sm" 
+                        className="font-bold text-sm px-6 py-2 bg-white text-gray-800 w-full border-0 rounded-[3px]" 
                         data-testid="button-quicklinks"
                         onClick={() => setShowQuickLinksModal(true)}
                       >
@@ -178,7 +178,7 @@ export default function Home() {
                     </div>
                     <Link href="/faq">
                       <div 
-                        className="relative p-[3px] rounded-md shadow-xl w-fit"
+                        className="relative p-[2px] rounded-md shadow-lg w-fit"
                         style={{
                           background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
                         }}
@@ -186,7 +186,7 @@ export default function Home() {
                       >
                         <Button 
                           size="sm" 
-                          className="font-bold text-sm px-6 py-3 bg-white text-gray-800 border-0 rounded-[4px]" 
+                          className="font-bold text-sm px-6 py-2 bg-white text-gray-800 border-0 rounded-[3px]" 
                           data-testid="button-faq-hero"
                         >
                           FAQ
