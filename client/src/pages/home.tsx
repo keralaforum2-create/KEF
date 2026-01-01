@@ -941,7 +941,7 @@ export default function Home() {
               animate={partnersInView ? { opacity: 1 } : {}}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              in association with
+              Venue
             </motion.div>
 
             <motion.div 
@@ -951,15 +951,11 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.4 }}
               whileHover={{ scale: 1.05 }}
             >
-              <div className="mb-6 flex items-center justify-center h-24 sm:h-32">
-                <img 
-                  src={caliphLifeSchoolLogo} 
-                  alt="Caliph Life School" 
-                  className="h-full w-auto object-contain"
-                  data-testid="img-caliph-logo"
-                />
+              <div className="text-center p-6 rounded-xl bg-white border border-gray-100 shadow-sm w-full max-w-md">
+                <MapPin className="w-12 h-12 text-teal-600 mx-auto mb-4" />
+                <h3 className="font-bold text-xl sm:text-2xl text-gray-800 mb-2">Venture Arcade</h3>
+                <p className="text-gray-600">Mavoor Rd, above Croma, Thondayad, Kozhikode, Kerala</p>
               </div>
-              <h3 className="font-bold text-xl sm:text-2xl text-gray-800">Caliph Life School</h3>
             </motion.div>
           </div>
         </div>

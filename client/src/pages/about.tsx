@@ -10,7 +10,8 @@ import {
   Sparkles,
   GraduationCap,
   Briefcase,
-  ArrowRight
+  ArrowRight,
+  MapPin
 } from "lucide-react";
 import {
   ScrollFadeUp,
