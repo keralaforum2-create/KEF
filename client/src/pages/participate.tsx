@@ -2292,7 +2292,7 @@ export default function Participate() {
                                       </div>
                                       <div className="flex justify-between items-center">
                                         <span className="font-medium">Platinum Ticket</span>
-                                        <span className="font-bold text-teal-600">Rs 1999/student</span>
+                                        <span className="font-bold text-teal-600">Rs 2499/student</span>
                                       </div>
                                     </div>
                                   </div>
@@ -4240,7 +4240,7 @@ export default function Participate() {
                                           <span className="text-[10px] text-muted-foreground line-through">Price: Rs 1499/-</span>
                                           <span className="text-sm text-muted-foreground">Price:</span>
                                         </div>
-                                        <span className="font-bold text-xl text-teal-600">Rs 1999/-</span>
+                                        <span className="font-bold text-xl text-teal-600">Rs 2499/-</span>
                                       </div>
                                     </div>
                                   </div>
@@ -4300,7 +4300,7 @@ export default function Participate() {
                               {isBusinessQuiz 
                                 ? "Pay ₹199/-"
                                 : ticketCategory === "platinum" 
-                                  ? "Pay ₹1999/-"
+                                  ? "Pay ₹2499/-"
                                   : ticketCategory === "gold"
                                     ? "Pay ₹599/-"
                                     : "Pay ₹249/-"
