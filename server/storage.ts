@@ -272,16 +272,14 @@ export class DatabaseStorage implements IStorage {
   async getPaidRegistrations(): Promise<Registration[]> {
     const result = await db.select().from(registrations)
       .where(sql`${registrations.paymentStatus} IN ('paid', 'approved')`)
-      .orderBy(desc(registrations.createdAt))
-      .limit(1000);
+      .orderBy(desc(registrations.createdAt));
     return result;
   }
 
   async getPendingRegistrations(): Promise<Registration[]> {
     const result = await db.select().from(registrations)
       .where(sql`${registrations.paymentStatus} IS NULL OR (${registrations.paymentStatus} != 'paid' AND ${registrations.paymentStatus} != 'approved')`)
-      .orderBy(desc(registrations.createdAt))
-      .limit(500);
+      .orderBy(desc(registrations.createdAt));
     return result;
   }
 
