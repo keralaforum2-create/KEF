@@ -270,17 +270,40 @@ export default function About() {
             </motion.div>
 
             <div className="text-muted-foreground font-medium uppercase tracking-widest text-sm">
-              Venue
+              in association with
             </div>
 
             <motion.div 
               className="flex flex-col items-center text-center"
               whileHover={{ scale: 1.05 }}
             >
-              <div className="text-center p-6 rounded-xl bg-background border border-border shadow-sm">
+              <div className="mb-6 flex items-center justify-center h-32">
+                <img src={califphLifeSchoolLogo} alt="Caliph Life School" className="h-full w-auto object-contain" />
+              </div>
+              <h3 className="font-semibold text-xl">Caliph Life School</h3>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollFadeUp>
+            <h2 className="text-4xl sm:text-6xl font-bold text-center mb-12" style={{ fontFamily: "'Big Shoulders Display', sans-serif" }}>
+              VENUE
+            </h2>
+          </ScrollFadeUp>
+          
+          <div className="max-w-4xl mx-auto">
+            <motion.div 
+              className="flex flex-col items-center text-center"
+              whileHover={{ scale: 1.05 }}
+            >
+              <div className="text-center p-8 rounded-2xl bg-background border border-border shadow-md w-full">
                 <MapPin className="w-12 h-12 text-primary mx-auto mb-4" />
-                <h3 className="font-semibold text-xl mb-2">Venture Arcade</h3>
-                <p className="text-muted-foreground">Mavoor Rd, above Croma, Thondayad, Kozhikode, Kerala</p>
+                <h3 className="font-semibold text-2xl mb-2">Venture Arcade</h3>
+                <p className="text-muted-foreground text-lg italic mb-2">Mavoor Rd, above Croma, Thondayad, Kozhikode, Kerala</p>
+                <p className="text-muted-foreground">Join us at the heart of Kozhikode's startup ecosystem.</p>
               </div>
             </motion.div>
           </div>
