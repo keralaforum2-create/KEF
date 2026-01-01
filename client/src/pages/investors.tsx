@@ -4,8 +4,56 @@ import { motion } from "framer-motion";
 import { TrendingUp, ArrowRight, CheckCircle2 } from "lucide-react";
 import { ScrollFadeUp, ScrollFadeLeft, ScrollFadeRight } from "@/lib/animations";
 import investorImage from "@assets/Building Strong Relationships for Business Growth with a B2B PR_1764503880578.jpg";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger 
+} from "@/components/ui/dialog";
+import { 
+  Form, 
+  FormControl, 
+  FormField, 
+  FormItem, 
+  FormLabel, 
+  FormMessage 
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { insertInvestorApplicationSchema, type InsertInvestorApplication } from "@shared/schema";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 export default function Investors() {
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const form = useForm<InsertInvestorApplication>({
+    resolver: zodResolver(insertInvestorApplicationSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      phone: "",
+      bio: "",
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: (data: InsertInvestorApplication) => apiRequest("POST", "/api/investor-applications", data),
+    onSuccess: () => {
+      toast({ title: "Application Submitted", description: "Thank you for your interest. We'll get back to you soon." });
+      form.reset();
+      setOpen(false);
+    },
+    onError: (error: Error) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    },
+  });
+
   return (
     <div className="min-h-screen pt-20 bg-gradient-to-br from-blue-50 via-cyan-100/50 to-teal-50 dark:from-blue-950/30 dark:via-cyan-900/20 dark:to-teal-950/30">
       <section className="py-16 sm:py-20">
@@ -61,14 +109,89 @@ export default function Investors() {
                     </motion.li>
                   ))}
                 </ul>
-                <Link href="/contact">
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-                    <Button className="font-semibold" data-testid="button-apply-investor">
-                      Apply as Investor
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </motion.div>
-                </Link>
+
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogTrigger asChild>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                      <Button className="font-semibold" data-testid="button-apply-investor">
+                        Apply as Investor
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </motion.div>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                      <DialogTitle>Apply as Investor</DialogTitle>
+                    </DialogHeader>
+                    <Form {...form}>
+                      <form onSubmit={form.handleSubmit((data) => mutation.mutate(data))} className="space-y-4">
+                        <FormField
+                          control={form.control}
+                          name="fullName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Full Name</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Enter your full name" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                                <Input type="email" placeholder="Enter your email" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Phone Number</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Enter your phone number" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="bio"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>About You / Your Firm</FormLabel>
+                              <FormControl>
+                                <Textarea 
+                                  placeholder="Briefly describe your investment focus or firm" 
+                                  className="min-h-[100px]"
+                                  {...field} 
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <Button 
+                          type="submit" 
+                          className="w-full" 
+                          disabled={mutation.isPending}
+                        >
+                          {mutation.isPending ? "Submitting..." : "Submit Application"}
+                        </Button>
+                      </form>
+                    </Form>
+                  </DialogContent>
+                </Dialog>
               </div>
             </ScrollFadeLeft>
             <ScrollFadeRight>

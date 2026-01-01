@@ -28,7 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration, ReferralCode, SpeakerApplication, ExpoRegistration, InfluencerApplication } from "@shared/schema";
+import type { Registration, Contact, InvestorMentor, Sponsorship, BulkRegistration, ReferralCode, SpeakerApplication, ExpoRegistration, InfluencerApplication, InvestorApplication } from "@shared/schema";
 import { ScrollFadeUp, StaggerContainer, StaggerItem, CardWave } from "@/lib/animations";
 
 export default function Admin() {
@@ -42,6 +42,7 @@ export default function Admin() {
   const [selectedSpeakerApp, setSelectedSpeakerApp] = useState<SpeakerApplication | null>(null);
   const [selectedExpoReg, setSelectedExpoReg] = useState<ExpoRegistration | null>(null);
   const [selectedInfluencer, setSelectedInfluencer] = useState<InfluencerApplication | null>(null);
+  const [selectedInvestorApp, setSelectedInvestorApp] = useState<InvestorApplication | null>(null);
   const [expertCategoryFilter, setExpertCategoryFilter] = useState<"all" | "platinum" | "gold" | "silver">("all");
   const [contestTypeFilter, setContestTypeFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -179,6 +180,22 @@ export default function Admin() {
         credentials: "include"
       });
       if (!response.ok) throw new Error("Failed to fetch influencer applications");
+      return response.json();
+    }
+  });
+
+  const { data: investorApplications, isLoading: loadingInvestorApplications } = useQuery<InvestorApplication[]>({
+    queryKey: ["/api/admin/investor-applications"],
+    refetchInterval: 5000,
+    staleTime: 2000,
+    queryFn: async () => {
+      const token = localStorage.getItem("admin_token");
+      if (!token) throw new Error("No authentication token");
+      const response = await fetch("/api/admin/investor-applications", {
+        headers: { "Authorization": `Bearer ${token}` },
+        credentials: "include"
+      });
+      if (!response.ok) throw new Error("Failed to fetch investor applications");
       return response.json();
     }
   });
@@ -339,6 +356,32 @@ export default function Admin() {
       console.error("Delete error:", error);
       toast({ 
         title: "Failed to delete influencer application", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    },
+  });
+
+  const deleteInvestorApplicationMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch(`/api/admin/investor-applications/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to delete investor application");
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/investor-applications"] });
+      toast({ title: "Investor application deleted successfully" });
+    },
+    onError: (error: any) => {
+      console.error("Delete error:", error);
+      toast({ 
+        title: "Failed to delete investor application", 
         description: error.message,
         variant: "destructive" 
       });
@@ -727,7 +770,13 @@ export default function Admin() {
     return `"${escaped}"`;
   };
 
-  const exportToCSV = (data: Registration[], filename: string) => {
+  const filteredInvestorApplications = investorApplications?.filter(app => 
+    app.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    app.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    app.bio.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
+
+  const exportToCSV = (data: any[], filename: string) => {
     const headers = ["Registration ID", "Name", "Email", "Phone", "Ticket Category", "Registration Type", "Contest/Session", "Institution", "Created At"];
     const csvRows = [
       headers.map(h => escapeCSVField(h)).join(","),
@@ -836,7 +885,7 @@ export default function Admin() {
 
           <ScrollFadeUp delay={0.3}>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="mb-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-1 h-auto">
+              <TabsList className="mb-6 flex flex-wrap gap-1 h-auto">
                 <TabsTrigger value="registrations" data-testid="tab-registrations">
                   All ({allRegistrations.length})
                 </TabsTrigger>
@@ -863,6 +912,9 @@ export default function Admin() {
                 </TabsTrigger>
                 <TabsTrigger value="referral-usage" data-testid="tab-referral-usage">
                   Usage
+                </TabsTrigger>
+                <TabsTrigger value="investor-applications" data-testid="tab-investors">
+                  Investors ({investorApplications?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger value="expo-registrations" data-testid="tab-expo-registrations">
                   Expo ({expoRegistrations?.length || 0})
@@ -1767,103 +1819,86 @@ export default function Admin() {
                 </motion.div>
               </TabsContent>
 
-              <TabsContent value="investors">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Briefcase className="w-5 h-5" />
-                        Investor & Mentor Applications
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {loadingInvestors ? (
-                        <div className="text-center py-8 text-muted-foreground">
-                          Loading applications...
-                        </div>
-                      ) : filteredInvestorMentors.length > 0 ? (
-                        <div className="overflow-x-auto">
-                          <div className="mb-4 flex flex-col gap-3">
-                            <Input
-                              placeholder="Search by name or company..."
-                              value={searchQuery}
-                              onChange={(e) => setSearchQuery(e.target.value)}
-                              data-testid="input-search-investors"
-                            />
-                          </div>
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead>Name</TableHead>
-                                <TableHead>Type</TableHead>
-                                <TableHead>Company</TableHead>
-                                <TableHead>Action</TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {filteredInvestorMentors.map((investor, index) => (
-                                <motion.tr
-                                  key={investor.id}
-                                  initial={{ opacity: 0, x: -10 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ delay: index * 0.03 }}
-                                  className="border-b transition-colors hover:bg-muted/50"
-                                  data-testid={`row-investor-${investor.id}`}
-                                >
-                                  <TableCell className="font-medium">{investor.name}</TableCell>
-                                  <TableCell>
-                                    <Badge className={investor.type === "investor" ? "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300" : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"}>
-                                      {investor.type.charAt(0).toUpperCase() + investor.type.slice(1)}
-                                    </Badge>
-                                  </TableCell>
-                                  <TableCell>{investor.companyName || "-"}</TableCell>
-                                  <TableCell>
-                                    <div className="flex items-center gap-2">
-                                      <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => setSelectedInvestor(investor)}
-                                        data-testid={`button-view-investor-${investor.id}`}
-                                      >
-                                        <Eye className="w-4 h-4 mr-1" />
-                                        View
-                                      </Button>
-                                      <Button
-                                        variant="destructive"
-                                        size="sm"
-                                        onClick={() => {
-                                          if (confirm("Are you sure you want to delete this application?")) {
-                                            deleteInvestorMutation.mutate(investor.id);
-                                          }
-                                        }}
-                                        disabled={deleteInvestorMutation.isPending}
-                                        data-testid={`button-delete-investor-${investor.id}`}
-                                      >
-                                        <Trash2 className="w-4 h-4" />
-                                      </Button>
-                                    </div>
-                                  </TableCell>
-                                </motion.tr>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </div>
+          <TabsContent value="investors">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between gap-1 space-y-0 pb-2">
+                <CardTitle className="text-xl font-bold">Investor Applications</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="rounded-md border">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Phone</TableHead>
+                        <TableHead>Bio/Firm</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {loadingInvestorApplications ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center py-8">Loading...</TableCell>
+                        </TableRow>
+                      ) : investorApplications?.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center py-8">No investor applications found.</TableCell>
+                        </TableRow>
                       ) : (
-                        <div className="text-center py-12">
-                          <Briefcase className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-                          <p className="text-muted-foreground">No applications yet</p>
-                        </div>
+                        investorApplications?.map((app) => (
+                          <TableRow key={app.id}>
+                            <TableCell className="whitespace-nowrap">
+                              {new Date(app.createdAt).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell className="font-medium">{app.fullName}</TableCell>
+                            <TableCell>{app.email}</TableCell>
+                            <TableCell>{app.phone}</TableCell>
+                            <TableCell className="max-w-xs truncate">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => setSelectedInvestorApp(app)}
+                                className="h-auto p-0 text-left font-normal"
+                              >
+                                {app.bio}
+                              </Button>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-2">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => setSelectedInvestorApp(app)}
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="text-destructive"
+                                  onClick={() => {
+                                    if (confirm("Are you sure you want to delete this application?")) {
+                                      deleteInvestorApplicationMutation.mutate(app.id);
+                                    }
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))
                       )}
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </TabsContent>
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-              <TabsContent value="sponsorships">
+          <TabsContent value="sponsorships">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -2630,6 +2665,216 @@ export default function Admin() {
                         </div>
                       ) : (
                         <p className="text-muted-foreground">No startup clinic registrations yet</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="investor-applications">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <Handshake className="w-5 h-5" />
+                          Investor Applications
+                        </div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => exportToCSV(filteredInvestorApplications, "KSF2026-Investor-Applications")}
+                            disabled={filteredInvestorApplications.length === 0}
+                            data-testid="button-export-csv-investors"
+                          >
+                            <FileSpreadsheet className="w-4 h-4 mr-1" />
+                            Export CSV
+                          </Button>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingInvestorApplications ? (
+                        <div className="text-center py-8 text-muted-foreground">Loading...</div>
+                      ) : investorApplications && investorApplications.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <div className="mb-4 flex flex-col gap-3">
+                            <Input
+                              placeholder="Search by name, email, or bio..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              data-testid="input-search-investors"
+                            />
+                          </div>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Phone</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {filteredInvestorApplications.map((app, index) => (
+                                <motion.tr
+                                  key={app.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.03 }}
+                                  className="border-b transition-colors hover:bg-muted/50"
+                                >
+                                  <TableCell className="font-medium">{app.fullName}</TableCell>
+                                  <TableCell>{app.email}</TableCell>
+                                  <TableCell>{app.phone}</TableCell>
+                                  <TableCell>{app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "-"}</TableCell>
+                                  <TableCell>
+                                    <div className="flex items-center gap-2">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedInvestorApp(app)}
+                                        data-testid={`button-view-investor-${app.id}`}
+                                      >
+                                        <Eye className="w-4 h-4 mr-1" />
+                                        View
+                                      </Button>
+                                      <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => {
+                                          if (confirm("Are you sure you want to delete this application?")) {
+                                            deleteInvestorApplicationMutation.mutate(app.id);
+                                          }
+                                        }}
+                                        disabled={deleteInvestorApplicationMutation.isPending}
+                                        data-testid={`button-delete-investor-${app.id}`}
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    </div>
+                                  </TableCell>
+                                </motion.tr>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <div className="text-center py-12">
+                          <Handshake className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+                          <p className="text-muted-foreground">No applications yet</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="investor-applications">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <Handshake className="w-5 h-5" />
+                          Investor Applications
+                        </div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => exportToCSV(filteredInvestorApplications, "KSF2026-Investor-Applications")}
+                            disabled={filteredInvestorApplications.length === 0}
+                            data-testid="button-export-csv-investors"
+                          >
+                            <FileSpreadsheet className="w-4 h-4 mr-1" />
+                            Export CSV
+                          </Button>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {loadingInvestorApplications ? (
+                        <div className="text-center py-8 text-muted-foreground">Loading...</div>
+                      ) : investorApplications && investorApplications.length > 0 ? (
+                        <div className="overflow-x-auto">
+                          <div className="mb-4 flex flex-col gap-3">
+                            <Input
+                              placeholder="Search by name, email, or bio..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              data-testid="input-search-investors"
+                            />
+                          </div>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Phone</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Action</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {filteredInvestorApplications.map((app, index) => (
+                                <motion.tr
+                                  key={app.id}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.03 }}
+                                  className="border-b transition-colors hover:bg-muted/50"
+                                >
+                                  <TableCell className="font-medium">{app.fullName}</TableCell>
+                                  <TableCell>{app.email}</TableCell>
+                                  <TableCell>{app.phone}</TableCell>
+                                  <TableCell>{app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "-"}</TableCell>
+                                  <TableCell>
+                                    <div className="flex items-center gap-2">
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedInvestorApp(app)}
+                                        data-testid={`button-view-investor-${app.id}`}
+                                      >
+                                        <Eye className="w-4 h-4 mr-1" />
+                                        View
+                                      </Button>
+                                      <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => {
+                                          if (confirm("Are you sure you want to delete this application?")) {
+                                            deleteInvestorApplicationMutation.mutate(app.id);
+                                          }
+                                        }}
+                                        disabled={deleteInvestorApplicationMutation.isPending}
+                                        data-testid={`button-delete-investor-${app.id}`}
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </Button>
+                                    </div>
+                                  </TableCell>
+                                </motion.tr>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      ) : (
+                        <div className="text-center py-12">
+                          <Handshake className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+                          <p className="text-muted-foreground">No applications yet</p>
+                        </div>
                       )}
                     </CardContent>
                   </Card>

@@ -734,19 +734,59 @@ export default function Home() {
       </section>
 
       {/* Quick Links Modal */}
-      <Dialog open={showQuickLinksModal} onOpenChange={setShowQuickLinksModal}>
-        <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-y-auto p-8 sm:p-12">
-          <div className="text-center mb-8">
-            <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">QUICK LINKS</h2>
-            <p className="text-lg text-gray-600">
-              Get involved in Kerala Startup Fest in multiple ways. Choose your opportunity below.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Podcast Speaker */}
-            <div 
-              className="relative p-[3px] rounded-2xl shadow-lg"
+          <Dialog open={showQuickLinksModal} onOpenChange={setShowQuickLinksModal}>
+            <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-y-auto p-8 sm:p-12">
+              <div className="text-center mb-8">
+                <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">QUICK LINKS</h2>
+                <p className="text-lg text-gray-600">
+                  Get involved in Kerala Startup Fest in multiple ways. Choose your opportunity below.
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                {/* Register for Expert Session */}
+                <div 
+                  className="relative p-[3px] rounded-2xl shadow-lg"
+                  style={{
+                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                  }}
+                  data-testid="modal-card-expert-session"
+                >
+                  <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
+                    <div>
+                      <div 
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                        style={{ backgroundColor: "hsl(200 100% 50%)" }}
+                      >
+                        <Users className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="font-bold text-lg text-center mb-3 text-gray-900">Register for Expert Session</h3>
+                      <p className="text-gray-600 text-sm text-center">
+                        Join exclusive sessions with industry veterans and gain valuable insights.
+                      </p>
+                    </div>
+                    <Link href="/participate#register" className="mt-6">
+                      <div 
+                        className="relative p-[2px] rounded-md w-full"
+                        style={{
+                          background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                        }}
+                      >
+                        <Button 
+                          size="sm" 
+                          className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
+                          data-testid="modal-button-expert-register"
+                        >
+                          Register Now
+                        </Button>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Podcast Speaker */}
+                <div 
+                  className="relative p-[3px] rounded-2xl shadow-lg"
               style={{
                 background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
               }}

@@ -23,6 +23,8 @@ import {
   type InsertStartupClinic,
   type InfluencerApplication,
   type InsertInfluencerApplication,
+  type InvestorApplication,
+  type InsertInvestorApplication,
   users,
   contactSubmissions,
   registrations,
@@ -35,6 +37,7 @@ import {
   expoRegistrations,
   startupClinicRegistrations,
   influencerApplications,
+  investorApplications,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, sql } from "drizzle-orm";
@@ -103,6 +106,10 @@ export interface IStorage {
   createInfluencerApplication(application: InsertInfluencerApplication): Promise<InfluencerApplication>;
   getInfluencerApplications(): Promise<InfluencerApplication[]>;
   deleteInfluencerApplication(id: string): Promise<void>;
+
+  createInvestorApplication(application: InsertInvestorApplication): Promise<InvestorApplication>;
+  getInvestorApplications(): Promise<InvestorApplication[]>;
+  deleteInvestorApplication(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -580,6 +587,20 @@ export class DatabaseStorage implements IStorage {
 
   async deleteInfluencerApplication(id: string): Promise<void> {
     await db.delete(influencerApplications).where(eq(influencerApplications.id, id));
+  }
+
+  async createInvestorApplication(insertData: InsertInvestorApplication): Promise<InvestorApplication> {
+    const id = randomUUID();
+    const result = await db.insert(investorApplications).values({ ...insertData, id }).returning();
+    return result[0];
+  }
+
+  async getInvestorApplications(): Promise<InvestorApplication[]> {
+    return await db.select().from(investorApplications).orderBy(desc(investorApplications.createdAt));
+  }
+
+  async deleteInvestorApplication(id: string): Promise<void> {
+    await db.delete(investorApplications).where(eq(investorApplications.id, id));
   }
 }
 

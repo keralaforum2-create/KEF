@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
-import { registrations, insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema, insertBulkRegistrationSchema, insertReferralCodeSchema, insertExpoRegistrationSchema, insertStartupClinicSchema, insertInfluencerApplicationSchema } from "@shared/schema";
+import { registrations, insertContactSchema, insertRegistrationSchema, insertInvestorMentorSchema, insertSponsorshipSchema, insertBulkRegistrationSchema, insertReferralCodeSchema, insertExpoRegistrationSchema, insertStartupClinicSchema, insertInfluencerApplicationSchema, insertInvestorApplicationSchema } from "@shared/schema";
 import { fromError } from "zod-validation-error";
 import multer from "multer";
 import path from "path";
@@ -533,6 +533,51 @@ export async function registerRoutes(
       }
     } catch (error) {
       console.error("Error verifying ticket:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Investor Applications
+  app.post("/api/investor-applications", async (req, res) => {
+    try {
+      const result = insertInvestorApplicationSchema.safeParse(req.body);
+      if (!result.success) {
+        return res.status(400).json({ message: fromError(result.error).toString() });
+      }
+      const application = await storage.createInvestorApplication(result.data);
+      return res.status(201).json(application);
+    } catch (error) {
+      console.error("Error creating investor application:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/admin/investor-applications", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization || "";
+      const token = authHeader.replace("Bearer ", "").trim();
+      if (token !== "admin-authenticated" && token !== ADMIN_PASSWORD) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const applications = await storage.getInvestorApplications();
+      return res.json(applications);
+    } catch (error) {
+      console.error("Error fetching investor applications:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/admin/investor-applications/:id", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization || "";
+      const token = authHeader.replace("Bearer ", "").trim();
+      if (token !== "admin-authenticated" && token !== ADMIN_PASSWORD) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      await storage.deleteInvestorApplication(req.params.id);
+      return res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting investor application:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   });
