@@ -449,7 +449,7 @@ export default function Participate() {
     
     let baseAmount = 199;
     if (isBusinessQuiz) baseAmount = 199;
-    else if (ticketCategory === "platinum") baseAmount = 1499;
+    else if (ticketCategory === "platinum") baseAmount = 1999;
     else if (ticketCategory === "gold") baseAmount = 599;
     else baseAmount = 199; // silver
     
@@ -478,7 +478,7 @@ export default function Participate() {
 
   // Get bulk registration price per student
   const getBulkPricePerStudent = () => {
-    if (bulkFormData.ticketCategory === "platinum") return 1499;
+    if (bulkFormData.ticketCategory === "platinum") return 1999;
     if (bulkFormData.ticketCategory === "gold") return 599;
     return 199; // silver
   };
@@ -4177,19 +4177,19 @@ export default function Participate() {
 
                                     {/* Platinum Ticket Card */}
                                     <div
-                                      onClick={() => field.onChange("platinum")}
-                                      className={`relative cursor-pointer rounded-xl border-2 p-5 transition-all ${
-                                        field.value === "platinum"
-                                          ? "border-teal-500 bg-teal-50 dark:bg-teal-950/30 shadow-lg"
-                                          : "border-gray-200 dark:border-gray-700 hover:border-teal-300"
-                                      }`}
+                                      onClick={() => {
+                                        toast({
+                                          title: "Registration Closed",
+                                          description: "Platinum ticket registrations are currently closed.",
+                                          variant: "destructive"
+                                        });
+                                      }}
+                                      className={`relative rounded-xl border-2 p-5 transition-all opacity-75 grayscale-[0.5] border-gray-200 dark:border-gray-700`}
                                       data-testid="card-ticket-platinum"
                                     >
-                                      {field.value === "platinum" && (
-                                        <div className="absolute top-3 right-3">
-                                          <CheckCircle className="w-6 h-6 text-teal-500" />
-                                        </div>
-                                      )}
+                                      <div className="absolute top-0 right-0 bg-destructive text-destructive-foreground px-3 py-1 text-[10px] font-bold rounded-bl-lg rounded-tr-lg z-10">
+                                        CLOSED
+                                      </div>
                                       <div className="flex items-center gap-2 mb-4">
                                         <div className="w-3 h-3 rounded-full bg-teal-500" />
                                         <h4 className="font-bold text-lg">Platinum Ticket</h4>
@@ -4231,8 +4231,11 @@ export default function Participate() {
                                       </ul>
                                       
                                       <div className="border-t pt-4 flex items-center justify-between">
-                                        <span className="text-sm text-muted-foreground">Price:</span>
-                                        <span className="font-bold text-xl text-teal-600">Rs 1499/-</span>
+                                        <div className="flex flex-col">
+                                          <span className="text-[10px] text-muted-foreground line-through">Price: Rs 1499/-</span>
+                                          <span className="text-sm text-muted-foreground">Price:</span>
+                                        </div>
+                                        <span className="font-bold text-xl text-teal-600">Rs 1999/-</span>
                                       </div>
                                     </div>
                                   </div>
