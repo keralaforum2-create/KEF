@@ -734,212 +734,167 @@ export default function Home() {
       </section>
 
       {/* Quick Links Modal */}
-          <Dialog open={showQuickLinksModal} onOpenChange={setShowQuickLinksModal}>
-            <DialogContent className="max-w-5xl w-full max-h-[90vh] overflow-y-auto p-8 sm:p-12">
-              <div className="text-center mb-8">
-                <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">QUICK LINKS</h2>
-                <p className="text-lg text-gray-600">
-                  Get involved in Kerala Startup Fest in multiple ways. Choose your opportunity below.
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-                {/* Register for Expert Session */}
-                <div 
-                  className="relative p-[3px] rounded-2xl shadow-lg"
-                  style={{
-                    background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                  }}
-                  data-testid="modal-card-expert-session"
-                >
-                  <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
-                    <div>
-                      <div 
-                        className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
-                        style={{ backgroundColor: "hsl(200 100% 50%)" }}
-                      >
-                        <Users className="w-8 h-8 text-white" />
-                      </div>
-                      <h3 className="font-bold text-lg text-center mb-3 text-gray-900">Register for Expert Session</h3>
-                      <p className="text-gray-600 text-sm text-center">
-                        Join exclusive sessions with industry veterans and gain valuable insights.
-                      </p>
-                    </div>
-                    <Link href="/participate#register" className="mt-6">
-                      <div 
-                        className="relative p-[2px] rounded-md w-full"
-                        style={{
-                          background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                        }}
-                      >
-                        <Button 
-                          size="sm" 
-                          className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
-                          data-testid="modal-button-expert-register"
-                        >
-                          Register Now
-                        </Button>
-                      </div>
-                    </Link>
+      <Dialog open={showQuickLinksModal} onOpenChange={setShowQuickLinksModal}>
+        <DialogContent className="max-w-4xl w-full p-6">
+          <div className="text-center mb-6">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">QUICK LINKS</h2>
+            <p className="text-sm text-gray-600">
+              Choose your opportunity below.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+            {/* Register for Expert Session */}
+            <div 
+              className="relative p-[2px] rounded-xl shadow-sm"
+              style={{
+                background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+              }}
+              data-testid="modal-card-expert-session"
+            >
+              <div className="bg-white rounded-[10px] p-3 h-full flex flex-col justify-between">
+                <div>
+                  <div 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-2" 
+                    style={{ backgroundColor: "hsl(200 100% 50%)" }}
+                  >
+                    <Users className="w-5 h-5 text-white" />
                   </div>
+                  <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Expert Session</h3>
                 </div>
+                <Link href="/participate#register" className="mt-2">
+                  <Button 
+                    size="sm" 
+                    className="h-7 text-[10px] font-bold px-2 py-0 bg-primary text-white border-0 rounded-md w-full" 
+                    data-testid="modal-button-expert-register"
+                    onClick={() => setShowQuickLinksModal(false)}
+                  >
+                    Register
+                  </Button>
+                </Link>
+              </div>
+            </div>
 
-                {/* Podcast Speaker */}
-                <div 
-                  className="relative p-[3px] rounded-2xl shadow-lg"
+            {/* Podcast Speaker */}
+            <div 
+              className="relative p-[2px] rounded-xl shadow-sm"
               style={{
                 background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
               }}
               data-testid="modal-card-podcast-speaker"
             >
-              <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
+              <div className="bg-white rounded-[10px] p-3 h-full flex flex-col justify-between">
                 <div>
                   <div 
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-2" 
                     style={{ backgroundColor: "hsl(0 100% 50%)" }}
                   >
-                    <Radio className="w-8 h-8 text-white" />
+                    <Radio className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="font-bold text-lg text-center mb-3 text-gray-900">Apply as Podcast Speaker</h3>
-                  <p className="text-gray-600 text-sm text-center">
-                    Share your expertise with our audience. Connect with startup enthusiasts and industry leaders.
-                  </p>
+                  <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Podcast Speaker</h3>
                 </div>
-                <Link href="/participate#register" className="mt-6">
-                  <div 
-                    className="relative p-[2px] rounded-md w-full"
-                    style={{
-                      background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                    }}
+                <Link href="/participate#register" className="mt-2">
+                  <Button 
+                    size="sm" 
+                    className="h-7 text-[10px] font-bold px-2 py-0 bg-primary text-white border-0 rounded-md w-full" 
+                    data-testid="modal-button-podcast-register"
+                    onClick={() => setShowQuickLinksModal(false)}
                   >
-                    <Button 
-                      size="sm" 
-                      className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
-                      data-testid="modal-button-podcast-register"
-                    >
-                      Register Now
-                    </Button>
-                  </div>
+                    Register
+                  </Button>
                 </Link>
               </div>
             </div>
 
             {/* Startup Clinic */}
             <div 
-              className="relative p-[3px] rounded-2xl shadow-lg"
+              className="relative p-[2px] rounded-xl shadow-sm"
               style={{
                 background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
               }}
               data-testid="modal-card-startup-clinic"
             >
-              <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
+              <div className="bg-white rounded-[10px] p-3 h-full flex flex-col justify-between">
                 <div>
                   <div 
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-2" 
                     style={{ backgroundColor: "hsl(220 70% 50%)" }}
                   >
-                    <Briefcase className="w-8 h-8 text-white" />
+                    <Briefcase className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="font-bold text-lg text-center mb-3 text-gray-900">Apply for Startup Clinic</h3>
-                  <p className="text-gray-600 text-sm text-center">
-                    Get one-to-one consultation with startup experts. Gain clarity and direction for your journey.
-                  </p>
+                  <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Startup Clinic</h3>
                 </div>
-                <Link href="/startup-clinic" className="mt-6">
-                  <div 
-                    className="relative p-[2px] rounded-md w-full"
-                    style={{
-                      background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                    }}
+                <Link href="/startup-clinic" className="mt-2">
+                  <Button 
+                    size="sm" 
+                    className="h-7 text-[10px] font-bold px-2 py-0 bg-primary text-white border-0 rounded-md w-full" 
+                    data-testid="modal-button-clinic-register"
+                    onClick={() => setShowQuickLinksModal(false)}
                   >
-                    <Button 
-                      size="sm" 
-                      className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
-                      data-testid="modal-button-clinic-register"
-                    >
-                      Register Now
-                    </Button>
-                  </div>
+                    Register
+                  </Button>
                 </Link>
               </div>
             </div>
 
             {/* Expo */}
             <div 
-              className="relative p-[3px] rounded-2xl shadow-lg"
+              className="relative p-[2px] rounded-xl shadow-sm"
               style={{
                 background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
               }}
               data-testid="modal-card-expo"
             >
-              <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
+              <div className="bg-white rounded-[10px] p-3 h-full flex flex-col justify-between">
                 <div>
                   <div 
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-2" 
                     style={{ backgroundColor: "hsl(174 100% 29%)" }}
                   >
-                    <Store className="w-8 h-8 text-white" />
+                    <Store className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="font-bold text-lg text-center mb-3 text-gray-900">Apply for Expo</h3>
-                  <p className="text-gray-600 text-sm text-center">
-                    Showcase and sell your products at Young Kerala Expo. Launch and grow your business.
-                  </p>
+                  <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Apply for Expo</h3>
                 </div>
-                <Link href="/expo-register" className="mt-6">
-                  <div 
-                    className="relative p-[2px] rounded-md w-full"
-                    style={{
-                      background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                    }}
+                <Link href="/expo-register" className="mt-2">
+                  <Button 
+                    size="sm" 
+                    className="h-7 text-[10px] font-bold px-2 py-0 bg-primary text-white border-0 rounded-md w-full" 
+                    data-testid="modal-button-expo-register"
+                    onClick={() => setShowQuickLinksModal(false)}
                   >
-                    <Button 
-                      size="sm" 
-                      className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
-                      data-testid="modal-button-expo-register"
-                    >
-                      Register Now
-                    </Button>
-                  </div>
+                    Register
+                  </Button>
                 </Link>
               </div>
             </div>
 
             {/* Influencer */}
             <div 
-              className="relative p-[3px] rounded-2xl shadow-lg"
+              className="relative p-[2px] rounded-xl shadow-sm"
               style={{
                 background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
               }}
               data-testid="modal-card-influencer"
             >
-              <div className="bg-white rounded-[13px] p-6 sm:p-8 h-full flex flex-col justify-between">
+              <div className="bg-white rounded-[10px] p-3 h-full flex flex-col justify-between">
                 <div>
                   <div 
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-2" 
                     style={{ backgroundColor: "hsl(45 100% 50%)" }}
                   >
-                    <Star className="w-8 h-8 text-white" />
+                    <Star className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="font-bold text-lg text-center mb-3 text-gray-900">Be an Influencer at KSF</h3>
-                  <p className="text-gray-600 text-sm text-center">
-                    Create content and collaborate with Kerala Startup Fest. Get an Influencer Pass with exclusive benefits.
-                  </p>
+                  <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Influencer Pass</h3>
                 </div>
-                <Link href="/influencer-apply" className="mt-6">
-                  <div 
-                    className="relative p-[2px] rounded-md w-full"
-                    style={{
-                      background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
-                    }}
+                <Link href="/influencer-apply" className="mt-2">
+                  <Button 
+                    size="sm" 
+                    className="h-7 text-[10px] font-bold px-2 py-0 bg-primary text-white border-0 rounded-md w-full" 
+                    data-testid="modal-button-influencer-register"
+                    onClick={() => setShowQuickLinksModal(false)}
                   >
-                    <Button 
-                      size="sm" 
-                      className="font-bold text-sm px-4 py-2 bg-white text-gray-800 border-0 rounded-[4px] w-full" 
-                      data-testid="modal-button-influencer-register"
-                    >
-                      Register Now
-                    </Button>
-                  </div>
+                    Register
+                  </Button>
                 </Link>
               </div>
             </div>
