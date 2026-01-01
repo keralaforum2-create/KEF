@@ -117,7 +117,7 @@ export default function Refund() {
                   <ul className="text-muted-foreground list-disc pl-6">
                     <li>Email: keralastartupfest@gmail.com</li>
                     <li>Phone: +91 9072344431</li>
-                    <li>Address: Caliph Life School, Thammaressery, Kozhikode, Kerala, India</li>
+                    <li>Address: Kerala Economic Forum , Venture Arcade, Mavoor Rd, above Croma, Thondayad, Kozhikode, Kerala</li>
                   </ul>
                 </section>
               </div>

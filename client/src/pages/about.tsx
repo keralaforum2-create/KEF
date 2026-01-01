@@ -269,17 +269,18 @@ export default function About() {
             </motion.div>
 
             <div className="text-muted-foreground font-medium uppercase tracking-widest text-sm">
-              in association with
+              Venue
             </div>
 
             <motion.div 
               className="flex flex-col items-center text-center"
               whileHover={{ scale: 1.05 }}
             >
-              <div className="mb-6 flex items-center justify-center h-32">
-                <img src={califphLifeSchoolLogo} alt="Caliph Life School" className="h-full w-auto object-contain" />
+              <div className="text-center p-6 rounded-xl bg-background border border-border shadow-sm">
+                <MapPin className="w-12 h-12 text-primary mx-auto mb-4" />
+                <h3 className="font-semibold text-xl mb-2">Venture Arcade</h3>
+                <p className="text-muted-foreground">Mavoor Rd, above Croma, Thondayad, Kozhikode, Kerala</p>
               </div>
-              <h3 className="font-semibold text-xl">Caliph Life School</h3>
             </motion.div>
           </div>
         </div>

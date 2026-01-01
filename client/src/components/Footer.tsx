@@ -34,7 +34,7 @@ export function Footer({ className }: FooterProps) {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
                     <Users className="w-4 h-4 text-primary" />
-                    <span>School to age 29</span>
+                    <span>No age limit</span>
                   </div>
                 </div>
               </StaggerItem>
@@ -59,8 +59,7 @@ export function Footer({ className }: FooterProps) {
                     <li className="flex items-start gap-2">
                       <MapPin className="w-4 h-4 text-primary mt-0.5" />
                       <span className="text-sm text-muted-foreground">
-                        Caliph Life School, Thammaressery<br />
-                        Kozhikode, Kerala, India
+                        Kerala Economic Forum , Venture Arcade, Mavoor Rd, above Croma, Thondayad, Kozhikode, Kerala
                       </span>
                     </li>
                   </ul>
