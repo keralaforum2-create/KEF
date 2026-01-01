@@ -406,6 +406,28 @@ export const insertStartupClinicSchema = createInsertSchema(startupClinicRegistr
 export type InsertStartupClinic = z.infer<typeof insertStartupClinicSchema>;
 export type StartupClinic = typeof startupClinicRegistrations.$inferSelect;
 
+export const investorApplications = pgTable("investor_applications", {
+  id: varchar("id", { length: 36 }).primaryKey(),
+  fullName: text("full_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  bio: text("bio").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertInvestorApplicationSchema = createInsertSchema(investorApplications).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  fullName: z.string().min(2, "Full name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
+  bio: z.string().min(10, "Please provide a brief bio or information about your firm"),
+});
+
+export type InsertInvestorApplication = z.infer<typeof insertInvestorApplicationSchema>;
+export type InvestorApplication = typeof investorApplications.$inferSelect;
+
 export const influencerApplications = pgTable("influencer_applications", {
   id: varchar("id", { length: 36 }).primaryKey(),
   fullName: text("full_name").notNull(),
