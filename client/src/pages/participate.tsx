@@ -449,7 +449,7 @@ export default function Participate() {
     
     let baseAmount = 249;
     if (isBusinessQuiz) baseAmount = 199;
-    else if (ticketCategory === "platinum") baseAmount = 1999;
+    else if (ticketCategory === "platinum") baseAmount = 2499;
     else if (ticketCategory === "gold") baseAmount = 599;
     else baseAmount = 249; // silver
     
@@ -478,7 +478,7 @@ export default function Participate() {
 
   // Get bulk registration price per student
   const getBulkPricePerStudent = () => {
-    if (bulkFormData.ticketCategory === "platinum") return 1999;
+    if (bulkFormData.ticketCategory === "platinum") return 2499;
     if (bulkFormData.ticketCategory === "gold") return 599;
     return 249; // silver
   };
