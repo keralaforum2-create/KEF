@@ -965,31 +965,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Venue Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollFadeUp>
-            <h2 className="text-4xl sm:text-6xl font-bold text-center mb-16 text-gray-900" style={{ fontFamily: "'Big Shoulders Display', sans-serif" }}>
-              VENUE
-            </h2>
-          </ScrollFadeUp>
-          
-          <div className="max-w-4xl mx-auto">
-            <motion.div 
-              className="flex flex-col items-center text-center w-full"
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="text-center p-8 rounded-2xl bg-white border border-gray-100 shadow-xl w-full">
-                <MapPin className="w-16 h-16 text-teal-600 mx-auto mb-6" />
-                <h3 className="font-bold text-2xl sm:text-3xl text-gray-800 mb-4">Venture Arcade</h3>
-                <p className="text-gray-600 text-lg sm:text-xl italic mb-2">Mavoor Rd, above Croma, Thondayad, Kozhikode, Kerala</p>
-                <p className="text-gray-500">Kozhikode's premier destination for startup innovation.</p>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
     </div>
   );
 }
