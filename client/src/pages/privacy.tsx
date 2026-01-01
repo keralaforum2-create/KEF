@@ -120,7 +120,8 @@ export default function Privacy() {
                   <ul className="text-muted-foreground list-disc pl-6">
                     <li>Email: keralastartupfest@gmail.com</li>
                     <li>Phone: +91 9072344431</li>
-                    <li>Address: Kerala Economic Forum , Venture Arcade, Mavoor Rd, above Croma, Thondayad, Kozhikode, Kerala</li>
+                    <li>Address 1: Kerala Economic Forum , Venture Arcade, Mavoor Rd, above Croma, Thondayad, Kozhikode, Kerala</li>
+                    <li>Address 2: Caliph Life School, Puduppadi, Thamarassery, Kerala 673586, India</li>
                   </ul>
                 </section>
               </div>
