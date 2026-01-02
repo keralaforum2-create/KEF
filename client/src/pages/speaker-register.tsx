@@ -74,7 +74,7 @@ export default function SpeakerRegister() {
   const validateReferralCode = async (code: string) => {
     if (!code) {
       setDiscount(0);
-      setDiscountedAmount(3999);
+      setDiscountedAmount(4999);
       return;
     }
     try {
@@ -82,16 +82,16 @@ export default function SpeakerRegister() {
       const data = await res.json();
       if (data.discount) {
         setDiscount(data.discount);
-        const discountAmount = 3999 - (3999 * data.discount / 100);
+        const discountAmount = 4999 - (4999 * data.discount / 100);
         setDiscountedAmount(Math.ceil(discountAmount));
       } else {
         setDiscount(0);
-        setDiscountedAmount(3999);
+        setDiscountedAmount(4999);
         toast({ title: "Invalid referral code", variant: "destructive" });
       }
     } catch (error) {
       setDiscount(0);
-      setDiscountedAmount(3999);
+      setDiscountedAmount(4999);
     }
   };
 
@@ -313,7 +313,7 @@ export default function SpeakerRegister() {
                   Fee & Refund Policy
                 </h3>
                 <p className="text-gray-700">
-                  📋 <strong>Podcast Application Fee: ₹3999/-</strong><br />
+                  📋 <strong>Podcast Application Fee: ₹4999/-</strong><br />
                   ✅ Full refund will be provided to applicants who are not selected
                 </p>
               </div>

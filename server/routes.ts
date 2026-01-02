@@ -282,7 +282,7 @@ export async function registerRoutes(
       const expectedAmount = parseInt(req.body.expectedAmount) || 199;
       
       // Allow for updated platinum price
-      const validAmounts = [99, 199, 599, 1299, 1499, 3999];
+      const validAmounts = [99, 199, 599, 1299, 1499, 4999];
       if (!validAmounts.includes(expectedAmount)) {
         console.warn(`Unusual expected amount for verification: ${expectedAmount}`);
       }
@@ -2384,7 +2384,7 @@ export async function registerRoutes(
   app.post("/api/speaker-razorpay/create-order", async (req, res) => {
     try {
       const { email, contactNumber, founderName, startupName, referralCode, amount } = req.body;
-      const finalAmount = amount || 3999;
+      const finalAmount = amount || 4999;
       
       const result = await createRazorpayOrder({
         amount: finalAmount,

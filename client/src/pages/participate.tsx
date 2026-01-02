@@ -442,9 +442,9 @@ export default function Participate() {
 
   // Get payment amount based on ticket type and contest
   const getPaymentAmount = () => {
-    // Speaker registration has a fixed ₹3,999/- fee
+    // Speaker registration has a fixed ₹4,999/- fee
     if (registrationType === "speaker") {
-      return 3999;
+      return 4999;
     }
     
     let baseAmount = 249;
