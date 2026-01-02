@@ -791,7 +791,7 @@ export default function Home() {
                   >
                     <Radio className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Podcast Speaker</h3>
+                  <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Be a Podcast Speaker</h3>
                 </div>
                 <Link href="/participate#register" className="mt-2">
                   <Button 
@@ -884,7 +884,7 @@ export default function Home() {
                   >
                     <Star className="w-5 h-5 text-white" />
                   </div>
-                  <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Influencer Pass</h3>
+                  <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Get a Influencer Pass</h3>
                 </div>
                 <Link href="/influencer-apply" className="mt-2">
                   <Button 
