@@ -39,7 +39,7 @@ export default function SpeakerRegister() {
   const [submitted, setSubmitted] = useState(false);
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
   const [discount, setDiscount] = useState(0);
-  const [discountedAmount, setDiscountedAmount] = useState(3999);
+  const [discountedAmount, setDiscountedAmount] = useState(4999);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -560,7 +560,7 @@ export default function SpeakerRegister() {
                       <>
                         <div className="mb-3">
                           <p className="text-sm text-gray-600">Original Price:</p>
-                          <p className="text-lg line-through text-gray-500">₹3,999</p>
+                          <p className="text-lg line-through text-gray-500">₹4,999</p>
                         </div>
                         <div className="mb-3 bg-green-100 border border-green-300 rounded p-2">
                           <p className="text-sm text-green-700 font-semibold">{discount}% Discount Applied!</p>
@@ -568,7 +568,7 @@ export default function SpeakerRegister() {
                         <p className="text-2xl font-bold text-green-600 mb-4">₹{discountedAmount.toLocaleString()}</p>
                       </>
                     ) : (
-                      <p className="text-2xl font-bold text-blue-600 mb-4">₹3,999</p>
+                      <p className="text-2xl font-bold text-blue-600 mb-4">₹4,999</p>
                     )}
                     <p className="text-sm text-gray-700 mb-6">
                       Full refund will be provided to applicants who are not selected.
@@ -588,7 +588,7 @@ export default function SpeakerRegister() {
                             />
                           </FormControl>
                           <label className="text-sm cursor-pointer">
-                            I agree to the ₹3,999 application fee
+                            I agree to the ₹4,999 application fee
                           </label>
                           <FormMessage />
                         </FormItem>
@@ -623,7 +623,7 @@ export default function SpeakerRegister() {
                     ) : (
                       <>
                         <CreditCardIcon className="w-4 h-4 mr-2" />
-                        Pay Online - ₹3,999
+                        Pay Online - ₹4,999
                       </>
                     )}
                   </Button>

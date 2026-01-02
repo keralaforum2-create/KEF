@@ -2722,7 +2722,7 @@ export default function Participate() {
                                   />
                                   <div>
                                     <p className="text-sm text-blue-900 dark:text-blue-200">
-                                      I agree to the <span className="font-semibold">₹3,999 application fee</span>
+                                      I agree to the <span className="font-semibold">₹4,999 application fee</span>
                                     </p>
                                     <p className="text-xs text-blue-800 dark:text-blue-300 mt-1">
                                       Full refund will be provided to applicants who are not selected.
