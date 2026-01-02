@@ -76,7 +76,7 @@ export default function RegistrationSuccess() {
           className="text-center mt-6"
         >
           <p className="text-sm text-muted-foreground">
-            January 7-8, 2026 | Kozhikode
+            January 7-8, 2026 | Aspin Courtyards, Calicut Beach
           </p>
         </motion.div>
       </motion.div>

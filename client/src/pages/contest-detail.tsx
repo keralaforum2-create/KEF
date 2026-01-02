@@ -449,7 +449,7 @@ export default function ContestDetail() {
               </Badge>
               <Badge variant="secondary" className="flex items-center gap-1">
                 <MapPin className="w-3 h-3" />
-                Kozhikode, Kerala
+                Aspin Courtyards, Calicut
               </Badge>
             </div>
           </ScrollFadeUp>

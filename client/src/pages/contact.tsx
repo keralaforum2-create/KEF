@@ -360,9 +360,10 @@ export default function Contact() {
                           <MapPin className="w-5 h-5 text-primary" />
                         </motion.div>
                         <div>
-                          <p className="font-medium">Calicut Beach</p>
+                          <h4 className="font-bold text-gray-900">Aspin Courtyards</h4>
+                          <p className="font-medium">Aspin Courtyards</p>
                           <p className="text-muted-foreground text-sm">
-                            Kozhikode<br />
+                            Beach Road, Vellayil, Kozhikode<br />
                             Kerala, India
                           </p>
                         </div>
@@ -413,7 +414,7 @@ export default function Contact() {
               transition={{ duration: 0.5 }}
             >
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3912.7!2d75.7684!3d11.2588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba65938563d4747%3A0x32150641ca32ecab!2sCalicut%20Beach!5e0!3m2!1sen!2sin!4v1699999999999!5m2!1sen!2sin"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3912.7!2d75.7684!3d11.2588!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba65938563d4747%3A0x89793f46f48f484a!2sAspin%20Courtyards!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

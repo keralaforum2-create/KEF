@@ -60,7 +60,7 @@ export function Footer({ className }: FooterProps) {
                       <MapPin className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
                       <div className="flex flex-col gap-3">
                         <span className="text-sm text-muted-foreground">
-                          Kerala Economic Forum , Venture Arcade, Mavoor Rd, above Croma, Thondayad, Kozhikode, Kerala
+                          Aspin Courtyards, Beach Road, Vellayil, Kozhikode, Kerala
                         </span>
                         <span className="text-sm text-muted-foreground">
                           Caliph Life School, Puduppadi, Thamarassery, Kerala 673586, India

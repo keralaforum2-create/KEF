@@ -16,7 +16,7 @@ const faqItems = [
   },
   {
     question: "Where is Kerala Startup Fest held?",
-    answer: "Venue: Aspin Courtyard, Calicut Beach, Kozhikode"
+    answer: "Venue: Aspin Courtyards, Calicut Beach, Kozhikode"
   },
   {
     question: "What are the event timings?",

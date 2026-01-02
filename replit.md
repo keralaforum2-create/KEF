@@ -1,7 +1,7 @@
 # Kerala Startup Fest 2026 - Project Documentation
 
 ## Overview
-Kerala Startup Fest 2026 is a two-day mega startup festival website (January 7-8, 2026, Calicut Beach) connecting students, young adults, mentors, and investors. The platform provides event information, facilitates participant registration, and handles contact form submissions for various stakeholders. It's a modern single-page application with a Node.js/Express backend and React frontend, aiming for a clean, youth-focused design. Key capabilities include event registration with QR code-based payment, contact forms, and an admin dashboard for managing submissions.
+Kerala Startup Fest 2026 is a two-day mega startup festival website (January 7-8, 2026, Aspin Courtyards, Calicut Beach) connecting students, young adults, mentors, and investors. The platform provides event information, facilitates participant registration, and handles contact form submissions for various stakeholders. It's a modern single-page application with a Node.js/Express backend and React frontend, aiming for a clean, youth-focused design. Key capabilities include event registration with QR code-based payment, contact forms, and an admin dashboard for managing submissions.
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
