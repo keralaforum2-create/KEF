@@ -925,17 +925,18 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="w-full sm:w-auto">
-                  <Button 
-                    size="sm" 
-                    className="font-bold px-6 bg-primary text-white border-0 rounded-md w-full sm:w-auto" 
-                    data-testid="modal-button-brand-affair-details"
-                    onClick={() => {
-                      setShowQuickLinksModal(false);
-                      setShowBrandAffairModal(true);
-                    }}
-                  >
-                    Learn More & Apply
-                  </Button>
+                  <Link href="/brand-affair" className="w-full sm:w-auto">
+                    <Button 
+                      size="sm" 
+                      className="font-bold px-6 bg-primary text-white border-0 rounded-md w-full sm:w-auto" 
+                      data-testid="modal-button-brand-affair-details"
+                      onClick={() => {
+                        setShowQuickLinksModal(false);
+                      }}
+                    >
+                      Learn More & Apply
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -943,78 +944,6 @@ export default function Home() {
         </DialogContent>
       </Dialog>
 
-      {/* Brand Affair Details Modal */}
-      <Dialog open={showBrandAffairModal} onOpenChange={setShowBrandAffairModal}>
-        <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-y-auto p-8" aria-describedby="brand-affair-description">
-          <div className="space-y-6">
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-2xl bg-red-100 flex items-center justify-center mx-auto mb-4">
-                <Heart className="w-10 h-10 text-red-600" />
-              </div>
-              <h2 className="text-3xl font-bold text-gray-900">The Great Brand Love Affair</h2>
-              <p className="text-red-600 font-semibold mt-2">FREE Brand Makeover worth ₹25 lakhs</p>
-            </div>
-
-            <div id="brand-affair-description" className="prose prose-sm max-w-none text-gray-700">
-              <p className="text-lg font-medium">We have some really exciting news for startups across Kerala</p>
-              <p>Kerala Startup Fest 2026, in collaboration with Young Indians and Origami, is launching The Great Brand Love Affair — a FREE Brand Makeover worth ₹25 lakhs for promising startup brands.</p>
-              
-              <h3 className="text-xl font-bold text-gray-900 mt-8">What’s this about?</h3>
-              <ul className="list-disc pl-5 space-y-2">
-                <li>Selected startups will get a chance to present a short rebranding elevator pitch.</li>
-                <li>From these, one lucky startup will win a complete business brand makeover — absolutely free.</li>
-              </ul>
-
-              <h3 className="text-xl font-bold text-gray-900 mt-8">What does the winner get?</h3>
-              <p>A power-packed transformation that includes:</p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                  <h4 className="font-bold flex items-center gap-2">✨ Complete Brand Makeover</h4>
-                  <p className="text-xs mt-1 text-gray-600">Brand strategy, idea-driven storytelling, brand identity, and mood boards (Powered by Origami & Bloombox)</p>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                  <h4 className="font-bold flex items-center gap-2">✨ Leadership & People Transformation</h4>
-                  <p className="text-xs mt-1 text-gray-600">“Winning to Lead” program for founders and future leaders (Powered by Carpediem)</p>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                  <h4 className="font-bold flex items-center gap-2">✨ Digital & AI Transformation</h4>
-                  <p className="text-xs mt-1 text-gray-600">Digital process assessment, AI opportunity mapping, and adoption roadmap (Powered by Avohi Labs)</p>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                  <h4 className="font-bold flex items-center gap-2">✨ Legal & IP Support</h4>
-                  <p className="text-xs mt-1 text-gray-600">Up to 10 hours of pro bono legal and intellectual property services (Powered by Fox Mandal)</p>
-                </div>
-              </div>
-
-              <div className="bg-red-50 p-4 rounded-xl border border-red-100 mt-6">
-                <h4 className="font-bold text-red-900 flex items-center gap-2">✨ Bonus Surprise</h4>
-                <p className="text-sm text-red-800">And who knows… there might even be funding support 👀 (We love a good plot twist!)</p>
-              </div>
-
-              <h3 className="text-xl font-bold text-gray-900 mt-8">Who can apply?</h3>
-              <p>Any startup brand from Kerala that believes it’s ready for a serious upgrade.</p>
-
-              <div className="text-center mt-12 pt-6 border-t">
-                <p className="text-lg font-bold mb-4">💡 Interested? Apply now and start the love affair</p>
-                <a 
-                  href="https://www.brandloveaffair.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  <Button 
-                    size="lg" 
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold px-12 py-6 text-xl rounded-xl shadow-xl hover-elevate"
-                    data-testid="modal-button-apply-brand-love-affair"
-                  >
-                    Apply Now
-                  </Button>
-                </a>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Organisers Section */}
       <section className="py-20 bg-background" ref={partnersRef}>
