@@ -23,7 +23,8 @@ import {
   HandshakeIcon,
   Radio,
   Store,
-  Star
+  Star,
+  Heart
 } from "lucide-react";
 import {
   HeroAnimation,
@@ -46,6 +47,7 @@ import youngKeralaExpo from "@assets/WhatsApp_Image_2025-12-24_at_11.08.16_AM_17
 export default function Home() {
   const [showExpoModal, setShowExpoModal] = useState(false);
   const [showQuickLinksModal, setShowQuickLinksModal] = useState(false);
+  const [showBrandAffairModal, setShowBrandAffairModal] = useState(false);
   const partnersRef = useRef<HTMLDivElement>(null);
   const partnersInView = useInView(partnersRef, { once: true, margin: "-50px" });
 
@@ -116,7 +118,7 @@ export default function Home() {
                       2026 JAN 7-8
                     </p>
                     <p className="text-lg sm:text-xl font-semibold text-gray-500 tracking-widest">
-                      KOZHIKODE
+                      ASPIN COURTYARDS, CALICUT BEACH
                     </p>
                   </div>
                 </HeroSubAnimation>
@@ -735,13 +737,13 @@ export default function Home() {
 
       {/* Quick Links Modal */}
       <Dialog open={showQuickLinksModal} onOpenChange={setShowQuickLinksModal}>
-        <DialogContent className="max-w-4xl w-full p-6">
-          <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">QUICK LINKS</h2>
-            <p className="text-sm text-gray-600">
-              Choose your opportunity below.
-            </p>
-          </div>
+            <DialogContent className="max-w-4xl w-full p-6" aria-describedby="quick-links-description">
+              <div className="text-center mb-6">
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">QUICK LINKS</h2>
+                <p id="quick-links-description" className="text-sm text-gray-600">
+                  Choose your opportunity below.
+                </p>
+              </div>
           
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             {/* Register for Expert Session */}
@@ -868,7 +870,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Influencer */}
+            {/* Get a Influencer Pass */}
             <div 
               className="relative p-[2px] rounded-xl shadow-sm"
               style={{
@@ -886,7 +888,7 @@ export default function Home() {
                   </div>
                   <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Get a Influencer Pass</h3>
                 </div>
-                <Link href="/influencer-apply" className="mt-2">
+                <Link href="/participate#register" className="mt-2">
                   <Button 
                     size="sm" 
                     className="h-7 text-[10px] font-bold px-2 py-0 bg-primary text-white border-0 rounded-md w-full" 
@@ -896,6 +898,118 @@ export default function Home() {
                     Register
                   </Button>
                 </Link>
+              </div>
+            </div>
+
+            {/* Great Brand Affair */}
+            <div 
+              className="relative p-[2px] rounded-xl shadow-sm col-span-2 sm:col-span-3 lg:col-span-5"
+              style={{
+                background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+              }}
+              data-testid="modal-card-brand-affair"
+            >
+              <div className="bg-white rounded-[10px] p-4 h-full flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div 
+                    className="w-12 h-12 rounded-lg flex-shrink-0 flex items-center justify-center" 
+                    style={{ backgroundColor: "hsl(0 100% 50%)" }}
+                  >
+                    <Heart className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm text-gray-900 leading-tight">Great Brand Affair</h3>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      FREE Brand Makeover worth ₹25 lakhs for promising startup brands.
+                    </p>
+                  </div>
+                </div>
+                <div className="w-full sm:w-auto">
+                  <Button 
+                    size="sm" 
+                    className="font-bold px-6 bg-primary text-white border-0 rounded-md w-full sm:w-auto" 
+                    data-testid="modal-button-brand-affair-details"
+                    onClick={() => {
+                      setShowQuickLinksModal(false);
+                      setShowBrandAffairModal(true);
+                    }}
+                  >
+                    Learn More & Apply
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Brand Affair Details Modal */}
+      <Dialog open={showBrandAffairModal} onOpenChange={setShowBrandAffairModal}>
+        <DialogContent className="max-w-3xl w-full max-h-[90vh] overflow-y-auto p-8" aria-describedby="brand-affair-description">
+          <div className="space-y-6">
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-2xl bg-red-100 flex items-center justify-center mx-auto mb-4">
+                <Heart className="w-10 h-10 text-red-600" />
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900">The Great Brand Love Affair</h2>
+              <p className="text-red-600 font-semibold mt-2">FREE Brand Makeover worth ₹25 lakhs</p>
+            </div>
+
+            <div id="brand-affair-description" className="prose prose-sm max-w-none text-gray-700">
+              <p className="text-lg font-medium">We have some really exciting news for startups across Kerala</p>
+              <p>Kerala Startup Fest 2026, in collaboration with Young Indians and Origami, is launching The Great Brand Love Affair — a FREE Brand Makeover worth ₹25 lakhs for promising startup brands.</p>
+              
+              <h3 className="text-xl font-bold text-gray-900 mt-8">What’s this about?</h3>
+              <ul className="list-disc pl-5 space-y-2">
+                <li>Selected startups will get a chance to present a short rebranding elevator pitch.</li>
+                <li>From these, one lucky startup will win a complete business brand makeover — absolutely free.</li>
+              </ul>
+
+              <h3 className="text-xl font-bold text-gray-900 mt-8">What does the winner get?</h3>
+              <p>A power-packed transformation that includes:</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                  <h4 className="font-bold flex items-center gap-2">✨ Complete Brand Makeover</h4>
+                  <p className="text-xs mt-1 text-gray-600">Brand strategy, idea-driven storytelling, brand identity, and mood boards (Powered by Origami & Bloombox)</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                  <h4 className="font-bold flex items-center gap-2">✨ Leadership & People Transformation</h4>
+                  <p className="text-xs mt-1 text-gray-600">“Winning to Lead” program for founders and future leaders (Powered by Carpediem)</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                  <h4 className="font-bold flex items-center gap-2">✨ Digital & AI Transformation</h4>
+                  <p className="text-xs mt-1 text-gray-600">Digital process assessment, AI opportunity mapping, and adoption roadmap (Powered by Avohi Labs)</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                  <h4 className="font-bold flex items-center gap-2">✨ Legal & IP Support</h4>
+                  <p className="text-xs mt-1 text-gray-600">Up to 10 hours of pro bono legal and intellectual property services (Powered by Fox Mandal)</p>
+                </div>
+              </div>
+
+              <div className="bg-red-50 p-4 rounded-xl border border-red-100 mt-6">
+                <h4 className="font-bold text-red-900 flex items-center gap-2">✨ Bonus Surprise</h4>
+                <p className="text-sm text-red-800">And who knows… there might even be funding support 👀 (We love a good plot twist!)</p>
+              </div>
+
+              <h3 className="text-xl font-bold text-gray-900 mt-8">Who can apply?</h3>
+              <p>Any startup brand from Kerala that believes it’s ready for a serious upgrade.</p>
+
+              <div className="text-center mt-12 pt-6 border-t">
+                <p className="text-lg font-bold mb-4">💡 Interested? Apply now and start the love affair</p>
+                <a 
+                  href="https://www.brandloveaffair.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <Button 
+                    size="lg" 
+                    className="bg-red-600 hover:bg-red-700 text-white font-bold px-12 py-6 text-xl rounded-xl shadow-xl hover-elevate"
+                    data-testid="modal-button-apply-brand-love-affair"
+                  >
+                    Apply Now
+                  </Button>
+                </a>
               </div>
             </div>
           </div>

@@ -363,7 +363,7 @@ export default function Contact() {
                           <h4 className="font-bold text-gray-900">Aspin Courtyards</h4>
                           <p className="font-medium">Aspin Courtyards</p>
                           <p className="text-muted-foreground text-sm">
-                            Beach Road, Vellayil, Kozhikode<br />
+                            Beach Road, Vellayil, Calicut Beach<br />
                             Kerala, India
                           </p>
                         </div>
