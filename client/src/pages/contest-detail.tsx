@@ -521,7 +521,7 @@ export default function ContestDetail() {
       </section>
 
       {/* Event Stages */}
-      {contest.id !== \"jam\" && (
+      {contest.id !== "jam" && (
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">
             <ScrollFadeUp>
