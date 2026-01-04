@@ -447,11 +447,11 @@ export default function Participate() {
       return 4999;
     }
     
-    let baseAmount = 249;
+    let baseAmount = 299;
     if (isBusinessQuiz) baseAmount = 199;
     else if (ticketCategory === "platinum") baseAmount = 2499;
     else if (ticketCategory === "gold") baseAmount = 599;
-    else baseAmount = 249; // silver
+    else baseAmount = 299; // silver
     
     // For Pitch Room, multiply amount by number of team members
     if (isPitchRoom) {
@@ -480,7 +480,7 @@ export default function Participate() {
   const getBulkPricePerStudent = () => {
     if (bulkFormData.ticketCategory === "platinum") return 2499;
     if (bulkFormData.ticketCategory === "gold") return 599;
-    return 249; // silver
+    return 299; // silver
   };
 
   // Get bulk registration total amount
@@ -2259,7 +2259,7 @@ export default function Participate() {
                                     >
                                       <div className="flex justify-between items-center">
                                         <span className="font-medium">Silver Ticket</span>
-                                        <span className="font-bold text-gray-600">Rs 249/student</span>
+                                        <span className="font-bold text-gray-600">Rs 299/student</span>
                                       </div>
                                     </div>
                                     <div
@@ -4115,7 +4115,7 @@ export default function Participate() {
                                       
                                       <div className="border-t pt-4 flex items-center justify-between">
                                         <span className="text-sm text-muted-foreground">Price:</span>
-                                        <span className="font-bold text-xl text-gray-600">Rs 249/-</span>
+                                        <span className="font-bold text-xl text-gray-600">Rs 299/-</span>
                                       </div>
                                     </div>
 
@@ -4283,7 +4283,7 @@ export default function Participate() {
                                     return count === 0 ? 1 : count;
                                   })()}
                                 </span></span>
-                                <span className="text-muted-foreground">× ₹249 = <span className="text-teal-600 font-bold text-lg">₹{getPaymentAmount()}/-</span></span>
+                                <span className="text-muted-foreground">× ₹299 = <span className="text-teal-600 font-bold text-lg">₹{getPaymentAmount()}/-</span></span>
                               </div>
                               <p className="text-xs text-muted-foreground">
                                 {(() => {
@@ -4303,7 +4303,7 @@ export default function Participate() {
                                   ? "Pay ₹2499/-"
                                   : ticketCategory === "gold"
                                     ? "Pay ₹599/-"
-                                    : "Pay ₹249/-"
+                                    : "Pay ₹299/-"
                               }
                             </p>
                           )}

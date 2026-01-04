@@ -282,7 +282,7 @@ export async function registerRoutes(
       const expectedAmount = parseInt(req.body.expectedAmount) || 199;
       
       // Allow for updated platinum price
-      const validAmounts = [99, 199, 599, 1299, 1499, 4999];
+      const validAmounts = [99, 199, 299, 599, 1299, 1499, 4999];
       if (!validAmounts.includes(expectedAmount)) {
         console.warn(`Unusual expected amount for verification: ${expectedAmount}`);
       }
@@ -1351,16 +1351,16 @@ export async function registerRoutes(
         console.log(`✓ Found registration: ${registration.fullName} (DB ID: ${registration.id})`);
 
         // Calculate amount based on registration type
-        let orderAmount = 199; // Default
+        let orderAmount = 299; // Default
         if (registration.registrationType === 'pitch-room') {
           const teamCount = [registration.teamMember1Name, registration.teamMember2Name, registration.teamMember3Name].filter(Boolean).length || 1;
           orderAmount = 199 * teamCount;
         } else if (registration.registrationType === 'session') {
-          orderAmount = 199;
+          orderAmount = 299;
         } else if (registration.registrationType === 'contest') {
-          orderAmount = registration.ticketCategory === 'platinum' ? 1299 : registration.ticketCategory === 'gold' ? 599 : 199;
+          orderAmount = registration.ticketCategory === 'platinum' ? 1299 : registration.ticketCategory === 'gold' ? 599 : 299;
         } else if (registration.registrationType === 'session-ticket') {
-          orderAmount = registration.ticketCategory === 'platinum' ? 1299 : registration.ticketCategory === 'gold' ? 599 : 199;
+          orderAmount = registration.ticketCategory === 'platinum' ? 1299 : registration.ticketCategory === 'gold' ? 599 : 299;
         }
 
         // Apply referral code discount if provided
