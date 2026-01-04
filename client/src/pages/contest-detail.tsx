@@ -376,7 +376,7 @@ export default function ContestDetail() {
             <AlertTriangle className="w-16 h-16 text-amber-500 mx-auto" />
             <div>
               <h2 className="font-serif text-2xl font-bold text-primary mb-2">Registrations Closed</h2>
-              <p className="text-muted-foreground">The "National Level Inter School Business Quiz" registrations are currently closed.</p>
+              <p className="text-muted-foreground">The \"National Level Inter School Business Quiz\" registrations are currently closed.</p>
             </div>
           </motion.div>
         </div>
@@ -521,76 +521,78 @@ export default function ContestDetail() {
       </section>
 
       {/* Event Stages */}
-      <section className="py-12 md:py-16">
-        <div className="container mx-auto px-4">
-          <ScrollFadeUp>
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
-                <Target className="w-6 h-6 text-primary" />
-                Event Stages
-              </h2>
-            </div>
-          </ScrollFadeUp>
+      {contest.id !== \"jam\" && (
+        <section className="py-12 md:py-16">
+          <div className="container mx-auto px-4">
+            <ScrollFadeUp>
+              <div className="max-w-4xl mx-auto">
+                <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
+                  <Target className="w-6 h-6 text-primary" />
+                  Event Stages
+                </h2>
+              </div>
+            </ScrollFadeUp>
 
-          <StaggerContainer className="max-w-4xl mx-auto space-y-6" staggerDelay={0.1}>
-            {contest.stages.map((stage, index) => (
-              <StaggerItem key={index}>
-                <motion.div whileHover={{ scale: 1.01 }} transition={{ duration: 0.2 }}>
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <span className="font-bold text-primary">{index + 1}</span>
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-xl font-semibold mb-2">{stage.title}</h3>
-                          <p className="text-muted-foreground mb-4">{stage.description}</p>
-                          
-                          {stage.deadline && (
-                            <div className="mb-4 space-y-3">
-                              <div className="flex items-center gap-2 text-destructive">
-                                <Clock className="w-4 h-4" />
-                                <span className="font-medium">Deadline: {stage.deadline}</span>
-                              </div>
-                              <DeadlineCountdown deadlineDate={new Date(2025, 11, 28, 23, 59, 0)} />
-                            </div>
-                          )}
-
-                          <div className="mb-4">
-                            <h4 className="font-medium mb-2">What's Required:</h4>
-                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                              {stage.details.map((detail, i) => (
-                                <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                  {detail}
-                                </li>
-                              ))}
-                            </ul>
+            <StaggerContainer className="max-w-4xl mx-auto space-y-6" staggerDelay={0.1}>
+              {contest.stages.map((stage, index) => (
+                <StaggerItem key={index}>
+                  <motion.div whileHover={{ scale: 1.01 }} transition={{ duration: 0.2 }}>
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <span className="font-bold text-primary">{index + 1}</span>
                           </div>
+                          <div className="flex-1">
+                            <h3 className="text-xl font-semibold mb-2">{stage.title}</h3>
+                            <p className="text-muted-foreground mb-4">{stage.description}</p>
+                            
+                            {stage.deadline && (
+                              <div className="mb-4 space-y-3">
+                                <div className="flex items-center gap-2 text-destructive">
+                                  <Clock className="w-4 h-4" />
+                                  <span className="font-medium">Deadline: {stage.deadline}</span>
+                                </div>
+                                <DeadlineCountdown deadlineDate={new Date(2025, 11, 28, 23, 59, 0)} />
+                              </div>
+                            )}
 
-                          {stage.outcome && (
-                            <div className="bg-green-50 dark:bg-green-950/20 rounded-lg p-4">
-                              <h4 className="font-medium mb-2 text-green-700 dark:text-green-400">Outcome:</h4>
-                              <ul className="space-y-1">
-                                {stage.outcome.map((item, i) => (
-                                  <li key={i} className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
-                                    <CheckCircle className="w-4 h-4" />
-                                    {item}
+                            <div className="mb-4">
+                              <h4 className="font-medium mb-2">What's Required:</h4>
+                              <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                {stage.details.map((detail, i) => (
+                                  <li key={i} className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                    {detail}
                                   </li>
                                 ))}
                               </ul>
                             </div>
-                          )}
+
+                            {stage.outcome && (
+                              <div className="bg-green-50 dark:bg-green-950/20 rounded-lg p-4">
+                                <h4 className="font-medium mb-2 text-green-700 dark:text-green-400">Outcome:</h4>
+                                <ul className="space-y-1">
+                                  {stage.outcome.map((item, i) => (
+                                    <li key={i} className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+                                      <CheckCircle className="w-4 h-4" />
+                                      {item}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </div>
+        </section>
+      )}
 
       {/* Rules Section */}
       {contest.rules && (
@@ -690,15 +692,15 @@ export default function ContestDetail() {
             <div className="max-w-3xl mx-auto">
               <Card>
                 <CardContent className="p-6">
-                  <h3 className="font-semibold mb-4 text-center">Additional Benefits</h3>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <h2 className="text-xl font-bold mb-6">Additional Benefits</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {contest.additionalBenefits.map((benefit, index) => (
-                      <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        {benefit}
-                      </li>
+                      <div key={index} className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-primary" />
+                        <span className="text-muted-foreground">{benefit}</span>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -706,43 +708,17 @@ export default function ContestDetail() {
         </div>
       </section>
 
-      {/* Important Dates */}
-      {contest.importantDates && (
-        <section className="py-12 md:py-16">
-          <div className="container mx-auto px-4">
-            <ScrollFadeUp>
-              <div className="max-w-4xl mx-auto">
-                <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                  <Calendar className="w-6 h-6 text-primary" />
-                  Important Dates
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {contest.importantDates.map((date, index) => (
-                    <Card key={index}>
-                      <CardContent className="p-4 text-center">
-                        <p className="text-sm text-muted-foreground mb-1">{date.event}</p>
-                        <p className="font-semibold">{date.date}</p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </ScrollFadeUp>
-          </div>
-        </section>
-      )}
-
       {/* CTA Section */}
-      <section className="py-16 bg-primary text-primary-foreground">
+      <section className="py-16 md:py-20 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
           <ScrollFadeUp>
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Participate?</h2>
-            <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
-              Don't miss this opportunity to showcase your talent at Kerala Startup Fest 2026!
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Showcase Your Talent?</h2>
+            <p className="text-xl opacity-90 mb-10 max-w-2xl mx-auto">
+              Join hundreds of other students and young adults at Kerala Startup Fest 2026.
             </p>
             <Link href={`/participate?contest=${encodeURIComponent(contest.title)}#register`}>
-              <Button size="lg" variant="secondary" data-testid="button-register-now-bottom">
-                Register Now
+              <Button size="lg" variant="secondary" className="px-10 h-14 text-lg font-bold" data-testid="button-register-cta">
+                Register for {contest.title}
               </Button>
             </Link>
           </ScrollFadeUp>
