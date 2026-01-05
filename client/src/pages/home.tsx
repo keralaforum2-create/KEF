@@ -5,6 +5,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion, useInView } from "framer-motion";
 import { LiveCountdown } from "@/components/LiveCountdown";
 import { useRef, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Calendar, 
   MapPin, 
@@ -45,6 +46,7 @@ import keralaEconomicForumLogo from "@assets/Screenshot_2025-11-29_222342-remove
 import youngKeralaExpo from "@assets/WhatsApp_Image_2025-12-24_at_11.08.16_AM_1766555334460.jpeg";
 
 export default function Home() {
+  const { toast } = useToast();
   const [showExpoModal, setShowExpoModal] = useState(false);
   const [showQuickLinksModal, setShowQuickLinksModal] = useState(false);
   const [showBrandAffairModal, setShowBrandAffairModal] = useState(false);

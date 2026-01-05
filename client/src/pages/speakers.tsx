@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollFadeUp } from "@/lib/animations";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import ajilImage from "@assets/AJIL_HILITE_1766212685898.jpg";
 import alfanImage from "@assets/ALFAN_1766212690930.jpg";
 import jaizalImage from "@assets/JAIZAL_ALI_1766212695708.jpg";
@@ -128,6 +129,7 @@ function SpeakerModal({ speaker, onClose }: { speaker: typeof speakers[0]; onClo
 }
 
 export default function Speakers() {
+  const { toast } = useToast();
   const [selectedSpeaker, setSelectedSpeaker] = useState<typeof speakers[0] | null>(null);
 
   return (
