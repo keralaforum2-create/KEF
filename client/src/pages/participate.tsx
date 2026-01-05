@@ -345,7 +345,7 @@ export default function Participate() {
   const isBusinessQuiz = contestName === "Business Quiz – School Edition";
   const isPitchRoom = contestName === "The Pitch Room";
 
-  const isRegistrationClosed = isBusinessQuiz || isPitchRoom;
+  const isRegistrationClosed = true;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
