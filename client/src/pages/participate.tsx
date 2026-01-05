@@ -523,7 +523,122 @@ export default function Participate() {
       await handleBulkQrPayment();
     } else {
       // Use online payment for bulk registration
-      await handleBulkPhonePePayment();
+      await handleBulkRazorpayPayment();
+    }
+  };
+
+  // Handle bulk Razorpay payment
+  const handleBulkRazorpayPayment = async () => {
+    if (!razorpayLoaded || !(window as any).Razorpay) {
+      toast({
+        title: "Payment gateway not ready",
+        description: "Please wait a moment and try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsProcessingOnlinePayment(true);
+
+    try {
+      // Upload PDF first if provided
+      let pdfPath = uploadedPdfPath;
+      if (studentsPdfFile && !uploadedPdfPath) {
+        const formData = new FormData();
+        formData.append('studentsPdf', studentsPdfFile);
+        const uploadResponse = await fetch('/api/upload-students-pdf', {
+          method: 'POST',
+          body: formData,
+        });
+        const uploadData = await uploadResponse.json();
+        if (uploadData.success) {
+          pdfPath = uploadData.path;
+          setUploadedPdfPath(pdfPath);
+        }
+      }
+
+      const amount = getBulkTotalAmount();
+
+      const response = await apiRequest("POST", "/api/bulk-razorpay/initiate", {
+        amount,
+        institutionName: bulkFormData.institutionName,
+        mentorName: bulkFormData.mentorName,
+        mentorEmail: bulkFormData.mentorEmail,
+        mentorPhone: bulkFormData.mentorPhone,
+        numberOfStudents: bulkFormData.numberOfStudents,
+        ticketCategory: bulkFormData.ticketCategory,
+        studentsPdfPath: pdfPath || "",
+      });
+
+      const orderData = await response.json();
+
+      if (!orderData.success) {
+        throw new Error(orderData.message || "Failed to initiate payment");
+      }
+
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Kerala Startup Fest 2026",
+        description: "Bulk Registration Payment",
+        order_id: orderData.orderId,
+        handler: async (response: any) => {
+          try {
+            const verifyResponse = await apiRequest("POST", "/api/bulk-razorpay/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              bulkRegistrationData: {
+                institutionName: bulkFormData.institutionName,
+                mentorName: bulkFormData.mentorName,
+                mentorEmail: bulkFormData.mentorEmail,
+                mentorPhone: bulkFormData.mentorPhone,
+                numberOfStudents: bulkFormData.numberOfStudents,
+                ticketCategory: bulkFormData.ticketCategory,
+                studentsPdfPath: pdfPath || "",
+              }
+            });
+
+            const verifyData = await verifyResponse.json();
+            if (verifyData.success) {
+              setBulkRegistrationId(verifyData.bulkRegistrationId);
+              setBulkStudentTickets(verifyData.studentTickets);
+              toast({
+                title: "Payment Successful",
+                description: "Bulk registration has been completed.",
+              });
+            } else {
+              throw new Error(verifyData.message || "Payment verification failed");
+            }
+          } catch (error: any) {
+            toast({
+              title: "Verification Failed",
+              description: error.message || "Something went wrong during verification.",
+              variant: "destructive",
+            });
+          }
+        },
+        prefill: {
+          name: bulkFormData.mentorName,
+          email: bulkFormData.mentorEmail,
+          contact: bulkFormData.mentorPhone,
+        },
+        theme: {
+          color: "#0d9488",
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (error: any) {
+      toast({
+        title: "Payment initiation failed",
+        description: error.message || "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessingOnlinePayment(false);
     }
   };
 

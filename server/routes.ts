@@ -1626,6 +1626,110 @@ export async function registerRoutes(
     }
   });
 
+  app.post("/api/bulk-razorpay/initiate", async (req: Request, res) => {
+    try {
+      const { amount, institutionName, mentorName, mentorEmail, mentorPhone, numberOfStudents, ticketCategory, studentsPdfPath } = req.body;
+      
+      if (!amount || !mentorEmail || !mentorName) {
+        return res.status(400).json({ 
+          success: false,
+          message: "Amount and mentor details are required" 
+        });
+      }
+
+      const orderResult = await createRazorpayOrder({
+        amount: Number(amount),
+        currency: "INR",
+        receipt: `bulk_${Date.now()}`,
+        notes: {
+          institutionName,
+          mentorName,
+          mentorEmail,
+          numberOfStudents,
+          ticketCategory,
+          type: "bulk_registration"
+        }
+      });
+
+      if (!orderResult.success) {
+        return res.status(400).json({ 
+          success: false,
+          message: orderResult.error || "Failed to create order"
+        });
+      }
+
+      return res.json({
+        success: true,
+        orderId: orderResult.order.id,
+        amount: orderResult.order.amount,
+        currency: orderResult.order.currency,
+        keyId: orderResult.keyId
+      });
+    } catch (error) {
+      console.error("Bulk Razorpay initiation error:", error);
+      return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  });
+
+  app.post("/api/bulk-razorpay/verify", async (req: Request, res) => {
+    try {
+      const { razorpay_order_id, razorpay_payment_id, razorpay_signature, bulkRegistrationData } = req.body;
+      
+      const verifyResult = verifyRazorpayPayment({
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature
+      });
+
+      if (!verifyResult.success) {
+        return res.status(400).json({
+          success: false,
+          message: verifyResult.error || "Payment verification failed"
+        });
+      }
+
+      // Create bulk registration record
+      const registrationData = {
+        ...bulkRegistrationData,
+        paymentStatus: "paid",
+        razorpayPaymentId: razorpay_payment_id,
+        razorpayOrderId: razorpay_order_id,
+      };
+
+      const result = insertBulkRegistrationSchema.safeParse(registrationData);
+      if (!result.success) {
+        return res.status(400).json({ 
+          success: false,
+          message: fromError(result.error).toString() 
+        });
+      }
+
+      const bulkRegistration = await storage.createBulkRegistration(result.data);
+      
+      // Create student tickets
+      const numberOfStudents = parseInt(bulkRegistrationData.numberOfStudents);
+      const studentTickets = [];
+      for (let i = 1; i <= numberOfStudents; i++) {
+        const studentRegistrationId = `${bulkRegistration.bulkRegistrationId}-S${String(i).padStart(3, '0')}`;
+        const student = await storage.createBulkStudent({
+          bulkRegistrationId: bulkRegistration.bulkRegistrationId,
+          studentRegistrationId,
+          studentNumber: String(i),
+        });
+        studentTickets.push(student);
+      }
+
+      return res.json({ 
+        success: true, 
+        bulkRegistrationId: bulkRegistration.bulkRegistrationId,
+        studentTickets 
+      });
+    } catch (error) {
+      console.error("Bulk Razorpay verification error:", error);
+      return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  });
+
   // Bulk Registration Routes
   app.post("/api/bulk-register", upload.single('paymentScreenshot'), async (req: Request, res) => {
     try {
