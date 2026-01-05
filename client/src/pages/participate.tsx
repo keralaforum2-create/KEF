@@ -347,6 +347,17 @@ export default function Participate() {
 
   const isRegistrationClosed = true;
 
+  const handleRegistrationClick = (type: "expert-session" | "contest" | "speaker") => {
+    form.setValue("registrationType", type);
+    setShowForm(true);
+    setTimeout(() => {
+      const registerSection = document.getElementById("register");
+      if (registerSection) {
+        registerSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 100);
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -2143,11 +2154,11 @@ export default function Participate() {
                               size="lg" 
                               className="w-full font-semibold text-base"
                               onClick={() => {
-                                form.setValue("registrationType", "expert-session");
-                                setShowForm(true);
-                                setTimeout(() => {
-                                  document.getElementById("register")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                                }, 100);
+                                toast({
+                                  title: "Registration Closed",
+                                  description: "Expert session registrations are currently closed.",
+                                  variant: "destructive"
+                                });
                               }}
                               data-testid="button-register-expert-session"
                             >
@@ -2164,11 +2175,11 @@ export default function Participate() {
                               variant="outline"
                               className="w-full font-semibold text-base"
                               onClick={() => {
-                                form.setValue("registrationType", "contest");
-                                setShowForm(true);
-                                setTimeout(() => {
-                                  document.getElementById("register")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                                }, 100);
+                                toast({
+                                  title: "Registration Closed",
+                                  description: "Contest registrations are currently closed.",
+                                  variant: "destructive"
+                                });
                               }}
                               data-testid="button-register-contest"
                             >
@@ -2184,7 +2195,13 @@ export default function Participate() {
                               size="lg" 
                               variant="outline"
                               className="w-full font-semibold text-base"
-                              onClick={() => setLocation("/speaker-register")}
+                              onClick={() => {
+                                toast({
+                                  title: "Registration Closed",
+                                  description: "Podcast speaker registrations are currently closed.",
+                                  variant: "destructive"
+                                });
+                              }}
                               data-testid="button-register-podcast-speaker"
                             >
                               <Presentation className="w-5 h-5 mr-2" />
