@@ -1109,12 +1109,17 @@ export default function Admin() {
                                       <Button
                                         variant="outline"
                                         size="sm"
-                                        onClick={() => resendEmailMutation.mutate(reg.registrationId)}
+                                        onClick={() => {
+                                          if (confirm(`Resend ticket email to ${reg.email}?`)) {
+                                            resendEmailMutation.mutate(reg.registrationId);
+                                          }
+                                        }}
                                         disabled={resendEmailMutation.isPending}
-                                        title="Resend Email"
+                                        title="Resend Ticket Email"
                                         data-testid={`button-resend-email-${reg.id}`}
                                       >
-                                        <Mail className="w-4 h-4" />
+                                        <Mail className="w-4 h-4 mr-1" />
+                                        Resend
                                       </Button>
                                       {reg.profilePhoto && (
                                         <Button
@@ -1312,6 +1317,21 @@ export default function Admin() {
                                     <div className="flex items-center gap-2 flex-wrap">
                                       <Button variant="outline" size="sm" onClick={() => setSelectedReg(reg)} data-testid={`button-view-contest-${reg.id}`}>
                                         <Eye className="w-4 h-4 mr-1" />View
+                                      </Button>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                          if (confirm(`Resend ticket email to ${reg.email}?`)) {
+                                            resendEmailMutation.mutate(reg.registrationId);
+                                          }
+                                        }}
+                                        disabled={resendEmailMutation.isPending}
+                                        title="Resend Ticket Email"
+                                        data-testid={`button-resend-contest-email-${reg.id}`}
+                                      >
+                                        <Mail className="w-4 h-4 mr-1" />
+                                        Resend
                                       </Button>
                                       {reg.profilePhoto && (
                                         <Button 
