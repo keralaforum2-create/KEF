@@ -2154,11 +2154,10 @@ export default function Participate() {
                               size="lg" 
                               className="w-full font-semibold text-base"
                               onClick={() => {
-                                toast({
-                                  title: "Registration Closed",
-                                  description: "Expert session registrations are currently closed.",
-                                  variant: "destructive"
-                                });
+                                setShowForm(true);
+                                setRegistrationType("expert-session");
+                                form.setValue("registrationType", "expert-session");
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
                               }}
                               data-testid="button-register-expert-session"
                             >
@@ -2175,11 +2174,10 @@ export default function Participate() {
                               variant="outline"
                               className="w-full font-semibold text-base"
                               onClick={() => {
-                                toast({
-                                  title: "Registration Closed",
-                                  description: "Contest registrations are currently closed.",
-                                  variant: "destructive"
-                                });
+                                setShowForm(true);
+                                setRegistrationType("contest");
+                                form.setValue("registrationType", "contest");
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
                               }}
                               data-testid="button-register-contest"
                             >
@@ -2196,11 +2194,10 @@ export default function Participate() {
                               variant="outline"
                               className="w-full font-semibold text-base"
                               onClick={() => {
-                                toast({
-                                  title: "Registration Closed",
-                                  description: "Podcast speaker registrations are currently closed.",
-                                  variant: "destructive"
-                                });
+                                setShowForm(true);
+                                setRegistrationType("speaker");
+                                form.setValue("registrationType", "speaker");
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
                               }}
                               data-testid="button-register-podcast-speaker"
                             >

@@ -766,22 +766,16 @@ export default function Home() {
                   </div>
                   <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Expert Session</h3>
                 </div>
-                <div className="mt-2">
+                <Link href="/participate#register" className="mt-2">
                   <Button 
                     size="sm" 
                     className="h-7 text-[10px] font-bold px-2 py-0 bg-primary text-white border-0 rounded-md w-full" 
                     data-testid="modal-button-expert-register"
-                    onClick={() => {
-                      toast({
-                        title: "Registration Closed",
-                        description: "Expert session registrations are currently closed.",
-                        variant: "destructive"
-                      });
-                    }}
+                    onClick={() => setShowQuickLinksModal(false)}
                   >
                     Register
                   </Button>
-                </div>
+                </Link>
               </div>
             </div>
 
@@ -803,22 +797,16 @@ export default function Home() {
                   </div>
                   <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Be a Podcast Speaker</h3>
                 </div>
-                <div className="mt-2">
+                <Link href="/participate#register" className="mt-2">
                   <Button 
                     size="sm" 
                     className="h-7 text-[10px] font-bold px-2 py-0 bg-primary text-white border-0 rounded-md w-full" 
                     data-testid="modal-button-podcast-register"
-                    onClick={() => {
-                      toast({
-                        title: "Registration Closed",
-                        description: "Podcast speaker registrations are currently closed.",
-                        variant: "destructive"
-                      });
-                    }}
+                    onClick={() => setShowQuickLinksModal(false)}
                   >
                     Register
                   </Button>
-                </div>
+                </Link>
               </div>
             </div>
 
@@ -840,22 +828,16 @@ export default function Home() {
                   </div>
                   <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Startup Clinic</h3>
                 </div>
-                <div className="mt-2">
+                <Link href="/startup-clinic" className="mt-2">
                   <Button 
                     size="sm" 
                     className="h-7 text-[10px] font-bold px-2 py-0 bg-primary text-white border-0 rounded-md w-full" 
                     data-testid="modal-button-clinic-register"
-                    onClick={() => {
-                      toast({
-                        title: "Registration Closed",
-                        description: "Startup Clinic registrations are currently closed.",
-                        variant: "destructive"
-                      });
-                    }}
+                    onClick={() => setShowQuickLinksModal(false)}
                   >
                     Register
                   </Button>
-                </div>
+                </Link>
               </div>
             </div>
 
@@ -877,22 +859,16 @@ export default function Home() {
                   </div>
                   <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Apply for Expo</h3>
                 </div>
-                <div className="mt-2">
+                <Link href="/expo-register" className="mt-2">
                   <Button 
                     size="sm" 
                     className="h-7 text-[10px] font-bold px-2 py-0 bg-primary text-white border-0 rounded-md w-full" 
                     data-testid="modal-button-expo-register"
-                    onClick={() => {
-                      toast({
-                        title: "Registration Closed",
-                        description: "Expo registrations are currently closed.",
-                        variant: "destructive"
-                      });
-                    }}
+                    onClick={() => setShowQuickLinksModal(false)}
                   >
                     Register
                   </Button>
-                </div>
+                </Link>
               </div>
             </div>
 
@@ -914,22 +890,16 @@ export default function Home() {
                   </div>
                   <h3 className="font-bold text-[11px] text-center mb-1 text-gray-900 leading-tight">Get a Influencer Pass</h3>
                 </div>
-                <div className="mt-2">
+                <Link href="/participate#register" className="mt-2">
                   <Button 
                     size="sm" 
                     className="h-7 text-[10px] font-bold px-2 py-0 bg-primary text-white border-0 rounded-md w-full" 
                     data-testid="modal-button-influencer-register"
-                    onClick={() => {
-                      toast({
-                        title: "Registration Closed",
-                        description: "Influencer pass registrations are currently closed.",
-                        variant: "destructive"
-                      });
-                    }}
+                    onClick={() => setShowQuickLinksModal(false)}
                   >
                     Register
                   </Button>
-                </div>
+                </Link>
               </div>
             </div>
 

@@ -687,14 +687,7 @@ export default function Speakers() {
                     <h3 className="text-2xl sm:text-3xl font-bold">Be a Live Podcast Speaker at KSF Venue</h3>
                   </div>
                 </div>
-                <Link href="/participate" onClick={(e) => {
-                  e.preventDefault();
-                  toast({
-                    title: "Registration Closed",
-                    description: "Podcast speaker registrations are currently closed.",
-                    variant: "destructive"
-                  });
-                }}>
+                <Link href="/speaker-register">
                   <Button 
                     variant="default" 
                     className="bg-white text-red-600 hover:bg-gray-100 whitespace-nowrap"
