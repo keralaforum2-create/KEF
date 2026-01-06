@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Lightbulb, 
   Scale, 
@@ -135,6 +136,7 @@ const sessions = [
 ];
 
 export default function Sessions() {
+  const { toast } = useToast();
   return (
     <div className="min-h-screen pt-20 bg-white dark:bg-background">
       <section className="py-20">
@@ -206,11 +208,19 @@ export default function Sessions() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <Link href="/participate?type=expert-session">
-              <Button size="lg" data-testid="button-register-expert-session">
-                Register for Expert Sessions
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              data-testid="button-register-expert-session"
+              onClick={() => {
+                toast({
+                  title: "Registration Closed",
+                  description: "Expert session registrations are currently closed.",
+                  variant: "destructive"
+                });
+              }}
+            >
+              Register for Expert Sessions
+            </Button>
           </motion.div>
         </div>
       </section>
