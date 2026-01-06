@@ -388,6 +388,34 @@ export default function Admin() {
     },
   });
 
+  const resendEmailMutation = useMutation({
+    mutationFn: async (registrationId: string) => {
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch(`/api/admin/registrations/${registrationId}/resend-email`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        }
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to resend email");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({ title: "Email resent successfully!" });
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Failed to resend email", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    },
+  });
+
   const createReferralCodeMutation = useMutation({
     mutationFn: async (data: { code: string; discountPercentage: number }) => {
       const token = localStorage.getItem("admin_token");
@@ -1077,6 +1105,16 @@ export default function Admin() {
                                       >
                                         <Eye className="w-4 h-4 mr-1" />
                                         View
+                                      </Button>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => resendEmailMutation.mutate(reg.registrationId)}
+                                        disabled={resendEmailMutation.isPending}
+                                        title="Resend Email"
+                                        data-testid={`button-resend-email-${reg.id}`}
+                                      >
+                                        <Mail className="w-4 h-4" />
                                       </Button>
                                       {reg.profilePhoto && (
                                         <Button

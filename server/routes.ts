@@ -617,22 +617,51 @@ export async function registerRoutes(
       
       const registration = await storage.createRegistration(result.data);
       
-      // Skip admin notification for pending registrations - wait until payment is confirmed
-      // Admin will be notified only when payment is verified
-      
       return res.status(201).json({ 
         message: "Registration successful - Proceed to payment", 
         registration,
       });
     } catch (error: any) {
       console.error("Error creating registration:", error);
-      const errorMessage = error?.message || "Internal server error";
-      const isDbError = errorMessage.includes("relation") || errorMessage.includes("database") || errorMessage.includes("connection");
-      return res.status(500).json({ 
-        message: isDbError 
-          ? "Database connection error. Please check your database configuration." 
-          : `Registration failed: ${errorMessage}`
-      });
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Resend registration email (admin)
+  app.post("/api/admin/registrations/:id/resend-email", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization || "";
+      const token = authHeader.replace("Bearer ", "").trim();
+      if (token !== "admin-authenticated" && token !== ADMIN_PASSWORD) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const registrationId = req.params.id;
+      const registration = await storage.getRegistrationByRegistrationId(registrationId);
+      
+      if (!registration) {
+        return res.status(404).json({ message: "Registration not found" });
+      }
+
+      const baseUrl = resolveBaseUrl(req);
+      const ticketUrl = `${baseUrl}/ticket/${registration.registrationId}`;
+
+      // Re-send the registration confirmation email
+      await sendRegistrationEmail(
+        registration.fullName,
+        registration.email,
+        registration.registrationId,
+        ticketUrl,
+        registration.registrationType,
+        registration.sessionName || registration.contestName || ""
+      );
+
+      console.log(`🔄 Registration email resent to ${registration.email} for ID: ${registration.registrationId}`);
+
+      return res.json({ success: true, message: "Email resent successfully" });
+    } catch (error) {
+      console.error("Error resending email:", error);
+      return res.status(500).json({ message: "Internal server error" });
     }
   });
 
