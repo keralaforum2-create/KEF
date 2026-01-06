@@ -2157,9 +2157,11 @@ export default function Participate() {
                               size="lg" 
                               className="w-full font-semibold text-base"
                               onClick={() => {
-                                setShowForm(true);
-                                registrationTypeChange("expert-session");
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                toast({
+                                  title: "Registration Closed",
+                                  description: "Expert session registrations are currently closed.",
+                                  variant: "destructive"
+                                });
                               }}
                               data-testid="button-register-expert-session"
                             >
@@ -2176,9 +2178,11 @@ export default function Participate() {
                               variant="outline"
                               className="w-full font-semibold text-base"
                               onClick={() => {
-                                setShowForm(true);
-                                registrationTypeChange("contest");
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                toast({
+                                  title: "Registration Closed",
+                                  description: "Contest registrations are currently closed.",
+                                  variant: "destructive"
+                                });
                               }}
                               data-testid="button-register-contest"
                             >

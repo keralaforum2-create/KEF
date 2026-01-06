@@ -208,11 +208,19 @@ export default function Sessions() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <Link href="/participate?type=expert-session">
-              <Button size="lg" data-testid="button-register-expert-session">
-                Register for Expert Sessions
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              data-testid="button-register-expert-session"
+              onClick={() => {
+                toast({
+                  title: "Registration Closed",
+                  description: "Expert session registrations are currently closed.",
+                  variant: "destructive"
+                });
+              }}
+            >
+              Register for Expert Sessions
+            </Button>
           </motion.div>
         </div>
       </section>
