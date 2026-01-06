@@ -1516,6 +1516,21 @@ export default function Admin() {
                                       <Button variant="outline" size="sm" onClick={() => setSelectedReg(reg)} data-testid={`button-view-expert-${reg.id}`}>
                                         <Eye className="w-4 h-4 mr-1" />View
                                       </Button>
+                                      <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                          if (confirm(`Resend ticket email to ${reg.email}?`)) {
+                                            resendEmailMutation.mutate(reg.registrationId);
+                                          }
+                                        }}
+                                        disabled={resendEmailMutation.isPending}
+                                        title="Resend Ticket Email"
+                                        data-testid={`button-resend-expert-email-${reg.id}`}
+                                      >
+                                        <Mail className="w-4 h-4 mr-1" />
+                                        Resend
+                                      </Button>
                                       {reg.profilePhoto && (
                                         <Button variant="outline" size="sm" onClick={() => { const link = document.createElement('a'); link.href = reg.profilePhoto!; link.download = `photo-${reg.registrationId}.jpg`; document.body.appendChild(link); link.click(); document.body.removeChild(link); }} data-testid={`button-download-photo-expert-${reg.id}`}>
                                           <Image className="w-4 h-4 mr-1" />Photo
