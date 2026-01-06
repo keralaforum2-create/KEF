@@ -1923,12 +1923,11 @@ export default function Participate() {
                 whileHover={{ scale: 1.05, y: -5 }} 
                 transition={{ duration: 0.2 }}
                 onClick={() => {
-                  form.setValue("registrationType", "expert-session");
-                  form.setValue("participantType", "school-student");
-                  setShowForm(true);
-                  setTimeout(() => {
-                    document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
-                  }, 100);
+                  toast({
+                    title: "Registration Closed",
+                    description: "Student registrations are currently closed.",
+                    variant: "destructive"
+                  });
                 }}
                 className="cursor-pointer"
               >
@@ -1958,12 +1957,11 @@ export default function Participate() {
                 whileHover={{ scale: 1.05, y: -5 }} 
                 transition={{ duration: 0.2 }}
                 onClick={() => {
-                  form.setValue("registrationType", "expert-session");
-                  form.setValue("participantType", "college-student");
-                  setShowForm(true);
-                  setTimeout(() => {
-                    document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
-                  }, 100);
+                  toast({
+                    title: "Registration Closed",
+                    description: "Student registrations are currently closed.",
+                    variant: "destructive"
+                  });
                 }}
                 className="cursor-pointer"
               >
@@ -1993,12 +1991,11 @@ export default function Participate() {
                 whileHover={{ scale: 1.05, y: -5 }} 
                 transition={{ duration: 0.2 }}
                 onClick={() => {
-                  form.setValue("registrationType", "expert-session");
-                  form.setValue("participantType", "commoner");
-                  setShowForm(true);
-                  setTimeout(() => {
-                    document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
-                  }, 100);
+                  toast({
+                    title: "Registration Closed",
+                    description: "Entrepreneur registrations are currently closed.",
+                    variant: "destructive"
+                  });
                 }}
                 className="cursor-pointer"
               >
