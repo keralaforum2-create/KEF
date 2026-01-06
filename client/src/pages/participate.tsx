@@ -339,6 +339,9 @@ export default function Participate() {
   }, []);
 
   const registrationType = form.watch("registrationType");
+  const registrationTypeChange = (type: "expert-session" | "contest" | "speaker") => {
+    form.setValue("registrationType", type);
+  };
   const contestName = form.watch("contestName");
   const participantType = form.watch("participantType");
   const ticketCategory = form.watch("ticketCategory");
@@ -2155,8 +2158,7 @@ export default function Participate() {
                               className="w-full font-semibold text-base"
                               onClick={() => {
                                 setShowForm(true);
-                                setRegistrationType("expert-session");
-                                form.setValue("registrationType", "expert-session");
+                                registrationTypeChange("expert-session");
                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                               }}
                               data-testid="button-register-expert-session"
@@ -2175,8 +2177,7 @@ export default function Participate() {
                               className="w-full font-semibold text-base"
                               onClick={() => {
                                 setShowForm(true);
-                                setRegistrationType("contest");
-                                form.setValue("registrationType", "contest");
+                                registrationTypeChange("contest");
                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                               }}
                               data-testid="button-register-contest"
@@ -2195,8 +2196,7 @@ export default function Participate() {
                               className="w-full font-semibold text-base"
                               onClick={() => {
                                 setShowForm(true);
-                                setRegistrationType("speaker");
-                                form.setValue("registrationType", "speaker");
+                                registrationTypeChange("speaker");
                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                               }}
                               data-testid="button-register-podcast-speaker"
