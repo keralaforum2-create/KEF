@@ -2035,11 +2035,11 @@ export default function Participate() {
                     transition={{ delay: index * 0.1 }}
                     whileHover={{ scale: 1.02 }}
                     onClick={() => {
-                      form.setValue("registrationType", "expert-session");
-                      setShowForm(true);
-                      setTimeout(() => {
-                        document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
-                      }, 100);
+                      toast({
+                        title: "Registration Closed",
+                        description: "These registration categories are currently closed.",
+                        variant: "destructive"
+                      });
                     }}
                     data-testid={`button-join-${item.toLowerCase().replace(/\s+/g, '-')}`}
                   >
@@ -2146,47 +2146,6 @@ export default function Participate() {
                           />
                         </motion.div>
                         <div className="p-6 sm:p-8 space-y-4">
-                          <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            <Button 
-                              size="lg" 
-                              className="w-full font-semibold text-base"
-                              onClick={() => {
-                                toast({
-                                  title: "Registration Closed",
-                                  description: "Expert session registrations are currently closed.",
-                                  variant: "destructive"
-                                });
-                              }}
-                              data-testid="button-register-expert-session"
-                            >
-                              <GraduationCap className="w-5 h-5 mr-2" />
-                              Register for Kerala Startup Fest Expert Session
-                            </Button>
-                          </motion.div>
-                          <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            <Button 
-                              size="lg" 
-                              variant="outline"
-                              className="w-full font-semibold text-base"
-                              onClick={() => {
-                                toast({
-                                  title: "Registration Closed",
-                                  description: "Contest registrations are currently closed.",
-                                  variant: "destructive"
-                                });
-                              }}
-                              data-testid="button-register-contest"
-                            >
-                              <Trophy className="w-5 h-5 mr-2" />
-                              Register for Kerala Startup Fest Contest
-                            </Button>
-                          </motion.div>
                           <motion.div
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
