@@ -144,6 +144,9 @@ app.use((req, _res, next) => {
 // Serve uploaded files
 app.use("/uploads", express.static(uploadDir));
 
+// Serve attached assets (for PDF schedules, etc.)
+app.use("/attached_assets", express.static(path.join(process.cwd(), "attached_assets")));
+
 // PhonePe payment routes
 registerPhonepeRoutes(app);
 
