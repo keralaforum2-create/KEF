@@ -150,7 +150,7 @@ export default function Home() {
                         size="lg" 
                         className="font-bold text-base px-10 py-6 bg-white text-gray-800 w-full text-lg border-0 rounded-[4px]" 
                       >
-                        Event Schedule
+                        Session Schedule
                         <Calendar className="w-5 h-5 ml-2" />
                       </Button>
                     </div>
