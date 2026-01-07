@@ -676,30 +676,7 @@ export default function Speakers() {
           </div>
         </div>
 
-        {/* Be a Speaker Section */}
-        <div className="mt-20 pt-16 border-t border-gray-200">
-          <ScrollFadeUp>
-            <Card className="bg-red-600 text-white p-8 rounded-lg">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Presentation className="w-6 h-6" />
-                    <h3 className="text-2xl sm:text-3xl font-bold">Be a Live Podcast Speaker at KSF Venue</h3>
-                  </div>
-                </div>
-                <Link href="/speaker-register">
-                  <Button 
-                    variant="default" 
-                    className="bg-white text-red-600 hover:bg-gray-100 whitespace-nowrap"
-                    data-testid="button-register-speaker"
-                  >
-                    Register Now
-                  </Button>
-                </Link>
-              </div>
-            </Card>
-          </ScrollFadeUp>
-        </div>
+        {/* Be a Speaker Section Removed */}
       </div>
 
       {selectedSpeaker && (

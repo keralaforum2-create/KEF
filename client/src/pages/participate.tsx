@@ -2146,25 +2146,6 @@ export default function Participate() {
                           />
                         </motion.div>
                         <div className="p-6 sm:p-8 space-y-4">
-                          <motion.div
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            <Button 
-                              size="lg" 
-                              variant="outline"
-                              className="w-full font-semibold text-base"
-                              onClick={() => {
-                                setShowForm(true);
-                                registrationTypeChange("speaker");
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                              }}
-                              data-testid="button-register-podcast-speaker"
-                            >
-                              <Presentation className="w-5 h-5 mr-2" />
-                              Register for Live Podcast Speaker
-                            </Button>
-                          </motion.div>
                         </div>
                       </CardContent>
                     </Card>
