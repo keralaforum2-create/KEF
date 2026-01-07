@@ -143,7 +143,7 @@ export default function Home() {
                       style={{
                         background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
                       }}
-                      onClick={() => window.open('/attached_assets/KSF_SESSION_SCHEDULE_(1)_1767773231218.pdf', '_blank')}
+                      onClick={() => window.open('/attached_assets/KSF_SESSION_SCHEDULE_(1)_1767773408317.pdf', '_blank')}
                       data-testid="button-schedule-hero"
                     >
                       <Button 
