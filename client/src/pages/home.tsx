@@ -82,12 +82,6 @@ export default function Home() {
                     </div>
                   </motion.div>
                 </HeroAnimation>
-                
-                <HeroSubAnimation delay={0.7}>
-                  <div className="mt-8">
-                    <LiveCountdown />
-                  </div>
-                </HeroSubAnimation>
               </div>
               
               {/* Right - Text Content */}
@@ -144,6 +138,22 @@ export default function Home() {
                         </Button>
                       </div>
                     </Link>
+                    <div 
+                      className="relative p-[3px] rounded-md min-w-[200px] shadow-xl cursor-pointer"
+                      style={{
+                        background: 'linear-gradient(90deg, #1E3A8A 0%, #1E3A8A 25%, #DC2626 25%, #DC2626 50%, #FACC15 50%, #FACC15 75%, #0D9488 75%, #0D9488 100%)'
+                      }}
+                      onClick={() => window.open('/attached_assets/KSF_SESSION_SCHEDULE_(1)_1767773231218.pdf', '_blank')}
+                      data-testid="button-schedule-hero"
+                    >
+                      <Button 
+                        size="lg" 
+                        className="font-bold text-base px-10 py-6 bg-white text-gray-800 w-full text-lg border-0 rounded-[4px]" 
+                      >
+                        Event Schedule
+                        <Calendar className="w-5 h-5 ml-2" />
+                      </Button>
+                    </div>
                   </div>
                   <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-4">
                     <Link href="/speakers">
