@@ -13,11 +13,8 @@ import { startReminderScheduler } from "./reminderScheduler";
 import { DatabaseStorage } from "./storage";
 
 // SSL certificate workaround for external hosting platforms (Render, Railway, etc.)
-// This helps with "self-signed certificate in certificate chain" errors
-if (process.env.RENDER || process.env.RAILWAY_ENVIRONMENT || process.env.DISABLE_SSL_VALIDATION === 'true') {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-  console.log('SSL validation disabled for external hosting platform compatibility');
-}
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+console.log('SSL validation disabled for deployment compatibility');
 
 const app = express();
 const httpServer = createServer(app);

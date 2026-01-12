@@ -10,12 +10,11 @@ if (!databaseUrl) {
 
 const pool = new Pool({ 
   connectionString: databaseUrl,
-  ssl: process.env.SUPABASE_DATABASE_URL ? { rejectUnauthorized: false } : undefined,
-  // Optimize for production performance
-  max: 20, // Maximum number of connections in pool
-  min: 5,  // Minimum number of connections to maintain
-  idleTimeoutMillis: 30000, // Close idle connections after 30s
-  connectionTimeoutMillis: 5000, // Connection timeout 5s
+  ssl: { rejectUnauthorized: false }, // Force SSL for external platforms
+  max: 20,
+  min: 5,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
   keepAlive: true,
   keepAliveInitialDelayMillis: 30000,
 });
