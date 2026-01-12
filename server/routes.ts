@@ -582,6 +582,27 @@ export async function registerRoutes(
     }
   });
 
+  // Delete all data endpoint (admin)
+  app.post("/api/admin/delete-all-data", async (req, res) => {
+    try {
+      const authHeader = req.headers.authorization || "";
+      const token = authHeader.replace("Bearer ", "").trim();
+      if (token !== "admin-authenticated" && token !== ADMIN_PASSWORD) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      if (req.body.confirmText !== "DELETE ALL DATA") {
+        return res.status(400).json({ message: "Invalid confirmation text" });
+      }
+
+      await storage.deleteAllData();
+      return res.json({ success: true, message: "All data deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting all data:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.post("/api/register", uploadFields, async (req: Request, res) => {
     try {
       const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;

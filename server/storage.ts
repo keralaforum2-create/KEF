@@ -326,6 +326,20 @@ export class DatabaseStorage implements IStorage {
     await db.delete(sponsorshipInquiries).where(eq(sponsorshipInquiries.id, id));
   }
 
+  async deleteAllData(): Promise<void> {
+    await db.delete(registrations);
+    await db.delete(contactSubmissions);
+    await db.delete(investorMentorApplications);
+    await db.delete(sponsorshipInquiries);
+    await db.delete(bulkRegistrationStudents);
+    await db.delete(bulkRegistrations);
+    await db.delete(speakerApplications);
+    await db.delete(expoRegistrations);
+    await db.delete(startupClinicRegistrations);
+    await db.delete(investorApplications);
+    await db.delete(influencerApplications);
+  }
+
   async createBulkRegistration(insertData: InsertBulkRegistration): Promise<BulkRegistration> {
     const id = randomUUID();
     const bulkRegistrationId = `KSFB-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;

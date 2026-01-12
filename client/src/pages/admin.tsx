@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, Download, FileText, Plus, Image, FileSpreadsheet, AlertTriangle, CheckCircle2, CheckCircle } from "lucide-react";
+import { Users, Mail, Phone, Building2, MessageSquare, UserCheck, Eye, Briefcase, Handshake, Trash2, Download, FileText, Plus, Image, FileSpreadsheet, AlertTriangle, CheckCircle2, CheckCircle, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -68,6 +68,58 @@ export default function Admin() {
     participantType: "commoner" as "school-student" | "college-student" | "commoner",
   });
   
+  const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false);
+  const [deleteAllConfirmText, setDeleteAllConfirmText] = useState("");
+  const [isDeletingAll, setIsDeletingAll] = useState(false);
+
+  const deleteAllMutation = useMutation({
+    mutationFn: async () => {
+      const token = localStorage.getItem("admin_token");
+      const response = await fetch("/api/admin/delete-all-data", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        },
+        body: JSON.stringify({ confirmText: deleteAllConfirmText })
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to delete all data");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+      toast({ title: "All data deleted successfully" });
+      setShowDeleteAllDialog(false);
+      setDeleteAllConfirmText("");
+    },
+    onError: (error: any) => {
+      toast({ 
+        title: "Deletion Failed", 
+        description: error.message,
+        variant: "destructive" 
+      });
+    },
+    onSettled: () => {
+      setIsDeletingAll(false);
+    }
+  });
+
+  const handleDeleteAll = () => {
+    if (deleteAllConfirmText !== "DELETE ALL DATA") {
+      toast({ 
+        title: "Confirmation Failed", 
+        description: "Please type DELETE ALL DATA exactly to confirm.",
+        variant: "destructive" 
+      });
+      return;
+    }
+    setIsDeletingAll(true);
+    deleteAllMutation.mutate();
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
     if (!token) {
@@ -879,7 +931,8 @@ export default function Admin() {
       <section className="py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollFadeUp>
-            <div className="mb-8">
+          <div className="mb-8 flex justify-between items-center gap-4">
+            <div>
               <h1 className="font-serif text-3xl sm:text-4xl font-bold mb-2" data-testid="text-admin-title">
                 Admin Dashboard
               </h1>
@@ -887,7 +940,60 @@ export default function Admin() {
                 View all registrations and contact form submissions for Kerala Startup Fest 2026.
               </p>
             </div>
+            <Button 
+              variant="destructive" 
+              size="sm"
+              onClick={() => setShowDeleteAllDialog(true)}
+              className="flex items-center gap-2 shadow-lg hover:bg-destructive/90"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete All Data
+            </Button>
+          </div>
           </ScrollFadeUp>
+
+          <Dialog open={showDeleteAllDialog} onOpenChange={setShowDeleteAllDialog}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-destructive text-xl">
+                  <AlertTriangle className="w-6 h-6" />
+                  CRITICAL: Delete All Data
+                </DialogTitle>
+                <DialogDescription className="text-base pt-2">
+                  This action is **irreversible**. It will permanently delete every registration, contact message, investor application, and expo entry from the database.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2 p-3 bg-destructive/10 rounded-lg border border-destructive/20 text-sm text-destructive font-medium">
+                  To confirm, please type <span className="font-bold underline italic">DELETE ALL DATA</span> in the box below.
+                </div>
+                <div className="space-y-2">
+                  <Input 
+                    value={deleteAllConfirmText} 
+                    onChange={(e) => setDeleteAllConfirmText(e.target.value)}
+                    placeholder="DELETE ALL DATA"
+                    className="border-destructive focus-visible:ring-destructive font-bold text-center"
+                    autoFocus
+                  />
+                </div>
+                <Button 
+                  variant="destructive" 
+                  className="w-full font-bold h-11"
+                  disabled={deleteAllConfirmText !== "DELETE ALL DATA" || isDeletingAll}
+                  onClick={handleDeleteAll}
+                >
+                  {isDeletingAll ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Deleting Everything...
+                    </>
+                  ) : (
+                    "Yes, Delete Everything"
+                  )}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {statCards.map((stat, index) => (
