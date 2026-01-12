@@ -338,6 +338,7 @@ export class DatabaseStorage implements IStorage {
     await db.delete(startupClinicRegistrations);
     await db.delete(investorApplications);
     await db.delete(influencerApplications);
+    await db.delete(referralCodes);
   }
 
   async createBulkRegistration(insertData: InsertBulkRegistration): Promise<BulkRegistration> {
